@@ -152,7 +152,13 @@
          this.field_76104_m = p_76084_1_;
      }
  
-@@ -709,6 +738,11 @@
+@@ -704,11 +733,16 @@
+ 
+     public EnumDifficulty func_176130_y()
+     {
+-        return this.field_176158_z;
++        return this.field_176158_z == null ? this.field_176158_z = MinecraftServer.getServerInst().func_147135_j() : this.field_176158_z;
+     }
  
      public void func_176144_a(EnumDifficulty p_176144_1_)
      {
