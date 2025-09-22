@@ -164,8 +164,8 @@
      {
 +        net.minecraftforge.common.ForgeHooks.onDifficultyChange(p_176144_1_, this.field_176158_z);
 +        SPacketServerDifficulty packet = new SPacketServerDifficulty(this.func_176130_y(), this.func_176123_z());
-+        for (EntityPlayerMP player :(java.util.List<EntityPlayerMP>) (java.util.List) world.field_73010_i) {
-+            player.field_71135_a.func_147359_a(packet);
++        for (EntityPlayer player : world.field_73010_i) {
++            ((EntityPlayerMP) player).field_71135_a.func_147359_a(packet);
 +        }
          this.field_176158_z = p_176144_1_;
      }
