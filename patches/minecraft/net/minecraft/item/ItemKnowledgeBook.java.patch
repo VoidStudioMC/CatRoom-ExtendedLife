@@ -1,0 +1,11 @@
+--- before/net/minecraft/item/ItemKnowledgeBook.java
++++ after/net/minecraft/item/ItemKnowledgeBook.java
+@@ -43,7 +43,7 @@
+                 NBTTagList nbttaglist = nbttagcompound.func_150295_c("Recipes", 8);
+                 List<IRecipe> list = Lists.newArrayList();
+ 
+-                for (int i = 0; i < nbttaglist.func_74745_c(); i++)
++                for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+                 {
+                     String s = nbttaglist.func_150307_f(i);
+                     IRecipe irecipe = CraftingManager.func_193373_a(new ResourceLocation(s));

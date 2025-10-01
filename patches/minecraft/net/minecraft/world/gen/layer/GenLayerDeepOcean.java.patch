@@ -1,0 +1,41 @@
+--- before/net/minecraft/world/gen/layer/GenLayerDeepOcean.java
++++ after/net/minecraft/world/gen/layer/GenLayerDeepOcean.java
+@@ -21,9 +21,9 @@
+         int[] aint = this.field_75909_a.func_75904_a(i, j, k, l);
+         int[] aint1 = IntCache.func_76445_a(p_75904_3_ * p_75904_4_);
+ 
+-        for (int i1 = 0; i1 < p_75904_4_; i1++)
++        for (int i1 = 0; i1 < p_75904_4_; ++i1)
+         {
+-            for (int j1 = 0; j1 < p_75904_3_; j1++)
++            for (int j1 = 0; j1 < p_75904_3_; ++j1)
+             {
+                 int k1 = aint[j1 + 1 + (i1 + 1 - 1) * (p_75904_3_ + 2)];
+                 int l1 = aint[j1 + 1 + 1 + (i1 + 1) * (p_75904_3_ + 2)];
+@@ -34,22 +34,22 @@
+ 
+                 if (k1 == 0)
+                 {
+-                    l2++;
++                    ++l2;
+                 }
+ 
+                 if (l1 == 0)
+                 {
+-                    l2++;
++                    ++l2;
+                 }
+ 
+                 if (i2 == 0)
+                 {
+-                    l2++;
++                    ++l2;
+                 }
+ 
+                 if (j2 == 0)
+                 {
+-                    l2++;
++                    ++l2;
+                 }
+ 
+                 if (k2 == 0 && l2 > 3)

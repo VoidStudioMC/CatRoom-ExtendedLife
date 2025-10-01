@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/gui/GuiSubtitleOverlay.java
++++ after/net/minecraft/client/gui/GuiSubtitleOverlay.java
+@@ -122,7 +122,7 @@
+ 
+                 this.field_184069_a.field_71466_p.func_78276_b(s, -k1 / 2, -j1, i2 + -16777216);
+                 GlStateManager.func_179121_F();
+-                i++;
++                ++i;
+             }
+ 
+             GlStateManager.func_179084_k();

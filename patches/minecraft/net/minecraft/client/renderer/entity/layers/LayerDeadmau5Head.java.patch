@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/renderer/entity/layers/LayerDeadmau5Head.java
++++ after/net/minecraft/client/renderer/entity/layers/LayerDeadmau5Head.java
+@@ -31,7 +31,7 @@
+         {
+             this.field_177208_a.func_110776_a(p_177141_1_.func_110306_p());
+ 
+-            for (int i = 0; i < 2; i++)
++            for (int i = 0; i < 2; ++i)
+             {
+                 float f = p_177141_1_.field_70126_B
+                           + (p_177141_1_.field_70177_z - p_177141_1_.field_70126_B) * p_177141_4_

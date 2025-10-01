@@ -9,6 +9,15 @@
      public EntityAnimal(World p_i1681_1_)
      {
          super(p_i1681_1_);
+@@ -53,7 +55,7 @@
+ 
+         if (this.field_70881_d > 0)
+         {
+-            this.field_70881_d--;
++            --this.field_70881_d;
+ 
+             if (this.field_70881_d % 10 == 0)
+             {
 @@ -74,19 +76,21 @@
          }
      }
@@ -54,3 +63,27 @@
          }
  
          this.field_70170_p.func_72960_a(this, (byte)18);
+@@ -232,9 +236,13 @@
+         {
+             return false;
+         }
++        else if (p_70878_1_.getClass() != this.getClass())
++        {
++            return false;
++        }
+         else
+         {
+-            return p_70878_1_.getClass() != this.getClass() ? false : this.func_70880_s() && p_70878_1_.func_70880_s();
++            return this.func_70880_s() && p_70878_1_.func_70880_s();
+         }
+     }
+ 
+@@ -244,7 +252,7 @@
+     {
+         if (p_70103_1_ == 18)
+         {
+-            for (int i = 0; i < 7; i++)
++            for (int i = 0; i < 7; ++i)
+             {
+                 double d0 = this.field_70146_Z.nextGaussian() * 0.02;
+                 double d1 = this.field_70146_Z.nextGaussian() * 0.02;

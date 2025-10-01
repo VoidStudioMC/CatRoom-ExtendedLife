@@ -1,0 +1,11 @@
+--- before/net/minecraft/entity/ai/EntityAIAttackRanged.java
++++ after/net/minecraft/entity/ai/EntityAIAttackRanged.java
+@@ -81,7 +81,7 @@
+ 
+         if (flag)
+         {
+-            this.field_75318_f++;
++            ++this.field_75318_f;
+         }
+         else
+         {

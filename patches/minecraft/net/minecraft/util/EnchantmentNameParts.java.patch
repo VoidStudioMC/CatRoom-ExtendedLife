@@ -1,0 +1,11 @@
+--- before/net/minecraft/util/EnchantmentNameParts.java
++++ after/net/minecraft/util/EnchantmentNameParts.java
+@@ -28,7 +28,7 @@
+         int i = this.field_148336_b.nextInt(2) + 3;
+         String s = "";
+ 
+-        for (int j = 0; j < i; j++)
++        for (int j = 0; j < i; ++j)
+         {
+             if (j > 0)
+             {

@@ -95,7 +95,7 @@
      }
  
      private void func_190589_G()
-@@ -131,9 +153,9 @@
+@@ -131,21 +153,21 @@
  
          if (iblockstate.func_177230_c() instanceof BlockShulkerBox)
          {
@@ -107,7 +107,10 @@
  
              if (!list.isEmpty())
              {
-@@ -143,9 +165,9 @@
+-                for (int i = 0; i < list.size(); i++)
++                for (int i = 0; i < list.size(); ++i)
+                 {
+                     Entity entity = list.get(i);
  
                      if (entity.func_184192_z() != EnumPushReaction.IGNORE)
                      {
@@ -184,7 +187,13 @@
      public void func_174889_b(EntityPlayer p_174889_1_)
      {
          if (!p_174889_1_.func_175149_v())
-@@ -254,20 +267,11 @@
+@@ -249,60 +262,40 @@
+                 this.field_190598_h = 0;
+             }
+ 
+-            this.field_190598_h++;
++            ++this.field_190598_h;
+             this.field_145850_b.func_175641_c(this.field_174879_c, this.func_145838_q(), 1, this.field_190598_h);
  
              if (this.field_190598_h == 1)
              {
@@ -206,7 +215,10 @@
      public void func_174886_c(EntityPlayer p_174886_1_)
      {
          if (!p_174886_1_.func_175149_v())
-@@ -277,32 +281,21 @@
+         {
+-            this.field_190598_h--;
++            --this.field_190598_h;
+             this.field_145850_b.func_175641_c(this.field_174879_c, this.func_145838_q(), 1, this.field_190598_h);
  
              if (this.field_190598_h <= 0)
              {

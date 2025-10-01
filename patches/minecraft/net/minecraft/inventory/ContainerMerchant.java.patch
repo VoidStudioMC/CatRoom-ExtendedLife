@@ -18,14 +18,27 @@
      public ContainerMerchant(InventoryPlayer p_i1821_1_, IMerchant p_i1821_2_, World p_i1821_3_)
      {
          this.field_75178_e = p_i1821_2_;
-@@ -20,6 +24,7 @@
+@@ -20,16 +24,17 @@
          this.func_75146_a(new Slot(this.field_75176_f, 0, 36, 53));
          this.func_75146_a(new Slot(this.field_75176_f, 1, 62, 53));
          this.func_75146_a(new SlotMerchantResult(p_i1821_1_.field_70458_d, p_i1821_2_, this.field_75176_f, 2, 120, 53));
 +        this.player = p_i1821_1_;
  
-         for (int i = 0; i < 3; ++i)
+-        for (int i = 0; i < 3; i++)
++        for (int i = 0; i < 3; ++i)
          {
+-            for (int j = 0; j < 9; j++)
++            for (int j = 0; j < 9; ++j)
+             {
+                 this.func_75146_a(new Slot(p_i1821_1_, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+             }
+         }
+ 
+-        for (int k = 0; k < 9; k++)
++        for (int k = 0; k < 9; ++k)
+         {
+             this.func_75146_a(new Slot(p_i1821_1_, k, 8 + k * 18, 142));
+         }
 @@ -140,5 +145,13 @@
                  p_75134_1_.func_71019_a(itemstack, false);
              }

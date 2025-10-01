@@ -1,0 +1,26 @@
+--- before/net/minecraft/client/renderer/chunk/VisGraph.java
++++ after/net/minecraft/client/renderer/chunk/VisGraph.java
+@@ -24,7 +24,7 @@
+     public void func_178606_a(BlockPos p_178606_1_)
+     {
+         this.field_178612_d.set(func_178608_c(p_178606_1_), true);
+-        this.field_178611_f--;
++        --this.field_178611_f;
+     }
+ 
+     private static int func_178608_c(BlockPos p_178608_0_)
+@@ -194,11 +194,11 @@
+         int j = 15;
+         int k = 0;
+ 
+-        for (int l = 0; l < 16; l++)
++        for (int l = 0; l < 16; ++l)
+         {
+-            for (int i1 = 0; i1 < 16; i1++)
++            for (int i1 = 0; i1 < 16; ++i1)
+             {
+-                for (int j1 = 0; j1 < 16; j1++)
++                for (int j1 = 0; j1 < 16; ++j1)
+                 {
+                     if (l == 0 || l == 15 || i1 == 0 || i1 == 15 || j1 == 0 || j1 == 15)
+                     {

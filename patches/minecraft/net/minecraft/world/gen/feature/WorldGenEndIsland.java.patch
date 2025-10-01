@@ -1,0 +1,17 @@
+--- before/net/minecraft/world/gen/feature/WorldGenEndIsland.java
++++ after/net/minecraft/world/gen/feature/WorldGenEndIsland.java
+@@ -13,11 +13,11 @@
+     {
+         float f = (float)(p_180709_2_.nextInt(3) + 4);
+ 
+-        for (int i = 0; f > 0.5F; i--)
++        for (int i = 0; f > 0.5F; --i)
+         {
+-            for (int j = MathHelper.func_76141_d(-f); j <= MathHelper.func_76123_f(f); j++)
++            for (int j = MathHelper.func_76141_d(-f); j <= MathHelper.func_76123_f(f); ++j)
+             {
+-                for (int k = MathHelper.func_76141_d(-f); k <= MathHelper.func_76123_f(f); k++)
++                for (int k = MathHelper.func_76141_d(-f); k <= MathHelper.func_76123_f(f); ++k)
+                 {
+                     if ((float)(j * j + k * k) <= (f + 1.0F) * (f + 1.0F))
+                     {

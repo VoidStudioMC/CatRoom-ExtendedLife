@@ -1,0 +1,29 @@
+--- before/net/minecraft/entity/ai/attributes/ModifiableAttributeInstance.java
++++ after/net/minecraft/entity/ai/attributes/ModifiableAttributeInstance.java
+@@ -28,7 +28,7 @@
+         this.field_111136_b = p_i1608_2_;
+         this.field_111132_f = p_i1608_2_.func_111110_b();
+ 
+-        for (int i = 0; i < 3; i++)
++        for (int i = 0; i < 3; ++i)
+         {
+             this.field_111137_c.put(i, Sets.newHashSet());
+         }
+@@ -67,7 +67,7 @@
+     {
+         Set<AttributeModifier> set = Sets.newHashSet();
+ 
+-        for (int i = 0; i < 3; i++)
++        for (int i = 0; i < 3; ++i)
+         {
+             set.addAll(this.func_111130_a(i));
+         }
+@@ -121,7 +121,7 @@
+     @Override
+     public void func_111124_b(AttributeModifier p_111124_1_)
+     {
+-        for (int i = 0; i < 3; i++)
++        for (int i = 0; i < 3; ++i)
+         {
+             Set<AttributeModifier> set = this.field_111137_c.get(i);
+             set.remove(p_111124_1_);

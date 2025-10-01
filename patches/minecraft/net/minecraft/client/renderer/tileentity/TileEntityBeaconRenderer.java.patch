@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/renderer/tileentity/TileEntityBeaconRenderer.java
++++ after/net/minecraft/client/renderer/tileentity/TileEntityBeaconRenderer.java
+@@ -49,7 +49,7 @@
+             GlStateManager.func_179106_n();
+             int i = 0;
+ 
+-            for (int j = 0; j < p_188206_11_.size(); j++)
++            for (int j = 0; j < p_188206_11_.size(); ++j)
+             {
+                 TileEntityBeacon.BeamSegment tileentitybeacon$beamsegment = p_188206_11_.get(j);
+                 func_188204_a(

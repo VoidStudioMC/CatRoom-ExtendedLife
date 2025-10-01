@@ -1,0 +1,11 @@
+--- before/net/minecraft/entity/ai/EntityAILookIdle.java
++++ after/net/minecraft/entity/ai/EntityAILookIdle.java
+@@ -39,7 +39,7 @@
+     @Override
+     public void func_75246_d()
+     {
+-        this.field_75255_d--;
++        --this.field_75255_d;
+         this.field_75258_a
+         .func_70671_ap()
+         .func_75650_a(

@@ -1,0 +1,11 @@
+--- before/net/minecraft/block/BlockStainedGlassPane.java
++++ after/net/minecraft/block/BlockStainedGlassPane.java
+@@ -46,7 +46,7 @@
+     @Override
+     public void func_149666_a(CreativeTabs p_149666_1_, NonNullList<ItemStack> p_149666_2_)
+     {
+-        for (int i = 0; i < EnumDyeColor.values().length; i++)
++        for (int i = 0; i < EnumDyeColor.values().length; ++i)
+         {
+             p_149666_2_.add(new ItemStack(this, 1, i));
+         }

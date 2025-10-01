@@ -21,3 +21,21 @@
      }
  
      public static void func_190694_b(DataFixer p_190694_0_, Class<?> p_190694_1_)
+@@ -107,7 +109,7 @@
+         {
+             NBTTagList nbttaglist = new NBTTagList();
+ 
+-            for (int i = 2; i < this.field_110296_bG.func_70302_i_(); i++)
++            for (int i = 2; i < this.field_110296_bG.func_70302_i_(); ++i)
+             {
+                 ItemStack itemstack = this.field_110296_bG.func_70301_a(i);
+ 
+@@ -135,7 +137,7 @@
+             NBTTagList nbttaglist = p_70037_1_.func_150295_c("Items", 10);
+             this.func_110226_cD();
+ 
+-            for (int i = 0; i < nbttaglist.func_74745_c(); i++)
++            for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+             {
+                 NBTTagCompound nbttagcompound = nbttaglist.func_150305_b(i);
+                 int j = nbttagcompound.func_74771_c("Slot") & 255;

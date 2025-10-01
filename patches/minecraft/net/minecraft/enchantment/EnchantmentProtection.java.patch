@@ -1,0 +1,21 @@
+--- before/net/minecraft/enchantment/EnchantmentProtection.java
++++ after/net/minecraft/enchantment/EnchantmentProtection.java
+@@ -80,9 +80,15 @@
+         if (p_77326_1_ instanceof EnchantmentProtection)
+         {
+             EnchantmentProtection enchantmentprotection = (EnchantmentProtection)p_77326_1_;
+-            return this.field_77356_a == enchantmentprotection.field_77356_a
+-                   ? false
+-                   : this.field_77356_a == EnchantmentProtection.Type.FALL || enchantmentprotection.field_77356_a == EnchantmentProtection.Type.FALL;
++
++            if (this.field_77356_a == enchantmentprotection.field_77356_a)
++            {
++                return false;
++            }
++            else
++            {
++                return this.field_77356_a == EnchantmentProtection.Type.FALL || enchantmentprotection.field_77356_a == EnchantmentProtection.Type.FALL;
++            }
+         }
+         else
+         {

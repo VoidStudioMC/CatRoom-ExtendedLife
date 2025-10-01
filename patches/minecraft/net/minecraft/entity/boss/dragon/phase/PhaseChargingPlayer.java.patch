@@ -1,0 +1,11 @@
+--- before/net/minecraft/entity/boss/dragon/phase/PhaseChargingPlayer.java
++++ after/net/minecraft/entity/boss/dragon/phase/PhaseChargingPlayer.java
+@@ -35,7 +35,7 @@
+ 
+             if (d0 < 100.0 || d0 > 22500.0 || this.field_188661_a.field_70123_F || this.field_188661_a.field_70124_G)
+             {
+-                this.field_188671_d++;
++                ++this.field_188671_d;
+             }
+         }
+     }

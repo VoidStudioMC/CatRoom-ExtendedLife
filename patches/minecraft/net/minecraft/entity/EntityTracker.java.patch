@@ -77,6 +77,15 @@
  
          for (EntityTrackerEntry entitytrackerentry : this.field_72793_b)
          {
+@@ -300,7 +305,7 @@
+             }
+         }
+ 
+-        for (int i = 0; i < list.size(); i++)
++        for (int i = 0; i < list.size(); ++i)
+         {
+             EntityPlayerMP entityplayermp = list.get(i);
+ 
 @@ -339,6 +344,25 @@
          }
      }

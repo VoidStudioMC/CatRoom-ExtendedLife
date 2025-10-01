@@ -24,7 +24,8 @@
 -        entityskeleton.func_184220_m(this.field_188516_a);
 +        if (entityskeleton != null) entityskeleton.func_184220_m(this.field_188516_a);
  
-         for (int i = 0; i < 3; ++i)
+-        for (int i = 0; i < 3; i++)
++        for (int i = 0; i < 3; ++i)
          {
              AbstractHorse abstracthorse = this.func_188515_a(difficultyinstance);
 +            if (abstracthorse == null) continue; // CraftBukkit

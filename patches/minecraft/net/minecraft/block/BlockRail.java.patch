@@ -1,0 +1,18 @@
+--- before/net/minecraft/block/BlockRail.java
++++ after/net/minecraft/block/BlockRail.java
+@@ -46,6 +46,7 @@
+         return p_176201_1_.func_177229_b(field_176565_b).func_177015_a();
+     }
+ 
++    @SuppressWarnings("incomplete-switch")
+     @Override
+     public IBlockState func_185499_a(IBlockState p_185499_1_, Rotation p_185499_2_)
+     {
+@@ -130,6 +131,7 @@
+         }
+     }
+ 
++    @SuppressWarnings("incomplete-switch")
+     @Override
+     public IBlockState func_185471_a(IBlockState p_185471_1_, Mirror p_185471_2_)
+     {

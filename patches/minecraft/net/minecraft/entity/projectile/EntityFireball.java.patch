@@ -44,7 +44,7 @@
          return p_70112_1_ < d0 * d0;
      }
  
-@@ -57,49 +59,56 @@
+@@ -57,84 +59,82 @@
          this.func_70012_b(p_i1760_2_, p_i1760_4_, p_i1760_6_, this.field_70177_z, this.field_70125_A);
          this.func_70107_b(p_i1760_2_, p_i1760_4_, p_i1760_6_);
          double d0 = (double)MathHelper.func_76133_a(p_i1760_8_ * p_i1760_8_ + p_i1760_10_ * p_i1760_10_ + p_i1760_12_ * p_i1760_12_);
@@ -108,7 +108,8 @@
 +                this.setFire(1);
              }
  
-             ++this.field_70234_an;
+-            this.field_70234_an++;
++            ++this.field_70234_an;
              RayTraceResult raytraceresult = ProjectileHelper.func_188802_a(this, true, this.field_70234_an >= 25, this.field_70235_a);
  
 -            if (raytraceresult != null)
@@ -120,9 +121,19 @@
 +                }
              }
  
-             this.field_70165_t += this.field_70159_w;
-@@ -113,16 +122,7 @@
-                 for (int i = 0; i < 4; ++i)
+-            this.field_70165_t = this.field_70165_t + this.field_70159_w;
+-            this.field_70163_u = this.field_70163_u + this.field_70181_x;
+-            this.field_70161_v = this.field_70161_v + this.field_70179_y;
++            this.field_70165_t += this.field_70159_w;
++            this.field_70163_u += this.field_70181_x;
++            this.field_70161_v += this.field_70179_y;
+             ProjectileHelper.func_188803_a(this, 0.2F);
+             float f = this.func_82341_c();
+ 
+             if (this.func_70090_H())
+             {
+-                for (int i = 0; i < 4; i++)
++                for (int i = 0; i < 4; ++i)
                  {
                      float f1 = 0.25F;
 -                    this.field_70170_p
@@ -139,7 +150,14 @@
                  }
  
                  f = 0.8F;
-@@ -134,7 +134,7 @@
+             }
+ 
+-            this.field_70159_w = this.field_70159_w + this.field_70232_b;
+-            this.field_70181_x = this.field_70181_x + this.field_70233_c;
+-            this.field_70179_y = this.field_70179_y + this.field_70230_d;
++            this.field_70159_w += this.field_70232_b;
++            this.field_70181_x += this.field_70233_c;
++            this.field_70179_y += this.field_70230_d;
              this.field_70159_w *= (double)f;
              this.field_70181_x *= (double)f;
              this.field_70179_y *= (double)f;

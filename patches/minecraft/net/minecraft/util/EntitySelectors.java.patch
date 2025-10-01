@@ -1,0 +1,41 @@
+--- before/net/minecraft/util/EntitySelectors.java
++++ after/net/minecraft/util/EntitySelectors.java
+@@ -86,11 +86,18 @@
+                     else
+                     {
+                         boolean flag = team != null && team.func_142054_a(team1);
+-                        return (team$collisionrule == Team.CollisionRule.HIDE_FOR_OWN_TEAM || team$collisionrule1 == Team.CollisionRule.HIDE_FOR_OWN_TEAM)
+-                               && flag
+-                               ? false
+-                               : team$collisionrule != Team.CollisionRule.HIDE_FOR_OTHER_TEAMS && team$collisionrule1 != Team.CollisionRule.HIDE_FOR_OTHER_TEAMS
+-                               || flag;
++
++                        if ((team$collisionrule == Team.CollisionRule.HIDE_FOR_OWN_TEAM || team$collisionrule1 == Team.CollisionRule.HIDE_FOR_OWN_TEAM) && flag
++                           )
++                        {
++                            return false;
++                        }
++                        else
++                        {
++                            return team$collisionrule != Team.CollisionRule.HIDE_FOR_OTHER_TEAMS
++                                   && team$collisionrule1 != Team.CollisionRule.HIDE_FOR_OTHER_TEAMS
++                                   || flag;
++                        }
+                     }
+                 }
+                 else
+@@ -155,9 +162,13 @@
+                     {
+                         return ((EntityLiving)entitylivingbase).func_98052_bS();
+                     }
++                    else if (entitylivingbase instanceof EntityArmorStand)
++                    {
++                        return true;
++                    }
+                     else
+                     {
+-                        return entitylivingbase instanceof EntityArmorStand ? true : entitylivingbase instanceof EntityPlayer;
++                        return entitylivingbase instanceof EntityPlayer;
+                     }
+                 }
+             }

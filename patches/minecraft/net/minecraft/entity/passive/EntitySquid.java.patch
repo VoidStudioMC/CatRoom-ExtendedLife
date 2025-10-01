@@ -1,6 +1,41 @@
 --- before/net/minecraft/entity/passive/EntitySquid.java
 +++ after/net/minecraft/entity/passive/EntitySquid.java
-@@ -204,7 +204,7 @@
+@@ -111,7 +111,7 @@
+         this.field_70860_g = this.field_70859_f;
+         this.field_70868_i = this.field_70867_h;
+         this.field_70865_by = this.field_70866_j;
+-        this.field_70867_h = this.field_70867_h + this.field_70864_bA;
++        this.field_70867_h += this.field_70864_bA;
+ 
+         if ((double)this.field_70867_h > Math.PI * 2)
+         {
+@@ -164,12 +164,11 @@
+             }
+ 
+             float f1 = MathHelper.func_76133_a(this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y);
+-            this.field_70761_aq = this.field_70761_aq
+-                                  + (-((float)MathHelper.func_181159_b(this.field_70159_w, this.field_70179_y)) * (180.0F / (float)Math.PI) - this.field_70761_aq) * 0.1F;
++            this.field_70761_aq += (-((float)MathHelper.func_181159_b(this.field_70159_w, this.field_70179_y)) * (180.0F / (float)Math.PI) - this.field_70761_aq)
++                                   * 0.1F;
+             this.field_70177_z = this.field_70761_aq;
+             this.field_70859_f = (float)((double)this.field_70859_f + Math.PI * (double)this.field_70871_bB * 1.5);
+-            this.field_70861_d = this.field_70861_d
+-                                 + (-((float)MathHelper.func_181159_b((double)f1, this.field_70181_x)) * (180.0F / (float)Math.PI) - this.field_70861_d) * 0.1F;
++            this.field_70861_d += (-((float)MathHelper.func_181159_b((double)f1, this.field_70181_x)) * (180.0F / (float)Math.PI) - this.field_70861_d) * 0.1F;
+         }
+         else
+         {
+@@ -182,8 +181,7 @@
+ 
+                 if (this.func_70644_a(MobEffects.field_188424_y))
+                 {
+-                    this.field_70181_x = this.field_70181_x
+-                                         + (0.05 * (double)(this.func_70660_b(MobEffects.field_188424_y).func_76458_c() + 1) - this.field_70181_x);
++                    this.field_70181_x += 0.05 * (double)(this.func_70660_b(MobEffects.field_188424_y).func_76458_c() + 1) - this.field_70181_x;
+                 }
+                 else if (!this.func_189652_ae())
+                 {
+@@ -206,7 +204,7 @@
      @Override
      public boolean func_70601_bi()
      {

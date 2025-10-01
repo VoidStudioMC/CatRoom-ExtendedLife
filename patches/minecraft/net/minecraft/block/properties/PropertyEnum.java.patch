@@ -1,0 +1,11 @@
+--- before/net/minecraft/block/properties/PropertyEnum.java
++++ after/net/minecraft/block/properties/PropertyEnum.java
+@@ -60,7 +60,7 @@
+         }
+         else if (p_equals_1_ instanceof PropertyEnum && super.equals(p_equals_1_))
+         {
+-            PropertyEnum<?> propertyenum = (PropertyEnum<?>)p_equals_1_;
++            PropertyEnum<?> propertyenum = (PropertyEnum)p_equals_1_;
+             return this.field_177711_a.equals(propertyenum.field_177711_a) && this.field_177710_b.equals(propertyenum.field_177710_b);
+         }
+         else

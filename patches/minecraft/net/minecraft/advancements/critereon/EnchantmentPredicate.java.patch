@@ -1,0 +1,11 @@
+--- before/net/minecraft/advancements/critereon/EnchantmentPredicate.java
++++ after/net/minecraft/advancements/critereon/EnchantmentPredicate.java
+@@ -94,7 +94,7 @@
+             JsonArray jsonarray = JsonUtils.func_151207_m(p_192465_0_, "enchantments");
+             EnchantmentPredicate[] aenchantmentpredicate = new EnchantmentPredicate[jsonarray.size()];
+ 
+-            for (int i = 0; i < aenchantmentpredicate.length; i++)
++            for (int i = 0; i < aenchantmentpredicate.length; ++i)
+             {
+                 aenchantmentpredicate[i] = func_192464_a(jsonarray.get(i));
+             }

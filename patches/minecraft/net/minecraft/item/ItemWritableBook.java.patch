@@ -1,0 +1,11 @@
+--- before/net/minecraft/item/ItemWritableBook.java
++++ after/net/minecraft/item/ItemWritableBook.java
+@@ -39,7 +39,7 @@
+         {
+             NBTTagList nbttaglist = p_150930_0_.func_150295_c("pages", 8);
+ 
+-            for (int i = 0; i < nbttaglist.func_74745_c(); i++)
++            for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+             {
+                 String s = nbttaglist.func_150307_f(i);
+ 

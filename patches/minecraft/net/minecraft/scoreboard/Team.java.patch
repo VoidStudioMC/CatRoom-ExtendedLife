@@ -1,0 +1,18 @@
+--- before/net/minecraft/scoreboard/Team.java
++++ after/net/minecraft/scoreboard/Team.java
+@@ -12,7 +12,14 @@
+ {
+     public boolean func_142054_a(@Nullable Team p_142054_1_)
+     {
+-        return p_142054_1_ == null ? false : this == p_142054_1_;
++        if (p_142054_1_ == null)
++        {
++            return false;
++        }
++        else
++        {
++            return this == p_142054_1_;
++        }
+     }
+ 
+     public abstract String func_96661_b();

@@ -23,3 +23,18 @@
          if (p_184881_3_.length < 1)
          {
              throw new WrongUsageException("commands.debug.usage");
+@@ -137,12 +146,12 @@
+ 
+         if (list != null && list.size() >= 3)
+         {
+-            for (int i = 1; i < list.size(); i++)
++            for (int i = 1; i < list.size(); ++i)
+             {
+                 Profiler.Result profiler$result = list.get(i);
+                 p_184895_3_.append(String.format("[%02d] ", p_184895_1_));
+ 
+-                for (int j = 0; j < p_184895_1_; j++)
++                for (int j = 0; j < p_184895_1_; ++j)
+                 {
+                     p_184895_3_.append("|   ");
+                 }

@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/renderer/block/model/BlockFaceUV.java
++++ after/net/minecraft/client/renderer/block/model/BlockFaceUV.java
+@@ -112,7 +112,7 @@
+                     {
+                         float[] afloat = new float[4];
+ 
+-                        for (int i = 0; i < afloat.length; i++)
++                        for (int i = 0; i < afloat.length; ++i)
+                         {
+                             afloat[i] = JsonUtils.func_151220_d(jsonarray.get(i), "uv[" + i + "]");
+                         }

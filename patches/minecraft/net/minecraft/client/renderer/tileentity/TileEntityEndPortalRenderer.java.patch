@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/renderer/tileentity/TileEntityEndPortalRenderer.java
++++ after/net/minecraft/client/renderer/tileentity/TileEntityEndPortalRenderer.java
+@@ -38,7 +38,7 @@
+         float f = this.func_191287_c();
+         boolean flag = false;
+ 
+-        for (int j = 0; j < i; j++)
++        for (int j = 0; j < i; ++j)
+         {
+             GlStateManager.func_179094_E();
+             float f1 = 2.0F / (float)(18 - j);

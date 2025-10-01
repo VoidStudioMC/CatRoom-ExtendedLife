@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/particle/ParticleFootStep.java
++++ after/net/minecraft/client/particle/ParticleFootStep.java
+@@ -75,7 +75,7 @@
+     @Override
+     public void func_189213_a()
+     {
+-        this.field_70576_a++;
++        ++this.field_70576_a;
+ 
+         if (this.field_70576_a == this.field_70578_aq)
+         {

@@ -191,7 +191,8 @@
      {
          if (this.field_70170_p.field_72995_K)
          {
-             for (int i = 0; i < 2; ++i)
+-            for (int i = 0; i < 2; i++)
++            for (int i = 0; i < 2; ++i)
              {
 -                this.field_70170_p
 -                .func_175688_a(
@@ -316,6 +317,15 @@
      public boolean func_70097_a(DamageSource p_70097_1_, float p_70097_2_)
      {
          if (this.func_180431_b(p_70097_1_))
+@@ -377,7 +346,7 @@
+         }
+         else if (p_70097_1_ instanceof EntityDamageSourceIndirect)
+         {
+-            for (int i = 0; i < 64; i++)
++            for (int i = 0; i < 64; ++i)
+             {
+                 if (this.func_70820_n())
+                 {
 @@ -400,9 +369,21 @@
          }
      }
@@ -422,7 +432,7 @@
                          {
                              this.field_179451_i = 0;
                          }
-@@ -543,14 +507,13 @@
+@@ -543,38 +507,41 @@
                  this.field_179475_a = p_i45843_1_;
              }
  
@@ -433,12 +443,16 @@
                  {
                      return false;
                  }
--                else if (!this.field_179475_a.field_70170_p.func_82736_K().func_82766_b("mobGriefing"))
 +                else if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.field_179475_a.field_70170_p, this.field_179475_a))
++                {
++                    return false;
++                }
+                 else
                  {
-                     return false;
-                 }
-@@ -560,23 +523,25 @@
+-                    return !this.field_179475_a.field_70170_p.func_82736_K().func_82766_b("mobGriefing")
+-                           ? false
+-                           : this.field_179475_a.func_70681_au().nextInt(2000) == 0;
++                    return this.field_179475_a.func_70681_au().nextInt(2000) == 0;
                  }
              }
  
@@ -471,7 +485,22 @@
                  }
              }
  
-@@ -610,14 +575,13 @@
+@@ -588,9 +555,13 @@
+                 {
+                     return false;
+                 }
++                else if (p_188518_5_.func_185904_a() == Material.field_151579_a)
++                {
++                    return false;
++                }
+                 else
+                 {
+-                    return p_188518_5_.func_185904_a() == Material.field_151579_a ? false : p_188518_5_.func_185917_h();
++                    return p_188518_5_.func_185917_h();
+                 }
+             }
+         }
+@@ -604,47 +575,45 @@
                  this.field_179473_a = p_i45841_1_;
              }
  
@@ -482,12 +511,14 @@
                  {
                      return false;
                  }
--                else if (!this.field_179473_a.field_70170_p.func_82736_K().func_82766_b("mobGriefing"))
 +                else if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.field_179473_a.field_70170_p, this.field_179473_a))
++                {
++                    return false;
++                }
+                 else
                  {
-                     return false;
-                 }
-@@ -627,34 +591,29 @@
+-                    return !this.field_179473_a.field_70170_p.func_82736_K().func_82766_b("mobGriefing") ? false : this.field_179473_a.func_70681_au().nextInt(20) == 0;
++                    return this.field_179473_a.func_70681_au().nextInt(20) == 0;
                  }
              }
  

@@ -1,0 +1,42 @@
+--- before/net/minecraft/world/gen/layer/GenLayerShore.java
++++ after/net/minecraft/world/gen/layer/GenLayerShore.java
+@@ -19,9 +19,9 @@
+         int[] aint = this.field_75909_a.func_75904_a(p_75904_1_ - 1, p_75904_2_ - 1, p_75904_3_ + 2, p_75904_4_ + 2);
+         int[] aint1 = IntCache.func_76445_a(p_75904_3_ * p_75904_4_);
+ 
+-        for (int i = 0; i < p_75904_4_; i++)
++        for (int i = 0; i < p_75904_4_; ++i)
+         {
+-            for (int j = 0; j < p_75904_3_; j++)
++            for (int j = 0; j < p_75904_3_; ++j)
+             {
+                 this.func_75903_a((long)(j + p_75904_1_), (long)(i + p_75904_2_));
+                 int k = aint[j + 1 + (i + 1) * (p_75904_3_ + 2)];
+@@ -151,14 +151,19 @@
+ 
+     private boolean func_151631_c(int p_151631_1_)
+     {
+-        return Biome.func_150568_d(p_151631_1_) != null && Biome.func_150568_d(p_151631_1_).func_150562_l() == BiomeJungle.class
+-               ? true
+-               : p_151631_1_ == Biome.func_185362_a(Biomes.field_150574_L)
+-               || p_151631_1_ == Biome.func_185362_a(Biomes.field_76782_w)
+-               || p_151631_1_ == Biome.func_185362_a(Biomes.field_76792_x)
+-               || p_151631_1_ == Biome.func_185362_a(Biomes.field_76767_f)
+-               || p_151631_1_ == Biome.func_185362_a(Biomes.field_76768_g)
+-               || func_151618_b(p_151631_1_);
++        if (Biome.func_150568_d(p_151631_1_) != null && Biome.func_150568_d(p_151631_1_).func_150562_l() == BiomeJungle.class)
++        {
++            return true;
++        }
++        else
++        {
++            return p_151631_1_ == Biome.func_185362_a(Biomes.field_150574_L)
++                   || p_151631_1_ == Biome.func_185362_a(Biomes.field_76782_w)
++                   || p_151631_1_ == Biome.func_185362_a(Biomes.field_76792_x)
++                   || p_151631_1_ == Biome.func_185362_a(Biomes.field_76767_f)
++                   || p_151631_1_ == Biome.func_185362_a(Biomes.field_76768_g)
++                   || func_151618_b(p_151631_1_);
++        }
+     }
+ 
+     private boolean func_151633_d(int p_151633_1_)

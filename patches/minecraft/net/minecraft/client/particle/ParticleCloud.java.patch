@@ -1,0 +1,13 @@
+--- before/net/minecraft/client/particle/ParticleCloud.java
++++ after/net/minecraft/client/particle/ParticleCloud.java
+@@ -78,8 +78,8 @@
+ 
+             if (this.field_187127_g > axisalignedbb.field_72338_b)
+             {
+-                this.field_187127_g = this.field_187127_g + (axisalignedbb.field_72338_b - this.field_187127_g) * 0.2;
+-                this.field_187130_j = this.field_187130_j + (entityplayer.field_70181_x - this.field_187130_j) * 0.2;
++                this.field_187127_g += (axisalignedbb.field_72338_b - this.field_187127_g) * 0.2;
++                this.field_187130_j += (entityplayer.field_70181_x - this.field_187130_j) * 0.2;
+                 this.func_187109_b(this.field_187126_f, this.field_187127_g, this.field_187128_h);
+             }
+         }

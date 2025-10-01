@@ -1,0 +1,20 @@
+--- before/net/minecraft/network/play/server/SPacketRecipeBook.java
++++ after/net/minecraft/network/play/server/SPacketRecipeBook.java
+@@ -46,7 +46,7 @@
+         int i = p_148837_1_.func_150792_a();
+         this.field_192596_a = Lists.newArrayList();
+ 
+-        for (int j = 0; j < i; j++)
++        for (int j = 0; j < i; ++j)
+         {
+             this.field_192596_a.add(CraftingManager.func_193374_a(p_148837_1_.func_150792_a()));
+         }
+@@ -56,7 +56,7 @@
+             i = p_148837_1_.func_150792_a();
+             this.field_193647_c = Lists.newArrayList();
+ 
+-            for (int k = 0; k < i; k++)
++            for (int k = 0; k < i; ++k)
+             {
+                 this.field_193647_c.add(CraftingManager.func_193374_a(p_148837_1_.func_150792_a()));
+             }

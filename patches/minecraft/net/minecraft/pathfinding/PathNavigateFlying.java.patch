@@ -1,0 +1,32 @@
+--- before/net/minecraft/pathfinding/PathNavigateFlying.java
++++ after/net/minecraft/pathfinding/PathNavigateFlying.java
+@@ -43,7 +43,7 @@
+     @Override
+     public void func_75501_e()
+     {
+-        this.field_75510_g++;
++        ++this.field_75510_g;
+ 
+         if (this.field_188562_p)
+         {
+@@ -108,17 +108,17 @@
+ 
+             if (d0 >= 0.0)
+             {
+-                d8++;
++                ++d8;
+             }
+ 
+             if (d1 >= 0.0)
+             {
+-                d9++;
++                ++d9;
+             }
+ 
+             if (d2 >= 0.0)
+             {
+-                d10++;
++                ++d10;
+             }
+ 
+             d8 /= d0;

@@ -1,0 +1,11 @@
+--- before/net/minecraft/util/text/TextComponentUtils.java
++++ after/net/minecraft/util/text/TextComponentUtils.java
+@@ -72,7 +72,7 @@
+ 
+             Object[] aobject = ((TextComponentTranslation)p_179985_1_).func_150271_j();
+ 
+-            for (int i = 0; i < aobject.length; i++)
++            for (int i = 0; i < aobject.length; ++i)
+             {
+                 Object object = aobject[i];
+ 

@@ -1,0 +1,19 @@
+--- before/net/minecraft/entity/monster/EntityVindicator.java
++++ after/net/minecraft/entity/monster/EntityVindicator.java
+@@ -161,11 +161,13 @@
+         {
+             return true;
+         }
++        else if (p_184191_1_ instanceof EntityLivingBase && ((EntityLivingBase)p_184191_1_).func_70668_bt() == EnumCreatureAttribute.ILLAGER)
++        {
++            return this.func_96124_cp() == null && p_184191_1_.func_96124_cp() == null;
++        }
+         else
+         {
+-            return p_184191_1_ instanceof EntityLivingBase && ((EntityLivingBase)p_184191_1_).func_70668_bt() == EnumCreatureAttribute.ILLAGER
+-                   ? this.func_96124_cp() == null && p_184191_1_.func_96124_cp() == null
+-                   : false;
++            return false;
+         }
+     }
+ 

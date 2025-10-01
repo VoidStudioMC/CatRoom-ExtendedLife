@@ -1,0 +1,23 @@
+--- before/net/minecraft/item/ItemFirework.java
++++ after/net/minecraft/item/ItemFirework.java
+@@ -96,7 +96,7 @@
+ 
+             if (!nbttaglist.func_82582_d())
+             {
+-                for (int i = 0; i < nbttaglist.func_74745_c(); i++)
++                for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+                 {
+                     NBTTagCompound nbttagcompound1 = nbttaglist.func_150305_b(i);
+                     List<String> list = Lists.newArrayList();
+@@ -104,9 +104,9 @@
+ 
+                     if (!list.isEmpty())
+                     {
+-                        for (int j = 1; j < list.size(); j++)
++                        for (int j = 1; j < list.size(); ++j)
+                         {
+-                            list.set(j, "  " + list.get(j));
++                            list.set(j, "  " + (String)list.get(j));
+                         }
+ 
+                         p_77624_3_.addAll(list);

@@ -1,11 +1,19 @@
 --- before/net/minecraft/network/NetworkSystem.java
 +++ after/net/minecraft/network/NetworkSystem.java
-@@ -49,27 +49,27 @@
+@@ -37,6 +37,7 @@
+ import net.minecraft.util.LazyLoadBase;
+ import net.minecraft.util.ReportedException;
+ import net.minecraft.util.text.TextComponentString;
++import net.minecraftforge.fml.common.thread.SidedThreadGroups;
+ import net.minecraftforge.fml.relauncher.Side;
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ import org.apache.logging.log4j.LogManager;
+@@ -49,21 +50,21 @@
      {
          protected NioEventLoopGroup func_179280_b()
          {
 -            return new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("Netty Server IO #%d").setDaemon(true).build());
-+            return new NioEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Server IO #%d").setDaemon(true).setThreadFactory(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER).build());
++            return new NioEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Server IO #%d").setDaemon(true).setThreadFactory(SidedThreadGroups.SERVER).build());
          }
      };
      public static final LazyLoadBase<EpollEventLoopGroup> field_181141_b = new LazyLoadBase<EpollEventLoopGroup>()
@@ -13,7 +21,7 @@
          protected EpollEventLoopGroup func_179280_b()
          {
 -            return new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("Netty Epoll Server IO #%d").setDaemon(true).build());
-+            return new EpollEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Epoll Server IO #%d").setDaemon(true).setThreadFactory(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER).build());
++            return new EpollEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Epoll Server IO #%d").setDaemon(true).setThreadFactory(SidedThreadGroups.SERVER).build());
          }
      };
      public static final LazyLoadBase<LocalEventLoopGroup> field_180232_b = new LazyLoadBase<LocalEventLoopGroup>()
@@ -21,19 +29,11 @@
          protected LocalEventLoopGroup func_179280_b()
          {
 -            return new LocalEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("Netty Local Server IO #%d").setDaemon(true).build());
-+            return new LocalEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Local Server IO #%d").setDaemon(true).setThreadFactory(net.minecraftforge.fml.common.thread.SidedThreadGroups.CLIENT).build());
++            return new LocalEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Local Server IO #%d").setDaemon(true).setThreadFactory(SidedThreadGroups.SERVER).build());
          }
      };
      private final MinecraftServer field_151273_d;
-     public volatile boolean field_151277_a;
--    private final List<ChannelFuture> field_151274_e = Collections.synchronizedList(Lists.newArrayList());
--    private final List<NetworkManager> field_151272_f = Collections.synchronizedList(Lists.newArrayList());
-+    private final List<ChannelFuture> field_151274_e = Collections.<ChannelFuture>synchronizedList(Lists.newArrayList());
-+    private final List<NetworkManager> field_151272_f = Collections.<NetworkManager>synchronizedList(Lists.newArrayList());
- 
-     public NetworkSystem(MinecraftServer p_i45292_1_)
-     {
-@@ -79,6 +79,7 @@
+@@ -79,6 +80,7 @@
  
      public void func_151265_a(InetAddress p_151265_1_, int p_151265_2_) throws IOException
      {
@@ -41,7 +41,7 @@
          synchronized (this.field_151274_e)
          {
              Class <? extends ServerSocketChannel > oclass;
-@@ -97,43 +98,26 @@
+@@ -97,43 +99,26 @@
                  field_151275_b.info("Using default channel type");
              }
  
@@ -51,7 +51,7 @@
 -                .channel(oclass)
 -                .childHandler(
 -                    new ChannelInitializer<Channel>()
-+            this.field_151274_e.add(((ServerBootstrap)((ServerBootstrap)(new ServerBootstrap()).channel(oclass)).childHandler(new ChannelInitializer<Channel>()
++            this.field_151274_e.add((((new ServerBootstrap()).channel(oclass)).childHandler(new ChannelInitializer<Channel>()
              {
 -                @Override
                  protected void initChannel(Channel p_initChannel_1_) throws Exception
@@ -91,27 +91,16 @@
          }
      }
  
-@@ -144,9 +128,8 @@
- 
-         synchronized (this.field_151274_e)
-         {
--            channelfuture = new ServerBootstrap().channel(LocalServerChannel.class).childHandler(new ChannelInitializer<Channel>()
-+            channelfuture = ((ServerBootstrap)((ServerBootstrap)(new ServerBootstrap()).channel(LocalServerChannel.class)).childHandler(new ChannelInitializer<Channel>()
-             {
--                @Override
-                 protected void initChannel(Channel p_initChannel_1_) throws Exception
-                 {
-                     NetworkManager networkmanager = new NetworkManager(EnumPacketDirection.SERVERBOUND);
-@@ -154,7 +137,7 @@
+@@ -154,7 +139,7 @@
                      NetworkSystem.this.field_151272_f.add(networkmanager);
                      p_initChannel_1_.pipeline().addLast("packet_handler", networkmanager);
                  }
 -            }).group(field_151276_c.func_179281_c()).localAddress(LocalAddress.ANY).bind().syncUninterruptibly();
-+            }).group(field_151276_c.func_179281_c()).localAddress(LocalAddress.ANY)).bind().syncUninterruptibly();
++            }).group(field_180232_b.func_179281_c()).localAddress(LocalAddress.ANY).bind().syncUninterruptibly();
              this.field_151274_e.add(channelfuture);
          }
  
-@@ -171,7 +154,7 @@
+@@ -171,7 +156,7 @@
              {
                  channelfuture.channel().close().sync();
              }
@@ -120,7 +109,7 @@
              {
                  field_151275_b.error("Interrupted whilst closing channel");
              }
-@@ -182,6 +165,13 @@
+@@ -182,6 +167,13 @@
      {
          synchronized (this.field_151272_f)
          {
@@ -134,15 +123,7 @@
              Iterator<NetworkManager> iterator = this.field_151272_f.iterator();
  
              while (iterator.hasNext())
-@@ -216,7 +206,6 @@
-                             final TextComponentString textcomponentstring = new TextComponentString("Internal server error");
-                             networkmanager.func_179288_a(new SPacketDisconnect(textcomponentstring), new GenericFutureListener < Future <? super Void >> ()
-                             {
--                                @Override
-                                 public void operationComplete(Future <? super Void > p_operationComplete_1_) throws Exception
-                                 {
-                                     networkmanager.func_150718_a(textcomponentstring);
-@@ -227,6 +216,9 @@
+@@ -227,6 +219,9 @@
                      }
                      else
                      {

@@ -1,0 +1,31 @@
+--- before/net/minecraft/util/math/Cartesian.java
++++ after/net/minecraft/util/math/Cartesian.java
+@@ -89,7 +89,7 @@
+                         this.field_179424_b = p_i46018_2_;
+                         this.field_179425_c = Cartesian.func_179319_b(Iterator.class, this.field_179424_b.length);
+ 
+-                        for (int i = 0; i < this.field_179424_b.length; i++)
++                        for (int i = 0; i < this.field_179424_b.length; ++i)
+                         {
+                             this.field_179425_c[i] = p_i46018_2_[i].iterator();
+                         }
+@@ -126,7 +126,7 @@
+                         {
+                             if (this.field_179426_a >= this.field_179425_c.length)
+                             {
+-                                for (this.field_179426_a = this.field_179425_c.length - 1; this.field_179426_a >= 0; this.field_179426_a--)
++                                for (this.field_179426_a = this.field_179425_c.length - 1; this.field_179426_a >= 0; --this.field_179426_a)
+                                 {
+                                     Iterator <? extends T > iterator = this.field_179425_c[this.field_179426_a];
+ 
+@@ -166,8 +166,8 @@
+                         {
+                             while (this.field_179426_a < this.field_179425_c.length)
+                             {
+-                                this.field_179423_d[this.field_179426_a] = (T)this.field_179425_c[this.field_179426_a].next();
+-                                this.field_179426_a++;
++                                this.field_179423_d[this.field_179426_a] = this.field_179425_c[this.field_179426_a].next();
++                                ++this.field_179426_a;
+                             }
+ 
+                             return (T[])((Object[])this.field_179423_d.clone());

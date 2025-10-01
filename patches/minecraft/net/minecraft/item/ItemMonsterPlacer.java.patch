@@ -153,7 +153,8 @@
          {
              Entity entity = null;
  
-             for (int i = 0; i < 1; ++i)
+-            for (int i = 0; i < 1; i++)
++            for (int i = 0; i < 1; ++i)
              {
 -                entity = EntityList.func_188429_b(p_77840_1_, p_77840_0_);
 +                entity = EntityList.func_188429_b(entityID, worldIn);

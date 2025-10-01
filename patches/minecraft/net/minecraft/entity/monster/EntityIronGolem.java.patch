@@ -53,7 +53,7 @@
      protected void func_70619_bc()
      {
          if (--this.field_70858_e <= 0)
-@@ -105,33 +102,29 @@
+@@ -105,72 +102,57 @@
          super.func_70619_bc();
      }
  
@@ -91,8 +91,17 @@
      public void func_70636_d()
      {
          super.func_70636_d();
-@@ -146,31 +139,20 @@
-             --this.field_70856_g;
+ 
+         if (this.field_70855_f > 0)
+         {
+-            this.field_70855_f--;
++            --this.field_70855_f;
+         }
+ 
+         if (this.field_70856_g > 0)
+         {
+-            this.field_70856_g--;
++            --this.field_70856_g;
          }
  
 -        if (this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y > 2.5000003E-7F && this.field_70146_Z.nextInt(5) == 0)

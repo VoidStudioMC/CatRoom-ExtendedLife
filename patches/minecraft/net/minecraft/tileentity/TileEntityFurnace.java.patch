@@ -191,7 +191,7 @@
 +
          if (this.func_145950_i())
          {
--            --this.field_145956_a;
+-            this.field_145956_a--;
 +            // --this.furnaceBurnTime;
 +            this.field_145956_a -= elapsedTicks; // CraftBukkit - use elapsedTicks in place of constant
          }
@@ -245,7 +245,7 @@
 +                /* CraftBukkit start - Moved up
 +                if (this.isBurning() && this.canSmelt())
                  {
--                    ++this.field_174906_k;
+-                    this.field_174906_k++;
 +                    ++this.cookTime;
  
 -                    if (this.field_174906_k == this.field_174905_l)
@@ -286,23 +286,24 @@
          {
              return false;
          }
-@@ -281,13 +334,13 @@
+@@ -281,11 +334,13 @@
                  {
                      return false;
                  }
--                else if (itemstack1.func_190916_E() < this.func_70297_j_() && itemstack1.func_190916_E() < itemstack1.func_77976_d())
 +                else if (itemstack1.func_190916_E() + itemstack.func_190916_E() <= this.func_70297_j_() && itemstack1.func_190916_E() + itemstack.func_190916_E() <= itemstack1.func_77976_d())  // Forge fix: make furnace respect stack sizes in furnace recipes
-                 {
-                     return true;
-                 }
++                {
++                    return true;
++                }
                  else
                  {
--                    return itemstack1.func_190916_E() < itemstack.func_77976_d();
+-                    return itemstack1.func_190916_E() < this.func_70297_j_() && itemstack1.func_190916_E() < itemstack1.func_77976_d()
+-                           ? true
+-                           : itemstack1.func_190916_E() < itemstack.func_77976_d();
 +                    return itemstack1.func_190916_E() + itemstack.func_190916_E() <= itemstack.func_77976_d(); // Forge fix: make furnace respect stack sizes in furnace recipes
                  }
              }
          }
-@@ -301,19 +354,41 @@
+@@ -299,19 +354,41 @@
              ItemStack itemstack1 = FurnaceRecipes.func_77602_a().func_151395_a(itemstack);
              ItemStack itemstack2 = this.field_145957_n.get(2);
  
@@ -357,7 +358,7 @@
              {
                  this.field_145957_n.set(1, new ItemStack(Items.field_151131_as));
              }
-@@ -330,6 +405,8 @@
+@@ -328,6 +405,8 @@
          }
          else
          {
@@ -366,7 +367,7 @@
              Item item = p_145952_0_.func_77973_b();
  
              if (item == Item.func_150898_a(Blocks.field_150376_bx))
-@@ -376,37 +453,43 @@
+@@ -374,37 +453,43 @@
              {
                  return 100;
              }
@@ -438,28 +439,31 @@
              }
          }
      }
-@@ -416,7 +499,6 @@
+@@ -414,32 +499,26 @@
          return func_145952_a(p_145954_0_) > 0;
      }
  
 -    @Override
      public boolean func_70300_a(EntityPlayer p_70300_1_)
      {
-         if (this.field_145850_b.func_175625_s(this.field_174879_c) != this)
-@@ -425,28 +507,18 @@
-         }
-         else
-         {
--            return !(
--                       p_70300_1_.func_70092_e(
--                           (double)this.field_174879_c.func_177958_n() + 0.5,
--                           (double)this.field_174879_c.func_177956_o() + 0.5,
--                           (double)this.field_174879_c.func_177952_p() + 0.5
--                       )
--                       > 64.0
--                   );
+-        return this.field_145850_b.func_175625_s(this.field_174879_c) != this
+-               ? false
+-               : !(
+-                   p_70300_1_.func_70092_e(
+-                       (double)this.field_174879_c.func_177958_n() + 0.5,
+-                       (double)this.field_174879_c.func_177956_o() + 0.5,
+-                       (double)this.field_174879_c.func_177952_p() + 0.5
+-                   )
+-                   > 64.0
+-               );
++        if (this.field_145850_b.func_175625_s(this.field_174879_c) != this)
++        {
++            return false;
++        }
++        else
++        {
 +            return p_70300_1_.func_70092_e((double)this.field_174879_c.func_177958_n() + 0.5D, (double)this.field_174879_c.func_177956_o() + 0.5D, (double)this.field_174879_c.func_177952_p() + 0.5D) <= 64.0D;
-         }
++        }
      }
  
 -    @Override
@@ -476,7 +480,7 @@
      public boolean func_94041_b(int p_94041_1_, ItemStack p_94041_2_)
      {
          if (p_94041_1_ == 2)
-@@ -464,7 +536,6 @@
+@@ -457,7 +536,6 @@
          }
      }
  
@@ -484,7 +488,7 @@
      public int[] func_180463_a(EnumFacing p_180463_1_)
      {
          if (p_180463_1_ == EnumFacing.DOWN)
-@@ -477,13 +548,11 @@
+@@ -470,13 +548,11 @@
          }
      }
  
@@ -498,7 +502,7 @@
      public boolean func_180461_b(int p_180461_1_, ItemStack p_180461_2_, EnumFacing p_180461_3_)
      {
          if (p_180461_3_ == EnumFacing.DOWN && p_180461_1_ == 1)
-@@ -499,19 +568,16 @@
+@@ -492,19 +568,16 @@
          return true;
      }
  
@@ -518,7 +522,7 @@
      public int func_174887_a_(int p_174887_1_)
      {
          switch (p_174887_1_)
-@@ -529,7 +595,6 @@
+@@ -522,7 +595,6 @@
          }
      }
  
@@ -526,7 +530,7 @@
      public void func_174885_b(int p_174885_1_, int p_174885_2_)
      {
          switch (p_174885_1_)
-@@ -548,15 +613,32 @@
+@@ -541,15 +613,32 @@
          }
      }
  

@@ -25,20 +25,28 @@
      private int field_75290_i;
      private boolean field_75287_j;
      private final Set<Item> field_151484_k;
-@@ -54,14 +58,25 @@
+@@ -47,15 +51,32 @@
+     {
+         if (this.field_75290_i > 0)
+         {
+-            this.field_75290_i--;
++            --this.field_75290_i;
+             return false;
+         }
+         else
          {
              this.field_75289_h = this.field_75284_a.field_70170_p.func_72890_a(this.field_75284_a, 10.0);
- 
--            if (this.field_75289_h == null)
+-            return this.field_75289_h == null
+-                   ? false
+-                   : this.func_188508_a(this.field_75289_h.func_184614_ca()) || this.func_188508_a(this.field_75289_h.func_184592_cb());
++
 +            /*
 +            if (this.temptingPlayer == null)
-             {
-                 return false;
-             }
-             else
-             {
--                return this.func_188508_a(this.field_75289_h.func_184614_ca()) || this.func_188508_a(this.field_75289_h.func_184592_cb());
--            }
++            {
++                return false;
++            }
++            else
++            {
 +                return this.isTempting(this.temptingPlayer.getHeldItemMainhand()) || this.isTempting(this.temptingPlayer.getHeldItemOffhand());
 +            }
 +            */

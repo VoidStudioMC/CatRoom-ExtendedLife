@@ -1,0 +1,45 @@
+--- before/net/minecraft/command/server/CommandScoreboard.java
++++ after/net/minecraft/command/server/CommandScoreboard.java
+@@ -293,7 +293,7 @@
+     {
+         int i = -1;
+ 
+-        for (int j = 0; j < p_184909_3_.length; j++)
++        for (int j = 0; j < p_184909_3_.length; ++j)
+         {
+             if (this.func_82358_a(p_184909_3_, j) && "*".equals(p_184909_3_[j]))
+             {
+@@ -1075,7 +1075,7 @@
+             else
+             {
+                 int i = p_184907_2_[p_184907_3_].equals("*") ? Integer.MIN_VALUE : func_175755_a(p_184907_2_[p_184907_3_]);
+-                p_184907_3_++;
++                ++p_184907_3_;
+                 int j = p_184907_3_ < p_184907_2_.length && !p_184907_2_[p_184907_3_].equals("*") ? func_180528_a(p_184907_2_[p_184907_3_], i) : Integer.MAX_VALUE;
+                 Score score = scoreboard.func_96529_a(s, scoreobjective);
+ 
+@@ -1491,11 +1491,22 @@
+     {
+         if (!"players".equalsIgnoreCase(p_82358_1_[0]))
+         {
+-            return "teams".equalsIgnoreCase(p_82358_1_[0]) ? p_82358_2_ == 2 : false;
++            if ("teams".equalsIgnoreCase(p_82358_1_[0]))
++            {
++                return p_82358_2_ == 2;
++            }
++            else
++            {
++                return false;
++            }
++        }
++        else if (p_82358_1_.length > 1 && "operation".equalsIgnoreCase(p_82358_1_[1]))
++        {
++            return p_82358_2_ == 2 || p_82358_2_ == 5;
+         }
+         else
+         {
+-            return p_82358_1_.length > 1 && "operation".equalsIgnoreCase(p_82358_1_[1]) ? p_82358_2_ == 2 || p_82358_2_ == 5 : p_82358_2_ == 2;
++            return p_82358_2_ == 2;
+         }
+     }
+ }

@@ -1,5 +1,64 @@
 --- before/net/minecraft/world/gen/structure/ComponentScatteredFeaturePieces.java
 +++ after/net/minecraft/world/gen/structure/ComponentScatteredFeaturePieces.java
+@@ -93,7 +93,7 @@
+                     false
+                 );
+ 
+-                for (int i = 1; i <= 9; i++)
++                for (int i = 1; i <= 9; ++i)
+                 {
+                     this.func_175804_a(
+                         p_74875_1_,
+@@ -123,9 +123,9 @@
+                     );
+                 }
+ 
+-                for (int i2 = 0; i2 < this.field_74939_a; i2++)
++                for (int i2 = 0; i2 < this.field_74939_a; ++i2)
+                 {
+-                    for (int j = 0; j < this.field_74938_c; j++)
++                    for (int j = 0; j < this.field_74938_c; ++j)
+                     {
+                         int k = -5;
+                         this.func_175808_b(p_74875_1_, Blocks.field_150322_A.func_176223_P(), i2, -5, j, p_74875_3_);
+@@ -615,16 +615,16 @@
+                     int j = 0;
+                     BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+ 
+-                    for (int k = this.field_74887_e.field_78896_c; k <= this.field_74887_e.field_78892_f; k++)
++                    for (int k = this.field_74887_e.field_78896_c; k <= this.field_74887_e.field_78892_f; ++k)
+                     {
+-                        for (int l = this.field_74887_e.field_78897_a; l <= this.field_74887_e.field_78893_d; l++)
++                        for (int l = this.field_74887_e.field_78897_a; l <= this.field_74887_e.field_78893_d; ++l)
+                         {
+                             blockpos$mutableblockpos.func_181079_c(l, 64, k);
+ 
+                             if (p_74935_2_.func_175898_b(blockpos$mutableblockpos))
+                             {
+                                 i += Math.max(p_74935_1_.func_175672_r(blockpos$mutableblockpos).func_177956_o(), p_74935_1_.field_73011_w.func_76557_i());
+-                                j++;
++                                ++j;
+                             }
+                         }
+                     }
+@@ -685,7 +685,7 @@
+                         Template template2 = templatemanager.func_186237_a(minecraftserver, field_186172_g);
+                         int i = p_74875_2_.nextInt(8) + 4;
+ 
+-                        for (int j = 0; j < i; j++)
++                        for (int j = 0; j < i; ++j)
+                         {
+                             BlockPos blockpos1 = template.func_186262_a(placementsettings, new BlockPos(3, -1 - j * 3, 5), placementsettings, new BlockPos(1, 2, 1));
+                             template1.func_186260_a(p_74875_1_, blockpos.func_177971_a(blockpos1), placementsettings);
+@@ -851,7 +851,7 @@
+                     this.func_175811_a(p_74875_1_, iblockstate2, 4, 4, 5, p_74875_3_);
+                     this.func_175811_a(p_74875_1_, iblockstate3, 7, 4, 5, p_74875_3_);
+ 
+-                    for (int k = 0; k < 4; k++)
++                    for (int k = 0; k < 4; ++k)
+                     {
+                         this.func_175811_a(p_74875_1_, iblockstate, 5, 0 - k, 6 + k, p_74875_3_);
+                         this.func_175811_a(p_74875_1_, iblockstate, 6, 0 - k, 6 + k, p_74875_3_);
 @@ -1203,9 +1203,9 @@
                              this.field_82682_h = true;
                              EntityWitch entitywitch = new EntityWitch(p_74875_1_);

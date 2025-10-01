@@ -1,0 +1,20 @@
+--- before/net/minecraft/client/gui/GuiCustomizeWorldScreen.java
++++ after/net/minecraft/client/gui/GuiCustomizeWorldScreen.java
+@@ -411,7 +411,7 @@
+             aguipagebuttonlist$guilistentry3
+         );
+ 
+-        for (int i = 0; i < 4; i++)
++        for (int i = 0; i < 4; ++i)
+         {
+             this.field_175342_h[i] = I18n.func_135052_a("createWorld.customize.custom.page" + i);
+         }
+@@ -960,7 +960,7 @@
+                     break;
+                 case 301:
+ 
+-                    for (int i = 0; i < this.field_175349_r.func_148127_b(); i++)
++                    for (int i = 0; i < this.field_175349_r.func_148127_b(); ++i)
+                     {
+                         GuiPageButtonList.GuiEntry guipagebuttonlist$guientry = this.field_175349_r.func_148180_b(i);
+                         Gui gui = guipagebuttonlist$guientry.func_178022_a();

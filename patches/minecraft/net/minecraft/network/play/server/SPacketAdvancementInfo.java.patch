@@ -1,0 +1,29 @@
+--- before/net/minecraft/network/play/server/SPacketAdvancementInfo.java
++++ after/net/minecraft/network/play/server/SPacketAdvancementInfo.java
+@@ -57,7 +57,7 @@
+         this.field_192608_d = Maps.newHashMap();
+         int i = p_148837_1_.func_150792_a();
+ 
+-        for (int j = 0; j < i; j++)
++        for (int j = 0; j < i; ++j)
+         {
+             ResourceLocation resourcelocation = p_148837_1_.func_192575_l();
+             Advancement.Builder advancement$builder = Advancement.Builder.func_192060_b(p_148837_1_);
+@@ -66,7 +66,7 @@
+ 
+         i = p_148837_1_.func_150792_a();
+ 
+-        for (int k = 0; k < i; k++)
++        for (int k = 0; k < i; ++k)
+         {
+             ResourceLocation resourcelocation1 = p_148837_1_.func_192575_l();
+             this.field_192607_c.add(resourcelocation1);
+@@ -74,7 +74,7 @@
+ 
+         i = p_148837_1_.func_150792_a();
+ 
+-        for (int l = 0; l < i; l++)
++        for (int l = 0; l < i; ++l)
+         {
+             ResourceLocation resourcelocation2 = p_148837_1_.func_192575_l();
+             this.field_192608_d.put(resourcelocation2, AdvancementProgress.func_192100_b(p_148837_1_));

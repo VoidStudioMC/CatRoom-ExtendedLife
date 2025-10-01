@@ -1,6 +1,22 @@
 --- before/net/minecraft/entity/monster/EntitySpellcasterIllager.java
 +++ after/net/minecraft/entity/monster/EntitySpellcasterIllager.java
-@@ -70,7 +70,7 @@
+@@ -54,7 +54,14 @@
+ 
+     public boolean func_193082_dl()
+     {
+-        return this.field_70170_p.field_72995_K ? this.field_70180_af.func_187225_a(field_193088_c) > 0 : this.field_193087_b > 0;
++        if (this.field_70170_p.field_72995_K)
++        {
++            return this.field_70180_af.func_187225_a(field_193088_c) > 0;
++        }
++        else
++        {
++            return this.field_193087_b > 0;
++        }
+     }
+ 
+     public void func_193081_a(EntitySpellcasterIllager.SpellType p_193081_1_)
+@@ -63,7 +70,7 @@
          this.field_70180_af.func_187227_b(field_193088_c, (byte)p_193081_1_.field_193345_g);
      }
  
@@ -9,3 +25,36 @@
      {
          return !this.field_70170_p.field_72995_K
                 ? this.field_193089_bx
+@@ -77,7 +84,7 @@
+ 
+         if (this.field_193087_b > 0)
+         {
+-            this.field_193087_b--;
++            --this.field_193087_b;
+         }
+     }
+ 
+@@ -171,9 +178,13 @@
+             {
+                 return false;
+             }
++            else if (EntitySpellcasterIllager.this.func_193082_dl())
++            {
++                return false;
++            }
+             else
+             {
+-                return EntitySpellcasterIllager.this.func_193082_dl() ? false : EntitySpellcasterIllager.this.field_70173_aa >= this.field_193322_d;
++                return EntitySpellcasterIllager.this.field_70173_aa >= this.field_193322_d;
+             }
+         }
+ 
+@@ -202,7 +213,7 @@
+         @Override
+         public void func_75246_d()
+         {
+-            this.field_193321_c--;
++            --this.field_193321_c;
+ 
+             if (this.field_193321_c == 0)
+             {

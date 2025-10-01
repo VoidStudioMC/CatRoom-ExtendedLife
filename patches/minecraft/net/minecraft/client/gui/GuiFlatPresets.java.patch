@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/gui/GuiFlatPresets.java
++++ after/net/minecraft/client/gui/GuiFlatPresets.java
+@@ -145,7 +145,7 @@
+     {
+         FlatGeneratorInfo flatgeneratorinfo = new FlatGeneratorInfo();
+ 
+-        for (int i = p_175354_5_.length - 1; i >= 0; i--)
++        for (int i = p_175354_5_.length - 1; i >= 0; --i)
+         {
+             flatgeneratorinfo.func_82650_c().add(p_175354_5_[i]);
+         }

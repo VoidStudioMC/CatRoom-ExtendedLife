@@ -1,0 +1,21 @@
+--- before/net/minecraft/advancements/critereon/LocationPredicate.java
++++ after/net/minecraft/advancements/critereon/LocationPredicate.java
+@@ -69,9 +69,15 @@
+         else
+         {
+             BlockPos blockpos = new BlockPos((double)p_193453_2_, (double)p_193453_3_, (double)p_193453_4_);
+-            return this.field_193456_b != null && this.field_193456_b != p_193453_1_.func_180494_b(blockpos)
+-                   ? false
+-                   : this.field_193460_f == null || p_193453_1_.func_72863_F().func_193413_a(p_193453_1_, this.field_193460_f, blockpos);
++
++            if (this.field_193456_b != null && this.field_193456_b != p_193453_1_.func_180494_b(blockpos))
++            {
++                return false;
++            }
++            else
++            {
++                return this.field_193460_f == null || p_193453_1_.func_72863_F().func_193413_a(p_193453_1_, this.field_193460_f, blockpos);
++            }
+         }
+     }
+ 

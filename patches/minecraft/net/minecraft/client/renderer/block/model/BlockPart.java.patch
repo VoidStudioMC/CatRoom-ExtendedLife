@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/renderer/block/model/BlockPart.java
++++ after/net/minecraft/client/renderer/block/model/BlockPart.java
+@@ -231,7 +231,7 @@
+                 {
+                     float[] afloat = new float[3];
+ 
+-                    for (int i = 0; i < afloat.length; i++)
++                    for (int i = 0; i < afloat.length; ++i)
+                     {
+                         afloat[i] = JsonUtils.func_151220_d(jsonarray.get(i), p_178251_2_ + "[" + i + "]");
+                     }

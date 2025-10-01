@@ -1,0 +1,29 @@
+--- before/net/minecraft/client/model/ModelParrot.java
++++ after/net/minecraft/client/model/ModelParrot.java
+@@ -120,9 +120,8 @@
+                 return;
+             }
+ 
+-            this.field_192773_j.field_78795_f = this.field_192773_j.field_78795_f + MathHelper.func_76134_b(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_;
+-            this.field_192774_k.field_78795_f = this.field_192774_k.field_78795_f
+-                                                + MathHelper.func_76134_b(p_78087_1_ * 0.6662F + (float) Math.PI) * 1.4F * p_78087_2_;
++            this.field_192773_j.field_78795_f += MathHelper.func_76134_b(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_;
++            this.field_192774_k.field_78795_f += MathHelper.func_76134_b(p_78087_1_ * 0.6662F + (float) Math.PI) * 1.4F * p_78087_2_;
+         }
+ 
+         this.field_192768_e.field_78797_d = 15.69F + f;
+@@ -174,10 +173,10 @@
+                 this.field_192766_c.field_78797_d = 18.84F;
+                 this.field_192767_d.field_78808_h = 0.0873F;
+                 this.field_192767_d.field_78797_d = 18.84F;
+-                this.field_192773_j.field_78797_d++;
+-                this.field_192774_k.field_78797_d++;
+-                this.field_192773_j.field_78795_f++;
+-                this.field_192774_k.field_78795_f++;
++                ++this.field_192773_j.field_78797_d;
++                ++this.field_192774_k.field_78797_d;
++                ++this.field_192773_j.field_78795_f;
++                ++this.field_192774_k.field_78795_f;
+                 this.field_192775_l = ModelParrot.State.SITTING;
+             }
+             else if (entityparrot.func_192002_a())

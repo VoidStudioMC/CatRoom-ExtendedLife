@@ -1,0 +1,23 @@
+--- before/net/minecraft/world/gen/ChunkGeneratorDebug.java
++++ after/net/minecraft/world/gen/ChunkGeneratorDebug.java
+@@ -33,9 +33,9 @@
+     {
+         ChunkPrimer chunkprimer = new ChunkPrimer();
+ 
+-        for (int i = 0; i < 16; i++)
++        for (int i = 0; i < 16; ++i)
+         {
+-            for (int j = 0; j < 16; j++)
++            for (int j = 0; j < 16; ++j)
+             {
+                 int k = p_185932_1_ * 16 + i;
+                 int l = p_185932_2_ * 16 + j;
+@@ -54,7 +54,7 @@
+         Biome[] abiome = this.field_177463_c.func_72959_q().func_76933_b(null, p_185932_1_ * 16, p_185932_2_ * 16, 16, 16);
+         byte[] abyte = chunk.func_76605_m();
+ 
+-        for (int i1 = 0; i1 < abyte.length; i1++)
++        for (int i1 = 0; i1 < abyte.length; ++i1)
+         {
+             abyte[i1] = (byte)Biome.func_185362_a(abiome[i1]);
+         }

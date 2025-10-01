@@ -68,6 +68,24 @@
      public int func_184492_k()
      {
          return this.func_184212_Q().func_187225_a(field_184499_b);
+@@ -207,7 +229,7 @@
+             {
+                 if (this.field_70146_Z.nextBoolean())
+                 {
+-                    for (int i = 0; i < 2; i++)
++                    for (int i = 0; i < 2; ++i)
+                     {
+                         float f1 = this.field_70146_Z.nextFloat() * (float)(Math.PI * 2);
+                         float f2 = MathHelper.func_76129_c(this.field_70146_Z.nextFloat()) * 0.2F;
+@@ -252,7 +274,7 @@
+             {
+                 float f5 = (float) Math.PI * f * f;
+ 
+-                for (int k1 = 0; (float)k1 < f5; k1++)
++                for (int k1 = 0; (float)k1 < f5; ++k1)
+                 {
+                     float f6 = this.field_70146_Z.nextFloat() * (float)(Math.PI * 2);
+                     float f7 = MathHelper.func_76129_c(this.field_70146_Z.nextFloat()) * f;
 @@ -340,11 +362,11 @@
                      }
                  }
@@ -134,3 +152,21 @@
                                          }
                                          else
                                          {
+@@ -406,7 +438,7 @@
+ 
+                                     if (this.field_184509_av != 0)
+                                     {
+-                                        this.field_184505_h = this.field_184505_h + this.field_184509_av;
++                                        this.field_184505_h += this.field_184509_av;
+ 
+                                         if (this.field_184505_h <= 0)
+                                         {
+@@ -500,7 +532,7 @@
+             NBTTagList nbttaglist = p_70037_1_.func_150295_c("Effects", 10);
+             this.field_184503_f.clear();
+ 
+-            for (int i = 0; i < nbttaglist.func_74745_c(); i++)
++            for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+             {
+                 PotionEffect potioneffect = PotionEffect.func_82722_b(nbttaglist.func_150305_b(i));
+ 

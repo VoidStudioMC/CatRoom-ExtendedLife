@@ -16,7 +16,12 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
-@@ -121,6 +123,24 @@
+@@ -117,10 +119,28 @@
+                 {
+                     NBTTagList nbttaglist = nbttagcompound.func_150295_c("pages", 8);
+ 
+-                    for (int i = 0; i < nbttaglist.func_74745_c(); i++)
++                    for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
                      {
                          String s = nbttaglist.func_150307_f(i);
                          ITextComponent itextcomponent;

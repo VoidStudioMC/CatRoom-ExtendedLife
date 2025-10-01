@@ -220,19 +220,21 @@
          {
              i |= 8;
          }
-@@ -245,7 +222,6 @@
+@@ -244,7 +221,7 @@
+         return i;
      }
  
-     @SuppressWarnings("incomplete-switch")
 -    @Override
++    @SuppressWarnings("incomplete-switch")
      public IBlockState func_185499_a(IBlockState p_185499_1_, Rotation p_185499_2_)
      {
          switch (p_185499_2_)
-@@ -330,10 +306,9 @@
+@@ -328,10 +305,10 @@
+         }
      }
  
-     @SuppressWarnings("incomplete-switch")
 -    @Override
++    @SuppressWarnings("incomplete-switch")
      public IBlockState func_185471_a(IBlockState p_185471_1_, Mirror p_185471_2_)
      {
 -        BlockRailBase.EnumRailDirection blockrailbase$enumraildirection = p_185471_1_.func_177229_b(field_176573_b);
@@ -240,7 +242,7 @@
  
          switch (p_185471_2_)
          {
-@@ -383,9 +358,8 @@
+@@ -381,9 +358,8 @@
          return super.func_185471_a(p_185471_1_, p_185471_2_);
      }
  

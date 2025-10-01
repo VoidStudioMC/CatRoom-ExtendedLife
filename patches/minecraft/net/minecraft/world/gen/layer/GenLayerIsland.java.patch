@@ -1,0 +1,14 @@
+--- before/net/minecraft/world/gen/layer/GenLayerIsland.java
++++ after/net/minecraft/world/gen/layer/GenLayerIsland.java
+@@ -12,9 +12,9 @@
+     {
+         int[] aint = IntCache.func_76445_a(p_75904_3_ * p_75904_4_);
+ 
+-        for (int i = 0; i < p_75904_4_; i++)
++        for (int i = 0; i < p_75904_4_; ++i)
+         {
+-            for (int j = 0; j < p_75904_3_; j++)
++            for (int j = 0; j < p_75904_3_; ++j)
+             {
+                 this.func_75903_a((long)(p_75904_1_ + j), (long)(p_75904_2_ + i));
+                 aint[j + i * p_75904_3_] = this.func_75902_a(10) == 0 ? 1 : 0;

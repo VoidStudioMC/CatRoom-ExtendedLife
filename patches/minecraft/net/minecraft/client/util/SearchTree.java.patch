@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/util/SearchTree.java
++++ after/net/minecraft/client/util/SearchTree.java
+@@ -119,7 +119,7 @@
+                         i = Integer.compare(this.field_194035_c.getInt(this.field_194036_d), this.field_194035_c.getInt(this.field_194037_e));
+                     }
+ 
+-                    T t = i <= 0 ? this.field_194036_d : this.field_194037_e;
++                    T t = (T)(i <= 0 ? this.field_194036_d : this.field_194037_e);
+ 
+                     if (i <= 0)
+                     {

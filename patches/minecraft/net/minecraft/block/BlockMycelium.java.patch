@@ -19,7 +19,7 @@
  
  public class BlockMycelium extends Block
  {
-@@ -23,26 +28,35 @@
+@@ -23,43 +28,59 @@
      protected BlockMycelium()
      {
          super(Material.field_151577_b, MapColor.field_151678_z);
@@ -61,7 +61,12 @@
              }
              else
              {
-@@ -54,12 +68,19 @@
+                 if (p_180650_1_.func_175671_l(p_180650_2_.func_177984_a()) >= 9)
+                 {
+-                    for (int i = 0; i < 4; i++)
++                    for (int i = 0; i < 4; ++i)
+                     {
+                         BlockPos blockpos = p_180650_2_.func_177982_a(p_180650_4_.nextInt(3) - 1, p_180650_4_.nextInt(5) - 3, p_180650_4_.nextInt(3) - 1);
                          IBlockState iblockstate = p_180650_1_.func_180495_p(blockpos);
                          IBlockState iblockstate1 = p_180650_1_.func_180495_p(blockpos.func_177984_a());
  

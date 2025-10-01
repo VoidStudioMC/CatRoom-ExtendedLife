@@ -1,0 +1,28 @@
+--- before/net/minecraft/client/particle/ParticleSimpleAnimated.java
++++ after/net/minecraft/client/particle/ParticleSimpleAnimated.java
+@@ -67,18 +67,18 @@
+ 
+             if (this.field_187153_L)
+             {
+-                this.field_70552_h = this.field_70552_h + (this.field_187150_I - this.field_70552_h) * 0.2F;
+-                this.field_70553_i = this.field_70553_i + (this.field_187151_J - this.field_70553_i) * 0.2F;
+-                this.field_70551_j = this.field_70551_j + (this.field_187152_K - this.field_70551_j) * 0.2F;
++                this.field_70552_h += (this.field_187150_I - this.field_70552_h) * 0.2F;
++                this.field_70553_i += (this.field_187151_J - this.field_70553_i) * 0.2F;
++                this.field_70551_j += (this.field_187152_K - this.field_70551_j) * 0.2F;
+             }
+         }
+ 
+         this.func_70536_a(this.field_187147_a + (this.field_187148_G - 1 - this.field_70546_d * this.field_187148_G / this.field_70547_e));
+-        this.field_187130_j = this.field_187130_j + (double)this.field_187149_H;
++        this.field_187130_j += (double)this.field_187149_H;
+         this.func_187110_a(this.field_187129_i, this.field_187130_j, this.field_187131_k);
+-        this.field_187129_i = this.field_187129_i * (double)this.field_191239_M;
+-        this.field_187130_j = this.field_187130_j * (double)this.field_191239_M;
+-        this.field_187131_k = this.field_187131_k * (double)this.field_191239_M;
++        this.field_187129_i *= (double)this.field_191239_M;
++        this.field_187130_j *= (double)this.field_191239_M;
++        this.field_187131_k *= (double)this.field_191239_M;
+ 
+         if (this.field_187132_l)
+         {

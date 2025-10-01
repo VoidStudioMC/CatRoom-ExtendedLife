@@ -25,6 +25,30 @@
      }
  
      public void func_146031_a(TileEntityEnderChest p_146031_1_)
+@@ -22,12 +32,12 @@
+ 
+     public void func_70486_a(NBTTagList p_70486_1_)
+     {
+-        for (int i = 0; i < this.func_70302_i_(); i++)
++        for (int i = 0; i < this.func_70302_i_(); ++i)
+         {
+             this.func_70299_a(i, ItemStack.field_190927_a);
+         }
+ 
+-        for (int k = 0; k < p_70486_1_.func_74745_c(); k++)
++        for (int k = 0; k < p_70486_1_.func_74745_c(); ++k)
+         {
+             NBTTagCompound nbttagcompound = p_70486_1_.func_150305_b(k);
+             int j = nbttagcompound.func_74771_c("Slot") & 255;
+@@ -43,7 +53,7 @@
+     {
+         NBTTagList nbttaglist = new NBTTagList();
+ 
+-        for (int i = 0; i < this.func_70302_i_(); i++)
++        for (int i = 0; i < this.func_70302_i_(); ++i)
+         {
+             ItemStack itemstack = this.func_70301_a(i);
+ 
 @@ -87,4 +97,14 @@
          super.func_174886_c(p_174886_1_);
          this.field_70488_a = null;

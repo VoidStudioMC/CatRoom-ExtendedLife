@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/gui/GuiClickableScrolledSelectionListProxy.java
++++ after/net/minecraft/client/gui/GuiClickableScrolledSelectionListProxy.java
+@@ -98,7 +98,7 @@
+     {
+         int i = this.func_148127_b();
+ 
+-        for (int j = 0; j < i; j++)
++        for (int j = 0; j < i; ++j)
+         {
+             int k = p_192638_2_ + j * this.field_148149_f + this.field_148160_j;
+             int l = this.field_148149_f - 4;

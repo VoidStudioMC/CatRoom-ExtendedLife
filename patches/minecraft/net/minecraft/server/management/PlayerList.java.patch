@@ -252,7 +252,7 @@
          this.func_72354_b(p_72355_2_, worldserver);
  
          if (!this.field_72400_f.func_147133_T().isEmpty())
-@@ -221,11 +285,14 @@
+@@ -221,18 +285,21 @@
          }
  
          p_72355_2_.func_71116_b();
@@ -269,6 +269,14 @@
  
          for (ScorePlayerTeam scoreplayerteam : p_96456_1_.func_96525_g())
          {
+             p_96456_2_.field_71135_a.func_147359_a(new SPacketTeams(scoreplayerteam, 0));
+         }
+ 
+-        for (int i = 0; i < 19; i++)
++        for (int i = 0; i < 19; ++i)
+         {
+             ScoreObjective scoreobjective = p_96456_1_.func_96539_a(i);
+ 
 @@ -250,39 +317,33 @@
  
      public void func_72364_a(WorldServer[] p_72364_1_)
@@ -371,7 +379,8 @@
 +        this.func_148540_a(new SPacketPlayerListItem(SPacketPlayerListItem.Action.ADD_PLAYER, new EntityPlayerMP[] {p_72377_1_}));
          WorldServer worldserver = this.field_72400_f.func_71218_a(p_72377_1_.field_71093_bK);
  
-         for (int i = 0; i < this.field_72404_b.size(); ++i)
+-        for (int i = 0; i < this.field_72404_b.size(); i++)
++        for (int i = 0; i < this.field_72404_b.size(); ++i)
          {
 -            p_72377_1_.field_71135_a.func_147359_a(new SPacketPlayerListItem(SPacketPlayerListItem.Action.ADD_PLAYER, this.field_72404_b.get(i)));
 +            p_72377_1_.field_71135_a.func_147359_a(new SPacketPlayerListItem(SPacketPlayerListItem.Action.ADD_PLAYER, new EntityPlayerMP[] {this.field_72404_b.get(i)}));
@@ -542,7 +551,7 @@
              String s1 = "You are banned from this server!\nReason: " + userlistbansentry.func_73686_f();
  
              if (userlistbansentry.func_73680_d() != null)
-@@ -456,10 +620,91 @@
+@@ -456,12 +620,93 @@
          }
      }
  
@@ -633,8 +642,11 @@
 -        List<EntityPlayerMP> list = Lists.newArrayList();
 +        List<EntityPlayerMP> list = Lists.<EntityPlayerMP>newArrayList();
  
-         for (int i = 0; i < this.field_72404_b.size(); ++i)
+-        for (int i = 0; i < this.field_72404_b.size(); i++)
++        for (int i = 0; i < this.field_72404_b.size(); ++i)
          {
+             EntityPlayerMP entityplayermp = this.field_72404_b.get(i);
+ 
 @@ -480,7 +725,7 @@
  
          for (EntityPlayerMP entityplayermp1 : list)
@@ -1162,7 +1174,7 @@
                  p_82448_4_.func_72838_d(p_82448_1_);
                  p_82448_4_.func_72866_a(p_82448_1_, false);
              }
-@@ -713,11 +1156,155 @@
+@@ -713,26 +1156,188 @@
          p_82448_1_.func_70029_a(p_82448_4_);
      }
  
@@ -1319,9 +1331,11 @@
              this.field_72408_o = 0;
          }
      }
-@@ -726,9 +1313,27 @@
+ 
+     public void func_148540_a(Packet<?> p_148540_1_)
      {
-         for (int i = 0; i < this.field_72404_b.size(); ++i)
+-        for (int i = 0; i < this.field_72404_b.size(); i++)
++        for (int i = 0; i < this.field_72404_b.size(); ++i)
          {
 -            this.field_72404_b.get(i).field_71135_a.func_147359_a(p_148540_1_);
 -        }
@@ -1350,7 +1364,29 @@
  
      public void func_148537_a(Packet<?> p_148537_1_, int p_148537_2_)
      {
-@@ -795,11 +1400,11 @@
+-        for (int i = 0; i < this.field_72404_b.size(); i++)
++        for (int i = 0; i < this.field_72404_b.size(); ++i)
+         {
+             EntityPlayerMP entityplayermp = this.field_72404_b.get(i);
+ 
+@@ -771,7 +1376,7 @@
+         }
+         else
+         {
+-            for (int i = 0; i < this.field_72404_b.size(); i++)
++            for (int i = 0; i < this.field_72404_b.size(); ++i)
+             {
+                 EntityPlayerMP entityplayermp = this.field_72404_b.get(i);
+ 
+@@ -788,18 +1393,18 @@
+         String s = "";
+         List<EntityPlayerMP> list = Lists.newArrayList(this.field_72404_b);
+ 
+-        for (int i = 0; i < list.size(); i++)
++        for (int i = 0; i < list.size(); ++i)
+         {
+             if (i > 0)
+             {
                  s = s + ", ";
              }
  
@@ -1364,18 +1400,24 @@
              }
          }
  
-@@ -812,7 +1417,7 @@
+@@ -810,9 +1415,9 @@
+     {
+         String[] astring = new String[this.field_72404_b.size()];
  
-         for (int i = 0; i < this.field_72404_b.size(); ++i)
+-        for (int i = 0; i < this.field_72404_b.size(); i++)
++        for (int i = 0; i < this.field_72404_b.size(); ++i)
          {
 -            astring[i] = this.field_72404_b.get(i).func_70005_c_();
 +            astring[i] = ((EntityPlayerMP)this.field_72404_b.get(i)).func_70005_c_();
          }
  
          return astring;
-@@ -824,7 +1429,7 @@
+@@ -822,9 +1427,9 @@
+     {
+         GameProfile[] agameprofile = new GameProfile[this.field_72404_b.size()];
  
-         for (int i = 0; i < this.field_72404_b.size(); ++i)
+-        for (int i = 0; i < this.field_72404_b.size(); i++)
++        for (int i = 0; i < this.field_72404_b.size(); ++i)
          {
 -            agameprofile[i] = this.field_72404_b.get(i).func_146103_bH();
 +            agameprofile[i] = ((EntityPlayerMP)this.field_72404_b.get(i)).func_146103_bH();
@@ -1431,7 +1473,8 @@
 -    )
 +    public void func_148543_a(@Nullable EntityPlayer p_148543_1_, double p_148543_2_, double p_148543_4_, double p_148543_6_, double p_148543_8_, int p_148543_10_, Packet<?> p_148543_11_)
      {
-         for (int i = 0; i < this.field_72404_b.size(); ++i)
+-        for (int i = 0; i < this.field_72404_b.size(); i++)
++        for (int i = 0; i < this.field_72404_b.size(); ++i)
          {
              EntityPlayerMP entityplayermp = this.field_72404_b.get(i);
 +
@@ -1443,6 +1486,15 @@
  
              if (entityplayermp != p_148543_1_ && entityplayermp.field_71093_bK == p_148543_10_)
              {
+@@ -934,7 +1541,7 @@
+ 
+     public void func_72389_g()
+     {
+-        for (int i = 0; i < this.field_72404_b.size(); i++)
++        for (int i = 0; i < this.field_72404_b.size(); ++i)
+         {
+             this.func_72391_b(this.field_72404_b.get(i));
+         }
 @@ -976,25 +1583,29 @@
  
      public void func_72354_b(EntityPlayerMP p_72354_1_, WorldServer p_72354_2_)
@@ -1508,7 +1560,7 @@
  
      public void func_72392_r()
      {
--        for (int i = 0; i < this.field_72404_b.size(); ++i)
+-        for (int i = 0; i < this.field_72404_b.size(); i++)
 -        {
 -            this.field_72404_b.get(i).field_71135_a.func_194028_b(new TextComponentTranslation("multiplayer.disconnect.server_shutdown"));
 +        // CraftBukkit start - disconnect safely

@@ -1,0 +1,26 @@
+--- before/net/minecraft/command/CommandCompare.java
++++ after/net/minecraft/command/CommandCompare.java
+@@ -78,11 +78,11 @@
+                     BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+                     BlockPos.MutableBlockPos blockpos$mutableblockpos1 = new BlockPos.MutableBlockPos();
+ 
+-                    for (int j = structureboundingbox.field_78896_c; j <= structureboundingbox.field_78892_f; j++)
++                    for (int j = structureboundingbox.field_78896_c; j <= structureboundingbox.field_78892_f; ++j)
+                     {
+-                        for (int k = structureboundingbox.field_78895_b; k <= structureboundingbox.field_78894_e; k++)
++                        for (int k = structureboundingbox.field_78895_b; k <= structureboundingbox.field_78894_e; ++k)
+                         {
+-                            for (int l = structureboundingbox.field_78897_a; l <= structureboundingbox.field_78893_d; l++)
++                            for (int l = structureboundingbox.field_78897_a; l <= structureboundingbox.field_78893_d; ++l)
+                             {
+                                 blockpos$mutableblockpos.func_181079_c(l, k, j);
+                                 blockpos$mutableblockpos1.func_181079_c(l + blockpos3.func_177958_n(), k + blockpos3.func_177956_o(), j + blockpos3.func_177952_p());
+@@ -122,7 +122,7 @@
+                                         flag1 = true;
+                                     }
+ 
+-                                    i++;
++                                    ++i;
+ 
+                                     if (flag1)
+                                     {

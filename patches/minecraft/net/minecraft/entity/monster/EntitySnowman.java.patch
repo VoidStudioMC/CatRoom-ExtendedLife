@@ -68,7 +68,7 @@
      public void func_70636_d()
      {
          super.func_70636_d();
-@@ -107,10 +102,12 @@
+@@ -107,43 +102,42 @@
  
              if (this.field_70170_p.func_180494_b(new BlockPos(i, 0, k)).func_180626_a(new BlockPos(i, j, k)) > 1.0F)
              {
@@ -83,7 +83,12 @@
              {
                  return;
              }
-@@ -122,28 +119,25 @@
+ 
+-            for (int l = 0; l < 4; l++)
++            for (int l = 0; l < 4; ++l)
+             {
+                 i = MathHelper.func_76128_c(this.field_70165_t + (double)((float)(l % 2 * 2 - 1) * 0.25F));
+                 j = MathHelper.func_76128_c(this.field_70163_u);
                  k = MathHelper.func_76128_c(this.field_70161_v + (double)((float)(l / 2 % 2 * 2 - 1) * 0.25F));
                  BlockPos blockpos = new BlockPos(i, j, k);
  

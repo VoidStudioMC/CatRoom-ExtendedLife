@@ -16,12 +16,19 @@
  
  public class BlockTripWireHook extends Block
  {
-@@ -228,6 +230,15 @@
-             p_176260_1_.func_180501_a(blockpos1, iblockstate1.func_177226_a(field_176264_a, enumfacing1), 3);
-             this.func_176262_b(p_176260_1_, blockpos1, enumfacing1);
+@@ -177,7 +179,7 @@
+         int i = 0;
+         IBlockState[] aiblockstate = new IBlockState[42];
+ 
+-        for (int j = 1; j < 42; j++)
++        for (int j = 1; j < 42; ++j)
+         {
+             BlockPos blockpos = p_176260_2_.func_177967_a(enumfacing, j);
+             IBlockState iblockstate = p_176260_1_.func_180495_p(blockpos);
+@@ -230,6 +232,15 @@
              this.func_180694_a(p_176260_1_, blockpos1, flag2, flag3, flag, flag1);
-+        }
-+
+         }
+ 
 +        org.bukkit.block.Block block = p_176260_1_.getWorld().getBlockAt(p_176260_2_.func_177958_n(), p_176260_2_.func_177956_o(), p_176260_2_.func_177952_p());
 +
 +        BlockRedstoneEvent eventRedstone = new BlockRedstoneEvent(block, 15, 0);
@@ -29,6 +36,17 @@
 +
 +        if (eventRedstone.getNewCurrent() > 0) {
 +            return;
-         }
- 
++        }
++
          this.func_180694_a(p_176260_1_, p_176260_2_, flag2, flag3, flag, flag1);
+ 
+         if (!p_176260_4_)
+@@ -244,7 +255,7 @@
+ 
+         if (flag != flag2)
+         {
+-            for (int k = 1; k < i; k++)
++            for (int k = 1; k < i; ++k)
+             {
+                 BlockPos blockpos2 = p_176260_2_.func_177967_a(enumfacing, k);
+                 IBlockState iblockstate2 = aiblockstate[k];

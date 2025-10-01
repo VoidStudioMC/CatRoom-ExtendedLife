@@ -1,14 +1,23 @@
 --- before/net/minecraft/entity/passive/EntityTameable.java
 +++ after/net/minecraft/entity/passive/EntityTameable.java
-@@ -238,6 +238,11 @@
-         return this.field_70911_d;
-     }
+@@ -111,7 +111,7 @@
+             enumparticletypes = EnumParticleTypes.SMOKE_NORMAL;
+         }
  
+-        for (int i = 0; i < 7; i++)
++        for (int i = 0; i < 7; ++i)
+         {
+             double d0 = this.field_70146_Z.nextGaussian() * 0.02;
+             double d1 = this.field_70146_Z.nextGaussian() * 0.02;
+@@ -236,6 +236,11 @@
+     public EntityAISit func_70907_r()
+     {
+         return this.field_70911_d;
++    }
++
 +    public void setAISit(EntityAISit aiSit)
 +    {
 +        this.field_70911_d = aiSit;
-+    }
-+
+     }
+ 
      public boolean func_142018_a(EntityLivingBase p_142018_1_, EntityLivingBase p_142018_2_)
-     {
-         return true;

@@ -1,0 +1,11 @@
+--- before/net/minecraft/network/play/server/SPacketStatistics.java
++++ after/net/minecraft/network/play/server/SPacketStatistics.java
+@@ -36,7 +36,7 @@
+         int i = p_148837_1_.func_150792_a();
+         this.field_148976_a = Maps.newHashMap();
+ 
+-        for (int j = 0; j < i; j++)
++        for (int j = 0; j < i; ++j)
+         {
+             StatBase statbase = StatList.func_151177_a(p_148837_1_.func_150789_c(32767));
+             int k = p_148837_1_.func_150792_a();

@@ -116,7 +116,7 @@
          }
      }
  
-@@ -167,14 +166,12 @@
+@@ -167,24 +166,22 @@
          this.field_175540_bm = 0;
      }
  
@@ -132,6 +132,18 @@
      public void func_70619_bc()
      {
          if (this.field_175538_bq > 0)
+         {
+-            this.field_175538_bq--;
++            --this.field_175538_bq;
+         }
+ 
+         if (this.field_175541_bs > 0)
+         {
+-            this.field_175541_bs = this.field_175541_bs - this.field_70146_Z.nextInt(3);
++            this.field_175541_bs -= this.field_70146_Z.nextInt(3);
+ 
+             if (this.field_175541_bs < 0)
+             {
 @@ -204,13 +201,10 @@
              {
                  EntityLivingBase entitylivingbase = this.func_70638_az();
@@ -174,7 +186,7 @@
          {
              this.field_175538_bq = 10;
          }
-@@ -282,7 +274,6 @@
+@@ -282,14 +274,13 @@
          this.func_175520_cs();
      }
  
@@ -182,6 +194,14 @@
      public void func_70636_d()
      {
          super.func_70636_d();
+ 
+         if (this.field_175540_bm != this.field_175535_bn)
+         {
+-            this.field_175540_bm++;
++            ++this.field_175540_bm;
+         }
+         else if (this.field_175535_bn != 0)
+         {
 @@ -299,12 +290,11 @@
          }
      }

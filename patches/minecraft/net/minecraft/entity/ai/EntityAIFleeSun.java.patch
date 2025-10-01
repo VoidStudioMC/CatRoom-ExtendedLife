@@ -1,0 +1,11 @@
+--- before/net/minecraft/entity/ai/EntityAIFleeSun.java
++++ after/net/minecraft/entity/ai/EntityAIFleeSun.java
+@@ -81,7 +81,7 @@
+         Random random = this.field_75372_a.func_70681_au();
+         BlockPos blockpos = new BlockPos(this.field_75372_a.field_70165_t, this.field_75372_a.func_174813_aQ().field_72338_b, this.field_75372_a.field_70161_v);
+ 
+-        for (int i = 0; i < 10; i++)
++        for (int i = 0; i < 10; ++i)
+         {
+             BlockPos blockpos1 = blockpos.func_177982_a(random.nextInt(20) - 10, random.nextInt(6) - 3, random.nextInt(20) - 10);
+ 

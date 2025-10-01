@@ -293,7 +293,7 @@
 -            worldsettings = new WorldSettings(worldinfo);
 -        }
 -
--        for (int i = 0; i < this.field_71305_c.length; ++i)
+-        for (int i = 0; i < this.field_71305_c.length; i++)
 -        {
 -            int j = 0;
 -
@@ -433,7 +433,13 @@
          BlockPos blockpos = worldserver.func_175694_M();
          long k1 = func_130071_aq();
  
-@@ -341,6 +421,10 @@
+@@ -336,11 +416,15 @@
+                     k1 = j2;
+                 }
+ 
+-                i1++;
++                ++i1;
+                 worldserver.func_72863_F().func_186025_d(blockpos.func_177958_n() + l1 >> 4, blockpos.func_177952_p() + i2 >> 4);
              }
          }
  
@@ -795,20 +801,25 @@
              }
              catch (Exception exception)
              {
-@@ -647,7 +822,10 @@
+@@ -647,8 +822,11 @@
  
      public void func_71217_p()
      {
 +        SpigotTimings.serverTickTimer.startTiming(); // Spigot
 +        this.slackActivityAccountant.tickStarted(); // Spigot
          long i = System.nanoTime();
+-        this.field_71315_w++;
 +        net.minecraftforge.fml.common.FMLCommonHandler.instance().onPreServerTick();
-         ++this.field_71315_w;
++        ++this.field_71315_w;
  
          if (this.field_71295_T)
-@@ -669,20 +847,33 @@
+         {
+@@ -667,22 +845,35 @@
+             GameProfile[] agameprofile = new GameProfile[Math.min(this.func_71233_x(), 12)];
+             int j = MathHelper.func_76136_a(this.field_147146_q, 0, this.func_71233_x() - agameprofile.length);
  
-             for (int k = 0; k < agameprofile.length; ++k)
+-            for (int k = 0; k < agameprofile.length; k++)
++            for (int k = 0; k < agameprofile.length; ++k)
              {
 -                agameprofile[k] = this.field_71318_t.func_181057_v().get(j + k).func_146103_bH();
 +                agameprofile[k] = ((EntityPlayerMP)this.field_71318_t.func_181057_v().get(j + k)).func_146103_bH();
@@ -880,7 +891,7 @@
  
          this.field_71304_b.func_76318_c("levels");
 -
--        for (int j = 0; j < this.field_71305_c.length; ++j)
+-        for (int j = 0; j < this.field_71305_c.length; j++)
 +        // CraftBukkit start
 +        // Run tasks that are waiting on processing
 +        SpigotTimings.processQueueTimer.startTiming(); // Spigot
@@ -1005,8 +1016,9 @@
 +        SpigotTimings.commandFunctionsTimer.stopTiming();// Spigot
          this.field_71304_b.func_76318_c("tickables");
  
+-        for (int k = 0; k < this.field_71322_p.size(); k++)
 +        SpigotTimings.tickablesTimer.startTiming(); // Spigot
-         for (int k = 0; k < this.field_71322_p.size(); ++k)
++        for (int k = 0; k < this.field_71322_p.size(); ++k)
          {
 -            this.field_71322_p.get(k).func_73660_a();
 +            ((ITickable)this.field_71322_p.get(k)).func_73660_a();
@@ -1040,7 +1052,7 @@
 -            boolean flag2 = false;
 -            int i = -1;
 -
--            for (int j = 0; j < p_main_0_.length; ++j)
+-            for (int j = 0; j < p_main_0_.length; j++)
 -            {
 -                String s3 = p_main_0_[j];
 -                String s4 = j == p_main_0_.length - 1 ? null : p_main_0_[j + 1];
@@ -1088,7 +1100,7 @@
 -
 -                if (flag3)
 -                {
--                    ++j;
+-                    j++;
 -                }
 -            }
 -
@@ -1428,7 +1440,7 @@
 -                    p_70000_1_.func_152768_a("world[" + i + "][generator_version]", worldinfo.func_76067_t().func_77131_c());
 -                    p_70000_1_.func_152768_a("world[" + i + "][height]", this.field_71280_D);
 -                    p_70000_1_.func_152768_a("world[" + i + "][chunks_loaded]", worldserver.func_72863_F().func_73152_e());
--                    ++i;
+-                    i++;
 +                    WorldInfo worldinfo = worldserver1.func_72912_H();
 +                    p_70000_1_.func_152768_a("world[" + l + "][dimension]", Integer.valueOf(worldserver1.field_73011_w.func_186058_p().func_186068_a()));
 +                    p_70000_1_.func_152768_a("world[" + l + "][mode]", worldinfo.func_76077_q());

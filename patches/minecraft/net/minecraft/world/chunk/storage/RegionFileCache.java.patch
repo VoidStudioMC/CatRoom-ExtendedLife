@@ -54,7 +54,14 @@
  
      public static synchronized RegionFile func_191065_b(File p_191065_0_, int p_191065_1_, int p_191065_2_)
      {
-@@ -92,10 +113,31 @@
+@@ -86,16 +107,44 @@
+         field_76553_a.clear();
+     }
+ 
++    @Nullable
+     public static DataInputStream func_76549_c(File p_76549_0_, int p_76549_1_, int p_76549_2_)
+     {
+         RegionFile regionfile = func_76550_a(p_76549_0_, p_76549_1_, p_76549_2_);
          return regionfile.func_76704_a(p_76549_1_ & 31, p_76549_2_ & 31);
      }
  
@@ -68,9 +75,15 @@
 +            return null;
 +        }
 +
-+        return CompressedStreamTools.func_74794_a(datainputstream);
++        // CatRoom start - close stream after reading
++        NBTTagCompound chunkNBT = CompressedStreamTools.func_74794_a(datainputstream);
++        datainputstream.close();
++        // CatRoom end
++
++        return chunkNBT;
 +    }
 +
++    @Nullable
      public static DataOutputStream func_76552_d(File p_76552_0_, int p_76552_1_, int p_76552_2_)
      {
          RegionFile regionfile = func_76550_a(p_76552_0_, p_76552_1_, p_76552_2_);

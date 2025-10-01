@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/particle/ParticleBubble.java
++++ after/net/minecraft/client/particle/ParticleBubble.java
+@@ -19,7 +19,7 @@
+         this.field_70551_j = 1.0F;
+         this.func_70536_a(32);
+         this.func_187115_a(0.02F, 0.02F);
+-        this.field_70544_f = this.field_70544_f * (this.field_187136_p.nextFloat() * 0.6F + 0.2F);
++        this.field_70544_f *= this.field_187136_p.nextFloat() * 0.6F + 0.2F;
+         this.field_187129_i = p_i1198_8_ * 0.2F + (Math.random() * 2.0 - 1.0) * 0.02F;
+         this.field_187130_j = p_i1198_10_ * 0.2F + (Math.random() * 2.0 - 1.0) * 0.02F;
+         this.field_187131_k = p_i1198_12_ * 0.2F + (Math.random() * 2.0 - 1.0) * 0.02F;

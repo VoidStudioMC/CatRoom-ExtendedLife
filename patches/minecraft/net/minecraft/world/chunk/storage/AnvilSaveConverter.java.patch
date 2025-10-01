@@ -1,0 +1,23 @@
+--- before/net/minecraft/world/chunk/storage/AnvilSaveConverter.java
++++ after/net/minecraft/world/chunk/storage/AnvilSaveConverter.java
+@@ -204,7 +204,7 @@
+         for (File file1 : p_75813_2_)
+         {
+             this.func_75811_a(p_75813_1_, file1, p_75813_3_, p_75813_4_, p_75813_5_, p_75813_6_);
+-            p_75813_4_++;
++            ++p_75813_4_;
+             int i = (int)Math.round(100.0 * (double)p_75813_4_ / (double)p_75813_5_);
+             p_75813_6_.func_73718_a(i);
+         }
+@@ -218,9 +218,9 @@
+             RegionFile regionfile = new RegionFile(p_75811_2_);
+             RegionFile regionfile1 = new RegionFile(new File(p_75811_1_, s.substring(0, s.length() - ".mcr".length()) + ".mca"));
+ 
+-            for (int i = 0; i < 32; i++)
++            for (int i = 0; i < 32; ++i)
+             {
+-                for (int j = 0; j < 32; j++)
++                for (int j = 0; j < 32; ++j)
+                 {
+                     if (regionfile.func_76709_c(i, j) && !regionfile1.func_76709_c(i, j))
+                     {

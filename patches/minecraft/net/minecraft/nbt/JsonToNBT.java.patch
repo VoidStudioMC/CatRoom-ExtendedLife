@@ -1,0 +1,75 @@
+--- before/net/minecraft/nbt/JsonToNBT.java
++++ after/net/minecraft/nbt/JsonToNBT.java
+@@ -30,7 +30,7 @@
+ 
+         if (this.func_193612_g())
+         {
+-            this.field_193623_i++;
++            ++this.field_193623_i;
+             throw this.func_193602_b("Trailing data found");
+         }
+         else
+@@ -197,7 +197,7 @@
+ 
+         while (this.func_193612_g() && this.func_193599_a(this.func_193598_n()))
+         {
+-            this.field_193623_i++;
++            ++this.field_193623_i;
+         }
+ 
+         return this.field_193622_h.substring(i, this.field_193623_i);
+@@ -341,7 +341,7 @@
+ 
+     private <T extends Number> List<T> func_193603_a(byte p_193603_1_, byte p_193603_2_) throws NBTException
+     {
+-        List<T> list = Lists.newArrayList();
++        List list = Lists.newArrayList();
+ 
+         while (this.func_193598_n() != ']')
+         {
+@@ -355,15 +355,15 @@
+ 
+             if (p_193603_2_ == 1)
+             {
+-                list.add((T)(Byte)((NBTPrimitive)nbtbase).func_150290_f());
++                list.add(((NBTPrimitive)nbtbase).func_150290_f());
+             }
+             else if (p_193603_2_ == 4)
+             {
+-                list.add((T)(Long)((NBTPrimitive)nbtbase).func_150291_c());
++                list.add(((NBTPrimitive)nbtbase).func_150291_c());
+             }
+             else
+             {
+-                list.add((T)(Integer)((NBTPrimitive)nbtbase).func_150287_d());
++                list.add(((NBTPrimitive)nbtbase).func_150287_d());
+             }
+ 
+             if (!this.func_193613_m())
+@@ -385,7 +385,7 @@
+     {
+         while (this.func_193612_g() && Character.isWhitespace(this.func_193598_n()))
+         {
+-            this.field_193623_i++;
++            ++this.field_193623_i;
+         }
+     }
+ 
+@@ -395,7 +395,7 @@
+ 
+         if (this.func_193612_g() && this.func_193598_n() == ',')
+         {
+-            this.field_193623_i++;
++            ++this.field_193623_i;
+             this.func_193607_l();
+             return true;
+         }
+@@ -412,7 +412,7 @@
+ 
+         if (flag && this.func_193598_n() == p_193604_1_)
+         {
+-            this.field_193623_i++;
++            ++this.field_193623_i;
+         }
+         else
+         {

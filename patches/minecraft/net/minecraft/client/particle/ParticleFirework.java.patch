@@ -1,0 +1,69 @@
+--- before/net/minecraft/client/particle/ParticleFirework.java
++++ after/net/minecraft/client/particle/ParticleFirework.java
+@@ -238,7 +238,7 @@
+                     {
+                         this.field_70547_e = this.field_92039_az.func_74745_c() * 2 - 1;
+ 
+-                        for (int i = 0; i < this.field_92039_az.func_74745_c(); i++)
++                        for (int i = 0; i < this.field_92039_az.func_74745_c(); ++i)
+                         {
+                             NBTTagCompound nbttagcompound = this.field_92039_az.func_150305_b(i);
+ 
+@@ -281,7 +281,7 @@
+                     }
+                     else
+                     {
+-                        for (int i = 0; i < this.field_92039_az.func_74745_c(); i++)
++                        for (int i = 0; i < this.field_92039_az.func_74745_c(); ++i)
+                         {
+                             NBTTagCompound nbttagcompound = this.field_92039_az.func_150305_b(i);
+ 
+@@ -402,7 +402,7 @@
+                     this.field_92040_ay.func_78873_a(particlefirework$overlay);
+                 }
+ 
+-                this.field_92042_ax++;
++                ++this.field_92042_ax;
+ 
+                 if (this.field_92042_ax > this.field_70547_e)
+                 {
+@@ -471,11 +471,11 @@
+                 double d1 = this.field_187127_g;
+                 double d2 = this.field_187128_h;
+ 
+-                for (int i = -p_92035_3_; i <= p_92035_3_; i++)
++                for (int i = -p_92035_3_; i <= p_92035_3_; ++i)
+                 {
+-                    for (int j = -p_92035_3_; j <= p_92035_3_; j++)
++                    for (int j = -p_92035_3_; j <= p_92035_3_; ++j)
+                     {
+-                        for (int k = -p_92035_3_; k <= p_92035_3_; k++)
++                        for (int k = -p_92035_3_; k <= p_92035_3_; ++k)
+                         {
+                             double d3 = (double)j + (this.field_187136_p.nextDouble() - this.field_187136_p.nextDouble()) * 0.5;
+                             double d4 = (double)i + (this.field_187136_p.nextDouble() - this.field_187136_p.nextDouble()) * 0.5;
+@@ -513,13 +513,13 @@
+                 float f = this.field_187136_p.nextFloat() * (float) Math.PI;
+                 double d2 = p_92038_8_ ? 0.034 : 0.34;
+ 
+-                for (int i = 0; i < 3; i++)
++                for (int i = 0; i < 3; ++i)
+                 {
+                     double d3 = (double)f + (double)((float)i * (float) Math.PI) * d2;
+                     double d4 = d0;
+                     double d5 = d1;
+ 
+-                    for (int j = 1; j < p_92038_3_.length; j++)
++                    for (int j = 1; j < p_92038_3_.length; ++j)
+                     {
+                         double d6 = p_92038_3_[j][0];
+                         double d7 = p_92038_3_[j][1];
+@@ -550,7 +550,7 @@
+                 double d0 = this.field_187136_p.nextGaussian() * 0.05;
+                 double d1 = this.field_187136_p.nextGaussian() * 0.05;
+ 
+-                for (int i = 0; i < 70; i++)
++                for (int i = 0; i < 70; ++i)
+                 {
+                     double d2 = this.field_187129_i * 0.5 + this.field_187136_p.nextGaussian() * 0.15 + d0;
+                     double d3 = this.field_187131_k * 0.5 + this.field_187136_p.nextGaussian() * 0.15 + d1;

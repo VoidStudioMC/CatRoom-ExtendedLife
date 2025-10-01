@@ -11,6 +11,15 @@
  
      public boolean func_185141_a(Item p_185141_1_)
      {
+@@ -37,7 +37,7 @@
+ 
+     public void func_185144_a()
+     {
+-        this.field_185148_b++;
++        ++this.field_185148_b;
+ 
+         if (!this.field_185147_a.isEmpty())
+         {
 @@ -77,10 +77,10 @@
      {
      }

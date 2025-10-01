@@ -1,0 +1,11 @@
+--- before/net/minecraft/entity/ai/RandomPositionGenerator.java
++++ after/net/minecraft/entity/ai/RandomPositionGenerator.java
+@@ -75,7 +75,7 @@
+         int i = 0;
+         int j = 0;
+ 
+-        for (int k = 0; k < 10; k++)
++        for (int k = 0; k < 10; ++k)
+         {
+             int l = random.nextInt(2 * p_191379_1_ + 1) - p_191379_1_;
+             int i1 = random.nextInt(2 * p_191379_2_ + 1) - p_191379_2_;

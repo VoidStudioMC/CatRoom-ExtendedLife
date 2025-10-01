@@ -1,0 +1,81 @@
+--- before/net/minecraft/entity/monster/EntityGuardian.java
++++ after/net/minecraft/entity/monster/EntityGuardian.java
+@@ -250,15 +250,15 @@
+                 }
+                 else
+                 {
+-                    this.field_175483_bk = this.field_175483_bk + (0.5F - this.field_175483_bk) * 0.1F;
++                    this.field_175483_bk += (0.5F - this.field_175483_bk) * 0.1F;
+                 }
+             }
+             else
+             {
+-                this.field_175483_bk = this.field_175483_bk + (0.125F - this.field_175483_bk) * 0.2F;
++                this.field_175483_bk += (0.125F - this.field_175483_bk) * 0.2F;
+             }
+ 
+-            this.field_175482_b = this.field_175482_b + this.field_175483_bk;
++            this.field_175482_b += this.field_175483_bk;
+             this.field_175486_bm = this.field_175485_bl;
+ 
+             if (!this.func_70090_H())
+@@ -267,18 +267,18 @@
+             }
+             else if (this.func_175472_n())
+             {
+-                this.field_175485_bl = this.field_175485_bl + (0.0F - this.field_175485_bl) * 0.25F;
++                this.field_175485_bl += (0.0F - this.field_175485_bl) * 0.25F;
+             }
+             else
+             {
+-                this.field_175485_bl = this.field_175485_bl + (1.0F - this.field_175485_bl) * 0.06F;
++                this.field_175485_bl += (1.0F - this.field_175485_bl) * 0.06F;
+             }
+ 
+             if (this.func_175472_n() && this.func_70090_H())
+             {
+                 Vec3d vec3d = this.func_70676_i(0.0F);
+ 
+-                for (int i = 0; i < 2; i++)
++                for (int i = 0; i < 2; ++i)
+                 {
+                     this.field_70170_p
+                     .func_175688_a(
+@@ -297,7 +297,7 @@
+             {
+                 if (this.field_175479_bo < this.func_175464_ck())
+                 {
+-                    this.field_175479_bo++;
++                    ++this.field_175479_bo;
+                 }
+ 
+                 EntityLivingBase entitylivingbase = this.func_175466_co();
+@@ -343,8 +343,8 @@
+         else if (this.field_70122_E)
+         {
+             this.field_70181_x += 0.5;
+-            this.field_70159_w = this.field_70159_w + (double)((this.field_70146_Z.nextFloat() * 2.0F - 1.0F) * 0.4F);
+-            this.field_70179_y = this.field_70179_y + (double)((this.field_70146_Z.nextFloat() * 2.0F - 1.0F) * 0.4F);
++            this.field_70159_w += (double)((this.field_70146_Z.nextFloat() * 2.0F - 1.0F) * 0.4F);
++            this.field_70179_y += (double)((this.field_70146_Z.nextFloat() * 2.0F - 1.0F) * 0.4F);
+             this.field_70177_z = this.field_70146_Z.nextFloat() * 360.0F;
+             this.field_70122_E = false;
+             this.field_70160_al = true;
+@@ -510,7 +510,7 @@
+                 }
+                 else
+                 {
+-                    this.field_179455_b++;
++                    ++this.field_179455_b;
+ 
+                     if (this.field_179455_b == 0)
+                     {
+@@ -576,7 +576,7 @@
+                     this.field_179930_g.field_70179_y += d4 * d6;
+                     d4 = Math.sin((double)(this.field_179930_g.field_70173_aa + this.field_179930_g.func_145782_y()) * 0.75) * 0.05;
+                     this.field_179930_g.field_70181_x += d4 * (d6 + d5) * 0.25;
+-                    this.field_179930_g.field_70181_x = this.field_179930_g.field_70181_x + (double)this.field_179930_g.func_70689_ay() * d1 * 0.1;
++                    this.field_179930_g.field_70181_x += (double)this.field_179930_g.func_70689_ay() * d1 * 0.1;
+                     EntityLookHelper entitylookhelper = this.field_179930_g.func_70671_ap();
+                     double d7 = this.field_179930_g.field_70165_t + d0 / d3 * 2.0;
+                     double d8 = (double)this.field_179930_g.func_70047_e() + this.field_179930_g.field_70163_u + d1 / d3;

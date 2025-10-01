@@ -1,0 +1,17 @@
+--- before/net/minecraft/item/ItemPickaxe.java
++++ after/net/minecraft/item/ItemPickaxe.java
+@@ -81,9 +81,13 @@
+             {
+                 return true;
+             }
++            else if (material == Material.field_151573_f)
++            {
++                return true;
++            }
+             else
+             {
+-                return material == Material.field_151573_f ? true : material == Material.field_151574_g;
++                return material == Material.field_151574_g;
+             }
+         }
+         else

@@ -29,6 +29,20 @@
  
      @Override
      public NBTTagCompound func_189515_b(NBTTagCompound p_189515_1_)
+@@ -78,11 +83,11 @@
+     {
+         boolean flag = this.func_184309_b();
+         boolean flag1 = this.func_184310_d();
+-        this.field_184315_f++;
++        ++this.field_184315_f;
+ 
+         if (flag1)
+         {
+-            this.field_184316_g--;
++            --this.field_184316_g;
+         }
+         else if (!this.field_145850_b.field_72995_K)
+         {
 @@ -178,7 +183,23 @@
              if (this.field_184317_h != null)
              {
@@ -54,3 +68,20 @@
              }
  
              this.func_184300_h();
+@@ -233,13 +254,13 @@
+     {
+         BlockPos blockpos = null;
+ 
+-        for (int i = -p_184308_2_; i <= p_184308_2_; i++)
++        for (int i = -p_184308_2_; i <= p_184308_2_; ++i)
+         {
+-            for (int j = -p_184308_2_; j <= p_184308_2_; j++)
++            for (int j = -p_184308_2_; j <= p_184308_2_; ++j)
+             {
+                 if (i != 0 || j != 0 || p_184308_3_)
+                 {
+-                    for (int k = 255; k > (blockpos == null ? 0 : blockpos.func_177956_o()); k--)
++                    for (int k = 255; k > (blockpos == null ? 0 : blockpos.func_177956_o()); --k)
+                     {
+                         BlockPos blockpos1 = new BlockPos(p_184308_1_.func_177958_n() + i, k, p_184308_1_.func_177952_p() + j);
+                         IBlockState iblockstate = p_184308_0_.func_180495_p(blockpos1);

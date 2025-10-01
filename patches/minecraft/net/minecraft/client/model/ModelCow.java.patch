@@ -1,0 +1,23 @@
+--- before/net/minecraft/client/model/ModelCow.java
++++ after/net/minecraft/client/model/ModelCow.java
+@@ -18,14 +18,14 @@
+         this.field_78148_b.func_78790_a(-6.0F, -10.0F, -7.0F, 12, 18, 10, 0.0F);
+         this.field_78148_b.func_78793_a(0.0F, 5.0F, 2.0F);
+         this.field_78148_b.func_78784_a(52, 0).func_78789_a(-2.0F, 2.0F, -8.0F, 4, 6, 1);
+-        this.field_78149_c.field_78800_c--;
+-        this.field_78146_d.field_78800_c++;
++        --this.field_78149_c.field_78800_c;
++        ++this.field_78146_d.field_78800_c;
+         this.field_78149_c.field_78798_e += 0.0F;
+         this.field_78146_d.field_78798_e += 0.0F;
+-        this.field_78147_e.field_78800_c--;
+-        this.field_78144_f.field_78800_c++;
+-        this.field_78147_e.field_78798_e--;
+-        this.field_78144_f.field_78798_e--;
++        --this.field_78147_e.field_78800_c;
++        ++this.field_78144_f.field_78800_c;
++        --this.field_78147_e.field_78798_e;
++        --this.field_78144_f.field_78798_e;
+         this.field_78151_h += 2.0F;
+     }
+ }

@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/tutorial/CraftPlanksStep.java
++++ after/net/minecraft/client/tutorial/CraftPlanksStep.java
+@@ -30,7 +30,7 @@
+     @Override
+     public void func_193245_a()
+     {
+-        this.field_193290_e++;
++        ++this.field_193290_e;
+ 
+         if (this.field_193288_c.func_194072_f() != GameType.SURVIVAL)
+         {

@@ -111,7 +111,15 @@
          int i = 0;
          int j = 0;
          boolean flag = false;
-@@ -92,6 +130,7 @@
+@@ -86,12 +124,13 @@
+             case SPRUCE:
+                 label68:
+ 
+-                for (i = 0; i >= -1; i--)
++                for (i = 0; i >= -1; --i)
+                 {
+-                    for (j = 0; j >= -1; j--)
++                    for (j = 0; j >= -1; --j)
                      {
                          if (this.func_181624_a(p_176476_1_, p_176476_2_, i, j, BlockPlanks.EnumType.SPRUCE))
                          {
@@ -119,7 +127,7 @@
                              worldgenerator = new WorldGenMegaPineTree(false, p_176476_4_.nextBoolean());
                              flag = true;
                              break label68;
-@@ -103,19 +142,18 @@
+@@ -103,27 +142,27 @@
                  {
                      i = 0;
                      j = 0;
@@ -141,8 +149,11 @@
 +                IBlockState iblockstate1 = Blocks.field_150362_t.func_176223_P().func_177226_a(BlockOldLeaf.field_176239_P, BlockPlanks.EnumType.JUNGLE).func_177226_a(BlockLeaves.field_176236_b, Boolean.valueOf(false));
                  label82:
  
-                 for (i = 0; i >= -1; --i)
-@@ -124,6 +162,7 @@
+-                for (i = 0; i >= -1; i--)
++                for (i = 0; i >= -1; --i)
+                 {
+-                    for (j = 0; j >= -1; j--)
++                    for (j = 0; j >= -1; --j)
                      {
                          if (this.func_181624_a(p_176476_1_, p_176476_2_, i, j, BlockPlanks.EnumType.JUNGLE))
                          {
@@ -150,7 +161,7 @@
                              worldgenerator = new WorldGenMegaJungle(true, 10, 20, iblockstate, iblockstate1);
                              flag = true;
                              break label82;
-@@ -135,11 +174,13 @@
+@@ -135,22 +174,25 @@
                  {
                      i = 0;
                      j = 0;
@@ -164,7 +175,13 @@
                  worldgenerator = new WorldGenSavannaTree(true);
                  break;
              case DARK_OAK:
-@@ -151,6 +192,7 @@
+                 label96:
+ 
+-                for (i = 0; i >= -1; i--)
++                for (i = 0; i >= -1; --i)
+                 {
+-                    for (j = 0; j >= -1; j--)
++                    for (j = 0; j >= -1; --j)
                      {
                          if (this.func_181624_a(p_176476_1_, p_176476_2_, i, j, BlockPlanks.EnumType.DARK_OAK))
                          {

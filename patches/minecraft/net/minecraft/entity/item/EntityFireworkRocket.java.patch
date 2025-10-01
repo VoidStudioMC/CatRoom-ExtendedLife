@@ -40,7 +40,35 @@
      protected void func_70088_a()
      {
          this.field_70180_af.func_187214_a(field_184566_a, ItemStack.field_190927_a);
-@@ -202,8 +211,10 @@
+@@ -132,15 +141,9 @@
+                     Vec3d vec3d = this.field_191513_e.func_70040_Z();
+                     double d0 = 1.5;
+                     double d1 = 0.1;
+-                    this.field_191513_e.field_70159_w = this.field_191513_e.field_70159_w
+-                                                        + vec3d.field_72450_a * 0.1
+-                                                        + (vec3d.field_72450_a * 1.5 - this.field_191513_e.field_70159_w) * 0.5;
+-                    this.field_191513_e.field_70181_x = this.field_191513_e.field_70181_x
+-                                                        + vec3d.field_72448_b * 0.1
+-                                                        + (vec3d.field_72448_b * 1.5 - this.field_191513_e.field_70181_x) * 0.5;
+-                    this.field_191513_e.field_70179_y = this.field_191513_e.field_70179_y
+-                                                        + vec3d.field_72449_c * 0.1
+-                                                        + (vec3d.field_72449_c * 1.5 - this.field_191513_e.field_70179_y) * 0.5;
++                    this.field_191513_e.field_70159_w += vec3d.field_72450_a * 0.1 + (vec3d.field_72450_a * 1.5 - this.field_191513_e.field_70159_w) * 0.5;
++                    this.field_191513_e.field_70181_x += vec3d.field_72448_b * 0.1 + (vec3d.field_72448_b * 1.5 - this.field_191513_e.field_70181_x) * 0.5;
++                    this.field_191513_e.field_70179_y += vec3d.field_72449_c * 0.1 + (vec3d.field_72449_c * 1.5 - this.field_191513_e.field_70179_y) * 0.5;
+                 }
+ 
+                 this.func_70107_b(this.field_191513_e.field_70165_t, this.field_191513_e.field_70163_u, this.field_191513_e.field_70161_v);
+@@ -190,7 +193,7 @@
+             .func_184148_a(null, this.field_70165_t, this.field_70163_u, this.field_70161_v, SoundEvents.field_187631_bo, SoundCategory.AMBIENT, 3.0F, 1.0F);
+         }
+ 
+-        this.field_92056_a++;
++        ++this.field_92056_a;
+ 
+         if (this.field_70170_p.field_72995_K && this.field_92056_a % 2 < 2)
+         {
+@@ -208,8 +211,10 @@
  
          if (!this.field_70170_p.field_72995_K && this.field_92056_a > this.field_92055_b)
          {
@@ -53,7 +81,7 @@
              this.func_70106_y();
          }
      }
-@@ -224,7 +235,9 @@
+@@ -230,7 +235,9 @@
          {
              if (this.field_191513_e != null)
              {
@@ -63,7 +91,16 @@
              }
  
              double d0 = 5.0;
-@@ -261,7 +274,9 @@
+@@ -242,7 +249,7 @@
+                 {
+                     boolean flag = false;
+ 
+-                    for (int i = 0; i < 2; i++)
++                    for (int i = 0; i < 2; ++i)
+                     {
+                         RayTraceResult raytraceresult = this.field_70170_p
+                                                         .func_147447_a(
+@@ -267,7 +274,9 @@
                      if (flag)
                      {
                          float f1 = f * (float)Math.sqrt((5.0 - (double)this.func_70032_d(entitylivingbase)) / 5.0);

@@ -1,0 +1,20 @@
+--- before/net/minecraft/server/gui/StatsComponent.java
++++ after/net/minecraft/server/gui/StatsComponent.java
+@@ -70,7 +70,7 @@
+         p_paint_1_.setColor(new Color(16777215));
+         p_paint_1_.fillRect(0, 0, 456, 246);
+ 
+-        for (int i = 0; i < 256; i++)
++        for (int i = 0; i < 256; ++i)
+         {
+             int j = this.field_120038_b[i + this.field_120039_c & 0xFF];
+             p_paint_1_.setColor(new Color(j + 28 << 16));
+@@ -79,7 +79,7 @@
+ 
+         p_paint_1_.setColor(Color.BLACK);
+ 
+-        for (int k = 0; k < this.field_120036_d.length; k++)
++        for (int k = 0; k < this.field_120036_d.length; ++k)
+         {
+             String s = this.field_120036_d[k];
+ 

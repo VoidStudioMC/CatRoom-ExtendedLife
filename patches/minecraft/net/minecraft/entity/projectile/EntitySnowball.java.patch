@@ -1,0 +1,11 @@
+--- before/net/minecraft/entity/projectile/EntitySnowball.java
++++ after/net/minecraft/entity/projectile/EntitySnowball.java
+@@ -38,7 +38,7 @@
+     {
+         if (p_70103_1_ == 3)
+         {
+-            for (int i = 0; i < 8; i++)
++            for (int i = 0; i < 8; ++i)
+             {
+                 this.field_70170_p.func_175688_a(EnumParticleTypes.SNOWBALL, this.field_70165_t, this.field_70163_u, this.field_70161_v, 0.0, 0.0, 0.0);
+             }

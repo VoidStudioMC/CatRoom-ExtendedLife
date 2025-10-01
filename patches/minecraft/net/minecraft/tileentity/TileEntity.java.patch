@@ -45,6 +45,15 @@
      }
  
      public NBTTagCompound func_189515_b(NBTTagCompound p_189515_1_)
+@@ -69,7 +79,7 @@
+ 
+     private NBTTagCompound func_189516_d(NBTTagCompound p_189516_1_)
+     {
+-        ResourceLocation resourcelocation = field_190562_f.func_177774_c((Class <? extends TileEntity >)this.getClass());
++        ResourceLocation resourcelocation = field_190562_f.func_177774_c(this.getClass());
+ 
+         if (resourcelocation == null)
+         {
 @@ -81,6 +91,8 @@
              p_189516_1_.func_74768_a("x", this.field_174879_c.func_177958_n());
              p_189516_1_.func_74768_a("y", this.field_174879_c.func_177956_o());
@@ -116,7 +125,29 @@
      }
  
      public BlockPos func_174877_v()
-@@ -244,9 +260,9 @@
+@@ -225,18 +241,13 @@
+ 
+     public void func_145828_a(CrashReportCategory p_145828_1_)
+     {
+-        p_145828_1_.func_189529_a(
+-            "Name",
+-            new ICrashReportDetail<String>()
++        p_145828_1_.func_189529_a("Name", new ICrashReportDetail<String>()
+         {
+             public String call() throws Exception
+             {
+-                return TileEntity.field_190562_f.func_177774_c((Class <? extends TileEntity >)TileEntity.this.getClass())
+-                       + " // "
+-                       + TileEntity.this.getClass().getCanonicalName();
++                return TileEntity.field_190562_f.func_177774_c(TileEntity.this.getClass()) + " // " + TileEntity.this.getClass().getCanonicalName();
+             }
+-        }
+-        );
++        });
+ 
+         if (this.field_145850_b != null)
+         {
+@@ -249,9 +260,9 @@
  
                      try
                      {
@@ -128,7 +159,7 @@
                      {
                          return "ID #" + i;
                      }
-@@ -297,6 +313,204 @@
+@@ -302,6 +313,204 @@
      {
      }
  
@@ -333,7 +364,7 @@
      static
      {
          func_190560_a("furnace", TileEntityFurnace.class);
-@@ -324,5 +538,10 @@
+@@ -329,5 +538,10 @@
          func_190560_a("command_block", TileEntityCommandBlock.class);
          func_190560_a("shulker_box", TileEntityShulkerBox.class);
          func_190560_a("bed", TileEntityBed.class);

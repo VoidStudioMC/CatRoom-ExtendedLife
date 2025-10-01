@@ -1,0 +1,20 @@
+--- before/net/minecraft/server/management/DemoPlayerInteractionManager.java
++++ after/net/minecraft/server/management/DemoPlayerInteractionManager.java
+@@ -26,7 +26,7 @@
+     public void func_73075_a()
+     {
+         super.func_73075_a();
+-        this.field_73102_f++;
++        ++this.field_73102_f;
+         long i = this.field_73092_a.func_82737_E();
+         long j = i / 24000L + 1L;
+ 
+@@ -40,7 +40,7 @@
+ 
+         if (this.field_73103_d)
+         {
+-            this.field_73104_e++;
++            ++this.field_73104_e;
+         }
+ 
+         if (i % 24000L == 500L)

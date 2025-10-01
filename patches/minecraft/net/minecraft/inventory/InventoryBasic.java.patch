@@ -67,3 +67,21 @@
      }
  
      @SideOnly(Side.CLIENT)
+@@ -71,7 +114,7 @@
+     {
+         ItemStack itemstack = p_174894_1_.func_77946_l();
+ 
+-        for (int i = 0; i < this.field_70481_b; i++)
++        for (int i = 0; i < this.field_70481_b; ++i)
+         {
+             ItemStack itemstack1 = this.func_70301_a(i);
+ 
+@@ -193,7 +236,7 @@
+     {
+         if (this.field_70480_d != null)
+         {
+-            for (int i = 0; i < this.field_70480_d.size(); i++)
++            for (int i = 0; i < this.field_70480_d.size(); ++i)
+             {
+                 this.field_70480_d.get(i).func_76316_a(this);
+             }

@@ -1,0 +1,11 @@
+--- before/net/minecraft/world/gen/feature/WorldGenEndPodium.java
++++ after/net/minecraft/world/gen/feature/WorldGenEndPodium.java
+@@ -60,7 +60,7 @@
+             }
+         }
+ 
+-        for (int i = 0; i < 4; i++)
++        for (int i = 0; i < 4; ++i)
+         {
+             this.func_175903_a(p_180709_1_, p_180709_3_.func_177981_b(i), Blocks.field_150357_h.func_176223_P());
+         }

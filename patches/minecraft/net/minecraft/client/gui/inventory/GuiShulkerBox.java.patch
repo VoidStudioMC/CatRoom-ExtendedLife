@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/gui/inventory/GuiShulkerBox.java
++++ after/net/minecraft/client/gui/inventory/GuiShulkerBox.java
+@@ -21,7 +21,7 @@
+         super(new ContainerShulkerBox(p_i47233_1_, p_i47233_2_, Minecraft.func_71410_x().field_71439_g));
+         this.field_190780_w = p_i47233_1_;
+         this.field_190779_v = p_i47233_2_;
+-        this.field_147000_g++;
++        ++this.field_147000_g;
+     }
+ 
+     @Override

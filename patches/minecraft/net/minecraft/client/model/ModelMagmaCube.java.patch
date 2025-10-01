@@ -1,0 +1,20 @@
+--- before/net/minecraft/client/model/ModelMagmaCube.java
++++ after/net/minecraft/client/model/ModelMagmaCube.java
+@@ -14,7 +14,7 @@
+ 
+     public ModelMagmaCube()
+     {
+-        for (int i = 0; i < this.field_78109_a.length; i++)
++        for (int i = 0; i < this.field_78109_a.length; ++i)
+         {
+             int j = 0;
+             int k = i;
+@@ -49,7 +49,7 @@
+             f = 0.0F;
+         }
+ 
+-        for (int i = 0; i < this.field_78109_a.length; i++)
++        for (int i = 0; i < this.field_78109_a.length; ++i)
+         {
+             this.field_78109_a[i].field_78797_d = (float)(-(4 - i)) * f * 1.7F;
+         }

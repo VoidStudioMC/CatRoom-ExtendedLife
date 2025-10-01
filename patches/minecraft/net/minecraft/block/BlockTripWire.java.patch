@@ -8,6 +8,15 @@
  
  public class BlockTripWire extends Block
  {
+@@ -136,7 +137,7 @@
+     {
+         for (EnumFacing enumfacing : new EnumFacing[] {EnumFacing.SOUTH, EnumFacing.WEST})
+         {
+-            for (int i = 1; i < 42; i++)
++            for (int i = 1; i < 42; ++i)
+             {
+                 BlockPos blockpos = p_176286_2_.func_177967_a(enumfacing, i);
+                 IBlockState iblockstate = p_176286_1_.func_180495_p(blockpos);
 @@ -206,6 +207,40 @@
                  }
              }

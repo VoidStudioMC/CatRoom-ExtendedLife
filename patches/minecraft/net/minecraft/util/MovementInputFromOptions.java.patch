@@ -1,0 +1,38 @@
+--- before/net/minecraft/util/MovementInputFromOptions.java
++++ after/net/minecraft/util/MovementInputFromOptions.java
+@@ -22,7 +22,7 @@
+ 
+         if (this.field_78903_e.field_74351_w.func_151470_d())
+         {
+-            this.field_192832_b++;
++            ++this.field_192832_b;
+             this.field_187255_c = true;
+         }
+         else
+@@ -32,7 +32,7 @@
+ 
+         if (this.field_78903_e.field_74368_y.func_151470_d())
+         {
+-            this.field_192832_b--;
++            --this.field_192832_b;
+             this.field_187256_d = true;
+         }
+         else
+@@ -42,7 +42,7 @@
+ 
+         if (this.field_78903_e.field_74370_x.func_151470_d())
+         {
+-            this.field_78902_a++;
++            ++this.field_78902_a;
+             this.field_187257_e = true;
+         }
+         else
+@@ -52,7 +52,7 @@
+ 
+         if (this.field_78903_e.field_74366_z.func_151470_d())
+         {
+-            this.field_78902_a--;
++            --this.field_78902_a;
+             this.field_187258_f = true;
+         }
+         else

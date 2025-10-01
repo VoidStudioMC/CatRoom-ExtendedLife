@@ -1,0 +1,23 @@
+--- before/net/minecraft/client/tutorial/MovementStep.java
++++ after/net/minecraft/client/tutorial/MovementStep.java
+@@ -38,17 +38,17 @@
+     @Override
+     public void func_193245_a()
+     {
+-        this.field_193261_h++;
++        ++this.field_193261_h;
+ 
+         if (this.field_193264_k)
+         {
+-            this.field_193262_i++;
++            ++this.field_193262_i;
+             this.field_193264_k = false;
+         }
+ 
+         if (this.field_193265_l)
+         {
+-            this.field_193263_j++;
++            ++this.field_193263_j;
+             this.field_193265_l = false;
+         }
+ 

@@ -1,0 +1,17 @@
+--- before/net/minecraft/entity/ai/EntityAIOcelotAttack.java
++++ after/net/minecraft/entity/ai/EntityAIOcelotAttack.java
+@@ -41,9 +41,13 @@
+         {
+             return false;
+         }
++        else if (this.field_75409_b.func_70068_e(this.field_75410_c) > 225.0)
++        {
++            return false;
++        }
+         else
+         {
+-            return this.field_75409_b.func_70068_e(this.field_75410_c) > 225.0 ? false : !this.field_75409_b.func_70661_as().func_75500_f() || this.func_75250_a();
++            return !this.field_75409_b.func_70661_as().func_75500_f() || this.func_75250_a();
+         }
+     }
+ 

@@ -1,0 +1,11 @@
+--- before/net/minecraft/command/CommandParticle.java
++++ after/net/minecraft/command/CommandParticle.java
+@@ -85,7 +85,7 @@
+ 
+                 int[] aint = new int[enumparticletypes.func_179345_d()];
+ 
+-                for (int j = 0; j < aint.length; j++)
++                for (int j = 0; j < aint.length; ++j)
+                 {
+                     if (p_184881_3_.length > 11 + j)
+                     {

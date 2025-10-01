@@ -1,0 +1,29 @@
+--- before/net/minecraft/network/play/server/SPacketChunkData.java
++++ after/net/minecraft/network/play/server/SPacketChunkData.java
+@@ -74,7 +74,7 @@
+             int j = p_148837_1_.func_150792_a();
+             this.field_189557_e = Lists.newArrayList();
+ 
+-            for (int k = 0; k < j; k++)
++            for (int k = 0; k < j; ++k)
+             {
+                 this.field_189557_e.add(p_148837_1_.func_150793_b());
+             }
+@@ -122,7 +122,7 @@
+         ExtendedBlockStorage[] aextendedblockstorage = p_189555_2_.func_76587_i();
+         int j = 0;
+ 
+-        for (int k = aextendedblockstorage.length; j < k; j++)
++        for (int k = aextendedblockstorage.length; j < k; ++j)
+         {
+             ExtendedBlockStorage extendedblockstorage = aextendedblockstorage[j];
+ 
+@@ -153,7 +153,7 @@
+         ExtendedBlockStorage[] aextendedblockstorage = p_189556_1_.func_76587_i();
+         int j = 0;
+ 
+-        for (int k = aextendedblockstorage.length; j < k; j++)
++        for (int k = aextendedblockstorage.length; j < k; ++j)
+         {
+             ExtendedBlockStorage extendedblockstorage = aextendedblockstorage[j];
+ 

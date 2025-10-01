@@ -1,0 +1,11 @@
+--- before/net/minecraft/world/NextTickListEntry.java
++++ after/net/minecraft/world/NextTickListEntry.java
+@@ -14,7 +14,7 @@
+ 
+     public NextTickListEntry(BlockPos p_i45745_1_, Block p_i45745_2_)
+     {
+-        this.field_77178_g = field_77177_f++;
++        this.field_77178_g = (long)(field_77177_f++);
+         this.field_180282_a = p_i45745_1_.func_185334_h();
+         this.field_151352_g = p_i45745_2_;
+     }

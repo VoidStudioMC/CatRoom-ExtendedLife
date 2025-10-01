@@ -1,0 +1,17 @@
+--- before/net/minecraft/pathfinding/SwimNodeProcessor.java
++++ after/net/minecraft/pathfinding/SwimNodeProcessor.java
+@@ -87,11 +87,11 @@
+     {
+         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+ 
+-        for (int i = p_186327_1_; i < p_186327_1_ + this.field_176168_c; i++)
++        for (int i = p_186327_1_; i < p_186327_1_ + this.field_176168_c; ++i)
+         {
+-            for (int j = p_186327_2_; j < p_186327_2_ + this.field_176165_d; j++)
++            for (int j = p_186327_2_; j < p_186327_2_ + this.field_176165_d; ++j)
+             {
+-                for (int k = p_186327_3_; k < p_186327_3_ + this.field_176166_e; k++)
++                for (int k = p_186327_3_; k < p_186327_3_ + this.field_176166_e; ++k)
+                 {
+                     IBlockState iblockstate = this.field_176169_a.func_180495_p(blockpos$mutableblockpos.func_181079_c(i, j, k));
+ 

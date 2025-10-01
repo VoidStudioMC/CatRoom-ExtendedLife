@@ -1,0 +1,11 @@
+--- before/net/minecraft/util/datafix/fixes/BookPagesStrictJSON.java
++++ after/net/minecraft/util/datafix/fixes/BookPagesStrictJSON.java
+@@ -29,7 +29,7 @@
+             {
+                 NBTTagList nbttaglist = nbttagcompound.func_150295_c("pages", 8);
+ 
+-                for (int i = 0; i < nbttaglist.func_74745_c(); i++)
++                for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+                 {
+                     String s = nbttaglist.func_150307_f(i);
+                     ITextComponent itextcomponent = null;

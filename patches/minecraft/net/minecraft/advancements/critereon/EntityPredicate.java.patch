@@ -1,0 +1,17 @@
+--- before/net/minecraft/advancements/critereon/EntityPredicate.java
++++ after/net/minecraft/advancements/critereon/EntityPredicate.java
+@@ -67,9 +67,13 @@
+         {
+             return false;
+         }
++        else if (!this.field_193436_e.func_193469_a(p_192482_2_))
++        {
++            return false;
++        }
+         else
+         {
+-            return !this.field_193436_e.func_193469_a(p_192482_2_) ? false : this.field_193437_f.func_193475_a(p_192482_2_);
++            return this.field_193437_f.func_193475_a(p_192482_2_);
+         }
+     }
+ 

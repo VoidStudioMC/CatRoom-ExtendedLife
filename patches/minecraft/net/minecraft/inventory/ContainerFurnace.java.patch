@@ -9,7 +9,7 @@
  
  public class ContainerFurnace extends Container
  {
-@@ -16,12 +18,16 @@
+@@ -16,22 +18,26 @@
      private int field_178154_h;
      private int field_178155_i;
  
@@ -24,8 +24,30 @@
          this.func_75146_a(new SlotFurnaceOutput(p_i45794_1_.field_70458_d, p_i45794_2_, 2, 116, 35));
 +        this.player = p_i45794_1_;
  
-         for (int i = 0; i < 3; ++i)
+-        for (int i = 0; i < 3; i++)
++        for (int i = 0; i < 3; ++i)
          {
+-            for (int j = 0; j < 9; j++)
++            for (int j = 0; j < 9; ++j)
+             {
+                 this.func_75146_a(new Slot(p_i45794_1_, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+             }
+         }
+ 
+-        for (int k = 0; k < 9; k++)
++        for (int k = 0; k < 9; ++k)
+         {
+             this.func_75146_a(new Slot(p_i45794_1_, k, 8 + k * 18, 142));
+         }
+@@ -49,7 +55,7 @@
+     {
+         super.func_75142_b();
+ 
+-        for (int i = 0; i < this.field_75149_d.size(); i++)
++        for (int i = 0; i < this.field_75149_d.size(); ++i)
+         {
+             IContainerListener icontainerlistener = this.field_75149_d.get(i);
+ 
 @@ -90,6 +96,7 @@
      @Override
      public boolean func_75145_c(EntityPlayer p_75145_1_)

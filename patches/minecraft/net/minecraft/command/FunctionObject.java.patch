@@ -24,3 +24,12 @@
              }
  
              @Override
+@@ -147,7 +155,7 @@
+                     int i = p_194145_4_ - p_194145_3_.size();
+                     int j = Math.min(afunctionobject$entry.length, i);
+ 
+-                    for (int k = j - 1; k >= 0; k--)
++                    for (int k = j - 1; k >= 0; --k)
+                     {
+                         p_194145_3_.addFirst(new FunctionManager.QueuedCommand(p_194145_1_, p_194145_2_, afunctionobject$entry[k]));
+                     }

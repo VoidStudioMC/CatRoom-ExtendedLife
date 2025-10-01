@@ -17,3 +17,48 @@
  
      public EntityEnderEye(World p_i1757_1_)
      {
+@@ -105,9 +105,9 @@
+         this.field_70137_T = this.field_70163_u;
+         this.field_70136_U = this.field_70161_v;
+         super.func_70071_h_();
+-        this.field_70165_t = this.field_70165_t + this.field_70159_w;
+-        this.field_70163_u = this.field_70163_u + this.field_70181_x;
+-        this.field_70161_v = this.field_70161_v + this.field_70179_y;
++        this.field_70165_t += this.field_70159_w;
++        this.field_70163_u += this.field_70181_x;
++        this.field_70161_v += this.field_70179_y;
+         float f = MathHelper.func_76133_a(this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y);
+         this.field_70177_z = (float)(MathHelper.func_181159_b(this.field_70159_w, this.field_70179_y) * 180.0F / (float)Math.PI);
+         this.field_70125_A = (float)(MathHelper.func_181159_b(this.field_70181_x, (double)f) * 180.0F / (float)Math.PI);
+@@ -154,11 +154,11 @@
+ 
+             if (this.field_70163_u < this.field_70225_c)
+             {
+-                this.field_70181_x = this.field_70181_x + (1.0 - this.field_70181_x) * 0.015F;
++                this.field_70181_x += (1.0 - this.field_70181_x) * 0.015F;
+             }
+             else
+             {
+-                this.field_70181_x = this.field_70181_x + (-1.0 - this.field_70181_x) * 0.015F;
++                this.field_70181_x += (-1.0 - this.field_70181_x) * 0.015F;
+             }
+         }
+ 
+@@ -166,7 +166,7 @@
+ 
+         if (this.func_70090_H())
+         {
+-            for (int i = 0; i < 4; i++)
++            for (int i = 0; i < 4; ++i)
+             {
+                 this.field_70170_p
+                 .func_175688_a(
+@@ -197,7 +197,7 @@
+         if (!this.field_70170_p.field_72995_K)
+         {
+             this.func_70107_b(this.field_70165_t, this.field_70163_u, this.field_70161_v);
+-            this.field_70223_e++;
++            ++this.field_70223_e;
+ 
+             if (this.field_70223_e > 80 && !this.field_70170_p.field_72995_K)
+             {

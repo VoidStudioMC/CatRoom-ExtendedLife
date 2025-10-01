@@ -1,0 +1,50 @@
+--- before/net/minecraft/command/CommandReplaceItem.java
++++ after/net/minecraft/command/CommandReplaceItem.java
+@@ -106,7 +106,7 @@
+                 item = null;
+             }
+ 
+-            i++;
++            ++i;
+             int k = p_184881_3_.length > i ? func_175764_a(p_184881_3_[i++], 1, item.func_77639_j()) : 1;
+             int l = p_184881_3_.length > i ? func_175755_a(p_184881_3_[i++]) : 0;
+             ItemStack itemstack = new ItemStack(item, k, l);
+@@ -217,32 +217,32 @@
+ 
+     static
+     {
+-        for (int i = 0; i < 54; i++)
++        for (int i = 0; i < 54; ++i)
+         {
+             field_175785_a.put("slot.container." + i, i);
+         }
+ 
+-        for (int j = 0; j < 9; j++)
++        for (int j = 0; j < 9; ++j)
+         {
+             field_175785_a.put("slot.hotbar." + j, j);
+         }
+ 
+-        for (int k = 0; k < 27; k++)
++        for (int k = 0; k < 27; ++k)
+         {
+             field_175785_a.put("slot.inventory." + k, 9 + k);
+         }
+ 
+-        for (int l = 0; l < 27; l++)
++        for (int l = 0; l < 27; ++l)
+         {
+             field_175785_a.put("slot.enderchest." + l, 200 + l);
+         }
+ 
+-        for (int i1 = 0; i1 < 8; i1++)
++        for (int i1 = 0; i1 < 8; ++i1)
+         {
+             field_175785_a.put("slot.villager." + i1, 300 + i1);
+         }
+ 
+-        for (int j1 = 0; j1 < 15; j1++)
++        for (int j1 = 0; j1 < 15; ++j1)
+         {
+             field_175785_a.put("slot.horse." + j1, 500 + j1);
+         }

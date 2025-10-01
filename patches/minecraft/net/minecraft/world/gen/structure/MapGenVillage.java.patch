@@ -1,0 +1,11 @@
+--- before/net/minecraft/world/gen/structure/MapGenVillage.java
++++ after/net/minecraft/world/gen/structure/MapGenVillage.java
+@@ -139,7 +139,7 @@
+                 {
+                     if (!(structurecomponent1 instanceof StructureVillagePieces.Road))
+                     {
+-                        k++;
++                        ++k;
+                     }
+                 }
+ 

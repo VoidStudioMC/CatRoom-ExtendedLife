@@ -122,6 +122,15 @@
                  }
              }
  
+@@ -112,7 +154,7 @@
+                     public void onProfileLookupSucceeded(GameProfile p_onProfileLookupSucceeded_1_)
+                     {
+                         p_152724_0_.func_152358_ax().func_152649_a(p_onProfileLookupSucceeded_1_);
+-                        String[] astring = map.get(p_onProfileLookupSucceeded_1_.getName().toLowerCase(Locale.ROOT));
++                        String[] astring = (String[])map.get(p_onProfileLookupSucceeded_1_.getName().toLowerCase(Locale.ROOT));
+ 
+                         if (astring == null)
+                         {
 @@ -177,9 +219,10 @@
                  {
                      userlistipbans.func_152679_g();
@@ -135,6 +144,15 @@
                  }
              }
  
+@@ -190,7 +233,7 @@
+ 
+                 for (String s : map.keySet())
+                 {
+-                    String[] astring = map.get(s);
++                    String[] astring = (String[])map.get(s);
+                     Date date = astring.length > 1 ? func_152713_b(astring[1], null) : null;
+                     String s1 = astring.length > 2 ? astring[2] : null;
+                     Date date1 = astring.length > 3 ? func_152713_b(astring[3], null) : null;
 @@ -227,9 +270,10 @@
                  {
                      userlistops.func_152679_g();

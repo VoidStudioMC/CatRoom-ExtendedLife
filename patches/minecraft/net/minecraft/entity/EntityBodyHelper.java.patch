@@ -1,0 +1,11 @@
+--- before/net/minecraft/entity/EntityBodyHelper.java
++++ after/net/minecraft/entity/EntityBodyHelper.java
+@@ -38,7 +38,7 @@
+                 }
+                 else
+                 {
+-                    this.field_75666_b++;
++                    ++this.field_75666_b;
+                     int i = 10;
+ 
+                     if (this.field_75666_b > 10)

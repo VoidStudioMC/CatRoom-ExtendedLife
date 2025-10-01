@@ -129,7 +129,8 @@
  
      public int func_70447_i()
      {
-         for (int i = 0; i < this.field_70462_a.size(); ++i)
+-        for (int i = 0; i < this.field_70462_a.size(); i++)
++        for (int i = 0; i < this.field_70462_a.size(); ++i)
          {
 -            if (this.field_70462_a.get(i).func_190926_b())
 +            if (((ItemStack)this.field_70462_a.get(i)).func_190926_b())
@@ -145,16 +146,24 @@
                  {
                      int j = this.func_70447_i();
  
-@@ -133,7 +193,7 @@
+@@ -131,9 +191,9 @@
+     @SideOnly(Side.CLIENT)
+     public int func_184429_b(ItemStack p_184429_1_)
      {
-         for (int i = 0; i < this.field_70462_a.size(); ++i)
+-        for (int i = 0; i < this.field_70462_a.size(); i++)
++        for (int i = 0; i < this.field_70462_a.size(); ++i)
          {
 -            if (!this.field_70462_a.get(i).func_190926_b() && this.func_184431_b(p_184429_1_, this.field_70462_a.get(i)))
 +            if (!((ItemStack)this.field_70462_a.get(i)).func_190926_b() && this.func_184431_b(p_184429_1_, this.field_70462_a.get(i)))
              {
                  return i;
              }
-@@ -148,11 +208,7 @@
+@@ -144,15 +204,11 @@
+ 
+     public int func_194014_c(ItemStack p_194014_1_)
+     {
+-        for (int i = 0; i < this.field_70462_a.size(); i++)
++        for (int i = 0; i < this.field_70462_a.size(); ++i)
          {
              ItemStack itemstack = this.field_70462_a.get(i);
  
@@ -167,7 +176,12 @@
              {
                  return i;
              }
-@@ -167,7 +223,7 @@
+@@ -163,21 +219,21 @@
+ 
+     public int func_184433_k()
+     {
+-        for (int i = 0; i < 9; i++)
++        for (int i = 0; i < 9; ++i)
          {
              int j = (this.field_70461_c + i) % 9;
  
@@ -176,7 +190,10 @@
              {
                  return j;
              }
-@@ -177,7 +233,7 @@
+         }
+ 
+-        for (int k = 0; k < 9; k++)
++        for (int k = 0; k < 9; ++k)
          {
              int l = (this.field_70461_c + k) % 9;
  
@@ -199,7 +216,12 @@
          }
  
          while (this.field_70461_c >= 9)
-@@ -220,10 +274,7 @@
+@@ -216,14 +270,11 @@
+     {
+         int i = 0;
+ 
+-        for (int j = 0; j < this.func_70302_i_(); j++)
++        for (int j = 0; j < this.func_70302_i_(); ++j)
          {
              ItemStack itemstack = this.func_70301_a(j);
  
@@ -230,9 +252,21 @@
              itemstack.func_190917_f(j);
              itemstack.func_190915_d(5);
              return i;
-@@ -369,10 +421,17 @@
+@@ -351,7 +403,7 @@
+         }
+         else
          {
-             for (int i = 0; i < nonnulllist.size(); ++i)
+-            for (int i = 0; i < this.field_70462_a.size(); i++)
++            for (int i = 0; i < this.field_70462_a.size(); ++i)
+             {
+                 if (this.func_184436_a(this.field_70462_a.get(i), p_70432_1_))
+                 {
+@@ -367,12 +419,19 @@
+     {
+         for (NonNullList<ItemStack> nonnulllist : this.field_184440_g)
+         {
+-            for (int i = 0; i < nonnulllist.size(); i++)
++            for (int i = 0; i < nonnulllist.size(); ++i)
              {
 -                if (!nonnulllist.get(i).func_190926_b())
 +                if (!((ItemStack)nonnulllist.get(i)).func_190926_b())
@@ -303,7 +337,7 @@
      public ItemStack func_70298_a(int p_70298_1_, int p_70298_2_)
      {
          List<ItemStack> list = null;
-@@ -509,7 +573,7 @@
+@@ -509,14 +573,14 @@
              p_70298_1_ -= nonnulllist.size();
          }
  
@@ -312,6 +346,14 @@
      }
  
      public void func_184437_d(ItemStack p_184437_1_)
+     {
+         for (NonNullList<ItemStack> nonnulllist : this.field_184440_g)
+         {
+-            for (int i = 0; i < nonnulllist.size(); i++)
++            for (int i = 0; i < nonnulllist.size(); ++i)
+             {
+                 if (nonnulllist.get(i) == p_184437_1_)
+                 {
 @@ -527,7 +591,6 @@
          }
      }
@@ -349,9 +391,12 @@
          }
  
          return f;
-@@ -593,33 +655,33 @@
+@@ -591,35 +653,35 @@
+ 
+     public NBTTagList func_70442_a(NBTTagList p_70442_1_)
      {
-         for (int i = 0; i < this.field_70462_a.size(); ++i)
+-        for (int i = 0; i < this.field_70462_a.size(); i++)
++        for (int i = 0; i < this.field_70462_a.size(); ++i)
          {
 -            if (!this.field_70462_a.get(i).func_190926_b())
 +            if (!((ItemStack)this.field_70462_a.get(i)).func_190926_b())
@@ -364,7 +409,8 @@
              }
          }
  
-         for (int j = 0; j < this.field_70460_b.size(); ++j)
+-        for (int j = 0; j < this.field_70460_b.size(); j++)
++        for (int j = 0; j < this.field_70460_b.size(); ++j)
          {
 -            if (!this.field_70460_b.get(j).func_190926_b())
 +            if (!((ItemStack)this.field_70460_b.get(j)).func_190926_b())
@@ -377,7 +423,8 @@
              }
          }
  
-         for (int k = 0; k < this.field_184439_c.size(); ++k)
+-        for (int k = 0; k < this.field_184439_c.size(); k++)
++        for (int k = 0; k < this.field_184439_c.size(); ++k)
          {
 -            if (!this.field_184439_c.get(k).func_190926_b())
 +            if (!((ItemStack)this.field_184439_c.get(k)).func_190926_b())
@@ -389,6 +436,15 @@
                  p_70442_1_.func_74742_a(nbttagcompound2);
              }
          }
+@@ -633,7 +695,7 @@
+         this.field_70460_b.clear();
+         this.field_184439_c.clear();
+ 
+-        for (int i = 0; i < p_70443_1_.func_74745_c(); i++)
++        for (int i = 0; i < p_70443_1_.func_74745_c(); ++i)
+         {
+             NBTTagCompound nbttagcompound = p_70443_1_.func_150305_b(i);
+             int j = nbttagcompound.func_74771_c("Slot") & 255;
 @@ -657,13 +719,11 @@
          }
      }
@@ -446,7 +502,7 @@
      }
  
      public boolean func_184432_b(IBlockState p_184432_1_)
-@@ -757,7 +812,7 @@
+@@ -757,14 +812,14 @@
  
      public void func_70449_g(float p_70449_1_)
      {
@@ -455,15 +511,36 @@
  
          if (p_70449_1_ < 1.0F)
          {
-@@ -792,7 +847,6 @@
+             p_70449_1_ = 1.0F;
+         }
+ 
+-        for (int i = 0; i < this.field_70460_b.size(); i++)
++        for (int i = 0; i < this.field_70460_b.size(); ++i)
+         {
+             ItemStack itemstack = this.field_70460_b.get(i);
+ 
+@@ -779,7 +834,7 @@
+     {
+         for (List<ItemStack> list : this.field_184440_g)
+         {
+-            for (int i = 0; i < list.size(); i++)
++            for (int i = 0; i < list.size(); ++i)
+             {
+                 ItemStack itemstack = list.get(i);
+ 
+@@ -792,10 +847,9 @@
          }
      }
  
 -    @Override
      public void func_70296_d()
      {
-         ++this.field_194017_h;
-@@ -811,10 +865,12 @@
+-        this.field_194017_h++;
++        ++this.field_194017_h;
+     }
+ 
+     @SideOnly(Side.CLIENT)
+@@ -811,42 +865,61 @@
  
      public ItemStack func_70445_o()
      {
@@ -476,14 +553,15 @@
 -    @Override
      public boolean func_70300_a(EntityPlayer p_70300_1_)
      {
-         if (this.field_70458_d.field_70128_L)
-@@ -823,37 +879,47 @@
-         }
-         else
-         {
--            return !(p_70300_1_.func_70068_e(this.field_70458_d) > 64.0);
+-        return this.field_70458_d.field_70128_L ? false : !(p_70300_1_.func_70068_e(this.field_70458_d) > 64.0);
++        if (this.field_70458_d.field_70128_L)
++        {
++            return false;
++        }
++        else
++        {
 +            return p_70300_1_.func_70068_e(this.field_70458_d) <= 64.0D;
-         }
++        }
      }
  
      public boolean func_70431_c(ItemStack p_70431_1_)
@@ -531,7 +609,16 @@
      public boolean func_94041_b(int p_94041_1_, ItemStack p_94041_2_)
      {
          return true;
-@@ -869,24 +935,20 @@
+@@ -854,7 +927,7 @@
+ 
+     public void func_70455_b(InventoryPlayer p_70455_1_)
+     {
+-        for (int i = 0; i < this.func_70302_i_(); i++)
++        for (int i = 0; i < this.func_70302_i_(); ++i)
+         {
+             this.func_70299_a(i, p_70455_1_.func_70301_a(i));
+         }
+@@ -862,24 +935,20 @@
          this.field_70461_c = p_70455_1_.field_70461_c;
      }
  

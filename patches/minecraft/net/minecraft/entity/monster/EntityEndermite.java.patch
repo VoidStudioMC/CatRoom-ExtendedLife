@@ -1,0 +1,20 @@
+--- before/net/minecraft/entity/monster/EntityEndermite.java
++++ after/net/minecraft/entity/monster/EntityEndermite.java
+@@ -158,7 +158,7 @@
+ 
+         if (this.field_70170_p.field_72995_K)
+         {
+-            for (int i = 0; i < 2; i++)
++            for (int i = 0; i < 2; ++i)
+             {
+                 this.field_70170_p
+                 .func_175688_a(
+@@ -176,7 +176,7 @@
+         {
+             if (!this.func_104002_bU())
+             {
+-                this.field_175497_b++;
++                ++this.field_175497_b;
+             }
+ 
+             if (this.field_175497_b >= 2400)

@@ -1,0 +1,11 @@
+--- before/net/minecraft/entity/item/EntityMinecartTNT.java
++++ after/net/minecraft/entity/item/EntityMinecartTNT.java
+@@ -56,7 +56,7 @@
+ 
+         if (this.field_94106_a > 0)
+         {
+-            this.field_94106_a--;
++            --this.field_94106_a;
+             this.field_70170_p.func_175688_a(EnumParticleTypes.SMOKE_NORMAL, this.field_70165_t, this.field_70163_u + 0.5, this.field_70161_v, 0.0, 0.0, 0.0);
+         }
+         else if (this.field_94106_a == 0)

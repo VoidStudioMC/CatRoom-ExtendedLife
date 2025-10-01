@@ -8,7 +8,23 @@
  
  public abstract class EntityCreature extends EntityLiving
  {
-@@ -95,6 +96,7 @@
+@@ -44,7 +45,14 @@
+ 
+     public boolean func_180485_d(BlockPos p_180485_1_)
+     {
+-        return this.field_70772_bD == -1.0F ? true : this.field_70775_bC.func_177951_i(p_180485_1_) < (double)(this.field_70772_bD * this.field_70772_bD);
++        if (this.field_70772_bD == -1.0F)
++        {
++            return true;
++        }
++        else
++        {
++            return this.field_70775_bC.func_177951_i(p_180485_1_) < (double)(this.field_70772_bD * this.field_70772_bD);
++        }
+     }
+ 
+     public void func_175449_a(BlockPos p_175449_1_, int p_175449_2_)
+@@ -88,6 +96,7 @@
              {
                  if (f > 10.0F)
                  {
@@ -16,7 +32,7 @@
                      this.func_110160_i(true, true);
                  }
  
-@@ -105,6 +107,7 @@
+@@ -98,6 +107,7 @@
  
              if (f > 10.0F)
              {
@@ -24,3 +40,16 @@
                  this.func_110160_i(true, true);
                  this.field_70714_bg.func_188526_c(1);
              }
+@@ -106,9 +116,9 @@
+                 double d0 = (entity.field_70165_t - this.field_70165_t) / (double)f;
+                 double d1 = (entity.field_70163_u - this.field_70163_u) / (double)f;
+                 double d2 = (entity.field_70161_v - this.field_70161_v) / (double)f;
+-                this.field_70159_w = this.field_70159_w + d0 * Math.abs(d0) * 0.4;
+-                this.field_70181_x = this.field_70181_x + d1 * Math.abs(d1) * 0.4;
+-                this.field_70179_y = this.field_70179_y + d2 * Math.abs(d2) * 0.4;
++                this.field_70159_w += d0 * Math.abs(d0) * 0.4;
++                this.field_70181_x += d1 * Math.abs(d1) * 0.4;
++                this.field_70179_y += d2 * Math.abs(d2) * 0.4;
+             }
+             else
+             {

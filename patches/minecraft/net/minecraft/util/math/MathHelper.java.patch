@@ -1,0 +1,20 @@
+--- before/net/minecraft/util/math/MathHelper.java
++++ after/net/minecraft/util/math/MathHelper.java
+@@ -544,7 +544,7 @@
+ 
+     static
+     {
+-        for (int i = 0; i < 65536; i++)
++        for (int i = 0; i < 65536; ++i)
+         {
+             field_76144_a[i] = (float)Math.sin((double)i * Math.PI * 2.0 / 65536.0);
+         }
+@@ -554,7 +554,7 @@
+         field_181164_e = new double[257];
+         field_181165_f = new double[257];
+ 
+-        for (int j = 0; j < 257; j++)
++        for (int j = 0; j < 257; ++j)
+         {
+             double d0 = (double)j / 256.0;
+             double d1 = Math.asin(d0);

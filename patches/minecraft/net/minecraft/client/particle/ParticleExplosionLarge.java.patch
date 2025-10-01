@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/particle/ParticleExplosionLarge.java
++++ after/net/minecraft/client/particle/ParticleExplosionLarge.java
+@@ -129,7 +129,7 @@
+         this.field_187123_c = this.field_187126_f;
+         this.field_187124_d = this.field_187127_g;
+         this.field_187125_e = this.field_187128_h;
+-        this.field_70581_a++;
++        ++this.field_70581_a;
+ 
+         if (this.field_70581_a == this.field_70584_aq)
+         {

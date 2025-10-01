@@ -1,0 +1,29 @@
+--- before/net/minecraft/block/BlockSponge.java
++++ after/net/minecraft/block/BlockSponge.java
+@@ -87,7 +87,7 @@
+                 {
+                     p_176312_1_.func_180501_a(blockpos1, Blocks.field_150350_a.func_176223_P(), 2);
+                     list.add(blockpos1);
+-                    i++;
++                    ++i;
+ 
+                     if (j < 6)
+                     {
+@@ -165,7 +165,7 @@
+ 
+                         if (enumfacing == EnumFacing.EAST)
+                         {
+-                            d0++;
++                            ++d0;
+                         }
+                         else
+                         {
+@@ -178,7 +178,7 @@
+ 
+                         if (enumfacing == EnumFacing.SOUTH)
+                         {
+-                            d2++;
++                            ++d2;
+                         }
+                         else
+                         {

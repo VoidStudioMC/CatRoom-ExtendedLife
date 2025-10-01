@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/gui/ScreenChatOptions.java
++++ after/net/minecraft/client/gui/ScreenChatOptions.java
+@@ -73,7 +73,7 @@
+                 }
+             }
+ 
+-            i++;
++            ++i;
+         }
+ 
+         this.field_146292_n.add(new GuiButton(200, this.field_146294_l / 2 - 100, this.field_146295_m / 6 + 144, I18n.func_135052_a("gui.done")));

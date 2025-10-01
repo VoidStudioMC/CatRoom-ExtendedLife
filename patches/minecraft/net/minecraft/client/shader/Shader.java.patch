@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/shader/Shader.java
++++ after/net/minecraft/client/shader/Shader.java
+@@ -73,7 +73,7 @@
+         GlStateManager.func_179083_b(0, 0, (int)f, (int)f1);
+         this.field_148051_c.func_147992_a("DiffuseSampler", this.field_148052_a);
+ 
+-        for (int i = 0; i < this.field_148048_d.size(); i++)
++        for (int i = 0; i < this.field_148048_d.size(); ++i)
+         {
+             this.field_148051_c.func_147992_a(this.field_148049_e.get(i), this.field_148048_d.get(i));
+             this.field_148051_c

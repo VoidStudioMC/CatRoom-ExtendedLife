@@ -1,0 +1,35 @@
+--- before/net/minecraft/util/text/TextComponentTranslation.java
++++ after/net/minecraft/util/text/TextComponentTranslation.java
+@@ -80,10 +80,12 @@
+ 
+         try
+         {
+-            while (matcher.find(j))
++            int l;
++
++            for (; matcher.find(j); j = l)
+             {
+                 int k = matcher.start();
+-                int l = matcher.end();
++                l = matcher.end();
+ 
+                 if (k > j)
+                 {
+@@ -116,8 +118,6 @@
+                         this.field_150278_b.add(this.func_150272_a(i1));
+                     }
+                 }
+-
+-                j = l;
+             }
+ 
+             if (j < p_150269_1_.length())
+@@ -207,7 +207,7 @@
+     {
+         Object[] aobject = new Object[this.field_150277_e.length];
+ 
+-        for (int i = 0; i < this.field_150277_e.length; i++)
++        for (int i = 0; i < this.field_150277_e.length; ++i)
+         {
+             if (this.field_150277_e[i] instanceof ITextComponent)
+             {

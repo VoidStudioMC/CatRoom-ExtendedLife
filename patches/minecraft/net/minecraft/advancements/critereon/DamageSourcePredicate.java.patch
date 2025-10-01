@@ -1,0 +1,19 @@
+--- before/net/minecraft/advancements/critereon/DamageSourcePredicate.java
++++ after/net/minecraft/advancements/critereon/DamageSourcePredicate.java
+@@ -90,11 +90,13 @@
+         {
+             return false;
+         }
++        else if (!this.field_193419_i.func_192482_a(p_193418_1_, p_193418_2_.func_76364_f()))
++        {
++            return false;
++        }
+         else
+         {
+-            return !this.field_193419_i.func_192482_a(p_193418_1_, p_193418_2_.func_76364_f())
+-                   ? false
+-                   : this.field_193420_j.func_192482_a(p_193418_1_, p_193418_2_.func_76346_g());
++            return this.field_193420_j.func_192482_a(p_193418_1_, p_193418_2_.func_76346_g());
+         }
+     }
+ 

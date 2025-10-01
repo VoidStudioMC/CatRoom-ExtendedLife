@@ -145,7 +145,7 @@ public class TerminalConsoleAppender extends AbstractAppender
      * @see TerminalConsoleAppender
      */
     @Nullable
-    public static Terminal getTerminal()
+    public synchronized static Terminal getTerminal()
     {
         return terminal;
     }
@@ -158,7 +158,7 @@ public class TerminalConsoleAppender extends AbstractAppender
      * @return The current line reader, or null if none
      */
     @Nullable
-    public static LineReader getReader()
+    public synchronized static LineReader getReader()
     {
         return reader;
     }
@@ -173,7 +173,7 @@ public class TerminalConsoleAppender extends AbstractAppender
      *
      * @param newReader The new line reader
      */
-    public static void setReader(@Nullable LineReader newReader)
+    public synchronized static void setReader(@Nullable LineReader newReader)
     {
         if (newReader != null && newReader.getTerminal() != terminal)
         {
@@ -214,7 +214,7 @@ public class TerminalConsoleAppender extends AbstractAppender
         initializeTerminal();
     }
 
-    private static void initializeTerminal()
+    private synchronized static void initializeTerminal()
     {
         if (!initialized)
         {
@@ -295,34 +295,59 @@ public class TerminalConsoleAppender extends AbstractAppender
     @Override
     public void append(LogEvent event)
     {
-        if (catserver.server.log4j.AsyncConsoleWriteQueue.enable) catserver.server.log4j.AsyncConsoleWriteQueue.addLogToQueue(getLayout().toSerializable(event));
-        else write(getLayout().toSerializable(event));
+		// TODO: AsyncConsoleWriteQueue need test
+		// TODO: i think we should abandon AsyncConsoleWriteQueue and delete it
+	    if (catserver.server.log4j.AsyncConsoleWriteQueue.enable) catserver.server.log4j.AsyncConsoleWriteQueue.addLogToQueue(getLayout().toSerializable(event));
+	    else print(getLayout().toSerializable(event).toString());
     }
 
-    public static void write(Object object)
+    private synchronized void print(String text)
     {
         if (terminal != null)
         {
             if (reader != null)
             {
-                // Draw the prompt line again if a reader is available
-                reader.callWidget(LineReader.CLEAR);
-                terminal.writer().print(object);
-                reader.callWidget(LineReader.REDRAW_LINE);
-                reader.callWidget(LineReader.REDISPLAY);
+                reader.printAbove(text);
             }
             else
             {
-                terminal.writer().print(object);
+                terminal.writer().print(text);
+                terminal.writer().flush();
             }
 
             terminal.writer().flush();
         }
         else
         {
-            stdout.print(object);
+            stdout.print(text);
         }
     }
+
+	// for backward compatibility with AsyncConsoleWriteQueue
+	public static void write(Object object)
+	{
+		if (terminal != null)
+		{
+			if (reader != null)
+			{
+				// Draw the prompt line again if a reader is available
+				reader.callWidget(LineReader.CLEAR);
+				terminal.writer().print(object);
+				reader.callWidget(LineReader.REDRAW_LINE);
+				reader.callWidget(LineReader.REDISPLAY);
+			}
+			else
+			{
+				terminal.writer().print(object);
+			}
+
+			terminal.writer().flush();
+		}
+		else
+		{
+			stdout.print(object);
+		}
+	}
 
     /**
      * Closes the JLine {@link Terminal} (if available) and restores the original
@@ -330,7 +355,7 @@ public class TerminalConsoleAppender extends AbstractAppender
      *
      * @throws IOException If an I/O error occurs
      */
-    public static void close() throws IOException
+    public synchronized static void close() throws IOException
     {
         if (initialized)
         {

@@ -9,3 +9,17 @@
  
      public BlockShulkerBox(EnumDyeColor p_i47248_1_)
      {
+@@ -273,11 +273,11 @@
+                 {
+                     if (!itemstack.func_190926_b())
+                     {
+-                        j++;
++                        ++j;
+ 
+                         if (i <= 4)
+                         {
+-                            i++;
++                            ++i;
+                             p_190948_3_.add(String.format("%s x%d", itemstack.func_82833_r(), itemstack.func_190916_E()));
+                         }
+                     }

@@ -1,0 +1,50 @@
+--- before/net/minecraft/client/model/ModelBlaze.java
++++ after/net/minecraft/client/model/ModelBlaze.java
+@@ -13,7 +13,7 @@
+ 
+     public ModelBlaze()
+     {
+-        for (int i = 0; i < this.field_78106_a.length; i++)
++        for (int i = 0; i < this.field_78106_a.length; ++i)
+         {
+             this.field_78106_a[i] = new ModelRenderer(this, 0, 16);
+             this.field_78106_a[i].func_78789_a(0.0F, 0.0F, 0.0F, 2, 8, 2);
+@@ -40,32 +40,32 @@
+     {
+         float f = p_78087_3_ * (float) Math.PI * -0.1F;
+ 
+-        for (int i = 0; i < 4; i++)
++        for (int i = 0; i < 4; ++i)
+         {
+             this.field_78106_a[i].field_78797_d = -2.0F + MathHelper.func_76134_b(((float)(i * 2) + p_78087_3_) * 0.25F);
+             this.field_78106_a[i].field_78800_c = MathHelper.func_76134_b(f) * 9.0F;
+             this.field_78106_a[i].field_78798_e = MathHelper.func_76126_a(f) * 9.0F;
+-            f++;
++            ++f;
+         }
+ 
+         f = (float)(Math.PI / 4) + p_78087_3_ * (float) Math.PI * 0.03F;
+ 
+-        for (int j = 4; j < 8; j++)
++        for (int j = 4; j < 8; ++j)
+         {
+             this.field_78106_a[j].field_78797_d = 2.0F + MathHelper.func_76134_b(((float)(j * 2) + p_78087_3_) * 0.25F);
+             this.field_78106_a[j].field_78800_c = MathHelper.func_76134_b(f) * 7.0F;
+             this.field_78106_a[j].field_78798_e = MathHelper.func_76126_a(f) * 7.0F;
+-            f++;
++            ++f;
+         }
+ 
+         f = 0.47123894F + p_78087_3_ * (float) Math.PI * -0.05F;
+ 
+-        for (int k = 8; k < 12; k++)
++        for (int k = 8; k < 12; ++k)
+         {
+             this.field_78106_a[k].field_78797_d = 11.0F + MathHelper.func_76134_b(((float)k * 1.5F + p_78087_3_) * 0.5F);
+             this.field_78106_a[k].field_78800_c = MathHelper.func_76134_b(f) * 5.0F;
+             this.field_78106_a[k].field_78798_e = MathHelper.func_76126_a(f) * 5.0F;
+-            f++;
++            ++f;
+         }
+ 
+         this.field_78105_b.field_78796_g = p_78087_4_ * (float)(Math.PI / 180.0);

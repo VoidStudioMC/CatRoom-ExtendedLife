@@ -8,6 +8,30 @@
  import com.mojang.authlib.GameProfile;
  import com.mojang.authlib.properties.Property;
  import java.util.UUID;
+@@ -61,7 +62,7 @@
+                 {
+                     NBTTagList nbttaglist = nbttagcompound.func_150295_c(s2, 10);
+ 
+-                    for (int i = 0; i < nbttaglist.func_74745_c(); i++)
++                    for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+                     {
+                         NBTTagCompound nbttagcompound1 = nbttaglist.func_150305_b(i);
+                         String s3 = nbttagcompound1.func_74779_i("Value");
+@@ -175,12 +176,12 @@
+             }
+             else
+             {
+-                for (int i = 0; i < nbttaglist.func_74745_c(); i++)
++                for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+                 {
+                     NBTBase nbtbase = nbttaglist.func_179238_g(i);
+                     boolean flag = false;
+ 
+-                    for (int j = 0; j < nbttaglist1.func_74745_c(); j++)
++                    for (int j = 0; j < nbttaglist1.func_74745_c(); ++j)
+                     {
+                         if (func_181123_a(nbtbase, nbttaglist1.func_179238_g(j), p_181123_2_))
+                         {
 @@ -288,10 +289,12 @@
          if (!p_190009_1_.func_177228_b().isEmpty())
          {

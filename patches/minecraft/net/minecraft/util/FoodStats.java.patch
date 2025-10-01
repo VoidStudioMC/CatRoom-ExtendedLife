@@ -95,7 +95,13 @@
              }
          }
  
-@@ -60,7 +103,7 @@
+@@ -55,30 +98,30 @@
+ 
+         if (flag && this.field_75125_b > 0.0F && p_75118_1_.func_70996_bM() && this.field_75127_a >= 20)
+         {
+-            this.field_75123_d++;
++            ++this.field_75123_d;
+ 
              if (this.field_75123_d >= 10)
              {
                  float f = Math.min(this.field_75125_b, 6.0F);
@@ -104,7 +110,11 @@
                  this.func_75113_a(f);
                  this.field_75123_d = 0;
              }
-@@ -71,8 +114,8 @@
+         }
+         else if (flag && this.field_75127_a >= 18 && p_75118_1_.func_70996_bM())
+         {
+-            this.field_75123_d++;
++            ++this.field_75123_d;
  
              if (this.field_75123_d >= 80)
              {
@@ -115,3 +125,10 @@
                  this.field_75123_d = 0;
              }
          }
+         else if (this.field_75127_a <= 0)
+         {
+-            this.field_75123_d++;
++            ++this.field_75123_d;
+ 
+             if (this.field_75123_d >= 80)
+             {

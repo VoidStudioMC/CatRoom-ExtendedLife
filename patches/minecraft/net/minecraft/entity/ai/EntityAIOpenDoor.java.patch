@@ -1,0 +1,11 @@
+--- before/net/minecraft/entity/ai/EntityAIOpenDoor.java
++++ after/net/minecraft/entity/ai/EntityAIOpenDoor.java
+@@ -39,7 +39,7 @@
+     @Override
+     public void func_75246_d()
+     {
+-        this.field_75360_j--;
++        --this.field_75360_j;
+         super.func_75246_d();
+     }
+ }

@@ -9,3 +9,12 @@
      private int field_70838_e;
      private UUID field_175459_bn;
  
+@@ -80,7 +80,7 @@
+                 iattributeinstance.func_111121_a(field_110190_br);
+             }
+ 
+-            this.field_70837_d--;
++            --this.field_70837_d;
+         }
+         else if (iattributeinstance.func_180374_a(field_110190_br))
+         {

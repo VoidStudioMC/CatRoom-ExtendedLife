@@ -22,3 +22,29 @@
                  tileentitycommandblock.func_184250_a(flag);
  
                  if (!flag1 && !tileentitycommandblock.func_184254_e() && tileentitycommandblock.func_184251_i() != TileEntityCommandBlock.Mode.SEQUENCE)
+@@ -277,12 +285,13 @@
+     {
+         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(p_193386_1_);
+         GameRules gamerules = p_193386_0_.func_82736_K();
+-        int i = gamerules.func_180263_c("maxCommandChainLength");
++        int i;
++        IBlockState iblockstate;
+ 
+-        while (i-- > 0)
++        for (i = gamerules.func_180263_c("maxCommandChainLength"); i-- > 0; p_193386_2_ = iblockstate.func_177229_b(field_185564_a))
+         {
+             blockpos$mutableblockpos.func_189536_c(p_193386_2_);
+-            IBlockState iblockstate = p_193386_0_.func_180495_p(blockpos$mutableblockpos);
++            iblockstate = p_193386_0_.func_180495_p(blockpos$mutableblockpos);
+             Block block = iblockstate.func_177230_c();
+ 
+             if (block != Blocks.field_185777_dd)
+@@ -322,8 +331,6 @@
+                     commandblockbaselogic.func_184167_a(0);
+                 }
+             }
+-
+-            p_193386_2_ = iblockstate.func_177229_b(field_185564_a);
+         }
+ 
+         if (i <= 0)

@@ -1,0 +1,29 @@
+--- before/net/minecraft/world/gen/feature/WorldGenBlockBlob.java
++++ after/net/minecraft/world/gen/feature/WorldGenBlockBlob.java
+@@ -21,7 +21,7 @@
+     @Override
+     public boolean func_180709_b(World p_180709_1_, Random p_180709_2_, BlockPos p_180709_3_)
+     {
+-        while (p_180709_3_.func_177956_o() > 3)
++        for (; p_180709_3_.func_177956_o() > 3; p_180709_3_ = p_180709_3_.func_177977_b())
+         {
+             if (!p_180709_1_.func_175623_d(p_180709_3_.func_177977_b()))
+             {
+@@ -32,8 +32,6 @@
+                     break;
+                 }
+             }
+-
+-            p_180709_3_ = p_180709_3_.func_177977_b();
+         }
+ 
+         if (p_180709_3_.func_177956_o() <= 3)
+@@ -44,7 +42,7 @@
+         {
+             int i1 = this.field_150544_b;
+ 
+-            for (int i = 0; i1 >= 0 && i < 3; i++)
++            for (int i = 0; i1 >= 0 && i < 3; ++i)
+             {
+                 int j = i1 + p_180709_2_.nextInt(2);
+                 int k = i1 + p_180709_2_.nextInt(2);

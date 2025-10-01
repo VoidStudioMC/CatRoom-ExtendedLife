@@ -1,0 +1,35 @@
+--- before/net/minecraft/item/crafting/RecipesMapExtending.java
++++ after/net/minecraft/item/crafting/RecipesMapExtending.java
+@@ -44,7 +44,7 @@
+         {
+             ItemStack itemstack = ItemStack.field_190927_a;
+ 
+-            for (int i = 0; i < p_77569_1_.func_70302_i_() && itemstack.func_190926_b(); i++)
++            for (int i = 0; i < p_77569_1_.func_70302_i_() && itemstack.func_190926_b(); ++i)
+             {
+                 ItemStack itemstack1 = p_77569_1_.func_70301_a(i);
+ 
+@@ -66,9 +66,13 @@
+                 {
+                     return false;
+                 }
++                else if (this.func_190934_a(mapdata))
++                {
++                    return false;
++                }
+                 else
+                 {
+-                    return this.func_190934_a(mapdata) ? false : mapdata.field_76197_d < 4;
++                    return mapdata.field_76197_d < 4;
+                 }
+             }
+         }
+@@ -95,7 +99,7 @@
+     {
+         ItemStack itemstack = ItemStack.field_190927_a;
+ 
+-        for (int i = 0; i < p_77572_1_.func_70302_i_() && itemstack.func_190926_b(); i++)
++        for (int i = 0; i < p_77572_1_.func_70302_i_() && itemstack.func_190926_b(); ++i)
+         {
+             ItemStack itemstack1 = p_77572_1_.func_70301_a(i);
+ 

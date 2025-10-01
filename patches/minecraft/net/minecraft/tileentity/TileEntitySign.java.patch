@@ -1,6 +1,6 @@
 --- before/net/minecraft/tileentity/TileEntitySign.java
 +++ after/net/minecraft/tileentity/TileEntitySign.java
-@@ -22,16 +22,12 @@
+@@ -22,91 +22,98 @@
  
  public class TileEntitySign extends TileEntity
  {
@@ -19,7 +19,11 @@
      public NBTTagCompound func_189515_b(NBTTagCompound p_189515_1_)
      {
          super.func_189515_b(p_189515_1_);
-@@ -42,71 +38,82 @@
+ 
+-        for (int i = 0; i < 4; i++)
++        for (int i = 0; i < 4; ++i)
+         {
+             String s = ITextComponent.Serializer.func_150696_a(this.field_145915_a[i]);
              p_189515_1_.func_74778_a("Text" + (i + 1), s);
          }
  
@@ -82,13 +86,14 @@
              }
          };
  
+-        for (int i = 0; i < 4; i++)
 +        // CraftBukkit start - Add an option to convert signs correctly
 +        // This is done with a flag instead of all the time because
 +        // we have no way to tell whether a sign is from 1.7.10 or 1.8
 +
 +        boolean oldSign = Boolean.getBoolean("convertLegacySigns") && !p_145839_1_.func_74767_n("Bukkit.isConverted");
 +
-         for (int i = 0; i < 4; ++i)
++        for (int i = 0; i < 4; ++i)
          {
              String s = p_145839_1_.func_74779_i("Text" + (i + 1));
 -            ITextComponent itextcomponent = ITextComponent.Serializer.func_150699_a(s);

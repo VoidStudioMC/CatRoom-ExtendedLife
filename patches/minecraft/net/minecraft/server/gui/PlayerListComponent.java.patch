@@ -1,0 +1,11 @@
+--- before/net/minecraft/server/gui/PlayerListComponent.java
++++ after/net/minecraft/server/gui/PlayerListComponent.java
+@@ -26,7 +26,7 @@
+         {
+             Vector<String> vector = new Vector<>();
+ 
+-            for (int i = 0; i < this.field_120015_a.func_184103_al().func_181057_v().size(); i++)
++            for (int i = 0; i < this.field_120015_a.func_184103_al().func_181057_v().size(); ++i)
+             {
+                 vector.add(this.field_120015_a.func_184103_al().func_181057_v().get(i).func_70005_c_());
+             }

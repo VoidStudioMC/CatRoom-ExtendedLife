@@ -1,0 +1,173 @@
+--- before/net/minecraft/world/gen/structure/WoodlandMansionPieces.java
++++ after/net/minecraft/world/gen/structure/WoodlandMansionPieces.java
+@@ -167,7 +167,7 @@
+                     p_191110_1_.func_191144_a(p_191110_2_, p_191110_3_, 1);
+                     p_191110_1_.func_191141_a(p_191110_2_ + p_191110_4_.func_82601_c(), p_191110_3_ + p_191110_4_.func_82599_e(), 0, 1);
+ 
+-                    for (int i = 0; i < 8; i++)
++                    for (int i = 0; i < 8; ++i)
+                     {
+                         EnumFacing enumfacing = EnumFacing.func_176731_b(this.field_191117_a.nextInt(4));
+ 
+@@ -217,9 +217,9 @@
+             {
+                 boolean flag = false;
+ 
+-                for (int i = 0; i < p_191111_1_.field_191150_c; i++)
++                for (int i = 0; i < p_191111_1_.field_191150_c; ++i)
+                 {
+-                    for (int j = 0; j < p_191111_1_.field_191149_b; j++)
++                    for (int j = 0; j < p_191111_1_.field_191149_b; ++j)
+                     {
+                         if (p_191111_1_.func_191145_a(j, i) == 0)
+                         {
+@@ -260,9 +260,9 @@
+                 List<Tuple<Integer, Integer>> list = Lists.newArrayList();
+                 WoodlandMansionPieces.SimpleGrid woodlandmansionpieces$simplegrid = this.field_191120_d[1];
+ 
+-                for (int i = 0; i < this.field_191119_c.field_191150_c; i++)
++                for (int i = 0; i < this.field_191119_c.field_191150_c; ++i)
+                 {
+-                    for (int j = 0; j < this.field_191119_c.field_191149_b; j++)
++                    for (int j = 0; j < this.field_191119_c.field_191149_b; ++j)
+                     {
+                         int k = woodlandmansionpieces$simplegrid.func_191145_a(j, i);
+                         int l = k & 983040;
+@@ -287,9 +287,9 @@
+                     int i2 = tuple.func_76341_a() + enumfacing1.func_82601_c();
+                     int i1 = tuple.func_76340_b() + enumfacing1.func_82599_e();
+ 
+-                    for (int j1 = 0; j1 < this.field_191119_c.field_191150_c; j1++)
++                    for (int j1 = 0; j1 < this.field_191119_c.field_191150_c; ++j1)
+                     {
+-                        for (int k1 = 0; k1 < this.field_191119_c.field_191149_b; k1++)
++                        for (int k1 = 0; k1 < this.field_191119_c.field_191149_b; ++k1)
+                         {
+                             if (!func_191109_a(this.field_191118_b, k1, j1))
+                             {
+@@ -338,9 +338,9 @@
+             {
+                 List<Tuple<Integer, Integer>> list = Lists.newArrayList();
+ 
+-                for (int i = 0; i < p_191116_1_.field_191150_c; i++)
++                for (int i = 0; i < p_191116_1_.field_191150_c; ++i)
+                 {
+-                    for (int j = 0; j < p_191116_1_.field_191149_b; j++)
++                    for (int j = 0; j < p_191116_1_.field_191149_b; ++j)
+                     {
+                         if (p_191116_1_.func_191145_a(j, i) == 2)
+                         {
+@@ -447,9 +447,9 @@
+                             }
+                         }
+ 
+-                        for (int i3 = k1; i3 <= l1; i3++)
++                        for (int i3 = k1; i3 <= l1; ++i3)
+                         {
+-                            for (int j3 = i1; j3 <= j1; j3++)
++                            for (int j3 = i1; j3 <= j1; ++j3)
+                             {
+                                 if (j3 == j2 && i3 == k2)
+                                 {
+@@ -462,7 +462,7 @@
+                             }
+                         }
+ 
+-                        k3++;
++                        ++k3;
+                     }
+                 }
+             }
+@@ -643,9 +643,9 @@
+                 woodlandmansionpieces$placementdata2.field_191140_c = "wall_window";
+                 boolean flag = false;
+ 
+-                for (int k = 0; k < woodlandmansionpieces$simplegrid1.field_191150_c && !flag; k++)
++                for (int k = 0; k < woodlandmansionpieces$simplegrid1.field_191150_c && !flag; ++k)
+                 {
+-                    for (int l = woodlandmansionpieces$simplegrid1.field_191149_b - 1; l >= 0 && !flag; l--)
++                    for (int l = woodlandmansionpieces$simplegrid1.field_191149_b - 1; l >= 0 && !flag; --l)
+                     {
+                         if (WoodlandMansionPieces.Grid.func_191109_a(woodlandmansionpieces$simplegrid1, l, k))
+                         {
+@@ -672,7 +672,7 @@
+                     new WoodlandMansionPieces.FirstFloor(), new WoodlandMansionPieces.SecondFloor(), new WoodlandMansionPieces.ThirdFloor()
+                 };
+ 
+-                for (int l2 = 0; l2 < 3; l2++)
++                for (int l2 = 0; l2 < 3; ++l2)
+                 {
+                     BlockPos blockpos = p_191125_1_.func_177981_b(8 * l2 + (l2 == 2 ? 3 : 0));
+                     WoodlandMansionPieces.SimpleGrid woodlandmansionpieces$simplegrid2 = p_191125_4_.field_191120_d[l2];
+@@ -680,9 +680,9 @@
+                     String s = l2 == 0 ? "carpet_south" : "carpet_south_2";
+                     String s1 = l2 == 0 ? "carpet_west" : "carpet_west_2";
+ 
+-                    for (int i1 = 0; i1 < woodlandmansionpieces$simplegrid3.field_191150_c; i1++)
++                    for (int i1 = 0; i1 < woodlandmansionpieces$simplegrid3.field_191150_c; ++i1)
+                     {
+-                        for (int j1 = 0; j1 < woodlandmansionpieces$simplegrid3.field_191149_b; j1++)
++                        for (int j1 = 0; j1 < woodlandmansionpieces$simplegrid3.field_191149_b; ++j1)
+                         {
+                             if (woodlandmansionpieces$simplegrid3.func_191145_a(j1, i1) == 1)
+                             {
+@@ -753,9 +753,9 @@
+                     String s3 = l2 == 0 ? "indoors_door" : "indoors_door_2";
+                     List<EnumFacing> list = Lists.newArrayList();
+ 
+-                    for (int k1 = 0; k1 < woodlandmansionpieces$simplegrid3.field_191150_c; k1++)
++                    for (int k1 = 0; k1 < woodlandmansionpieces$simplegrid3.field_191150_c; ++k1)
+                     {
+-                        for (int l1 = 0; l1 < woodlandmansionpieces$simplegrid3.field_191149_b; l1++)
++                        for (int l1 = 0; l1 < woodlandmansionpieces$simplegrid3.field_191149_b; ++l1)
+                         {
+                             boolean flag1 = l2 == 2 && woodlandmansionpieces$simplegrid3.func_191145_a(l1, k1) == 3;
+ 
+@@ -925,9 +925,9 @@
+                 @Nullable WoodlandMansionPieces.SimpleGrid p_191123_5_
+             )
+             {
+-                for (int i = 0; i < p_191123_4_.field_191150_c; i++)
++                for (int i = 0; i < p_191123_4_.field_191150_c; ++i)
+                 {
+-                    for (int j = 0; j < p_191123_4_.field_191149_b; j++)
++                    for (int j = 0; j < p_191123_4_.field_191149_b; ++j)
+                     {
+                         BlockPos lvt_8_3_ = p_191123_2_.func_177967_a(p_191123_3_.func_185831_a(EnumFacing.SOUTH), 8 + (i - this.field_191137_d) * 8);
+                         lvt_8_3_ = lvt_8_3_.func_177967_a(p_191123_3_.func_185831_a(EnumFacing.EAST), (j - this.field_191136_c) * 8);
+@@ -980,9 +980,9 @@
+ 
+                 if (p_191123_5_ != null)
+                 {
+-                    for (int k = 0; k < p_191123_4_.field_191150_c; k++)
++                    for (int k = 0; k < p_191123_4_.field_191150_c; ++k)
+                     {
+-                        for (int i1 = 0; i1 < p_191123_4_.field_191149_b; i1++)
++                        for (int i1 = 0; i1 < p_191123_4_.field_191149_b; ++i1)
+                         {
+                             BlockPos blockpos3 = p_191123_2_.func_177967_a(p_191123_3_.func_185831_a(EnumFacing.SOUTH), 8 + (k - this.field_191137_d) * 8);
+                             blockpos3 = blockpos3.func_177967_a(p_191123_3_.func_185831_a(EnumFacing.EAST), (i1 - this.field_191136_c) * 8);
+@@ -1079,9 +1079,9 @@
+                     }
+                 }
+ 
+-                for (int l = 0; l < p_191123_4_.field_191150_c; l++)
++                for (int l = 0; l < p_191123_4_.field_191150_c; ++l)
+                 {
+-                    for (int j1 = 0; j1 < p_191123_4_.field_191149_b; j1++)
++                    for (int j1 = 0; j1 < p_191123_4_.field_191149_b; ++j1)
+                     {
+                         BlockPos blockpos4 = p_191123_2_.func_177967_a(p_191123_3_.func_185831_a(EnumFacing.SOUTH), 8 + (l - this.field_191137_d) * 8);
+                         blockpos4 = blockpos4.func_177967_a(p_191123_3_.func_185831_a(EnumFacing.EAST), (j1 - this.field_191136_c) * 8);
+@@ -1589,9 +1589,9 @@
+ 
+             public void func_191142_a(int p_191142_1_, int p_191142_2_, int p_191142_3_, int p_191142_4_, int p_191142_5_)
+             {
+-                for (int i = p_191142_2_; i <= p_191142_4_; i++)
++                for (int i = p_191142_2_; i <= p_191142_4_; ++i)
+                 {
+-                    for (int j = p_191142_1_; j <= p_191142_3_; j++)
++                    for (int j = p_191142_1_; j <= p_191142_3_; ++j)
+                     {
+                         this.func_191144_a(j, i, p_191142_5_);
+                     }

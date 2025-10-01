@@ -1,0 +1,20 @@
+--- before/net/minecraft/network/play/server/SPacketMultiBlockChange.java
++++ after/net/minecraft/network/play/server/SPacketMultiBlockChange.java
+@@ -26,7 +26,7 @@
+         this.field_148925_b = new ChunkPos(p_i46959_3_.field_76635_g, p_i46959_3_.field_76647_h);
+         this.field_179845_b = new SPacketMultiBlockChange.BlockUpdateData[p_i46959_1_];
+ 
+-        for (int i = 0; i < this.field_179845_b.length; i++)
++        for (int i = 0; i < this.field_179845_b.length; ++i)
+         {
+             this.field_179845_b[i] = new SPacketMultiBlockChange.BlockUpdateData(p_i46959_2_[i], p_i46959_3_);
+         }
+@@ -38,7 +38,7 @@
+         this.field_148925_b = new ChunkPos(p_148837_1_.readInt(), p_148837_1_.readInt());
+         this.field_179845_b = new SPacketMultiBlockChange.BlockUpdateData[p_148837_1_.func_150792_a()];
+ 
+-        for (int i = 0; i < this.field_179845_b.length; i++)
++        for (int i = 0; i < this.field_179845_b.length; ++i)
+         {
+             this.field_179845_b[i] = new SPacketMultiBlockChange.BlockUpdateData(
+                 p_148837_1_.readShort(), Block.field_176229_d.func_148745_a(p_148837_1_.func_150792_a())

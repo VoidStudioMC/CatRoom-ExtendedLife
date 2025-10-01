@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/model/ModelSquid.java
++++ after/net/minecraft/client/model/ModelSquid.java
+@@ -17,7 +17,7 @@
+         this.field_78202_a.func_78789_a(-6.0F, -8.0F, -6.0F, 12, 16, 12);
+         this.field_78202_a.field_78797_d += 8.0F;
+ 
+-        for (int j = 0; j < this.field_78201_b.length; j++)
++        for (int j = 0; j < this.field_78201_b.length; ++j)
+         {
+             this.field_78201_b[j] = new ModelRenderer(this, 48, 0);
+             double d0 = (double)j * Math.PI * 2.0 / (double)this.field_78201_b.length;

@@ -1,0 +1,71 @@
+--- before/net/minecraft/client/gui/GuiTextField.java
++++ after/net/minecraft/client/gui/GuiTextField.java
+@@ -54,7 +54,7 @@
+ 
+     public void func_146178_a()
+     {
+-        this.field_146214_l++;
++        ++this.field_146214_l;
+     }
+ 
+     public void func_146180_a(String p_146180_1_)
+@@ -214,7 +214,7 @@
+         boolean flag = p_146197_1_ < 0;
+         int j = Math.abs(p_146197_1_);
+ 
+-        for (int k = 0; k < j; k++)
++        for (int k = 0; k < j; ++k)
+         {
+             if (!flag)
+             {
+@@ -229,7 +229,7 @@
+                 {
+                     while (p_146197_3_ && i < l && this.field_146216_j.charAt(i) == ' ')
+                     {
+-                        i++;
++                        ++i;
+                     }
+                 }
+             }
+@@ -237,12 +237,12 @@
+             {
+                 while (p_146197_3_ && i > 0 && this.field_146216_j.charAt(i - 1) == ' ')
+                 {
+-                    i--;
++                    --i;
+                 }
+ 
+                 while (i > 0 && this.field_146216_j.charAt(i - 1) != ' ')
+                 {
+-                    i--;
++                    --i;
+                 }
+             }
+         }
+@@ -513,7 +513,7 @@
+             else if (flag2)
+             {
+                 k1 = j1 - 1;
+-                j1--;
++                --j1;
+             }
+ 
+             if (!s.isEmpty() && flag && j < s.length())
+@@ -687,7 +687,7 @@
+ 
+             if (p_146199_1_ == this.field_146225_q)
+             {
+-                this.field_146225_q = this.field_146225_q - this.field_146211_a.func_78262_a(this.field_146216_j, j, true).length();
++                this.field_146225_q -= this.field_146211_a.func_78262_a(this.field_146216_j, j, true).length();
+             }
+ 
+             if (p_146199_1_ > k)
+@@ -696,7 +696,7 @@
+             }
+             else if (p_146199_1_ <= this.field_146225_q)
+             {
+-                this.field_146225_q = this.field_146225_q - (this.field_146225_q - p_146199_1_);
++                this.field_146225_q -= this.field_146225_q - p_146199_1_;
+             }
+ 
+             this.field_146225_q = MathHelper.func_76125_a(this.field_146225_q, 0, i);

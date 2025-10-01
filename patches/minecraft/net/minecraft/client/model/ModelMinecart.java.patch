@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/model/ModelMinecart.java
++++ after/net/minecraft/client/model/ModelMinecart.java
+@@ -45,7 +45,7 @@
+     {
+         this.field_78154_a[5].field_78797_d = 4.0F - p_78088_4_;
+ 
+-        for (int i = 0; i < 6; i++)
++        for (int i = 0; i < 6; ++i)
+         {
+             this.field_78154_a[i].func_78785_a(p_78088_7_);
+         }

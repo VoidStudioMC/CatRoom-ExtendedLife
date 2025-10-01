@@ -1,0 +1,29 @@
+--- before/net/minecraft/client/settings/CreativeSettings.java
++++ after/net/minecraft/client/settings/CreativeSettings.java
+@@ -22,7 +22,7 @@
+         this.field_192565_a = p_i47395_1_;
+         this.field_192567_c = new File(p_i47395_2_, "hotbar.nbt");
+ 
+-        for (int i = 0; i < 9; i++)
++        for (int i = 0; i < 9; ++i)
+         {
+             this.field_192568_d[i] = new HotbarSnapshot();
+         }
+@@ -41,7 +41,7 @@
+                 return;
+             }
+ 
+-            for (int i = 0; i < 9; i++)
++            for (int i = 0; i < 9; ++i)
+             {
+                 this.field_192568_d[i].func_192833_a(nbttagcompound.func_150295_c(String.valueOf(i), 10));
+             }
+@@ -58,7 +58,7 @@
+         {
+             NBTTagCompound nbttagcompound = new NBTTagCompound();
+ 
+-            for (int i = 0; i < 9; i++)
++            for (int i = 0; i < 9; ++i)
+             {
+                 nbttagcompound.func_74782_a(String.valueOf(i), this.field_192568_d[i].func_192834_a());
+             }

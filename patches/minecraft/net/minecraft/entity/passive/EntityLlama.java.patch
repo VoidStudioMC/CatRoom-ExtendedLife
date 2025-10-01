@@ -9,6 +9,15 @@
      {
          this.field_70180_af.func_187227_b(field_190720_bG, Math.max(1, Math.min(5, p_190706_1_)));
      }
+@@ -449,7 +449,7 @@
+ 
+         if (this.field_70146_Z.nextFloat() < 0.03F)
+         {
+-            i++;
++            ++i;
+         }
+ 
+         entityllama.func_190706_p(i);
 @@ -488,6 +488,9 @@
      @Override
      public void func_180430_e(float p_180430_1_, float p_180430_2_)

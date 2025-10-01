@@ -33,7 +33,7 @@ public class FMLCorePlugin implements IFMLLoadingPlugin
                              "net.minecraftforge.fml.common.asm.transformers.EventSubscriptionTransformer",
                              "net.minecraftforge.fml.common.asm.transformers.EventSubscriberTransformer",
                              "net.minecraftforge.fml.common.asm.transformers.SoundEngineFixTransformer",
-                             //"net.minecraftforge.fml.common.asm.transformers.JavaxTransformer",
+                             "net.minecraftforge.fml.common.asm.transformers.LWJGLTransformer",
                             };
     }
 
@@ -52,11 +52,5 @@ public class FMLCorePlugin implements IFMLLoadingPlugin
     public String getSetupClass()
     {
         return "net.minecraftforge.fml.common.asm.FMLSanityChecker";
-    }
-
-    @Override
-    public void injectData(Map<String, Object> data)
-    {
-        // don't care about this data
     }
 }

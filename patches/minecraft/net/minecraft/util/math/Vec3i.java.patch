@@ -1,0 +1,17 @@
+--- before/net/minecraft/util/math/Vec3i.java
++++ after/net/minecraft/util/math/Vec3i.java
+@@ -42,9 +42,13 @@
+             {
+                 return false;
+             }
++            else if (this.func_177956_o() != vec3i.func_177956_o())
++            {
++                return false;
++            }
+             else
+             {
+-                return this.func_177956_o() != vec3i.func_177956_o() ? false : this.func_177952_p() == vec3i.func_177952_p();
++                return this.func_177952_p() == vec3i.func_177952_p();
+             }
+         }
+     }

@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/gui/spectator/SpectatorMenu.java
++++ after/net/minecraft/client/gui/spectator/SpectatorMenu.java
+@@ -81,7 +81,7 @@
+     {
+         List<ISpectatorMenuObject> list = Lists.newArrayList();
+ 
+-        for (int i = 0; i <= 8; i++)
++        for (int i = 0; i <= 8; ++i)
+         {
+             list.add(this.func_178643_a(i));
+         }

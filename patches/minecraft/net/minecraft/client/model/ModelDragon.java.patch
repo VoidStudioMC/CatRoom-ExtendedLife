@@ -1,0 +1,29 @@
+--- before/net/minecraft/client/model/ModelDragon.java
++++ after/net/minecraft/client/model/ModelDragon.java
+@@ -130,7 +130,7 @@
+         f2 = 20.0F;
+         float f3 = -12.0F;
+ 
+-        for (int i = 0; i < 5; i++)
++        for (int i = 0; i < 5; ++i)
+         {
+             double[] adouble1 = entitydragon.func_70974_a(5 - i, this.field_78223_m);
+             float f9 = (float)Math.cos((double)((float)i * 0.45F + f8)) * 0.15F;
+@@ -161,7 +161,7 @@
+         this.field_78217_d.field_78808_h = 0.0F;
+         this.field_78217_d.func_78785_a(p_78088_7_);
+ 
+-        for (int j = 0; j < 2; j++)
++        for (int j = 0; j < 2; ++j)
+         {
+             GlStateManager.func_179089_o();
+             float f11 = f * (float)(Math.PI * 2);
+@@ -196,7 +196,7 @@
+         f4 = 0.0F;
+         adouble = entitydragon.func_70974_a(11, this.field_78223_m);
+ 
+-        for (int k = 0; k < 12; k++)
++        for (int k = 0; k < 12; ++k)
+         {
+             adouble2 = entitydragon.func_70974_a(12 + k, this.field_78223_m);
+             f10 = (float)((double)f10 + Math.sin((double)((float)k * 0.45F + f8)) * 0.05F);

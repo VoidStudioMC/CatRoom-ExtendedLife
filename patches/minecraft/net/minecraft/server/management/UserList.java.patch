@@ -1,13 +1,20 @@
 --- before/net/minecraft/server/management/UserList.java
 +++ after/net/minecraft/server/management/UserList.java
-@@ -165,6 +165,10 @@
-         return this.field_152696_d;
+@@ -157,12 +157,16 @@
+ 
+     protected UserListEntry<K> func_152682_a(JsonObject p_152682_1_)
+     {
+-        return new UserListEntry<>(null, p_152682_1_);
++        return new UserListEntry<>((K)null, p_152682_1_);
      }
  
-+    public Collection<V> getValuesCB() {
-+        return this.field_152696_d.values();
+     protected Map<String, V> func_152688_e()
+     {
+         return this.field_152696_d;
 +    }
 +
++    public Collection<V> getValuesCB() {
++        return this.field_152696_d.values();
+     }
+ 
      public void func_152678_f() throws IOException
-     {
-         Collection<V> collection = this.field_152696_d.values();

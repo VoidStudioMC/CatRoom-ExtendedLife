@@ -1,0 +1,23 @@
+--- before/net/minecraft/client/model/ModelPolarBear.java
++++ after/net/minecraft/client/model/ModelPolarBear.java
+@@ -39,14 +39,14 @@
+         this.field_78144_f = new ModelRenderer(this, 50, 40);
+         this.field_78144_f.func_78790_a(-2.0F, 0.0F, -2.0F, 4, 10, 6, 0.0F);
+         this.field_78144_f.func_78793_a(2.5F, 14.0F, -7.0F);
+-        this.field_78149_c.field_78800_c--;
+-        this.field_78146_d.field_78800_c++;
++        --this.field_78149_c.field_78800_c;
++        ++this.field_78146_d.field_78800_c;
+         this.field_78149_c.field_78798_e += 0.0F;
+         this.field_78146_d.field_78798_e += 0.0F;
+-        this.field_78147_e.field_78800_c--;
+-        this.field_78144_f.field_78800_c++;
+-        this.field_78147_e.field_78798_e--;
+-        this.field_78144_f.field_78798_e--;
++        --this.field_78147_e.field_78800_c;
++        ++this.field_78144_f.field_78800_c;
++        --this.field_78147_e.field_78798_e;
++        --this.field_78144_f.field_78798_e;
+         this.field_78151_h += 2.0F;
+     }
+ 

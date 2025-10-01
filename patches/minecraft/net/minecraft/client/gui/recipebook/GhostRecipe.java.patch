@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/gui/recipebook/GhostRecipe.java
++++ after/net/minecraft/client/gui/recipebook/GhostRecipe.java
+@@ -66,7 +66,7 @@
+         RenderHelper.func_74520_c();
+         GlStateManager.func_179140_f();
+ 
+-        for (int i = 0; i < this.field_192688_b.size(); i++)
++        for (int i = 0; i < this.field_192688_b.size(); ++i)
+         {
+             GhostRecipe.GhostIngredient ghostrecipe$ghostingredient = this.field_192688_b.get(i);
+             int j = ghostrecipe$ghostingredient.func_193713_b() + p_194188_2_;

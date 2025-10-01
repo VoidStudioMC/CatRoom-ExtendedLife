@@ -1,0 +1,56 @@
+--- before/net/minecraft/scoreboard/ScoreboardSaveData.java
++++ after/net/minecraft/scoreboard/ScoreboardSaveData.java
+@@ -60,7 +60,7 @@
+ 
+     protected void func_96498_a(NBTTagList p_96498_1_)
+     {
+-        for (int i = 0; i < p_96498_1_.func_74745_c(); i++)
++        for (int i = 0; i < p_96498_1_.func_74745_c(); ++i)
+         {
+             NBTTagCompound nbttagcompound = p_96498_1_.func_150305_b(i);
+             String s = nbttagcompound.func_74779_i("Name");
+@@ -134,7 +134,7 @@
+ 
+     protected void func_96502_a(ScorePlayerTeam p_96502_1_, NBTTagList p_96502_2_)
+     {
+-        for (int i = 0; i < p_96502_2_.func_74745_c(); i++)
++        for (int i = 0; i < p_96502_2_.func_74745_c(); ++i)
+         {
+             this.field_96507_a.func_151392_a(p_96502_2_.func_150307_f(i), p_96502_1_.func_96661_b());
+         }
+@@ -142,7 +142,7 @@
+ 
+     protected void func_96504_c(NBTTagCompound p_96504_1_)
+     {
+-        for (int i = 0; i < 19; i++)
++        for (int i = 0; i < 19; ++i)
+         {
+             if (p_96504_1_.func_150297_b("slot_" + i, 8))
+             {
+@@ -155,7 +155,7 @@
+ 
+     protected void func_96501_b(NBTTagList p_96501_1_)
+     {
+-        for (int i = 0; i < p_96501_1_.func_74745_c(); i++)
++        for (int i = 0; i < p_96501_1_.func_74745_c(); ++i)
+         {
+             NBTTagCompound nbttagcompound = p_96501_1_.func_150305_b(i);
+             IScoreCriteria iscorecriteria = IScoreCriteria.field_96643_a.get(nbttagcompound.func_74779_i("CriteriaName"));
+@@ -178,7 +178,7 @@
+ 
+     protected void func_96500_c(NBTTagList p_96500_1_)
+     {
+-        for (int i = 0; i < p_96500_1_.func_74745_c(); i++)
++        for (int i = 0; i < p_96500_1_.func_74745_c(); ++i)
+         {
+             NBTTagCompound nbttagcompound = p_96500_1_.func_150305_b(i);
+             ScoreObjective scoreobjective = this.field_96507_a.func_96518_b(nbttagcompound.func_74779_i("Objective"));
+@@ -258,7 +258,7 @@
+         NBTTagCompound nbttagcompound = new NBTTagCompound();
+         boolean flag = false;
+ 
+-        for (int i = 0; i < 19; i++)
++        for (int i = 0; i < 19; ++i)
+         {
+             ScoreObjective scoreobjective = this.field_96507_a.func_96539_a(i);
+ 

@@ -1,0 +1,19 @@
+--- before/net/minecraft/advancements/critereon/MobEffectsPredicate.java
++++ after/net/minecraft/advancements/critereon/MobEffectsPredicate.java
+@@ -126,11 +126,13 @@
+                 {
+                     return false;
+                 }
++                else if (this.field_193467_c != null && this.field_193467_c != p_193463_1_.func_82720_e())
++                {
++                    return false;
++                }
+                 else
+                 {
+-                    return this.field_193467_c != null && this.field_193467_c != p_193463_1_.func_82720_e()
+-                           ? false
+-                           : this.field_193468_d == null || this.field_193468_d == p_193463_1_.func_188418_e();
++                    return this.field_193468_d == null || this.field_193468_d == p_193463_1_.func_188418_e();
+                 }
+             }
+ 

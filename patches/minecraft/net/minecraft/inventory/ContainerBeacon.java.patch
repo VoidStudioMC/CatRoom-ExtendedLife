@@ -1,6 +1,6 @@
 --- before/net/minecraft/inventory/ContainerBeacon.java
 +++ after/net/minecraft/inventory/ContainerBeacon.java
-@@ -1,19 +1,24 @@
+@@ -1,40 +1,44 @@
  package net.minecraft.inventory;
  
  import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +28,23 @@
          this.field_82866_e = p_i45804_2_;
          this.field_82864_f = new ContainerBeacon.BeaconSlot(p_i45804_2_, 0, 136, 110);
          this.func_75146_a(this.field_82864_f);
-@@ -34,7 +39,6 @@
+         int i = 36;
+         int j = 137;
+ 
+-        for (int k = 0; k < 3; k++)
++        for (int k = 0; k < 3; ++k)
+         {
+-            for (int l = 0; l < 9; l++)
++            for (int l = 0; l < 9; ++l)
+             {
+                 this.func_75146_a(new Slot(p_i45804_1_, l + k * 9 + 9, 36 + l * 18, 137 + k * 18));
+             }
+         }
+ 
+-        for (int i1 = 0; i1 < 9; i1++)
++        for (int i1 = 0; i1 < 9; ++i1)
+         {
+             this.func_75146_a(new Slot(p_i45804_1_, i1, 36 + i1 * 18, 195));
          }
      }
  

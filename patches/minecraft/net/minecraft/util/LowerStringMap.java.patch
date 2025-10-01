@@ -1,0 +1,11 @@
+--- before/net/minecraft/util/LowerStringMap.java
++++ after/net/minecraft/util/LowerStringMap.java
+@@ -57,7 +57,7 @@
+     {
+         for (Entry <? extends String, ? extends V > entry : p_putAll_1_.entrySet())
+         {
+-            this.put(entry.getKey(), (V)entry.getValue());
++            this.put(entry.getKey(), entry.getValue());
+         }
+     }
+ 

@@ -1,0 +1,23 @@
+--- before/net/minecraft/client/model/ModelLlama.java
++++ after/net/minecraft/client/model/ModelLlama.java
+@@ -48,14 +48,14 @@
+         this.field_78144_f = new ModelRenderer(this, 29, 29);
+         this.field_78144_f.func_78790_a(-2.0F, 0.0F, -2.0F, 4, 14, 4, p_i47226_1_);
+         this.field_78144_f.func_78793_a(2.5F, 10.0F, -4.0F);
+-        this.field_78149_c.field_78800_c--;
+-        this.field_78146_d.field_78800_c++;
++        --this.field_78149_c.field_78800_c;
++        ++this.field_78146_d.field_78800_c;
+         this.field_78149_c.field_78798_e += 0.0F;
+         this.field_78146_d.field_78798_e += 0.0F;
+-        this.field_78147_e.field_78800_c--;
+-        this.field_78144_f.field_78800_c++;
+-        this.field_78147_e.field_78798_e--;
+-        this.field_78144_f.field_78798_e--;
++        --this.field_78147_e.field_78800_c;
++        ++this.field_78144_f.field_78800_c;
++        --this.field_78147_e.field_78798_e;
++        --this.field_78144_f.field_78798_e;
+         this.field_78151_h += 2.0F;
+     }
+ 

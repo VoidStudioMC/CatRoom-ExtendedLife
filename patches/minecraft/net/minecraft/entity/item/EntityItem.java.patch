@@ -94,7 +94,7 @@
  
 -            if (this.field_145804_b > 0 && this.field_145804_b != 32767)
 -            {
--                --this.field_145804_b;
+-                this.field_145804_b--;
 -            }
 +            // if (this.pickupDelay > 0 && this.pickupDelay != 32767){
 +            //     --this.pickupDelay;
@@ -177,7 +177,7 @@
 +            /* Craftbukkit start - moved up
 +            if (this.age != -32768)
              {
--                ++this.field_70292_b;
+-                this.field_70292_b++;
 +                ++this.age;
              }
 +            */

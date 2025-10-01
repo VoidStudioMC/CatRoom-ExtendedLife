@@ -1,0 +1,413 @@
+--- before/net/minecraft/world/gen/structure/StructureOceanMonumentPieces.java
++++ after/net/minecraft/world/gen/structure/StructureOceanMonumentPieces.java
+@@ -156,7 +156,7 @@
+                     this.func_175819_a(p_74875_1_, p_74875_3_, 8, 8, 1, 14, 8, 6, field_175828_a);
+                 }
+ 
+-                for (int i = 1; i <= 7; i++)
++                for (int i = 1; i <= 7; ++i)
+                 {
+                     IBlockState iblockstate = field_175826_b;
+ 
+@@ -403,7 +403,7 @@
+                     this.func_175819_a(p_74875_1_, p_74875_3_, 1, 8, 8, 6, 8, 14, field_175828_a);
+                 }
+ 
+-                for (int i = 1; i <= 7; i++)
++                for (int i = 1; i <= 7; ++i)
+                 {
+                     IBlockState iblockstate = field_175826_b;
+ 
+@@ -418,7 +418,7 @@
+                     this.func_175804_a(p_74875_1_, p_74875_3_, 1, i, 15, 6, i, 15, iblockstate, iblockstate, false);
+                 }
+ 
+-                for (int j = 1; j <= 7; j++)
++                for (int j = 1; j <= 7; ++j)
+                 {
+                     IBlockState iblockstate1 = field_175827_c;
+ 
+@@ -798,9 +798,9 @@
+             {
+                 StructureOceanMonumentPieces.RoomDefinition[] astructureoceanmonumentpieces$roomdefinition = new StructureOceanMonumentPieces.RoomDefinition[75];
+ 
+-                for (int i = 0; i < 5; i++)
++                for (int i = 0; i < 5; ++i)
+                 {
+-                    for (int j = 0; j < 4; j++)
++                    for (int j = 0; j < 4; ++j)
+                     {
+                         int k = 0;
+                         int l = func_175820_a(i, 0, j);
+@@ -808,9 +808,9 @@
+                     }
+                 }
+ 
+-                for (int i2 = 0; i2 < 5; i2++)
++                for (int i2 = 0; i2 < 5; ++i2)
+                 {
+-                    for (int l2 = 0; l2 < 4; l2++)
++                    for (int l2 = 0; l2 < 4; ++l2)
+                     {
+                         int k3 = 1;
+                         int j4 = func_175820_a(i2, 1, l2);
+@@ -818,9 +818,9 @@
+                     }
+                 }
+ 
+-                for (int j2 = 1; j2 < 4; j2++)
++                for (int j2 = 1; j2 < 4; ++j2)
+                 {
+-                    for (int i3 = 0; i3 < 2; i3++)
++                    for (int i3 = 0; i3 < 2; ++i3)
+                     {
+                         int l3 = 2;
+                         int k4 = func_175820_a(j2, 2, i3);
+@@ -830,11 +830,11 @@
+ 
+                 this.field_175845_o = astructureoceanmonumentpieces$roomdefinition[field_175823_g];
+ 
+-                for (int k2 = 0; k2 < 5; k2++)
++                for (int k2 = 0; k2 < 5; ++k2)
+                 {
+-                    for (int j3 = 0; j3 < 5; j3++)
++                    for (int j3 = 0; j3 < 5; ++j3)
+                     {
+-                        for (int i4 = 0; i4 < 3; i4++)
++                        for (int i4 = 0; i4 < 3; ++i4)
+                         {
+                             int l4 = func_175820_a(k2, i4, j3);
+ 
+@@ -912,7 +912,7 @@
+ 
+                     while (j5 < 2 && k5 < 5)
+                     {
+-                        k5++;
++                        ++k5;
+                         int l5 = p_175836_1_.nextInt(6);
+ 
+                         if (structureoceanmonumentpieces$roomdefinition3.field_175966_c[l5])
+@@ -924,7 +924,7 @@
+                             if (structureoceanmonumentpieces$roomdefinition3.func_175959_a(i5++)
+                                     && structureoceanmonumentpieces$roomdefinition3.field_175965_b[l5].func_175959_a(i5++))
+                             {
+-                                j5++;
++                                ++j5;
+                             }
+                             else
+                             {
+@@ -955,7 +955,7 @@
+                 this.func_175842_f(p_74875_1_, p_74875_2_, p_74875_3_);
+                 this.func_175838_g(p_74875_1_, p_74875_2_, p_74875_3_);
+ 
+-                for (int j = 0; j < 7; j++)
++                for (int j = 0; j < 7; ++j)
+                 {
+                     int k = 0;
+ 
+@@ -969,9 +969,9 @@
+                         int l = j * 9;
+                         int i1 = k * 9;
+ 
+-                        for (int j1 = 0; j1 < 4; j1++)
++                        for (int j1 = 0; j1 < 4; ++j1)
+                         {
+-                            for (int k1 = 0; k1 < 4; k1++)
++                            for (int k1 = 0; k1 < 4; ++k1)
+                             {
+                                 this.func_175811_a(p_74875_1_, field_175826_b, l + j1, 0, i1 + k1, p_74875_3_);
+                                 this.func_175808_b(p_74875_1_, field_175826_b, l + j1, -1, i1 + k1, p_74875_3_);
+@@ -984,12 +984,12 @@
+                         }
+                         else
+                         {
+-                            k++;
++                            ++k;
+                         }
+                     }
+                 }
+ 
+-                for (int l1 = 0; l1 < 5; l1++)
++                for (int l1 = 0; l1 < 5; ++l1)
+                 {
+                     this.func_181655_a(p_74875_1_, p_74875_3_, -1 - l1, 0 + l1 * 2, -1 - l1, -1 - l1, 23, 58 + l1, false);
+                     this.func_181655_a(p_74875_1_, p_74875_3_, 58 + l1, 0 + l1 * 2, -1 - l1, 58 + l1, 23, 58 + l1, false);
+@@ -1017,7 +1017,7 @@
+                     this.func_175804_a(p_175840_3_, p_175840_5_, p_175840_2_ + 0, 0, 0, p_175840_2_ + 24, 0, 20, field_175828_a, field_175828_a, false);
+                     this.func_181655_a(p_175840_3_, p_175840_5_, p_175840_2_ + 0, 1, 0, p_175840_2_ + 24, 10, 20, false);
+ 
+-                    for (int j = 0; j < 4; j++)
++                    for (int j = 0; j < 4; ++j)
+                     {
+                         this.func_175804_a(p_175840_3_, p_175840_5_, p_175840_2_ + j, j + 1, j, p_175840_2_ + j, j + 1, 20, field_175826_b, field_175826_b, false);
+                         this.func_175804_a(
+@@ -1057,7 +1057,7 @@
+                         this.func_175811_a(p_175840_3_, field_175824_d, k, 5, k1, p_175840_5_);
+                     }
+ 
+-                    for (int l1 = 0; l1 < 4; l1++)
++                    for (int l1 = 0; l1 < 4; ++l1)
+                     {
+                         int i1 = p_175840_1_ ? p_175840_2_ + (24 - (17 - l1 * 3)) : p_175840_2_ + 17 - l1 * 3;
+                         this.func_175811_a(p_175840_3_, field_175824_d, i1, 5, 5, p_175840_5_);
+@@ -1075,7 +1075,7 @@
+                 {
+                     this.func_181655_a(p_175839_1_, p_175839_3_, 25, 0, 0, 32, 8, 20, false);
+ 
+-                    for (int i = 0; i < 4; i++)
++                    for (int i = 0; i < 4; ++i)
+                     {
+                         this.func_175804_a(p_175839_1_, p_175839_3_, 24, 2, 5 + i * 4, 24, 4, 5 + i * 4, field_175826_b, field_175826_b, false);
+                         this.func_175804_a(p_175839_1_, p_175839_3_, 22, 4, 5 + i * 4, 23, 4, 5 + i * 4, field_175826_b, field_175826_b, false);
+@@ -1117,13 +1117,13 @@
+                     this.func_175811_a(p_175837_1_, field_175826_b, 25, 1, 21, p_175837_3_);
+                     this.func_175811_a(p_175837_1_, field_175826_b, 32, 1, 21, p_175837_3_);
+ 
+-                    for (int i = 0; i < 7; i++)
++                    for (int i = 0; i < 7; ++i)
+                     {
+                         this.func_175811_a(p_175837_1_, field_175827_c, 28 - i, 6 + i, 21, p_175837_3_);
+                         this.func_175811_a(p_175837_1_, field_175827_c, 29 + i, 6 + i, 21, p_175837_3_);
+                     }
+ 
+-                    for (int j = 0; j < 4; j++)
++                    for (int j = 0; j < 4; ++j)
+                     {
+                         this.func_175811_a(p_175837_1_, field_175827_c, 28 - j, 9 + j, 21, p_175837_3_);
+                         this.func_175811_a(p_175837_1_, field_175827_c, 29 + j, 9 + j, 21, p_175837_3_);
+@@ -1132,7 +1132,7 @@
+                     this.func_175811_a(p_175837_1_, field_175827_c, 28, 12, 21, p_175837_3_);
+                     this.func_175811_a(p_175837_1_, field_175827_c, 29, 12, 21, p_175837_3_);
+ 
+-                    for (int k = 0; k < 3; k++)
++                    for (int k = 0; k < 3; ++k)
+                     {
+                         this.func_175811_a(p_175837_1_, field_175827_c, 22 - k * 2, 8, 21, p_175837_3_);
+                         this.func_175811_a(p_175837_1_, field_175827_c, 22 - k * 2, 9, 21, p_175837_3_);
+@@ -1163,7 +1163,7 @@
+                     this.func_175804_a(p_175841_1_, p_175841_3_, 21, 0, 22, 36, 0, 36, field_175828_a, field_175828_a, false);
+                     this.func_181655_a(p_175841_1_, p_175841_3_, 21, 1, 22, 36, 23, 36, false);
+ 
+-                    for (int i = 0; i < 4; i++)
++                    for (int i = 0; i < 4; ++i)
+                     {
+                         this.func_175804_a(p_175841_1_, p_175841_3_, 21 + i, 13 + i, 21 + i, 36 - i, 13 + i, 21 + i, field_175826_b, field_175826_b, false);
+                         this.func_175804_a(p_175841_1_, p_175841_3_, 21 + i, 13 + i, 36 - i, 36 - i, 13 + i, 36 - i, field_175826_b, field_175826_b, false);
+@@ -1203,7 +1203,7 @@
+                     this.func_181655_a(p_175835_1_, p_175835_3_, 0, 1, 21, 6, 7, 57, false);
+                     this.func_175804_a(p_175835_1_, p_175835_3_, 4, 4, 21, 6, 4, 53, field_175828_a, field_175828_a, false);
+ 
+-                    for (int i = 0; i < 4; i++)
++                    for (int i = 0; i < 4; ++i)
+                     {
+                         this.func_175804_a(p_175835_1_, p_175835_3_, i, i + 1, 21, i, i + 1, 57 - i, field_175826_b, field_175826_b, false);
+                     }
+@@ -1215,7 +1215,7 @@
+ 
+                     this.func_175811_a(p_175835_1_, field_175824_d, 5, 5, 52, p_175835_3_);
+ 
+-                    for (int k = 0; k < 4; k++)
++                    for (int k = 0; k < 4; ++k)
+                     {
+                         this.func_175804_a(p_175835_1_, p_175835_3_, k, k + 1, 21, k, k + 1, 57 - k, field_175826_b, field_175826_b, false);
+                     }
+@@ -1230,7 +1230,7 @@
+                     this.func_181655_a(p_175835_1_, p_175835_3_, 51, 1, 21, 57, 7, 57, false);
+                     this.func_175804_a(p_175835_1_, p_175835_3_, 51, 4, 21, 53, 4, 53, field_175828_a, field_175828_a, false);
+ 
+-                    for (int l = 0; l < 4; l++)
++                    for (int l = 0; l < 4; ++l)
+                     {
+                         this.func_175804_a(p_175835_1_, p_175835_3_, 57 - l, l + 1, 21, 57 - l, l + 1, 57 - l, field_175826_b, field_175826_b, false);
+                     }
+@@ -1250,7 +1250,7 @@
+                     this.func_175804_a(p_175835_1_, p_175835_3_, 7, 0, 51, 50, 0, 57, field_175828_a, field_175828_a, false);
+                     this.func_181655_a(p_175835_1_, p_175835_3_, 7, 1, 51, 50, 10, 57, false);
+ 
+-                    for (int j1 = 0; j1 < 4; j1++)
++                    for (int j1 = 0; j1 < 4; ++j1)
+                     {
+                         this.func_175804_a(p_175835_1_, p_175835_3_, j1 + 1, j1 + 1, 57 - j1, 56 - j1, j1 + 1, 57 - j1, field_175826_b, field_175826_b, false);
+                     }
+@@ -1265,7 +1265,7 @@
+                     this.func_181655_a(p_175842_1_, p_175842_3_, 7, 1, 21, 13, 10, 50, false);
+                     this.func_175804_a(p_175842_1_, p_175842_3_, 11, 8, 21, 13, 8, 53, field_175828_a, field_175828_a, false);
+ 
+-                    for (int i = 0; i < 4; i++)
++                    for (int i = 0; i < 4; ++i)
+                     {
+                         this.func_175804_a(p_175842_1_, p_175842_3_, i + 7, i + 5, 21, i + 7, i + 5, 54, field_175826_b, field_175826_b, false);
+                     }
+@@ -1282,7 +1282,7 @@
+                     this.func_181655_a(p_175842_1_, p_175842_3_, 44, 1, 21, 50, 10, 50, false);
+                     this.func_175804_a(p_175842_1_, p_175842_3_, 44, 8, 21, 46, 8, 53, field_175828_a, field_175828_a, false);
+ 
+-                    for (int k = 0; k < 4; k++)
++                    for (int k = 0; k < 4; ++k)
+                     {
+                         this.func_175804_a(p_175842_1_, p_175842_3_, 50 - k, k + 5, 21, 50 - k, k + 5, 54, field_175826_b, field_175826_b, false);
+                     }
+@@ -1318,7 +1318,7 @@
+                         }
+                     }
+ 
+-                    for (int j1 = 0; j1 < 3; j1++)
++                    for (int j1 = 0; j1 < 3; ++j1)
+                     {
+                         this.func_175804_a(p_175842_1_, p_175842_3_, 8 + j1, 5 + j1, 54, 49 - j1, 5 + j1, 54, field_175828_a, field_175828_a, false);
+                     }
+@@ -1337,7 +1337,7 @@
+                     this.func_175804_a(p_175838_1_, p_175838_3_, 18, 12, 22, 20, 12, 39, field_175828_a, field_175828_a, false);
+                     this.func_175804_a(p_175838_1_, p_175838_3_, 18, 12, 21, 20, 12, 21, field_175826_b, field_175826_b, false);
+ 
+-                    for (int i = 0; i < 4; i++)
++                    for (int i = 0; i < 4; ++i)
+                     {
+                         this.func_175804_a(p_175838_1_, p_175838_3_, i + 14, i + 9, 21, i + 14, i + 9, 43 - i, field_175826_b, field_175826_b, false);
+                     }
+@@ -1355,7 +1355,7 @@
+                     this.func_175804_a(p_175838_1_, p_175838_3_, 37, 12, 22, 39, 12, 39, field_175828_a, field_175828_a, false);
+                     this.func_175804_a(p_175838_1_, p_175838_3_, 37, 12, 21, 39, 12, 21, field_175826_b, field_175826_b, false);
+ 
+-                    for (int k = 0; k < 4; k++)
++                    for (int k = 0; k < 4; ++k)
+                     {
+                         this.func_175804_a(p_175838_1_, p_175838_3_, 43 - k, k + 9, 21, 43 - k, k + 9, 43 - k, field_175826_b, field_175826_b, false);
+                     }
+@@ -1372,7 +1372,7 @@
+                     this.func_181655_a(p_175838_1_, p_175838_3_, 21, 1, 37, 36, 14, 43, false);
+                     this.func_175804_a(p_175838_1_, p_175838_3_, 21, 12, 37, 36, 12, 39, field_175828_a, field_175828_a, false);
+ 
+-                    for (int i1 = 0; i1 < 4; i1++)
++                    for (int i1 = 0; i1 < 4; ++i1)
+                     {
+                         this.func_175804_a(p_175838_1_, p_175838_3_, 15 + i1, i1 + 9, 43 - i1, 42 - i1, i1 + 9, 43 - i1, field_175826_b, field_175826_b, false);
+                     }
+@@ -1407,7 +1407,7 @@
+                 this.func_175804_a(p_74875_1_, p_74875_3_, 1, 7, 0, 15, 7, 0, iblockstate, iblockstate, false);
+                 this.func_175804_a(p_74875_1_, p_74875_3_, 1, 7, 15, 14, 7, 15, iblockstate, iblockstate, false);
+ 
+-                for (int k = 1; k <= 6; k++)
++                for (int k = 1; k <= 6; ++k)
+                 {
+                     iblockstate = field_175826_b;
+ 
+@@ -1523,7 +1523,7 @@
+                 this.func_175804_a(p_74875_1_, p_74875_3_, 6, 0, 10, 7, 0, 10, field_175827_c, field_175827_c, false);
+                 int l = 3;
+ 
+-                for (int j = 0; j < 2; j++)
++                for (int j = 0; j < 2; ++j)
+                 {
+                     for (int k = 2; k <= 8; k += 3)
+                     {
+@@ -1637,11 +1637,11 @@
+                 boolean p_181655_9_
+             )
+             {
+-                for (int i = p_181655_4_; i <= p_181655_7_; i++)
++                for (int i = p_181655_4_; i <= p_181655_7_; ++i)
+                 {
+-                    for (int j = p_181655_3_; j <= p_181655_6_; j++)
++                    for (int j = p_181655_3_; j <= p_181655_6_; ++j)
+                     {
+-                        for (int k = p_181655_5_; k <= p_181655_8_; k++)
++                        for (int k = p_181655_5_; k <= p_181655_8_; ++k)
+                         {
+                             if (!p_181655_9_ || this.func_175807_a(p_181655_1_, j, i, k, p_181655_2_).func_185904_a() != Material.field_151579_a)
+                             {
+@@ -1728,11 +1728,11 @@
+                 IBlockState p_175819_9_
+             )
+             {
+-                for (int i = p_175819_4_; i <= p_175819_7_; i++)
++                for (int i = p_175819_4_; i <= p_175819_7_; ++i)
+                 {
+-                    for (int j = p_175819_3_; j <= p_175819_6_; j++)
++                    for (int j = p_175819_3_; j <= p_175819_6_; ++j)
+                     {
+-                        for (int k = p_175819_5_; k <= p_175819_8_; k++)
++                        for (int k = p_175819_5_; k <= p_175819_8_; ++k)
+                         {
+                             if (this.func_175807_a(p_175819_1_, j, i, k, p_175819_2_) == field_175822_f)
+                             {
+@@ -1796,7 +1796,7 @@
+ 
+             public void func_175958_a()
+             {
+-                for (int i = 0; i < 6; i++)
++                for (int i = 0; i < 6; ++i)
+                 {
+                     this.field_175966_c[i] = this.field_175965_b[i] != null;
+                 }
+@@ -1812,7 +1812,7 @@
+                 {
+                     this.field_175962_f = p_175959_1_;
+ 
+-                    for (int i = 0; i < 6; i++)
++                    for (int i = 0; i < 6; ++i)
+                     {
+                         if (this.field_175965_b[i] != null
+                                 && this.field_175966_c[i]
+@@ -1836,11 +1836,11 @@
+             {
+                 int i = 0;
+ 
+-                for (int j = 0; j < 6; j++)
++                for (int j = 0; j < 6; ++j)
+                 {
+                     if (this.field_175966_c[j])
+                     {
+-                        i++;
++                        ++i;
+                     }
+                 }
+ 
+@@ -2078,9 +2078,9 @@
+                     this.func_175819_a(p_74875_1_, p_74875_3_, 1, 4, 1, 6, 4, 6, field_175828_a);
+                 }
+ 
+-                for (int i = 1; i <= 6; i++)
++                for (int i = 1; i <= 6; ++i)
+                 {
+-                    for (int j = 1; j <= 6; j++)
++                    for (int j = 1; j <= 6; ++j)
+                     {
+                         if (p_74875_2_.nextInt(3) != 0)
+                         {
+@@ -2137,7 +2137,7 @@
+             {
+                 if (this.field_175834_o == 0)
+                 {
+-                    for (int i = 0; i < 4; i++)
++                    for (int i = 0; i < 4; ++i)
+                     {
+                         this.func_175804_a(p_74875_1_, p_74875_3_, 10 - i, 3 - i, 20 - i, 12 + i, 3 - i, 20, field_175826_b, field_175826_b, false);
+                     }
+@@ -2195,7 +2195,7 @@
+                     int j = 20;
+                     int k = 5;
+ 
+-                    for (int l = 0; l < 2; l++)
++                    for (int l = 0; l < 2; ++l)
+                     {
+                         this.func_175811_a(p_74875_1_, field_175826_b, j1, 6, 20, p_74875_3_);
+                         this.func_175811_a(p_74875_1_, field_175825_e, j1, 5, 20, p_74875_3_);
+@@ -2206,7 +2206,7 @@
+                     this.func_175804_a(p_74875_1_, p_74875_3_, 7, 3, 7, 15, 3, 14, field_175826_b, field_175826_b, false);
+                     int b0 = 10;
+ 
+-                    for (int k1 = 0; k1 < 2; k1++)
++                    for (int k1 = 0; k1 < 2; ++k1)
+                     {
+                         this.func_175804_a(p_74875_1_, p_74875_3_, b0, 0, 10, b0, 6, 10, field_175826_b, field_175826_b, false);
+                         this.func_175804_a(p_74875_1_, p_74875_3_, b0, 0, 12, b0, 6, 12, field_175826_b, field_175826_b, false);
+@@ -2219,7 +2219,7 @@
+ 
+                     b0 = 8;
+ 
+-                    for (int l1 = 0; l1 < 2; l1++)
++                    for (int l1 = 0; l1 < 2; ++l1)
+                     {
+                         this.func_175804_a(p_74875_1_, p_74875_3_, b0, 0, 7, b0, 2, 7, field_175826_b, field_175826_b, false);
+                         this.func_175804_a(p_74875_1_, p_74875_3_, b0, 0, 14, b0, 2, 14, field_175826_b, field_175826_b, false);

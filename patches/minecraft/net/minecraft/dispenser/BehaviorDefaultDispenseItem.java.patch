@@ -20,9 +20,16 @@
          return p_82487_2_;
      }
  
-@@ -50,6 +54,62 @@
-         entityitem.field_70181_x += p_82486_0_.field_73012_v.nextGaussian() * 0.0075F * (double)p_82486_2_;
-         entityitem.field_70179_y += p_82486_0_.field_73012_v.nextGaussian() * 0.0075F * (double)p_82486_2_;
+@@ -46,10 +50,66 @@
+         entityitem.field_70159_w = (double)p_82486_3_.func_82601_c() * d3;
+         entityitem.field_70181_x = 0.2F;
+         entityitem.field_70179_y = (double)p_82486_3_.func_82599_e() * d3;
+-        entityitem.field_70159_w = entityitem.field_70159_w + p_82486_0_.field_73012_v.nextGaussian() * 0.0075F * (double)p_82486_2_;
+-        entityitem.field_70181_x = entityitem.field_70181_x + p_82486_0_.field_73012_v.nextGaussian() * 0.0075F * (double)p_82486_2_;
+-        entityitem.field_70179_y = entityitem.field_70179_y + p_82486_0_.field_73012_v.nextGaussian() * 0.0075F * (double)p_82486_2_;
++        entityitem.field_70159_w += p_82486_0_.field_73012_v.nextGaussian() * 0.0075F * (double)p_82486_2_;
++        entityitem.field_70181_x += p_82486_0_.field_73012_v.nextGaussian() * 0.0075F * (double)p_82486_2_;
++        entityitem.field_70179_y += p_82486_0_.field_73012_v.nextGaussian() * 0.0075F * (double)p_82486_2_;
          p_82486_0_.func_72838_d(entityitem);
 +    }
 +

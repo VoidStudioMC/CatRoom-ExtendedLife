@@ -114,7 +114,6 @@ public class FMLCommonHandler
      */
     private IFMLSidedHandler sidedDelegate;
 
-    private boolean noForge;
     private List<String> brandings;
     private List<String> brandingsNoMC;
     private List<ICrashCallable> crashCallables = Lists.newArrayList(Loader.instance().getCallableCrashInformation());
@@ -125,16 +124,27 @@ public class FMLCommonHandler
 
     private FMLCommonHandler()
     {
+        registerCrashCallable(new ICrashCallable() {
+            @Override
+            public String call() {
+                return com.cleanroommc.common.CleanroomVersion.BUILD_VERSION;
+            }
+
+            @Override
+            public String getLabel() {
+                return "Cleanroom Version";
+            }
+        });
+
         registerCrashCallable(new ICrashCallable()
         {
             @Override
-            public String call() throws Exception
-            {
+            public String call() {
                 StringBuilder builder = new StringBuilder();
                 Joiner joiner = Joiner.on("\n  ");
                 for(String coreMod : CoreModManager.getTransformers().keySet())
                 {
-                    builder.append("\n" + coreMod + "\n  ").append(joiner.join(CoreModManager.getTransformers().get(coreMod)));
+                    builder.append("\n").append(coreMod).append("\n  ").append(joiner.join(CoreModManager.getTransformers().get(coreMod)));
                 }
                 return builder.toString();
             }
@@ -149,7 +159,7 @@ public class FMLCommonHandler
     /**
      * The FML event bus. Subscribe here for FML related events
      *
-     * @Deprecated Use {@link MinecraftForge#EVENT_BUS} they're the same thing now
+     * @deprecated Use {@link MinecraftForge#EVENT_BUS} they're the same thing now
      * @return the event bus
      */
     @Deprecated
@@ -536,10 +546,8 @@ public class FMLCommonHandler
     {
         List<String> modNames = Lists.newArrayListWithExpectedSize(3);
         modNames.add("fml");
-        if (!noForge)
-        {
-            modNames.add(ForgeVersion.MOD_ID);
-        }
+        modNames.add(ForgeVersion.MOD_ID);
+        modNames.add(CleanroomVersion.MOD_ID);
 
         if (Loader.instance().getFMLBrandingProperties().containsKey("snooperbranding"))
         {

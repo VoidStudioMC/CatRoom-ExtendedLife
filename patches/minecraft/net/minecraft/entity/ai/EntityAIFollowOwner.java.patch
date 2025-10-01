@@ -10,7 +10,15 @@
  
  public class EntityAIFollowOwner extends EntityAIBase
  {
-@@ -121,14 +124,17 @@
+@@ -115,20 +118,23 @@
+                             int j = MathHelper.func_76128_c(this.field_75339_e.field_70161_v) - 2;
+                             int k = MathHelper.func_76128_c(this.field_75339_e.func_174813_aQ().field_72338_b);
+ 
+-                            for (int l = 0; l <= 4; l++)
++                            for (int l = 0; l <= 4; ++l)
+                             {
+-                                for (int i1 = 0; i1 <= 4; i1++)
++                                for (int i1 = 0; i1 <= 4; ++i1)
                                  {
                                      if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && this.func_192381_a(i, j, k, l, i1))
                                      {

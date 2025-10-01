@@ -1,0 +1,20 @@
+--- before/net/minecraft/client/gui/GuiMerchant.java
++++ after/net/minecraft/client/gui/GuiMerchant.java
+@@ -81,7 +81,7 @@
+ 
+         if (p_146284_1_ == this.field_147043_x)
+         {
+-            this.field_147041_z++;
++            ++this.field_147041_z;
+             MerchantRecipeList merchantrecipelist = this.field_147037_w.func_70934_b(this.field_146297_k.field_71439_g);
+ 
+             if (merchantrecipelist != null && this.field_147041_z >= merchantrecipelist.size())
+@@ -93,7 +93,7 @@
+         }
+         else if (p_146284_1_ == this.field_147042_y)
+         {
+-            this.field_147041_z--;
++            --this.field_147041_z;
+ 
+             if (this.field_147041_z < 0)
+             {

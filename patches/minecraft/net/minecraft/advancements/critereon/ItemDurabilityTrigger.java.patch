@@ -1,0 +1,19 @@
+--- before/net/minecraft/advancements/critereon/ItemDurabilityTrigger.java
++++ after/net/minecraft/advancements/critereon/ItemDurabilityTrigger.java
+@@ -99,11 +99,13 @@
+                 {
+                     return false;
+                 }
++                else if (!this.field_193199_b.func_192514_a((float)(p_193197_1_.func_77958_k() - p_193197_2_)))
++                {
++                    return false;
++                }
+                 else
+                 {
+-                    return !this.field_193199_b.func_192514_a((float)(p_193197_1_.func_77958_k() - p_193197_2_))
+-                           ? false
+-                           : this.field_193200_c.func_192514_a((float)(p_193197_1_.func_77952_i() - p_193197_2_));
++                    return this.field_193200_c.func_192514_a((float)(p_193197_1_.func_77952_i() - p_193197_2_));
+                 }
+             }
+         }

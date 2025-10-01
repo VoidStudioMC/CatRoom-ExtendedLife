@@ -1,0 +1,11 @@
+--- before/net/minecraft/advancements/ICriterionTrigger.java
++++ after/net/minecraft/advancements/ICriterionTrigger.java
+@@ -48,7 +48,7 @@
+                 }
+                 else if (p_equals_1_ != null && this.getClass() == p_equals_1_.getClass())
+                 {
+-                    ICriterionTrigger.Listener<?> listener = (ICriterionTrigger.Listener<?>)p_equals_1_;
++                    ICriterionTrigger.Listener<?> listener = (ICriterionTrigger.Listener)p_equals_1_;
+ 
+                     if (!this.field_192160_a.equals(listener.field_192160_a))
+                     {

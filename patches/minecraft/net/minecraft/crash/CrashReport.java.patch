@@ -1,11 +1,6 @@
 --- before/net/minecraft/crash/CrashReport.java
 +++ after/net/minecraft/crash/CrashReport.java
-@@ -9,18 +9,26 @@
- import java.io.Writer;
- import java.lang.management.ManagementFactory;
- import java.lang.management.RuntimeMXBean;
-+import java.lang.reflect.Method;
- import java.nio.charset.StandardCharsets;
+@@ -13,6 +13,9 @@
  import java.text.SimpleDateFormat;
  import java.util.Date;
  import java.util.List;
@@ -14,10 +9,8 @@
 +import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
  import net.minecraft.util.ReportedException;
  import net.minecraft.world.gen.layer.IntCache;
-+import net.minecraftforge.fml.relauncher.MixinBooterPlugin;
  import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
- import org.apache.commons.io.IOUtils;
+@@ -21,6 +24,9 @@
  import org.apache.commons.lang3.ArrayUtils;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -27,16 +20,7 @@
  
  public class CrashReport
  {
-@@ -28,7 +36,7 @@
-     private final String field_71513_a;
-     private final Throwable field_71511_b;
-     private final CrashReportCategory field_85061_c = new CrashReportCategory(this, "System Details");
--    private final List<CrashReportCategory> field_71512_c = Lists.newArrayList();
-+    private final List<CrashReportCategory> field_71512_c = Lists.<CrashReportCategory>newArrayList();
-     private File field_71510_d;
-     private boolean field_85059_f = true;
-     private StackTraceElement[] field_85060_g = new StackTraceElement[0];
-@@ -116,6 +124,8 @@
+@@ -116,6 +122,8 @@
                  return IntCache.func_85144_b();
              }
          });
@@ -45,72 +29,15 @@
      }
  
      public String func_71501_a()
-@@ -132,7 +142,7 @@
-     {
-         if ((this.field_85060_g == null || this.field_85060_g.length <= 0) && !this.field_71512_c.isEmpty())
-         {
--            this.field_85060_g = ArrayUtils.subarray(this.field_71512_c.get(0).func_147152_a(), 0, 1);
-+            this.field_85060_g = (StackTraceElement[])ArrayUtils.subarray(((CrashReportCategory)this.field_71512_c.get(0)).func_147152_a(), 0, 1);
-         }
- 
-         if (this.field_85060_g != null && this.field_85060_g.length > 0)
-@@ -143,7 +153,7 @@
- 
-             for (StackTraceElement stacktraceelement : this.field_85060_g)
-             {
--                p_71506_1_.append("\t").append("at ").append(stacktraceelement);
-+                p_71506_1_.append("\t").append("at ").append((Object)stacktraceelement);
-                 p_71506_1_.append("\n");
-             }
- 
-@@ -198,6 +208,46 @@
+@@ -198,18 +206,19 @@
              IOUtils.closeQuietly((Writer)printwriter);
          }
  
-+        StackTraceElement[] stacktrace = throwable.getStackTrace();
-+        if (stacktrace.length > 0) {
-+            try {
-+                StringBuilder mixinMetadataBuilder = null;
-+                Set<String> classes = new ObjectOpenHashSet<>();
-+                for (StackTraceElement stackTraceElement : stacktrace) {
-+                    classes.add(stackTraceElement.getClassName());
-+                }
-+                for (String className : classes) {
-+                    ClassInfo classInfo = ClassInfo.fromCache(className);
-+                    if (classInfo != null) {
-+                        @SuppressWarnings("unchecked")
-+                        Set<MixinInfo> mixinInfos = classInfo.getMixins();
-+                        if (!mixinInfos.isEmpty()) {
-+                            if (mixinMetadataBuilder == null) {
-+                                mixinMetadataBuilder = new StringBuilder("\n(MixinBooter) Mixins in Stacktrace:");
-+                            }
-+                            mixinMetadataBuilder.append("\n\t");
-+                            mixinMetadataBuilder.append(className);
-+                            mixinMetadataBuilder.append(":");
-+                            for (IMixinInfo mixinInfo : mixinInfos) {
-+                                mixinMetadataBuilder.append("\n\t\t");
-+                                mixinMetadataBuilder.append(mixinInfo.getClassName());
-+                                mixinMetadataBuilder.append(" (");
-+                                mixinMetadataBuilder.append(mixinInfo.getConfig().getName());
-+                                mixinMetadataBuilder.append(")");
-+                            }
-+                        }
-+                    }
-+                }
-+
-+                if (mixinMetadataBuilder == null) {
-+                    return s + "\nNo Mixin Metadata is found in the Stacktrace.\n";
-+                } else {
-+                    return s + mixinMetadataBuilder;
-+                }
-+            } catch (Throwable t) {
-+                return s + "\nFailed to find Mixin Metadata in Stacktrace:\n" + t;
-+            }
-+        }
-         return s;
+-        return s;
++        return s + net.minecraftforge.common.ForgeHooks.gatherMixinInfo(throwable);
      }
  
-@@ -205,11 +255,12 @@
+     public String func_71502_e()
      {
          StringBuilder stringbuilder = new StringBuilder();
          stringbuilder.append("---- Minecraft Crash Report ----\n");
@@ -124,7 +51,16 @@
          stringbuilder.append("\n");
          stringbuilder.append("Description: ");
          stringbuilder.append(this.field_71513_a);
-@@ -247,26 +298,27 @@
+@@ -217,7 +226,7 @@
+         stringbuilder.append(this.func_71498_d());
+         stringbuilder.append("\n\nA detailed walkthrough of the error, its code path and all known details is as follows:\n");
+ 
+-        for (int i = 0; i < 87; i++)
++        for (int i = 0; i < 87; ++i)
+         {
+             stringbuilder.append("-");
+         }
+@@ -247,26 +256,27 @@
              }
  
              Writer writer = null;
@@ -156,7 +92,7 @@
          }
      }
  
-@@ -331,49 +383,13 @@
+@@ -331,49 +341,13 @@
  
      private static String func_71503_h()
      {

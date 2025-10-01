@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/gui/GuiScreenOptionsSounds.java
++++ after/net/minecraft/client/gui/GuiScreenOptionsSounds.java
+@@ -55,7 +55,7 @@
+                         soundcategory.ordinal(), this.field_146294_l / 2 - 155 + i % 2 * 160, this.field_146295_m / 6 - 12 + 24 * (i >> 1), soundcategory, false
+                     )
+                 );
+-                i++;
++                ++i;
+             }
+         }
+ 

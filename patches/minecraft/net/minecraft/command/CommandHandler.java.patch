@@ -80,7 +80,23 @@
                      }
  
                      for (Entity entity : list)
-@@ -86,7 +104,7 @@
+@@ -68,7 +86,7 @@
+ 
+                         if (this.func_175786_a(p_71556_1_, astring, icommand, p_71556_2_))
+                         {
+-                            i++;
++                            ++i;
+                         }
+                     }
+ 
+@@ -80,13 +98,13 @@
+ 
+                     if (this.func_175786_a(p_71556_1_, astring, icommand, p_71556_2_))
+                     {
+-                        i++;
++                        ++i;
+                     }
+                 }
              }
              else
              {
@@ -183,3 +199,12 @@
      public Map<String, ICommand> func_71555_a()
      {
          return this.field_71562_a;
+@@ -227,7 +246,7 @@
+         }
+         else
+         {
+-            for (int i = 0; i < p_82370_2_.length; i++)
++            for (int i = 0; i < p_82370_2_.length; ++i)
+             {
+                 if (p_82370_1_.func_82358_a(p_82370_2_, i) && EntitySelector.func_82377_a(p_82370_2_[i]))
+                 {

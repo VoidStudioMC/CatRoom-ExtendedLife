@@ -1,0 +1,11 @@
+--- before/net/minecraft/world/storage/loot/functions/LootFunctionManager.java
++++ after/net/minecraft/world/storage/loot/functions/LootFunctionManager.java
+@@ -56,7 +56,7 @@
+ 
+     public static <T extends LootFunction> LootFunction.Serializer<T> func_186581_a(T p_186581_0_)
+     {
+-        LootFunction.Serializer<T> serializer = (LootFunction.Serializer<T>)field_186585_b.get(p_186581_0_.getClass());
++        LootFunction.Serializer<T> serializer = (LootFunction.Serializer<T>) field_186585_b.get(p_186581_0_.getClass());
+ 
+         if (serializer == null)
+         {

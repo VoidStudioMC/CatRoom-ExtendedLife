@@ -1,0 +1,19 @@
+--- before/net/minecraft/advancements/critereon/NetherTravelTrigger.java
++++ after/net/minecraft/advancements/critereon/NetherTravelTrigger.java
+@@ -102,11 +102,13 @@
+                 {
+                     return false;
+                 }
++                else if (!this.field_193208_b.func_193452_a(p_193206_1_, p_193206_3_, p_193206_5_, p_193206_7_))
++                {
++                    return false;
++                }
+                 else
+                 {
+-                    return !this.field_193208_b.func_193452_a(p_193206_1_, p_193206_3_, p_193206_5_, p_193206_7_)
+-                           ? false
+-                           : this.field_193209_c
++                    return this.field_193209_c
+                            .func_193422_a(p_193206_2_.field_72450_a, p_193206_2_.field_72448_b, p_193206_2_.field_72449_c, p_193206_3_, p_193206_5_, p_193206_7_);
+                 }
+             }

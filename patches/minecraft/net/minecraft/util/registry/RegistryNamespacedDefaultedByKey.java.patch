@@ -1,0 +1,37 @@
+--- before/net/minecraft/util/registry/RegistryNamespacedDefaultedByKey.java
++++ after/net/minecraft/util/registry/RegistryNamespacedDefaultedByKey.java
+@@ -43,7 +43,7 @@
+     public K func_177774_c(V p_177774_1_)
+     {
+         K k = super.func_177774_c(p_177774_1_);
+-        return k == null ? this.field_148760_d : k;
++        return (K)(k == null ? this.field_148760_d : k);
+     }
+ 
+     @Nonnull
+@@ -51,7 +51,7 @@
+     public V func_82594_a(@Nullable K p_82594_1_)
+     {
+         V v = super.func_82594_a(p_82594_1_);
+-        return v == null ? this.field_148761_e : v;
++        return (V)(v == null ? this.field_148761_e : v);
+     }
+ 
+     @Nonnull
+@@ -59,7 +59,7 @@
+     public V func_148754_a(int p_148754_1_)
+     {
+         V v = super.func_148754_a(p_148754_1_);
+-        return v == null ? this.field_148761_e : v;
++        return (V)(v == null ? this.field_148761_e : v);
+     }
+ 
+     @Nonnull
+@@ -67,6 +67,6 @@
+     public V func_186801_a(Random p_186801_1_)
+     {
+         V v = super.func_186801_a(p_186801_1_);
+-        return v == null ? this.field_148761_e : v;
++        return (V)(v == null ? this.field_148761_e : v);
+     }
+ }

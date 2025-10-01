@@ -78,7 +78,7 @@
                  {
                      String s = func_180529_a(p_184881_3_, 9);
  
-@@ -107,11 +93,11 @@
+@@ -107,18 +93,18 @@
                      }
                      catch (NBTException nbtexception)
                      {
@@ -91,7 +91,17 @@
 +                List<BlockPos> list = Lists.<BlockPos>newArrayList();
                  i = 0;
  
-                 for (int l = blockpos2.func_177952_p(); l <= blockpos3.func_177952_p(); ++l)
+-                for (int l = blockpos2.func_177952_p(); l <= blockpos3.func_177952_p(); l++)
++                for (int l = blockpos2.func_177952_p(); l <= blockpos3.func_177952_p(); ++l)
+                 {
+-                    for (int i1 = blockpos2.func_177956_o(); i1 <= blockpos3.func_177956_o(); i1++)
++                    for (int i1 = blockpos2.func_177956_o(); i1 <= blockpos3.func_177956_o(); ++i1)
+                     {
+-                        for (int j1 = blockpos2.func_177958_n(); j1 <= blockpos3.func_177958_n(); j1++)
++                        for (int j1 = blockpos2.func_177958_n(); j1 <= blockpos3.func_177958_n(); ++j1)
+                         {
+                             BlockPos blockpos4 = new BlockPos(j1, i1, l);
+ 
 @@ -137,26 +123,17 @@
                                              continue;
                                          }
@@ -122,6 +132,15 @@
                                  {
                                      if ("hollow".equals(p_184881_3_[8]))
                                      {
+@@ -178,7 +155,7 @@
+                             if (world.func_180501_a(blockpos4, iblockstate, 2))
+                             {
+                                 list.add(blockpos4);
+-                                i++;
++                                ++i;
+ 
+                                 if (flag)
+                                 {
 @@ -205,7 +182,7 @@
  
                  if (i <= 0)

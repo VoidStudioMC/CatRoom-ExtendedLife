@@ -1,0 +1,20 @@
+--- before/net/minecraft/advancements/AdvancementProgress.java
++++ after/net/minecraft/advancements/AdvancementProgress.java
+@@ -152,7 +152,7 @@
+         AdvancementProgress advancementprogress = new AdvancementProgress();
+         int i = p_192100_0_.func_150792_a();
+ 
+-        for (int j = 0; j < i; j++)
++        for (int j = 0; j < i; ++j)
+         {
+             advancementprogress.field_192110_a.put(p_192100_0_.func_150789_c(32767), CriterionProgress.func_192149_a(p_192100_0_, advancementprogress));
+         }
+@@ -227,7 +227,7 @@
+ 
+             if (flag)
+             {
+-                i++;
++                ++i;
+             }
+         }
+ 

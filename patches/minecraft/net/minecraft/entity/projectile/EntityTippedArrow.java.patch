@@ -17,6 +17,15 @@
      private boolean field_191509_at;
  
      public EntityTippedArrow(World p_i46756_1_)
+@@ -140,7 +141,7 @@
+             double d1 = (double)(i >> 8 & 0xFF) / 255.0;
+             double d2 = (double)(i >> 0 & 0xFF) / 255.0;
+ 
+-            for (int j = 0; j < p_184556_1_; j++)
++            for (int j = 0; j < p_184556_1_; ++j)
+             {
+                 this.field_70170_p
+                 .func_175688_a(
 @@ -156,12 +157,30 @@
          }
      }
@@ -49,3 +58,12 @@
      {
          this.field_191509_at = true;
          this.field_70180_af.func_187227_b(field_184559_f, p_191507_1_);
+@@ -296,7 +315,7 @@
+                 double d1 = (double)(i >> 8 & 0xFF) / 255.0;
+                 double d2 = (double)(i >> 0 & 0xFF) / 255.0;
+ 
+-                for (int j = 0; j < 20; j++)
++                for (int j = 0; j < 20; ++j)
+                 {
+                     this.field_70170_p
+                     .func_175688_a(

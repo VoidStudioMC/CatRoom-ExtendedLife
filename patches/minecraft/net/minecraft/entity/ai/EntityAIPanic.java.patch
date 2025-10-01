@@ -13,3 +13,18 @@
          return !this.field_75267_a.func_70661_as().func_75500_f();
      }
  
+@@ -90,11 +96,11 @@
+         BlockPos blockpos1 = null;
+         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+ 
+-        for (int l = i - p_188497_3_; l <= i + p_188497_3_; l++)
++        for (int l = i - p_188497_3_; l <= i + p_188497_3_; ++l)
+         {
+-            for (int i1 = j - p_188497_4_; i1 <= j + p_188497_4_; i1++)
++            for (int i1 = j - p_188497_4_; i1 <= j + p_188497_4_; ++i1)
+             {
+-                for (int j1 = k - p_188497_3_; j1 <= k + p_188497_3_; j1++)
++                for (int j1 = k - p_188497_3_; j1 <= k + p_188497_3_; ++j1)
+                 {
+                     blockpos$mutableblockpos.func_181079_c(l, i1, j1);
+                     IBlockState iblockstate = p_188497_1_.func_180495_p(blockpos$mutableblockpos);

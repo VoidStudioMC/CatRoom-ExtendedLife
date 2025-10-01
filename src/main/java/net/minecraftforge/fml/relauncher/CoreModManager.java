@@ -39,12 +39,11 @@ import net.minecraftforge.fml.relauncher.libraries.LibraryManager;
 import net.minecraftforge.fml.relauncher.libraries.Repository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
-import org.spongepowered.asm.mixin.MixinEnvironment;
-import org.spongepowered.asm.mixin.Mixins;
 import org.spongepowered.asm.service.mojang.MixinServiceLaunchWrapper;
 import org.spongepowered.asm.util.Constants;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.security.cert.Certificate;
 import java.util.*;
@@ -57,6 +56,7 @@ public class CoreModManager {
     private static final Attributes.Name COREMODCONTAINSFMLMOD = new Attributes.Name("FMLCorePluginContainsFMLMod");
     private static final Attributes.Name FORCELOADASMOD = new Attributes.Name("ForceLoadAsMod");
     private static final Attributes.Name MODTYPE = new Attributes.Name("ModType");
+    private static final Set<String> loadedPlugins = new HashSet<>();
     private static String[] rootPlugins = {
         "net.minecraftforge.fml.relauncher.FMLCorePlugin",
         "net.minecraftforge.classloading.FMLForgePlugin",
@@ -72,7 +72,6 @@ public class CoreModManager {
     private static List<String> candidateModFiles = Lists.newArrayList();
     private static List<String> accessTransformers = Lists.newArrayList();
     private static Set<String> rootNames = Sets.newHashSet();
-    private static Set<String> mixinConfigs = Sets.newHashSet();
 
     static boolean deobfuscatedEnvironment;
 
@@ -351,6 +350,11 @@ public class CoreModManager {
 
         for (File coreMod : file_canidates)
         {
+            if (coreMod.isDirectory())
+            {
+                continue;
+            }
+
             FMLLog.log.debug("Examining for coremod candidacy {}", coreMod.getName());
             JarFile jar = null;
             Attributes mfAttributes;
@@ -358,7 +362,7 @@ public class CoreModManager {
             String configs;
             String cascadedTweaker;
             File mods_ver = new File(new File(Launch.minecraftHome, "mods"), ForgeVersion.mcVersion);
-            boolean containNonMods = false, ignoreMods = false;
+            boolean containNonMods, ignoreMods = false;
             try
             {
                 File manifest = new File(coreMod.getAbsolutePath() + ".meta");
@@ -408,7 +412,8 @@ public class CoreModManager {
                     sortOrder = (sortOrder == null ? Integer.valueOf(0) : sortOrder);
                     handleCascadingTweak(coreMod, jar, cascadedTweaker, classLoader, sortOrder);
                     if (!Strings.isNullOrEmpty(configs))
-                        mixin_configs.addAll(List.of(configs.split(",")));
+                        for (String singleMixinConfig : configs.split(","))
+                            mixin_configs.add(singleMixinConfig.trim());
                     ignoredModFiles.add(coreMod.getName());
                     if (!MixinServiceLaunchWrapper.MIXIN_TWEAKER_CLASS.equals(cascadedTweaker)) {
                         continue;
@@ -431,6 +436,7 @@ public class CoreModManager {
                 }
                 if (ignoreMods) {
                     ignoredModFiles.add(coreMod.getName());
+                    FMLLog.log.warn("The mod with loading plugin {} is in blacklist and won't be loaded. Check forge_early.cfg for more info.", fmlCorePlugin);
                     continue;
                 }
                 if (fmlCorePlugin == null)
@@ -484,7 +490,12 @@ public class CoreModManager {
             }
             loadCoreMod(classLoader, fmlCorePlugin, coreMod);
         }
-        Launch.blackboard.put("MixinConfigs", mixin_configs);
+        String devConfigs = System.getProperty("cleanroom.dev.mixin");
+        if (!Strings.isNullOrEmpty(devConfigs)) {
+            for (String singleMixinConfig : devConfigs.split(","))
+                mixin_configs.add(singleMixinConfig.trim());
+        }
+        Launch.blackboard.put(Constants.ManifestAttributes.MIXINCONFIGS, mixin_configs);
     }
     private static void handleCascadingTweak(File coreMod, JarFile jar, String cascadedTweaker, LaunchClassLoader classLoader, Integer sortingOrder) throws MalformedURLException {
         try
@@ -544,6 +555,11 @@ public class CoreModManager {
 
     private static FMLPluginWrapper loadCoreMod(LaunchClassLoader classLoader, String coreModClass, File location)
     {
+        if (loadedPlugins.contains(coreModClass))
+        {
+            return null;
+        }
+
         String coreModName = coreModClass.substring(coreModClass.lastIndexOf('.') + 1);
         try
         {
@@ -559,7 +575,7 @@ public class CoreModManager {
             MCVersion requiredMCVersion = coreModClazz.getAnnotation(MCVersion.class);
             if (!Arrays.asList(rootPlugins).contains(coreModClass) && (requiredMCVersion == null || Strings.isNullOrEmpty(requiredMCVersion.value())))
             {
-                FMLLog.log.warn("The coremod {} does not have a MCVersion annotation, it may cause issues with this version of Minecraft",
+                FMLLog.log.debug("The coremod {} does not have a MCVersion annotation, it may cause issues with this version of Minecraft",
                         coreModClass);
             }
             else if (requiredMCVersion != null && !FMLInjectionData.mccversion.equals(requiredMCVersion.value()))
@@ -604,7 +620,7 @@ public class CoreModManager {
                 }
                 else // This is a probably a normal minecraft workspace - log at warn
                 {
-                    FMLLog.log.warn("The coremod {} ({}) is not signed!", coreModName, coreModClass);
+                    FMLLog.log.debug("The coremod {} ({}) is not signed!", coreModName, coreModClass);
                 }
             }
             else
@@ -616,7 +632,7 @@ public class CoreModManager {
                 }
             }
 
-            IFMLLoadingPlugin plugin = (IFMLLoadingPlugin) coreModClazz.newInstance();
+            IFMLLoadingPlugin plugin = (IFMLLoadingPlugin) coreModClazz.getConstructor().newInstance();
             String accessTransformerClass = plugin.getAccessTransformerClass();
             if (accessTransformerClass != null)
             {
@@ -625,6 +641,7 @@ public class CoreModManager {
             }
             FMLPluginWrapper wrap = new FMLPluginWrapper(coreModName, plugin, location, sortIndex, dependencies);
             loadPlugins.add(wrap);
+            loadedPlugins.add(coreModClass);
             FMLLog.log.debug("Enqueued coremod {}", coreModName);
             MixinBooterPlugin.queneEarlyMixinLoader(plugin);
             return wrap;
@@ -640,7 +657,7 @@ public class CoreModManager {
         {
             FMLLog.log.error("Coremod {}: The plugin {} is not an implementor of IFMLLoadingPlugin", coreModName, coreModClass, cce);
         }
-        catch (InstantiationException ie)
+        catch (InstantiationException | InvocationTargetException | NoSuchMethodException ie)
         {
             FMLLog.log.error("Coremod {}: The plugin class {} was not instantiable", coreModName, coreModClass, ie);
         }
@@ -707,14 +724,6 @@ public class CoreModManager {
             if (closeable != null)
                 closeable.close();
         } catch (final IOException ioe){}
-    }
-
-    public static void beginMixinInitPhase() {
-        for (var config : mixinConfigs) {
-            FMLLog.log.debug("Adding Mixin configs: {}", config);
-            Mixins.addConfigurations(config.split(","));
-        }
-        MixinEnvironment.gotoPhase(MixinEnvironment.Phase.INIT);
     }
 
 }

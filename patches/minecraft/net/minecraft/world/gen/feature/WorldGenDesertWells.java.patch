@@ -1,0 +1,62 @@
+--- before/net/minecraft/world/gen/feature/WorldGenDesertWells.java
++++ after/net/minecraft/world/gen/feature/WorldGenDesertWells.java
+@@ -37,9 +37,9 @@
+         }
+         else
+         {
+-            for (int i = -2; i <= 2; i++)
++            for (int i = -2; i <= 2; ++i)
+             {
+-                for (int j = -2; j <= 2; j++)
++                for (int j = -2; j <= 2; ++j)
+                 {
+                     if (p_180709_1_.func_175623_d(p_180709_3_.func_177982_a(i, -1, j)) && p_180709_1_.func_175623_d(p_180709_3_.func_177982_a(i, -2, j)))
+                     {
+@@ -48,11 +48,11 @@
+                 }
+             }
+ 
+-            for (int l = -1; l <= 0; l++)
++            for (int l = -1; l <= 0; ++l)
+             {
+-                for (int l1 = -2; l1 <= 2; l1++)
++                for (int l1 = -2; l1 <= 2; ++l1)
+                 {
+-                    for (int k = -2; k <= 2; k++)
++                    for (int k = -2; k <= 2; ++k)
+                     {
+                         p_180709_1_.func_180501_a(p_180709_3_.func_177982_a(l1, l, k), this.field_175912_c, 2);
+                     }
+@@ -66,9 +66,9 @@
+                 p_180709_1_.func_180501_a(p_180709_3_.func_177972_a(enumfacing), this.field_175910_d, 2);
+             }
+ 
+-            for (int i1 = -2; i1 <= 2; i1++)
++            for (int i1 = -2; i1 <= 2; ++i1)
+             {
+-                for (int i2 = -2; i2 <= 2; i2++)
++                for (int i2 = -2; i2 <= 2; ++i2)
+                 {
+                     if (i1 == -2 || i1 == 2 || i2 == -2 || i2 == 2)
+                     {
+@@ -82,9 +82,9 @@
+             p_180709_1_.func_180501_a(p_180709_3_.func_177982_a(0, 1, 2), this.field_175911_b, 2);
+             p_180709_1_.func_180501_a(p_180709_3_.func_177982_a(0, 1, -2), this.field_175911_b, 2);
+ 
+-            for (int j1 = -1; j1 <= 1; j1++)
++            for (int j1 = -1; j1 <= 1; ++j1)
+             {
+-                for (int j2 = -1; j2 <= 1; j2++)
++                for (int j2 = -1; j2 <= 1; ++j2)
+                 {
+                     if (j1 == 0 && j2 == 0)
+                     {
+@@ -97,7 +97,7 @@
+                 }
+             }
+ 
+-            for (int k1 = 1; k1 <= 3; k1++)
++            for (int k1 = 1; k1 <= 3; ++k1)
+             {
+                 p_180709_1_.func_180501_a(p_180709_3_.func_177982_a(-1, k1, -1), this.field_175912_c, 2);
+                 p_180709_1_.func_180501_a(p_180709_3_.func_177982_a(-1, k1, 1), this.field_175912_c, 2);

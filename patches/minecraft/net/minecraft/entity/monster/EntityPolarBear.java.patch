@@ -1,0 +1,11 @@
+--- before/net/minecraft/entity/monster/EntityPolarBear.java
++++ after/net/minecraft/entity/monster/EntityPolarBear.java
+@@ -154,7 +154,7 @@
+ 
+         if (this.field_189797_bB > 0)
+         {
+-            this.field_189797_bB--;
++            --this.field_189797_bB;
+         }
+     }
+ 

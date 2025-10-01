@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/gui/ServerSelectionList.java
++++ after/net/minecraft/client/gui/ServerSelectionList.java
+@@ -65,7 +65,7 @@
+     {
+         this.field_148198_l.clear();
+ 
+-        for (int i = 0; i < p_148195_1_.func_78856_c(); i++)
++        for (int i = 0; i < p_148195_1_.func_78856_c(); ++i)
+         {
+             this.field_148198_l.add(new ServerListEntryNormal(this.field_148200_k, p_148195_1_.func_78850_a(i)));
+         }

@@ -9,11 +9,11 @@
  
  public class PhaseManager
  {
-@@ -25,6 +27,17 @@
-             {
+@@ -26,7 +28,18 @@
                  this.field_188762_d.func_188658_e();
              }
-+
+ 
+-            this.field_188762_d = this.func_188757_b((PhaseList<IPhase>)p_188758_1_);
 +            EnderDragonChangePhaseEvent event = new EnderDragonChangePhaseEvent(
 +                    (CraftEnderDragon) this.field_188760_b.getBukkitEntity(),
 +                    (this.field_188762_d == null) ? null : CraftEnderDragon.getBukkitPhase(this.field_188762_d.func_188652_i()),
@@ -24,6 +24,8 @@
 +                return;
 +            }
 +            p_188758_1_ = CraftEnderDragon.getMinecraftPhase(event.getNewPhase());
++
++            this.field_188762_d = this.func_188757_b(p_188758_1_);
  
-             this.field_188762_d = this.func_188757_b(p_188758_1_);
- 
+             if (!this.field_188760_b.field_70170_p.field_72995_K)
+             {

@@ -1,0 +1,46 @@
+--- before/net/minecraft/client/gui/recipebook/RecipeBookPage.java
++++ after/net/minecraft/client/gui/recipebook/RecipeBookPage.java
+@@ -30,7 +30,7 @@
+ 
+     public RecipeBookPage()
+     {
+-        for (int i = 0; i < 20; i++)
++        for (int i = 0; i < 20; ++i)
+         {
+             this.field_193743_h.add(new GuiButtonRecipe());
+         }
+@@ -41,7 +41,7 @@
+         this.field_193754_s = p_194194_1_;
+         this.field_194204_k = p_194194_1_.field_71439_g.func_192035_E();
+ 
+-        for (int i = 0; i < this.field_193743_h.size(); i++)
++        for (int i = 0; i < this.field_193743_h.size(); ++i)
+         {
+             this.field_193743_h.get(i).func_191770_c(p_194194_2_ + 11 + 25 * (i % 5), p_194194_3_ + 31 + 25 * (i / 5));
+         }
+@@ -75,7 +75,7 @@
+     {
+         int i = 20 * this.field_193738_c;
+ 
+-        for (int j = 0; j < this.field_193743_h.size(); j++)
++        for (int j = 0; j < this.field_193743_h.size(); ++j)
+         {
+             GuiButtonRecipe guibuttonrecipe = this.field_193743_h.get(j);
+ 
+@@ -174,14 +174,14 @@
+         else if (this.field_193740_e.func_146116_c(this.field_193754_s, p_194196_1_, p_194196_2_) && p_194196_3_ == 0)
+         {
+             this.field_193740_e.func_146113_a(this.field_193754_s.func_147118_V());
+-            this.field_193738_c++;
++            ++this.field_193738_c;
+             this.func_194198_d();
+             return true;
+         }
+         else if (this.field_193741_f.func_146116_c(this.field_193754_s, p_194196_1_, p_194196_2_) && p_194196_3_ == 0)
+         {
+             this.field_193741_f.func_146113_a(this.field_193754_s.func_147118_V());
+-            this.field_193738_c--;
++            --this.field_193738_c;
+             this.func_194198_d();
+             return true;
+         }

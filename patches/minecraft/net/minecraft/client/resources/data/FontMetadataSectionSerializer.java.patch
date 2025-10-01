@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/resources/data/FontMetadataSectionSerializer.java
++++ after/net/minecraft/client/resources/data/FontMetadataSectionSerializer.java
+@@ -48,7 +48,7 @@
+                 Validate.inclusiveBetween(0.0, Float.MAX_VALUE, (double)f2, "Invalid default left");
+             }
+ 
+-            for (int i = 0; i < 256; i++)
++            for (int i = 0; i < 256; ++i)
+             {
+                 JsonElement jsonelement = jsonobject1.get(Integer.toString(i));
+                 float f3 = f;

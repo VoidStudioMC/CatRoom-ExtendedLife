@@ -236,7 +236,7 @@
      public void func_192024_a(ItemStack p_192024_1_, int p_192024_2_)
      {
          super.func_192024_a(p_192024_1_, p_192024_2_);
-@@ -294,35 +373,33 @@
+@@ -294,46 +373,44 @@
          this.field_71070_bA.func_75132_a(this);
      }
  
@@ -273,9 +273,14 @@
 +            this.joining = false;
 +        }
          this.field_71134_c.func_73075_a();
-         --this.field_147101_bU;
+-        this.field_147101_bU--;
++        --this.field_147101_bU;
  
-@@ -333,7 +410,7 @@
+         if (this.field_70172_ad > 0)
+         {
+-            this.field_70172_ad--;
++            --this.field_70172_ad;
+         }
  
          this.field_71070_bA.func_75142_b();
  
@@ -292,6 +297,15 @@
 +                aint[j++] = ((Integer)iterator.next()).intValue();
                  iterator.remove();
              }
+ 
+@@ -391,7 +468,7 @@
+         {
+             super.func_70071_h_();
+ 
+-            for (int i = 0; i < this.field_71071_by.func_70302_i_(); i++)
++            for (int i = 0; i < this.field_71071_by.func_70302_i_(); ++i)
+             {
+                 ItemStack itemstack = this.field_71071_by.func_70301_a(i);
  
 @@ -406,12 +483,9 @@
                  }
@@ -886,7 +900,7 @@
      public void func_71111_a(Container p_71111_1_, int p_71111_2_, ItemStack p_71111_3_)
      {
          if (!(p_71111_1_.func_75139_a(p_71111_2_) instanceof SlotCrafting))
-@@ -1014,20 +1220,23 @@
+@@ -1014,31 +1220,34 @@
          this.func_71110_a(p_71120_1_, p_71120_1_.func_75138_a());
      }
  
@@ -912,8 +926,10 @@
 -    @Override
      public void func_175173_a(Container p_175173_1_, IInventory p_175173_2_)
      {
-         for (int i = 0; i < p_175173_2_.func_174890_g(); ++i)
-@@ -1036,9 +1245,9 @@
+-        for (int i = 0; i < p_175173_2_.func_174890_g(); i++)
++        for (int i = 0; i < p_175173_2_.func_174890_g(); ++i)
+         {
+             this.field_71135_a.func_147359_a(new SPacketWindowProperty(p_175173_1_.field_75152_c, i, p_175173_2_.func_174887_a_(i)));
          }
      }
  
@@ -1101,7 +1117,7 @@
          this.field_71134_c.func_73076_a(p_71033_1_);
          this.field_71135_a.func_147359_a(new SPacketChangeGameState(3, (float)p_71033_1_.func_77148_a()));
  
-@@ -1294,44 +1527,41 @@
+@@ -1294,37 +1527,42 @@
          this.func_175136_bO();
      }
  
@@ -1139,21 +1155,21 @@
 +            if (this.server.getPlayerList().canSendCommands(this.getGameProfile()))
              {
 -                UserListOpsEntry userlistopsentry = this.field_71133_b.func_184103_al().func_152603_m().func_152683_b(this.func_146103_bH());
+-                return userlistopsentry != null ? userlistopsentry.func_152644_a() >= p_70003_1_ : this.field_71133_b.func_110455_j() >= p_70003_1_;
 +                UserListOpsEntry userlistopsentry = (UserListOpsEntry)this.server.getPlayerList().getOppedPlayers().getEntry(this.getGameProfile());
- 
-                 if (userlistopsentry != null)
-                 {
--                    return userlistopsentry.func_152644_a() >= p_70003_1_;
++
++                if (userlistopsentry != null)
++                {
 +                    return userlistopsentry.getPermissionLevel() >= permLevel;
-                 }
-                 else
-                 {
--                    return this.field_71133_b.func_110455_j() >= p_70003_1_;
++                }
++                else
++                {
 +                    return this.server.getOpPermissionLevel() >= permLevel;
-                 }
++                }
              }
              else
-@@ -1343,22 +1573,40 @@
+             {
+@@ -1335,22 +1573,40 @@
          {
              return true;
          }
@@ -1197,7 +1213,7 @@
      }
  
      public EntityPlayer.EnumChatVisibility func_147096_v()
-@@ -1371,10 +1619,9 @@
+@@ -1363,10 +1619,9 @@
          this.field_71135_a.func_147359_a(new SPacketResourcePackSend(p_175397_1_, p_175397_2_));
      }
  
@@ -1209,7 +1225,7 @@
      }
  
      public void func_143004_u()
-@@ -1396,11 +1643,11 @@
+@@ -1388,11 +1643,11 @@
      {
          if (p_152339_1_ instanceof EntityPlayer)
          {
@@ -1223,7 +1239,7 @@
          }
      }
  
-@@ -1409,7 +1656,6 @@
+@@ -1401,7 +1656,6 @@
          this.field_71130_g.remove(Integer.valueOf(p_184848_1_.func_145782_y()));
      }
  
@@ -1231,7 +1247,7 @@
      protected void func_175135_B()
      {
          if (this.func_175149_v())
-@@ -1438,11 +1684,10 @@
+@@ -1430,20 +1684,18 @@
          if (entity != this.field_175401_bS)
          {
              this.field_71135_a.func_147359_a(new SPacketCamera(this.field_175401_bS));
@@ -1244,7 +1260,9 @@
      protected void func_184173_H()
      {
          if (this.field_71088_bW > 0 && !this.field_184851_cj)
-@@ -1451,7 +1696,6 @@
+         {
+-            this.field_71088_bW--;
++            --this.field_71088_bW;
          }
      }
  
@@ -1252,7 +1270,7 @@
      public void func_71059_n(Entity p_71059_1_)
      {
          if (this.field_71134_c.func_73081_b() == GameType.SPECTATOR)
-@@ -1472,10 +1716,10 @@
+@@ -1464,10 +1716,10 @@
      @Nullable
      public ITextComponent func_175396_E()
      {
@@ -1265,7 +1283,7 @@
      public void func_184609_a(EnumHand p_184609_1_)
      {
          super.func_184609_a(p_184609_1_);
-@@ -1494,13 +1738,16 @@
+@@ -1486,13 +1738,16 @@
  
      public void func_184847_M()
      {
@@ -1285,7 +1303,7 @@
      }
  
      public PlayerAdvancements func_192039_O()
-@@ -1512,5 +1759,145 @@
+@@ -1504,5 +1759,145 @@
      public Vec3d func_193106_Q()
      {
          return this.field_193110_cw;

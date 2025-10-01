@@ -41,7 +41,7 @@
  
          if (this.func_179487_f())
          {
-@@ -72,7 +61,9 @@
+@@ -72,38 +61,56 @@
  
              if (this.field_179501_f == 0 && block instanceof BlockCrops && ((BlockCrops)block).func_185525_y(iblockstate))
              {
@@ -52,7 +52,13 @@
              }
              else if (this.field_179501_f == 1 && iblockstate.func_185904_a() == Material.field_151579_a)
              {
-@@ -85,25 +76,41 @@
+                 InventoryBasic inventorybasic = this.field_179504_c.func_175551_co();
+ 
+-                for (int i = 0; i < inventorybasic.func_70302_i_(); i++)
++                for (int i = 0; i < inventorybasic.func_70302_i_(); ++i)
+                 {
+                     ItemStack itemstack = inventorybasic.func_70301_a(i);
+                     boolean flag = false;
  
                      if (!itemstack.func_190926_b())
                      {

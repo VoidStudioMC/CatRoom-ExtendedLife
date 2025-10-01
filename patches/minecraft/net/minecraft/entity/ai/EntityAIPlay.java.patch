@@ -1,0 +1,11 @@
+--- before/net/minecraft/entity/ai/EntityAIPlay.java
++++ after/net/minecraft/entity/ai/EntityAIPlay.java
+@@ -92,7 +92,7 @@
+     @Override
+     public void func_75246_d()
+     {
+-        this.field_75259_d--;
++        --this.field_75259_d;
+ 
+         if (this.field_75260_b != null)
+         {

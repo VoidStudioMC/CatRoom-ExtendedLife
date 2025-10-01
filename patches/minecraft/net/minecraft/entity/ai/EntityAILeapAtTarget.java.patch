@@ -1,0 +1,28 @@
+--- before/net/minecraft/entity/ai/EntityAILeapAtTarget.java
++++ after/net/minecraft/entity/ai/EntityAILeapAtTarget.java
+@@ -34,9 +34,13 @@
+             {
+                 return false;
+             }
++            else if (!this.field_75328_a.field_70122_E)
++            {
++                return false;
++            }
+             else
+             {
+-                return !this.field_75328_a.field_70122_E ? false : this.field_75328_a.func_70681_au().nextInt(5) == 0;
++                return this.field_75328_a.func_70681_au().nextInt(5) == 0;
+             }
+         }
+     }
+@@ -56,8 +60,8 @@
+ 
+         if ((double)f >= 1.0E-4)
+         {
+-            this.field_75328_a.field_70159_w = this.field_75328_a.field_70159_w + d0 / (double)f * 0.5 * 0.8F + this.field_75328_a.field_70159_w * 0.2F;
+-            this.field_75328_a.field_70179_y = this.field_75328_a.field_70179_y + d1 / (double)f * 0.5 * 0.8F + this.field_75328_a.field_70179_y * 0.2F;
++            this.field_75328_a.field_70159_w += d0 / (double)f * 0.5 * 0.8F + this.field_75328_a.field_70159_w * 0.2F;
++            this.field_75328_a.field_70179_y += d1 / (double)f * 0.5 * 0.8F + this.field_75328_a.field_70179_y * 0.2F;
+         }
+ 
+         this.field_75328_a.field_70181_x = (double)this.field_75327_c;

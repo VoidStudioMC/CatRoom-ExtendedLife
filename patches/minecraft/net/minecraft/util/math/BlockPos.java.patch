@@ -1,0 +1,46 @@
+--- before/net/minecraft/util/math/BlockPos.java
++++ after/net/minecraft/util/math/BlockPos.java
+@@ -237,18 +237,18 @@
+                         {
+                             if (this.field_191535_c < p_191532_3_)
+                             {
+-                                this.field_191535_c++;
++                                ++this.field_191535_c;
+                             }
+                             else if (this.field_191536_d < p_191532_4_)
+                             {
+                                 this.field_191535_c = p_191532_0_;
+-                                this.field_191536_d++;
++                                ++this.field_191536_d;
+                             }
+                             else if (this.field_191537_e < p_191532_5_)
+                             {
+                                 this.field_191535_c = p_191532_0_;
+                                 this.field_191536_d = p_191532_1_;
+-                                this.field_191537_e++;
++                                ++this.field_191537_e;
+                             }
+ 
+                             return new BlockPos(this.field_191535_c, this.field_191536_d, this.field_191537_e);
+@@ -305,18 +305,18 @@
+                         {
+                             if (this.field_179314_b.field_177997_b < p_191531_3_)
+                             {
+-                                this.field_179314_b.field_177997_b++;
++                                ++this.field_179314_b.field_177997_b;
+                             }
+                             else if (this.field_179314_b.field_177998_c < p_191531_4_)
+                             {
+                                 this.field_179314_b.field_177997_b = p_191531_0_;
+-                                this.field_179314_b.field_177998_c++;
++                                ++this.field_179314_b.field_177998_c;
+                             }
+                             else if (this.field_179314_b.field_177996_d < p_191531_5_)
+                             {
+                                 this.field_179314_b.field_177997_b = p_191531_0_;
+                                 this.field_179314_b.field_177998_c = p_191531_1_;
+-                                this.field_179314_b.field_177996_d++;
++                                ++this.field_179314_b.field_177996_d;
+                             }
+ 
+                             return this.field_179314_b;

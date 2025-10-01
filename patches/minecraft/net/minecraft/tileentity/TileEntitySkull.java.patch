@@ -100,6 +100,15 @@
  
      public static void func_184293_a(PlayerProfileCache p_184293_0_)
      {
+@@ -89,7 +160,7 @@
+             if (this.field_145850_b.func_175640_z(this.field_174879_c))
+             {
+                 this.field_184297_i = true;
+-                this.field_184296_h++;
++                ++this.field_184296_h;
+             }
+             else
+             {
 @@ -138,47 +209,88 @@
  
      private void func_152109_d()

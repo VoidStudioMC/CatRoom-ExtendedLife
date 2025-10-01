@@ -1,0 +1,11 @@
+--- before/net/minecraft/pathfinding/PathWorldListener.java
++++ after/net/minecraft/pathfinding/PathWorldListener.java
+@@ -25,7 +25,7 @@
+         {
+             int i = 0;
+ 
+-            for (int j = this.field_189519_a.size(); i < j; i++)
++            for (int j = this.field_189519_a.size(); i < j; ++i)
+             {
+                 PathNavigate pathnavigate = this.field_189519_a.get(i);
+ 

@@ -1,0 +1,14 @@
+--- before/net/minecraft/world/biome/BiomeVoidDecorator.java
++++ after/net/minecraft/world/biome/BiomeVoidDecorator.java
+@@ -20,9 +20,9 @@
+             BlockPos blockpos2 = new BlockPos(blockpos.func_177958_n() + 16, blockpos.func_177956_o() - 1, blockpos.func_177952_p() + 16);
+             BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(blockpos1);
+ 
+-            for (int j = p_180292_4_.func_177952_p(); j < p_180292_4_.func_177952_p() + 16; j++)
++            for (int j = p_180292_4_.func_177952_p(); j < p_180292_4_.func_177952_p() + 16; ++j)
+             {
+-                for (int k = p_180292_4_.func_177958_n(); k < p_180292_4_.func_177958_n() + 16; k++)
++                for (int k = p_180292_4_.func_177958_n(); k < p_180292_4_.func_177958_n() + 16; ++k)
+                 {
+                     if (j >= blockpos1.func_177952_p() && j <= blockpos2.func_177952_p() && k >= blockpos1.func_177958_n() && k <= blockpos2.func_177958_n())
+                     {

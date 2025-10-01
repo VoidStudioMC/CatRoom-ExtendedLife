@@ -1,0 +1,17 @@
+--- before/net/minecraft/client/util/JsonBlendingMode.java
++++ after/net/minecraft/client/util/JsonBlendingMode.java
+@@ -110,9 +110,13 @@
+             {
+                 return false;
+             }
++            else if (this.field_148117_c != jsonblendingmode.field_148117_c)
++            {
++                return false;
++            }
+             else
+             {
+-                return this.field_148117_c != jsonblendingmode.field_148117_c ? false : this.field_148116_b == jsonblendingmode.field_148116_b;
++                return this.field_148116_b == jsonblendingmode.field_148116_b;
+             }
+         }
+     }

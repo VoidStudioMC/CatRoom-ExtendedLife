@@ -1,0 +1,11 @@
+--- before/net/minecraft/util/NonNullList.java
++++ after/net/minecraft/util/NonNullList.java
+@@ -84,7 +84,7 @@
+         }
+         else
+         {
+-            for (int i = 0; i < this.size(); i++)
++            for (int i = 0; i < this.size(); ++i)
+             {
+                 this.set(i, this.field_191199_b);
+             }

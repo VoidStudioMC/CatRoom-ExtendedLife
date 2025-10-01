@@ -1,0 +1,19 @@
+--- before/net/minecraft/world/gen/ChunkGeneratorSettings.java
++++ after/net/minecraft/world/gen/ChunkGeneratorSettings.java
+@@ -698,11 +698,13 @@
+                     {
+                         return false;
+                     }
++                    else if (this.field_177871_B != chunkgeneratorsettings$factory.field_177871_B)
++                    {
++                        return false;
++                    }
+                     else
+                     {
+-                        return this.field_177871_B != chunkgeneratorsettings$factory.field_177871_B
+-                               ? false
+-                               : this.field_177872_C == chunkgeneratorsettings$factory.field_177872_C;
++                        return this.field_177872_C == chunkgeneratorsettings$factory.field_177872_C;
+                     }
+                 }
+                 else

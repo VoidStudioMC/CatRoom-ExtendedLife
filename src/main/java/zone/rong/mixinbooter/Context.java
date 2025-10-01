@@ -18,7 +18,7 @@ import java.util.Collection;
  * If you aren't coremod:<br>
  * Group mixins by phase, add target env in config, use @env(MOD) for mod mixins.<br>
  * Add {"MixinConfigs": "modid.mod.mixin.json,modid.default.mixin.json"} to your jar manifest.<br>
- * Handle shouldApply in IMixinConfigPlugin. You can call {@link Loader#isModLoaded(String)} for {@link org.spongepowered.asm.mixin.MixinEnvironment.Phase#MOD} mixin.<br>
+ * Handle shouldApply in IMixinConfigPlugin. You can call {@link net.minecraftforge.fml.common.Loader#isModLoaded(String)} for {@link org.spongepowered.asm.mixin.MixinEnvironment.Phase#MOD} mixin.<br>
  * Recommend to group target mod name by package name. You can also get config instance from {@link org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin#injectConfig(org.spongepowered.asm.mixin.transformer.Config)}.
  */
 @Deprecated
@@ -68,8 +68,8 @@ public final class Context {
      * This means mostly, if not only coremods are queryable here,
      * make sure to test a normal mod's existence in your mixin plugin or in the mixin itself.</p>
      *
-     * <p>For late contexts, it comes from {@link Loader#getActiveModList}
-     * akin to {@link Loader#isModLoaded(String)}</p>
+     * <p>For late contexts, it comes from {@link net.minecraftforge.fml.common.Loader#getActiveModList}
+     * akin to {@link net.minecraftforge.fml.common.Loader#isModLoaded(String)}</p>
      * @param modId to check against the list of present mods in the context
      * @return whether the mod is present
      */

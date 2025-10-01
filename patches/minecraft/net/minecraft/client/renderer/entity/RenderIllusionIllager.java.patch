@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/renderer/entity/RenderIllusionIllager.java
++++ after/net/minecraft/client/renderer/entity/RenderIllusionIllager.java
+@@ -69,7 +69,7 @@
+             Vec3d[] avec3d = ((EntityIllusionIllager)p_76986_1_).func_193098_a(p_76986_9_);
+             float f = this.func_77044_a(p_76986_1_, p_76986_9_);
+ 
+-            for (int i = 0; i < avec3d.length; i++)
++            for (int i = 0; i < avec3d.length; ++i)
+             {
+                 super.func_76986_a(
+                     p_76986_1_,

@@ -1,0 +1,11 @@
+--- before/net/minecraft/network/datasync/DataParameter.java
++++ after/net/minecraft/network/datasync/DataParameter.java
+@@ -30,7 +30,7 @@
+         }
+         else if (p_equals_1_ != null && this.getClass() == p_equals_1_.getClass())
+         {
+-            DataParameter<?> dataparameter = (DataParameter<?>)p_equals_1_;
++            DataParameter<?> dataparameter = (DataParameter)p_equals_1_;
+             return this.field_187157_a == dataparameter.field_187157_a;
+         }
+         else

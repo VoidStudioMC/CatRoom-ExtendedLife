@@ -1,0 +1,25 @@
+--- before/net/minecraft/entity/ai/EntityAIWatchClosest.java
++++ after/net/minecraft/entity/ai/EntityAIWatchClosest.java
+@@ -81,9 +81,13 @@
+         {
+             return false;
+         }
++        else if (this.field_75332_b.func_70068_e(this.field_75334_a) > (double)(this.field_75333_c * this.field_75333_c))
++        {
++            return false;
++        }
+         else
+         {
+-            return this.field_75332_b.func_70068_e(this.field_75334_a) > (double)(this.field_75333_c * this.field_75333_c) ? false : this.field_75330_d > 0;
++            return this.field_75330_d > 0;
+         }
+     }
+ 
+@@ -111,6 +115,6 @@
+             (float)this.field_75332_b.func_184649_cE(),
+             (float)this.field_75332_b.func_70646_bf()
+         );
+-        this.field_75330_d--;
++        --this.field_75330_d;
+     }
+ }

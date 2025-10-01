@@ -1,0 +1,20 @@
+--- before/net/minecraft/client/particle/ParticleEmitter.java
++++ after/net/minecraft/client/particle/ParticleEmitter.java
+@@ -54,7 +54,7 @@
+     @Override
+     public void func_189213_a()
+     {
+-        for (int i = 0; i < 16; i++)
++        for (int i = 0; i < 16; ++i)
+         {
+             double d0 = (double)(this.field_187136_p.nextFloat() * 2.0F - 1.0F);
+             double d1 = (double)(this.field_187136_p.nextFloat() * 2.0F - 1.0F);
+@@ -71,7 +71,7 @@
+             }
+         }
+ 
+-        this.field_174852_ax++;
++        ++this.field_174852_ax;
+ 
+         if (this.field_174852_ax >= this.field_174850_ay)
+         {

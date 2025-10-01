@@ -1,0 +1,11 @@
+--- before/net/minecraft/inventory/SlotMerchantResult.java
++++ after/net/minecraft/inventory/SlotMerchantResult.java
+@@ -32,7 +32,7 @@
+     {
+         if (this.func_75216_d())
+         {
+-            this.field_75231_g = this.field_75231_g + Math.min(p_75209_1_, this.func_75211_c().func_190916_E());
++            this.field_75231_g += Math.min(p_75209_1_, this.func_75211_c().func_190916_E());
+         }
+ 
+         return super.func_75209_a(p_75209_1_);

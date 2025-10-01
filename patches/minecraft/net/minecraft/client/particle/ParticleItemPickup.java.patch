@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/particle/ParticleItemPickup.java
++++ after/net/minecraft/client/particle/ParticleItemPickup.java
+@@ -77,7 +77,7 @@
+     @Override
+     public void func_189213_a()
+     {
+-        this.field_70594_ar++;
++        ++this.field_70594_ar;
+ 
+         if (this.field_70594_ar == this.field_70593_as)
+         {

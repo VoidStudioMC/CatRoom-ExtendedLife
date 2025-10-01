@@ -1,0 +1,29 @@
+--- before/net/minecraft/item/ItemEnchantedBook.java
++++ after/net/minecraft/item/ItemEnchantedBook.java
+@@ -48,7 +48,7 @@
+         super.func_77624_a(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
+         NBTTagList nbttaglist = func_92110_g(p_77624_1_);
+ 
+-        for (int i = 0; i < nbttaglist.func_74745_c(); i++)
++        for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+         {
+             NBTTagCompound nbttagcompound = nbttaglist.func_150305_b(i);
+             int j = nbttagcompound.func_74765_d("id");
+@@ -66,7 +66,7 @@
+         NBTTagList nbttaglist = func_92110_g(p_92115_0_);
+         boolean flag = true;
+ 
+-        for (int i = 0; i < nbttaglist.func_74745_c(); i++)
++        for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+         {
+             NBTTagCompound nbttagcompound = nbttaglist.func_150305_b(i);
+ 
+@@ -114,7 +114,7 @@
+             {
+                 if (enchantment.field_77351_y != null)
+                 {
+-                    for (int i = enchantment.func_77319_d(); i <= enchantment.func_77325_b(); i++)
++                    for (int i = enchantment.func_77319_d(); i <= enchantment.func_77325_b(); ++i)
+                     {
+                         p_150895_2_.add(func_92111_a(new EnchantmentData(enchantment, i)));
+                     }

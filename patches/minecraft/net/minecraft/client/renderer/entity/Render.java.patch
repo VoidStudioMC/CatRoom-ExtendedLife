@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/renderer/entity/Render.java
++++ after/net/minecraft/client/renderer/entity/Render.java
+@@ -177,7 +177,7 @@
+             f4 -= 0.45F;
+             f1 *= 0.9F;
+             f5 += 0.03F;
+-            i++;
++            ++i;
+         }
+ 
+         tessellator.func_78381_a();

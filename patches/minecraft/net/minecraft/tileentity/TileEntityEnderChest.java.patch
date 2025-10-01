@@ -1,0 +1,47 @@
+--- before/net/minecraft/tileentity/TileEntityEnderChest.java
++++ after/net/minecraft/tileentity/TileEntityEnderChest.java
+@@ -111,27 +111,32 @@
+ 
+     public void func_145969_a()
+     {
+-        this.field_145973_j++;
++        ++this.field_145973_j;
+         this.field_145850_b.func_175641_c(this.field_174879_c, Blocks.field_150477_bB, 1, this.field_145973_j);
+     }
+ 
+     public void func_145970_b()
+     {
+-        this.field_145973_j--;
++        --this.field_145973_j;
+         this.field_145850_b.func_175641_c(this.field_174879_c, Blocks.field_150477_bB, 1, this.field_145973_j);
+     }
+ 
+     public boolean func_145971_a(EntityPlayer p_145971_1_)
+     {
+-        return this.field_145850_b.func_175625_s(this.field_174879_c) != this
+-               ? false
+-               : !(
+-                   p_145971_1_.func_70092_e(
+-                       (double)this.field_174879_c.func_177958_n() + 0.5,
+-                       (double)this.field_174879_c.func_177956_o() + 0.5,
+-                       (double)this.field_174879_c.func_177952_p() + 0.5
+-                   )
+-                   > 64.0
+-               );
++        if (this.field_145850_b.func_175625_s(this.field_174879_c) != this)
++        {
++            return false;
++        }
++        else
++        {
++            return !(
++                       p_145971_1_.func_70092_e(
++                           (double)this.field_174879_c.func_177958_n() + 0.5,
++                           (double)this.field_174879_c.func_177956_o() + 0.5,
++                           (double)this.field_174879_c.func_177952_p() + 0.5
++                       )
++                       > 64.0
++                   );
++        }
+     }
+ }

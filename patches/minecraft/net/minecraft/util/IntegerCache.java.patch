@@ -1,0 +1,11 @@
+--- before/net/minecraft/util/IntegerCache.java
++++ after/net/minecraft/util/IntegerCache.java
+@@ -17,7 +17,7 @@
+     {
+         int i = 0;
+ 
+-        for (int j = field_181757_a.length; i < j; i++)
++        for (int j = field_181757_a.length; i < j; ++i)
+         {
+             field_181757_a[i] = i;
+         }

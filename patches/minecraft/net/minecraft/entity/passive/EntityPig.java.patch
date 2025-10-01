@@ -46,3 +46,14 @@
              this.func_70106_y();
          }
      }
+@@ -308,8 +314,8 @@
+                 f1 = 1.0F;
+             }
+ 
+-            this.field_70721_aZ = this.field_70721_aZ + (f1 - this.field_70721_aZ) * 0.4F;
+-            this.field_184619_aG = this.field_184619_aG + this.field_70721_aZ;
++            this.field_70721_aZ += (f1 - this.field_70721_aZ) * 0.4F;
++            this.field_184619_aG += this.field_70721_aZ;
+         }
+         else
+         {

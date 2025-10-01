@@ -1,0 +1,58 @@
+--- before/net/minecraft/util/IntHashMap.java
++++ after/net/minecraft/util/IntHashMap.java
+@@ -103,7 +103,7 @@
+         IntHashMap.Entry<V>[] entry = this.field_76055_a;
+         int i = p_76048_1_.length;
+ 
+-        for (int j = 0; j < entry.length; j++)
++        for (int j = 0; j < entry.length; ++j)
+         {
+             IntHashMap.Entry<V> entry1 = entry[j];
+ 
+@@ -141,15 +141,16 @@
+         int i = func_76044_g(p_76036_1_);
+         int j = func_76043_a(i, this.field_76055_a.length);
+         IntHashMap.Entry<V> entry = this.field_76055_a[j];
+-        IntHashMap.Entry<V> entry1 = entry;
++        IntHashMap.Entry<V> entry1;
++        IntHashMap.Entry<V> entry2;
+ 
+-        while (entry1 != null)
++        for (entry1 = entry; entry1 != null; entry1 = entry2)
+         {
+-            IntHashMap.Entry<V> entry2 = entry1.field_76034_c;
++            entry2 = entry1.field_76034_c;
+ 
+             if (entry1.field_76035_a == p_76036_1_)
+             {
+-                this.field_76053_b--;
++                --this.field_76053_b;
+ 
+                 if (entry == entry1)
+                 {
+@@ -164,7 +165,6 @@
+             }
+ 
+             entry = entry1;
+-            entry1 = entry2;
+         }
+ 
+         return entry1;
+@@ -174,7 +174,7 @@
+     {
+         IntHashMap.Entry<V>[] entry = this.field_76055_a;
+ 
+-        for (int i = 0; i < entry.length; i++)
++        for (int i = 0; i < entry.length; ++i)
+         {
+             entry[i] = null;
+         }
+@@ -227,7 +227,7 @@
+                 }
+                 else
+                 {
+-                    IntHashMap.Entry<V> entry = (IntHashMap.Entry<V>)p_equals_1_;
++                    IntHashMap.Entry<V> entry = (IntHashMap.Entry)p_equals_1_;
+ 
+                     if (this.field_76035_a == entry.field_76035_a)
+                     {

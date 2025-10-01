@@ -42,6 +42,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.block.*;
@@ -49,6 +50,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -143,6 +145,9 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
+import org.spongepowered.asm.mixin.transformer.ClassInfo;
+import org.spongepowered.asm.mixin.transformer.MixinInfo;
 import org.bukkit.Location;
 import org.bukkit.TreeType;
 import org.bukkit.block.BlockState;
@@ -892,8 +897,8 @@ public class ForgeHooks
 
         // CraftBukkit start
         int newCount = itemstack.getCount();
-        if (ret == EnumActionResult.SUCCESS && world.captureTreeGeneration && world.capturedBlockSnapshots.size() > 0) {
-            List<BlockState> blocks = new ArrayList();
+        if (ret == EnumActionResult.SUCCESS && world.captureTreeGeneration && !world.capturedBlockSnapshots.isEmpty()) {
+            List<BlockState> blocks = new ArrayList<>();
             for (net.minecraftforge.common.util.BlockSnapshot snapshot : world.capturedBlockSnapshots) {
                 blocks.add(new CraftBlockState(snapshot));
             }
@@ -1587,5 +1592,49 @@ public class ForgeHooks
             if (entry != null) id = serializerRegistry.getID(entry);
         }
         return id;
+    }
+
+    public static String gatherMixinInfo(Throwable throwable){
+        StackTraceElement[] stacktrace = throwable.getStackTrace();
+        if (stacktrace.length > 0) {
+            try {
+                StringBuilder mixinMetadataBuilder = null;
+                ObjectOpenHashSet<String> classes = new ObjectOpenHashSet<>();
+                for (StackTraceElement stackTraceElement : stacktrace) {
+                    classes.add(stackTraceElement.getClassName());
+                }
+                for (String className : classes) {
+                    ClassInfo classInfo = ClassInfo.fromCache(className);
+                    if (classInfo != null) {
+                        java.util.Set<MixinInfo> mixinInfos = classInfo.getMixins();
+                        if (!mixinInfos.isEmpty()) {
+                            if (mixinMetadataBuilder == null) {
+                                mixinMetadataBuilder = new StringBuilder("\n(MixinBooter) Mixins in Stacktrace:");
+                            }
+                            mixinMetadataBuilder.append("\n\t");
+                            mixinMetadataBuilder.append(className);
+                            mixinMetadataBuilder.append(":");
+                            for (IMixinInfo mixinInfo : mixinInfos) {
+                                mixinMetadataBuilder.append("\n\t\t");
+                                mixinMetadataBuilder.append(mixinInfo.getClassName());
+                                mixinMetadataBuilder.append(" (");
+                                mixinMetadataBuilder.append(mixinInfo.getConfig().getName());
+                                mixinMetadataBuilder.append(")");
+                            }
+                        }
+                    }
+                }
+
+                if (mixinMetadataBuilder == null) {
+                    return "No Mixin Metadata is found in the Stacktrace.\n";
+                } else {
+                    return mixinMetadataBuilder.toString();
+                }
+            } catch (Throwable t) {
+                return "Failed to find Mixin Metadata in Stacktrace:\n" + t;
+            }
+        }
+
+        return "";
     }
 }

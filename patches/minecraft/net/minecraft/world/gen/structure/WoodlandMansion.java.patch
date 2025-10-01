@@ -1,0 +1,23 @@
+--- before/net/minecraft/world/gen/structure/WoodlandMansion.java
++++ after/net/minecraft/world/gen/structure/WoodlandMansion.java
+@@ -148,9 +148,9 @@
+                 super.func_75068_a(p_75068_1_, p_75068_2_, p_75068_3_);
+                 int i = this.field_75074_b.field_78895_b;
+ 
+-                for (int j = p_75068_3_.field_78897_a; j <= p_75068_3_.field_78893_d; j++)
++                for (int j = p_75068_3_.field_78897_a; j <= p_75068_3_.field_78893_d; ++j)
+                 {
+-                    for (int k = p_75068_3_.field_78896_c; k <= p_75068_3_.field_78892_f; k++)
++                    for (int k = p_75068_3_.field_78896_c; k <= p_75068_3_.field_78892_f; ++k)
+                     {
+                         BlockPos blockpos = new BlockPos(j, i, k);
+ 
+@@ -169,7 +169,7 @@
+ 
+                             if (flag)
+                             {
+-                                for (int l = i - 1; l > 1; l--)
++                                for (int l = i - 1; l > 1; --l)
+                                 {
+                                     BlockPos blockpos1 = new BlockPos(j, l, k);
+ 

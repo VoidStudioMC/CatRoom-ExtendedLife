@@ -1,0 +1,20 @@
+--- before/net/minecraft/advancements/critereon/PlayerHurtEntityTrigger.java
++++ after/net/minecraft/advancements/critereon/PlayerHurtEntityTrigger.java
+@@ -97,9 +97,14 @@
+                 EntityPlayerMP p_192278_1_, Entity p_192278_2_, DamageSource p_192278_3_, float p_192278_4_, float p_192278_5_, boolean p_192278_6_
+             )
+             {
+-                return !this.field_192279_a.func_192365_a(p_192278_1_, p_192278_3_, p_192278_4_, p_192278_5_, p_192278_6_)
+-                       ? false
+-                       : this.field_192280_b.func_192482_a(p_192278_1_, p_192278_2_);
++                if (!this.field_192279_a.func_192365_a(p_192278_1_, p_192278_3_, p_192278_4_, p_192278_5_, p_192278_6_))
++                {
++                    return false;
++                }
++                else
++                {
++                    return this.field_192280_b.func_192482_a(p_192278_1_, p_192278_2_);
++                }
+             }
+         }
+ 

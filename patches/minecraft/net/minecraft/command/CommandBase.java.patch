@@ -227,7 +227,15 @@
          {
              try
              {
-@@ -398,7 +393,7 @@
+@@ -391,14 +386,14 @@
+     {
+         ITextComponent itextcomponent = new TextComponentString("");
+ 
+-        for (int i = p_147176_2_; i < p_147176_1_.length; i++)
++        for (int i = p_147176_2_; i < p_147176_1_.length; ++i)
+         {
+             if (i > p_147176_2_)
+             {
                  itextcomponent.func_150258_a(" ");
              }
  
@@ -245,6 +253,15 @@
                      }
                  }
                  else
+@@ -427,7 +422,7 @@
+     {
+         StringBuilder stringbuilder = new StringBuilder();
+ 
+-        for (int i = p_180529_1_; i < p_180529_0_.length; i++)
++        for (int i = p_180529_1_; i < p_180529_0_.length; ++i)
+         {
+             if (i > p_180529_1_)
+             {
 @@ -452,11 +447,11 @@
  
          if (flag && Double.isNaN(p_175767_0_))
@@ -402,7 +419,25 @@
  
          if ("default".equals(p_190795_1_))
          {
-@@ -712,14 +707,14 @@
+@@ -678,7 +673,7 @@
+         else
+         {
+             BlockStateContainer blockstatecontainer = p_190795_0_.func_176194_O();
+-            Iterator<String> iterator = field_190796_b.split(p_190795_1_).iterator();
++            Iterator iterator = field_190796_b.split(p_190795_1_).iterator();
+ 
+             while (true)
+             {
+@@ -702,7 +697,7 @@
+                     break;
+                 }
+ 
+-                Comparable<?> comparable = func_190792_a((IProperty<?>)iproperty, iterator1.next());
++                Comparable<?> comparable = func_190792_a(iproperty, iterator1.next());
+ 
+                 if (comparable == null)
+                 {
+@@ -712,21 +707,21 @@
                  map.put(iproperty, comparable);
              }
  
@@ -419,6 +454,23 @@
      }
  
      public static String func_71527_a(Object[] p_71527_0_)
+     {
+         StringBuilder stringbuilder = new StringBuilder();
+ 
+-        for (int i = 0; i < p_71527_0_.length; i++)
++        for (int i = 0; i < p_71527_0_.length; ++i)
+         {
+             String s = p_71527_0_[i].toString();
+ 
+@@ -752,7 +747,7 @@
+     {
+         ITextComponent itextcomponent = new TextComponentString("");
+ 
+-        for (int i = 0; i < p_180530_0_.size(); i++)
++        for (int i = 0; i < p_180530_0_.size(); ++i)
+         {
+             if (i > 0)
+             {
 @@ -800,7 +795,7 @@
              {
                  if (i != p_175771_1_ + 2)
@@ -437,7 +489,7 @@
                  }
  
                  s = Integer.toString(p_181043_2_.func_177952_p());
-@@ -852,7 +847,7 @@
+@@ -852,11 +847,11 @@
      public static List<String> func_175762_a(String[] p_175762_0_, Collection<?> p_175762_1_)
      {
          String s = p_175762_0_[p_175762_0_.length - 1];
@@ -446,6 +498,11 @@
  
          if (!p_175762_1_.isEmpty())
          {
+-            for (String s1 : Iterables.transform((Iterable<Object>)p_175762_1_, Functions.toStringFunction()))
++            for (String s1 : Iterables.transform(p_175762_1_, Functions.toStringFunction()))
+             {
+                 if (func_71523_a(s, s1))
+                 {
 @@ -879,7 +874,6 @@
          return list;
      }

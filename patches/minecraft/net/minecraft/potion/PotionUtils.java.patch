@@ -1,0 +1,29 @@
+--- before/net/minecraft/potion/PotionUtils.java
++++ after/net/minecraft/potion/PotionUtils.java
+@@ -61,7 +61,7 @@
+         {
+             NBTTagList nbttaglist = p_185193_0_.func_150295_c("CustomPotionEffects", 10);
+ 
+-            for (int i = 0; i < nbttaglist.func_74745_c(); i++)
++            for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+             {
+                 NBTTagCompound nbttagcompound = nbttaglist.func_150305_b(i);
+                 PotionEffect potioneffect = PotionEffect.func_82722_b(nbttagcompound);
+@@ -273,7 +273,7 @@
+                         + I18n.func_74837_a(
+                             "attribute.modifier.plus." + attributemodifier2.func_111169_c(),
+                             ItemStack.field_111284_a.format(d1),
+-                            I18n.func_74838_a("attribute.name." + tuple.func_76341_a())
++                            I18n.func_74838_a("attribute.name." + (String)tuple.func_76341_a())
+                         )
+                     );
+                 }
+@@ -285,7 +285,7 @@
+                         + I18n.func_74837_a(
+                             "attribute.modifier.take." + attributemodifier2.func_111169_c(),
+                             ItemStack.field_111284_a.format(d1),
+-                            I18n.func_74838_a("attribute.name." + tuple.func_76341_a())
++                            I18n.func_74838_a("attribute.name." + (String)tuple.func_76341_a())
+                         )
+                     );
+                 }

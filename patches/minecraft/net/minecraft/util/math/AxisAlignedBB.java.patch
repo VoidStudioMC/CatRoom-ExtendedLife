@@ -1,0 +1,36 @@
+--- before/net/minecraft/util/math/AxisAlignedBB.java
++++ after/net/minecraft/util/math/AxisAlignedBB.java
+@@ -98,11 +98,13 @@
+             {
+                 return false;
+             }
++            else if (Double.compare(axisalignedbb.field_72337_e, this.field_72337_e) != 0)
++            {
++                return false;
++            }
+             else
+             {
+-                return Double.compare(axisalignedbb.field_72337_e, this.field_72337_e) != 0
+-                       ? false
+-                       : Double.compare(axisalignedbb.field_72334_f, this.field_72334_f) == 0;
++                return Double.compare(axisalignedbb.field_72334_f, this.field_72334_f) == 0;
+             }
+         }
+     }
+@@ -412,11 +414,13 @@
+         {
+             return false;
+         }
++        else if (p_72318_1_.field_72448_b <= this.field_72338_b || p_72318_1_.field_72448_b >= this.field_72337_e)
++        {
++            return false;
++        }
+         else
+         {
+-            return p_72318_1_.field_72448_b <= this.field_72338_b || p_72318_1_.field_72448_b >= this.field_72337_e
+-                   ? false
+-                   : !(p_72318_1_.field_72449_c <= this.field_72339_c) && !(p_72318_1_.field_72449_c >= this.field_72334_f);
++            return !(p_72318_1_.field_72449_c <= this.field_72339_c) && !(p_72318_1_.field_72449_c >= this.field_72334_f);
+         }
+     }
+ 

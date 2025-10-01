@@ -27,7 +27,12 @@
          this.field_70169_q = this.field_70165_t;
          this.field_70167_r = this.field_70163_u;
          this.field_70166_s = this.field_70161_v;
-@@ -87,12 +92,14 @@
+@@ -83,16 +88,18 @@
+             this.field_70181_x *= -0.5;
+         }
+ 
+-        this.field_70516_a--;
++        --this.field_70516_a;
  
          if (this.field_70516_a <= 0)
          {

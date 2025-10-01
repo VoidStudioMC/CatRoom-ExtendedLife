@@ -59,7 +59,7 @@
  
      public void func_73075_a()
      {
--        ++this.field_73100_i;
+-        this.field_73100_i++;
 +        // ++this.curblockDamage;
 +        this.field_73100_i = catserver.server.CatServer.getCurrentTick(); // CatServer - implement realtime
  

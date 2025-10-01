@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/gui/GuiOptions.java
++++ after/net/minecraft/client/gui/GuiOptions.java
+@@ -58,7 +58,7 @@
+                 this.field_146292_n.add(guioptionbutton);
+             }
+ 
+-            i++;
++            ++i;
+         }
+ 
+         if (this.field_146297_k.field_71441_e != null)

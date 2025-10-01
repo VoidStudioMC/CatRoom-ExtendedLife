@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/particle/ParticleRain.java
++++ after/net/minecraft/client/particle/ParticleRain.java
+@@ -33,7 +33,7 @@
+         this.field_187123_c = this.field_187126_f;
+         this.field_187124_d = this.field_187127_g;
+         this.field_187125_e = this.field_187128_h;
+-        this.field_187130_j = this.field_187130_j - (double)this.field_70545_g;
++        this.field_187130_j -= (double)this.field_70545_g;
+         this.func_187110_a(this.field_187129_i, this.field_187130_j, this.field_187131_k);
+         this.field_187129_i *= 0.98F;
+         this.field_187130_j *= 0.98F;

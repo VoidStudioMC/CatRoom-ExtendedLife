@@ -1,0 +1,20 @@
+--- before/net/minecraft/item/ItemFireworkCharge.java
++++ after/net/minecraft/item/ItemFireworkCharge.java
+@@ -74,7 +74,7 @@
+                 flag = false;
+                 boolean flag1 = false;
+ 
+-                for (int j = 0; j < ItemDye.field_150922_c.length; j++)
++                for (int j = 0; j < ItemDye.field_150922_c.length; ++j)
+                 {
+                     if (i == ItemDye.field_150922_c[j])
+                     {
+@@ -110,7 +110,7 @@
+                 flag2 = false;
+                 boolean flag5 = false;
+ 
+-                for (int k = 0; k < 16; k++)
++                for (int k = 0; k < 16; ++k)
+                 {
+                     if (l == ItemDye.field_150922_c[k])
+                     {

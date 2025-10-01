@@ -32,3 +32,12 @@
          public MinecraftServer func_184102_h()
          {
              return FunctionManager.this.field_193069_c;
+@@ -121,7 +120,7 @@
+                 int j = 0;
+                 FunctionObject.Entry[] afunctionobject$entry = p_194019_1_.func_193528_a();
+ 
+-                for (int k = afunctionobject$entry.length - 1; k >= 0; k--)
++                for (int k = afunctionobject$entry.length - 1; k >= 0; --k)
+                 {
+                     this.field_194020_g.push(new FunctionManager.QueuedCommand(this, p_194019_2_, afunctionobject$entry[k]));
+                 }

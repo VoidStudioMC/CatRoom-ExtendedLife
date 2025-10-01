@@ -1,0 +1,11 @@
+--- before/net/minecraft/world/gen/layer/GenLayerRiverMix.java
++++ after/net/minecraft/world/gen/layer/GenLayerRiverMix.java
+@@ -30,7 +30,7 @@
+         int[] aint1 = this.field_75911_c.func_75904_a(p_75904_1_, p_75904_2_, p_75904_3_, p_75904_4_);
+         int[] aint2 = IntCache.func_76445_a(p_75904_3_ * p_75904_4_);
+ 
+-        for (int i = 0; i < p_75904_3_ * p_75904_4_; i++)
++        for (int i = 0; i < p_75904_3_ * p_75904_4_; ++i)
+         {
+             if (aint[i] == Biome.func_185362_a(Biomes.field_76771_b) || aint[i] == Biome.func_185362_a(Biomes.field_150575_M))
+             {

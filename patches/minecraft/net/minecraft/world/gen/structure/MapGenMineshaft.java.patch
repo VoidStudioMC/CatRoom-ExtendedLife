@@ -1,0 +1,19 @@
+--- before/net/minecraft/world/gen/structure/MapGenMineshaft.java
++++ after/net/minecraft/world/gen/structure/MapGenMineshaft.java
+@@ -46,13 +46,13 @@
+         int j = p_180706_2_.func_177958_n() >> 4;
+         int k = p_180706_2_.func_177952_p() >> 4;
+ 
+-        for (int l = 0; l <= 1000; l++)
++        for (int l = 0; l <= 1000; ++l)
+         {
+-            for (int i1 = -l; i1 <= l; i1++)
++            for (int i1 = -l; i1 <= l; ++i1)
+             {
+                 boolean flag = i1 == -l || i1 == l;
+ 
+-                for (int j1 = -l; j1 <= l; j1++)
++                for (int j1 = -l; j1 <= l; ++j1)
+                 {
+                     boolean flag1 = j1 == -l || j1 == l;
+ 

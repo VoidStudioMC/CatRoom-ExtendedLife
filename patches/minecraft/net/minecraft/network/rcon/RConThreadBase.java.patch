@@ -1,0 +1,20 @@
+--- before/net/minecraft/network/rcon/RConThreadBase.java
++++ after/net/minecraft/network/rcon/RConThreadBase.java
+@@ -154,7 +154,7 @@
+         {
+             if (this.func_72604_a(datagramsocket, false))
+             {
+-                i++;
++                ++i;
+             }
+         }
+ 
+@@ -164,7 +164,7 @@
+         {
+             if (this.func_72605_a(serversocket, false))
+             {
+-                i++;
++                ++i;
+             }
+         }
+ 

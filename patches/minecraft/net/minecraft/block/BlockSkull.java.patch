@@ -170,19 +170,25 @@
      public Item func_180660_a(IBlockState p_180660_1_, Random p_180660_2_, int p_180660_3_)
      {
          return Items.field_151144_bL;
-@@ -202,10 +179,7 @@
+@@ -202,99 +179,89 @@
  
      public boolean func_176415_b(World p_176415_1_, BlockPos p_176415_2_, ItemStack p_176415_3_)
      {
--        if (p_176415_3_.func_77960_j() == 1
--                && p_176415_2_.func_177956_o() >= 2
--                && p_176415_1_.func_175659_aa() != EnumDifficulty.PEACEFUL
--                && !p_176415_1_.field_72995_K)
+-        return p_176415_3_.func_77960_j() == 1
+-               && p_176415_2_.func_177956_o() >= 2
+-               && p_176415_1_.func_175659_aa() != EnumDifficulty.PEACEFUL
+-               && !p_176415_1_.field_72995_K
+-               ? this.func_176414_j().func_177681_a(p_176415_1_, p_176415_2_) != null
+-               : false;
 +        if (p_176415_3_.func_77960_j() == 1 && p_176415_2_.func_177956_o() >= 2 && p_176415_1_.func_175659_aa() != EnumDifficulty.PEACEFUL && !p_176415_1_.field_72995_K)
-         {
-             return this.func_176414_j().func_177681_a(p_176415_1_, p_176415_2_) != null;
-         }
-@@ -217,20 +191,22 @@
++        {
++            return this.func_176414_j().func_177681_a(p_176415_1_, p_176415_2_) != null;
++        }
++        else
++        {
++            return false;
++        }
+     }
  
      public void func_180679_a(World p_180679_1_, BlockPos p_180679_2_, TileEntitySkull p_180679_3_)
      {
@@ -198,8 +204,9 @@
  
              if (blockpattern$patternhelper != null)
              {
+-                for (int i = 0; i < 3; i++)
 +                BlockStateListPopulator blockList = new BlockStateListPopulator(p_180679_1_.getWorld());
-                 for (int i = 0; i < 3; ++i)
++                for (int i = 0; i < 3; ++i)
                  {
                      BlockWorldState blockworldstate = blockpattern$patternhelper.func_177670_a(i, 0, 0);
 -                    p_180679_1_.func_180501_a(blockworldstate.func_177508_d(), blockworldstate.func_177509_a().func_177226_a(field_176417_b, true), 2);
@@ -209,9 +216,11 @@
 +//                    worldIn.setBlockState(blockworldstate.getPos(), blockworldstate.getBlockState().withProperty(NODROP, Boolean.valueOf(true)), 2);
                  }
  
-                 for (int j = 0; j < blockpattern.func_177684_c(); ++j)
-@@ -238,68 +214,54 @@
-                     for (int k = 0; k < blockpattern.func_177685_b(); ++k)
+-                for (int j = 0; j < blockpattern.func_177684_c(); j++)
++                for (int j = 0; j < blockpattern.func_177684_c(); ++j)
+                 {
+-                    for (int k = 0; k < blockpattern.func_177685_b(); k++)
++                    for (int k = 0; k < blockpattern.func_177685_b(); ++k)
                      {
                          BlockWorldState blockworldstate1 = blockpattern$patternhelper.func_177670_a(j, k, 0);
 -                        p_180679_1_.func_180501_a(blockworldstate1.func_177508_d(), Blocks.field_150350_a.func_176223_P(), 2);
@@ -243,7 +252,7 @@
 -
 -                p_180679_1_.func_72838_d(entitywither);
 -
--                for (int l = 0; l < 120; ++l)
+-                for (int l = 0; l < 120; l++)
 -                {
 -                    p_180679_1_.func_175688_a(
 -                        EnumParticleTypes.SNOWBALL,
@@ -256,9 +265,9 @@
 -                    );
 -                }
 -
--                for (int i1 = 0; i1 < blockpattern.func_177684_c(); ++i1)
+-                for (int i1 = 0; i1 < blockpattern.func_177684_c(); i1++)
 -                {
--                    for (int j1 = 0; j1 < blockpattern.func_177685_b(); ++j1)
+-                    for (int j1 = 0; j1 < blockpattern.func_177685_b(); j1++)
 -                    {
 -                        BlockWorldState blockworldstate2 = blockpattern$patternhelper.func_177670_a(i1, j1, 0);
 -                        p_180679_1_.func_175722_b(blockworldstate2.func_177508_d(), Blocks.field_150350_a, false);
@@ -305,7 +314,7 @@
          {
              i |= 8;
          }
-@@ -307,33 +269,26 @@
+@@ -302,33 +269,26 @@
          return i;
      }
  
@@ -343,7 +352,7 @@
          }
  
          return this.field_176420_N;
-@@ -343,18 +298,12 @@
+@@ -338,18 +298,12 @@
      {
          if (this.field_176421_O == null)
          {

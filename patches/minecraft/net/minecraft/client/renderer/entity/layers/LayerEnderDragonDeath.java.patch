@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/renderer/entity/layers/LayerEnderDragonDeath.java
++++ after/net/minecraft/client/renderer/entity/layers/LayerEnderDragonDeath.java
+@@ -48,7 +48,7 @@
+             GlStateManager.func_179094_E();
+             GlStateManager.func_179109_b(0.0F, -1.0F, -2.0F);
+ 
+-            for (int i = 0; (float)i < (f + f * f) / 2.0F * 60.0F; i++)
++            for (int i = 0; (float)i < (f + f * f) / 2.0F * 60.0F; ++i)
+             {
+                 GlStateManager.func_179114_b(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
+                 GlStateManager.func_179114_b(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);

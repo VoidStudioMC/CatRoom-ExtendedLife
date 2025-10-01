@@ -1,0 +1,16 @@
+--- before/net/minecraft/util/datafix/walkers/Filtered.java
++++ after/net/minecraft/util/datafix/walkers/Filtered.java
+@@ -16,11 +16,11 @@
+     {
+         if (Entity.class.isAssignableFrom(p_i47309_1_))
+         {
+-            this.field_188272_a = EntityList.func_191306_a((Class <? extends Entity >)p_i47309_1_);
++            this.field_188272_a = EntityList.func_191306_a((Class<Entity>)p_i47309_1_);
+         }
+         else if (TileEntity.class.isAssignableFrom(p_i47309_1_))
+         {
+-            this.field_188272_a = TileEntity.func_190559_a((Class <? extends TileEntity >)p_i47309_1_);
++            this.field_188272_a = TileEntity.func_190559_a((Class<TileEntity>)p_i47309_1_);
+         }
+         else
+         {

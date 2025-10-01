@@ -8,7 +8,25 @@
  
  public class EntityVex extends EntityMob
  {
-@@ -343,7 +344,8 @@
+@@ -267,9 +268,14 @@
+         @Override
+         public boolean func_75250_a()
+         {
+-            return EntityVex.this.func_70638_az() != null && !EntityVex.this.func_70605_aq().func_75640_a() && EntityVex.this.field_70146_Z.nextInt(7) == 0
+-                   ? EntityVex.this.func_70068_e(EntityVex.this.func_70638_az()) > 4.0
+-                   : false;
++            if (EntityVex.this.func_70638_az() != null && !EntityVex.this.func_70605_aq().func_75640_a() && EntityVex.this.field_70146_Z.nextInt(7) == 0)
++            {
++                return EntityVex.this.func_70068_e(EntityVex.this.func_70638_az()) > 4.0;
++            }
++            else
++            {
++                return false;
++            }
+         }
+ 
+         @Override
+@@ -338,7 +344,8 @@
          @Override
          public void func_75249_e()
          {
@@ -18,3 +36,25 @@
              super.func_75249_e();
          }
      }
+@@ -370,9 +377,9 @@
+                 }
+                 else
+                 {
+-                    EntityVex.this.field_70159_w = EntityVex.this.field_70159_w + d0 / d3 * 0.05 * this.field_75645_e;
+-                    EntityVex.this.field_70181_x = EntityVex.this.field_70181_x + d1 / d3 * 0.05 * this.field_75645_e;
+-                    EntityVex.this.field_70179_y = EntityVex.this.field_70179_y + d2 / d3 * 0.05 * this.field_75645_e;
++                    EntityVex.this.field_70159_w += d0 / d3 * 0.05 * this.field_75645_e;
++                    EntityVex.this.field_70181_x += d1 / d3 * 0.05 * this.field_75645_e;
++                    EntityVex.this.field_70179_y += d2 / d3 * 0.05 * this.field_75645_e;
+ 
+                     if (EntityVex.this.func_70638_az() == null)
+                     {
+@@ -421,7 +428,7 @@
+                 blockpos = new BlockPos(EntityVex.this);
+             }
+ 
+-            for (int i = 0; i < 3; i++)
++            for (int i = 0; i < 3; ++i)
+             {
+                 BlockPos blockpos1 = blockpos.func_177982_a(
+                                          EntityVex.this.field_70146_Z.nextInt(15) - 7, EntityVex.this.field_70146_Z.nextInt(11) - 5, EntityVex.this.field_70146_Z.nextInt(15) - 7

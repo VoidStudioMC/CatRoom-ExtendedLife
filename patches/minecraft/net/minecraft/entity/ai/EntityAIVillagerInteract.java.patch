@@ -1,0 +1,18 @@
+--- before/net/minecraft/entity/ai/EntityAIVillagerInteract.java
++++ after/net/minecraft/entity/ai/EntityAIVillagerInteract.java
+@@ -41,13 +41,13 @@
+ 
+         if (this.field_179478_e > 0)
+         {
+-            this.field_179478_e--;
++            --this.field_179478_e;
+ 
+             if (this.field_179478_e == 0)
+             {
+                 InventoryBasic inventorybasic = this.field_179477_f.func_175551_co();
+ 
+-                for (int i = 0; i < inventorybasic.func_70302_i_(); i++)
++                for (int i = 0; i < inventorybasic.func_70302_i_(); ++i)
+                 {
+                     ItemStack itemstack = inventorybasic.func_70301_a(i);
+                     ItemStack itemstack1 = ItemStack.field_190927_a;

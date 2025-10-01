@@ -1,0 +1,18 @@
+--- before/net/minecraft/advancements/critereon/NBTPredicate.java
++++ after/net/minecraft/advancements/critereon/NBTPredicate.java
+@@ -36,7 +36,14 @@
+ 
+     public boolean func_193477_a(@Nullable NBTBase p_193477_1_)
+     {
+-        return p_193477_1_ == null ? this == field_193479_a : this.field_193480_b == null || NBTUtil.func_181123_a(this.field_193480_b, p_193477_1_, true);
++        if (p_193477_1_ == null)
++        {
++            return this == field_193479_a;
++        }
++        else
++        {
++            return this.field_193480_b == null || NBTUtil.func_181123_a(this.field_193480_b, p_193477_1_, true);
++        }
+     }
+ 
+     public static NBTPredicate func_193476_a(@Nullable JsonElement p_193476_0_)

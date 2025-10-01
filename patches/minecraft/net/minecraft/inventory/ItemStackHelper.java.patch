@@ -1,0 +1,20 @@
+--- before/net/minecraft/inventory/ItemStackHelper.java
++++ after/net/minecraft/inventory/ItemStackHelper.java
+@@ -29,7 +29,7 @@
+     {
+         NBTTagList nbttaglist = new NBTTagList();
+ 
+-        for (int i = 0; i < p_191281_1_.size(); i++)
++        for (int i = 0; i < p_191281_1_.size(); ++i)
+         {
+             ItemStack itemstack = p_191281_1_.get(i);
+ 
+@@ -54,7 +54,7 @@
+     {
+         NBTTagList nbttaglist = p_191283_0_.func_150295_c("Items", 10);
+ 
+-        for (int i = 0; i < nbttaglist.func_74745_c(); i++)
++        for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+         {
+             NBTTagCompound nbttagcompound = nbttaglist.func_150305_b(i);
+             int j = nbttagcompound.func_74771_c("Slot") & 255;

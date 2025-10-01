@@ -21,14 +21,14 @@
  
      public Teleporter(WorldServer p_i1963_1_)
      {
-@@ -42,81 +47,120 @@
+@@ -42,124 +47,174 @@
              int i = MathHelper.func_76128_c(p_180266_1_.field_70165_t);
              int j = MathHelper.func_76128_c(p_180266_1_.field_70163_u) - 1;
              int k = MathHelper.func_76128_c(p_180266_1_.field_70161_v);
 -            int l = 1;
 -            int i1 = 0;
 -
--            for (int j1 = -2; j1 <= 2; ++j1)
+-            for (int j1 = -2; j1 <= 2; j1++)
 +            // CraftBukkit start - Modularize end portal creation
 +            BlockPos created = this.createEndPortal(p_180266_1_.field_70165_t, p_180266_1_.field_70163_u, p_180266_1_.field_70161_v);
 +            p_180266_1_.func_70012_b((double) created.func_177958_n(), (double) created.func_177956_o(), (double) created.func_177952_p(), p_180266_1_.field_70177_z, 0.0F);
@@ -49,10 +49,10 @@
 +        {
 +            for (int k1 = -2; k1 <= 2; ++k1)
              {
--                for (int k1 = -2; k1 <= 2; ++k1)
+-                for (int k1 = -2; k1 <= 2; k1++)
 +                for (int l1 = -1; l1 < 3; ++l1)
                  {
--                    for (int l1 = -1; l1 < 3; ++l1)
+-                    for (int l1 = -1; l1 < 3; l1++)
 -                    {
 -                        int i2 = i + k1 * 1 + j1 * 0;
 -                        int j2 = j + l1;
@@ -152,25 +152,17 @@
 -        else
 -        {
 -            BlockPos blockpos3 = new BlockPos(p_180620_1_);
-+        } else {
-+            BlockPos blockpos3 = new BlockPos(x, y, z);
- 
--            for (int i1 = -128; i1 <= 128; ++i1)
+-
+-            for (int i1 = -128; i1 <= 128; i1++)
 -            {
-+            for (int i1 = -radius; i1 <= radius; ++i1) {
-                 BlockPos blockpos2;
- 
--                for (int j1 = -128; j1 <= 128; ++j1)
+-                for (int j1 = -128; j1 <= 128; j1++)
 -                {
--                    for (BlockPos blockpos1 = blockpos3.func_177982_a(i1, this.field_85192_a.func_72940_L() - 1 - blockpos3.func_177956_o(), j1);
--                            blockpos1.func_177956_o() >= 0;
--                            blockpos1 = blockpos2
--                        )
+-                    BlockPos blockpos1 = blockpos3.func_177982_a(i1, this.field_85192_a.func_72940_L() - 1 - blockpos3.func_177956_o(), j1);
+-
+-                    while (blockpos1.func_177956_o() >= 0)
 -                    {
-+                for (int j1 = -radius; j1 <= radius; ++j1) {
-+                    for (BlockPos blockpos1 = blockpos3.func_177982_a(i1, this.field_85192_a.func_72940_L() - 1 - blockpos3.func_177956_o(), j1); blockpos1.func_177956_o() >= 0; blockpos1 = blockpos2) {
-                         blockpos2 = blockpos1.func_177977_b();
- 
+-                        BlockPos blockpos2 = blockpos1.func_177977_b();
+-
 -                        if (this.field_85192_a.func_180495_p(blockpos1).func_177230_c() == Blocks.field_150427_aO)
 -                        {
 -                            for (blockpos2 = blockpos1.func_177977_b();
@@ -178,6 +170,16 @@
 -                                    blockpos2 = blockpos2.func_177977_b()
 -                                )
 -                            {
++        } else {
++            BlockPos blockpos3 = new BlockPos(x, y, z);
++
++            for (int i1 = -radius; i1 <= radius; ++i1) {
++                BlockPos blockpos2;
++
++                for (int j1 = -radius; j1 <= radius; ++j1) {
++                    for (BlockPos blockpos1 = blockpos3.func_177982_a(i1, this.field_85192_a.func_72940_L() - 1 - blockpos3.func_177956_o(), j1); blockpos1.func_177956_o() >= 0; blockpos1 = blockpos2) {
++                        blockpos2 = blockpos1.func_177977_b();
++
 +                        if (this.field_85192_a.func_180495_p(blockpos1).func_177230_c() == Blocks.field_150427_aO) {
 +                            for (blockpos2 = blockpos1.func_177977_b(); this.field_85192_a.func_180495_p(blockpos2).func_177230_c() == Blocks.field_150427_aO; blockpos2 = blockpos2.func_177977_b()) {
                                  blockpos1 = blockpos2;
@@ -191,7 +193,11 @@
                                  d0 = d1;
                                  blockpos = blockpos1;
                              }
-@@ -126,22 +170,38 @@
+                         }
+-
+-                        blockpos1 = blockpos2;
+                     }
+                 }
              }
          }
  
@@ -244,7 +250,9 @@
  
              if (flag1)
              {
-@@ -150,17 +210,11 @@
+-                d2++;
++                ++d2;
+             }
  
              if (blockpattern$patternhelper.func_177669_b().func_176740_k() == EnumFacing.Axis.X)
              {
@@ -264,7 +272,7 @@
              }
  
              float f = 0.0F;
-@@ -168,17 +222,17 @@
+@@ -167,17 +222,17 @@
              float f2 = 0.0F;
              float f3 = 0.0F;
  
@@ -285,7 +293,7 @@
              {
                  f2 = 1.0F;
                  f3 = -1.0F;
-@@ -189,38 +243,55 @@
+@@ -188,38 +243,55 @@
                  f3 = 1.0F;
              }
  
@@ -364,23 +372,55 @@
          int i1 = j;
          int j1 = k;
          int k1 = l;
-@@ -230,12 +301,12 @@
+@@ -227,25 +299,25 @@
+         int i2 = this.field_77187_a.nextInt(4);
+         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
  
-         for (int j2 = j - 16; j2 <= j + 16; ++j2)
+-        for (int j2 = j - 16; j2 <= j + 16; j2++)
++        for (int j2 = j - 16; j2 <= j + 16; ++j2)
          {
 -            double d1 = (double)j2 + 0.5 - p_85188_1_.field_70165_t;
 +            double d1 = (double)j2 + 0.5D - x;
  
-             for (int l2 = l - 16; l2 <= l + 16; ++l2)
+-            for (int l2 = l - 16; l2 <= l + 16; l2++)
++            for (int l2 = l - 16; l2 <= l + 16; ++l2)
              {
 -                double d2 = (double)l2 + 0.5 - p_85188_1_.field_70161_v;
 -                label296:
 +                double d2 = (double)l2 + 0.5D - z;
 +                label293:
  
-                 for (int j3 = this.field_85192_a.func_72940_L() - 1; j3 >= 0; --j3)
+-                for (int j3 = this.field_85192_a.func_72940_L() - 1; j3 >= 0; j3--)
++                for (int j3 = this.field_85192_a.func_72940_L() - 1; j3 >= 0; --j3)
                  {
-@@ -268,19 +339,18 @@
+                     if (this.field_85192_a.func_175623_d(blockpos$mutableblockpos.func_181079_c(j2, j3, l2)))
+                     {
+                         while (j3 > 0 && this.field_85192_a.func_175623_d(blockpos$mutableblockpos.func_181079_c(j2, j3 - 1, l2)))
+                         {
+-                            j3--;
++                            --j3;
+                         }
+ 
+-                        for (int k3 = i2; k3 < i2 + 4; k3++)
++                        for (int k3 = i2; k3 < i2 + 4; ++k3)
+                         {
+                             int l3 = k3 % 2;
+                             int i4 = 1 - l3;
+@@ -256,30 +328,29 @@
+                                 i4 = -i4;
+                             }
+ 
+-                            for (int j4 = 0; j4 < 3; j4++)
++                            for (int j4 = 0; j4 < 3; ++j4)
+                             {
+-                                for (int k4 = 0; k4 < 4; k4++)
++                                for (int k4 = 0; k4 < 4; ++k4)
+                                 {
+-                                    for (int l4 = -1; l4 < 4; l4++)
++                                    for (int l4 = -1; l4 < 4; ++l4)
+                                     {
+                                         int i5 = j2 + (k4 - 1) * l3 + j4 * i4;
+                                         int j5 = j3 + l4;
                                          int k5 = l2 + (k4 - 1) * i4 - j4 * l3;
                                          blockpos$mutableblockpos.func_181079_c(i5, j5, k5);
  
@@ -404,28 +444,52 @@
                              {
                                  d0 = d7;
                                  i1 = j2;
-@@ -294,16 +364,16 @@
+@@ -293,52 +364,51 @@
              }
          }
  
 -        if (d0 < 0.0)
 +        if (d0 < 0.0D)
          {
-             for (int l5 = j - 16; l5 <= j + 16; ++l5)
+-            for (int l5 = j - 16; l5 <= j + 16; l5++)
++            for (int l5 = j - 16; l5 <= j + 16; ++l5)
              {
 -                double d3 = (double)l5 + 0.5 - p_85188_1_.field_70165_t;
 +                double d3 = (double)l5 + 0.5D - x;
  
-                 for (int j6 = l - 16; j6 <= l + 16; ++j6)
+-                for (int j6 = l - 16; j6 <= l + 16; j6++)
++                for (int j6 = l - 16; j6 <= l + 16; ++j6)
                  {
 -                    double d4 = (double)j6 + 0.5 - p_85188_1_.field_70161_v;
 -                    label233:
 +                    double d4 = (double)j6 + 0.5D - z;
 +                    label231:
  
-                     for (int i7 = this.field_85192_a.func_72940_L() - 1; i7 >= 0; --i7)
+-                    for (int i7 = this.field_85192_a.func_72940_L() - 1; i7 >= 0; i7--)
++                    for (int i7 = this.field_85192_a.func_72940_L() - 1; i7 >= 0; --i7)
                      {
-@@ -328,18 +398,17 @@
+                         if (this.field_85192_a.func_175623_d(blockpos$mutableblockpos.func_181079_c(l5, i7, j6)))
+                         {
+                             while (i7 > 0 && this.field_85192_a.func_175623_d(blockpos$mutableblockpos.func_181079_c(l5, i7 - 1, j6)))
+                             {
+-                                i7--;
++                                --i7;
+                             }
+ 
+-                            for (int k7 = i2; k7 < i2 + 2; k7++)
++                            for (int k7 = i2; k7 < i2 + 2; ++k7)
+                             {
+                                 int j8 = k7 % 2;
+                                 int j9 = 1 - j8;
+ 
+-                                for (int j10 = 0; j10 < 4; j10++)
++                                for (int j10 = 0; j10 < 4; ++j10)
+                                 {
+-                                    for (int j11 = -1; j11 < 4; j11++)
++                                    for (int j11 = -1; j11 < 4; ++j11)
+                                     {
+                                         int j12 = l5 + (j10 - 1) * j8;
+                                         int i13 = i7 + j11;
                                          int j13 = j6 + (j10 - 1) * j9;
                                          blockpos$mutableblockpos.func_181079_c(j12, i13, j13);
  
@@ -448,7 +512,7 @@
                                  {
                                      d0 = d8;
                                      i1 = l5;
-@@ -366,7 +435,7 @@
+@@ -365,37 +435,34 @@
              i3 = -i3;
          }
  
@@ -457,7 +521,17 @@
          {
              j1 = MathHelper.func_76125_a(j1, 70, this.field_85192_a.func_72940_L() - 10);
              k2 = j1;
-@@ -381,16 +450,13 @@
+ 
+-            for (int j7 = -1; j7 <= 1; j7++)
++            for (int j7 = -1; j7 <= 1; ++j7)
+             {
+-                for (int l7 = 1; l7 < 3; l7++)
++                for (int l7 = 1; l7 < 3; ++l7)
+                 {
+-                    for (int k8 = -1; k8 < 3; k8++)
++                    for (int k8 = -1; k8 < 3; ++k8)
+                     {
+                         int k9 = i6 + (l7 - 1) * l6 + j7 * i3;
                          int k10 = k2 + k8;
                          int k11 = k6 + (l7 - 1) * i3 - j7 * l6;
                          boolean flag = k8 < 0;
@@ -474,9 +548,30 @@
 -                                  .func_177226_a(BlockPortal.field_176550_a, l6 == 0 ? EnumFacing.Axis.Z : EnumFacing.Axis.X);
 +        IBlockState iblockstate = Blocks.field_150427_aO.func_176223_P().func_177226_a(BlockPortal.field_176550_a, l6 == 0 ? EnumFacing.Axis.Z : EnumFacing.Axis.X);
  
-         for (int i8 = 0; i8 < 4; ++i8)
+-        for (int i8 = 0; i8 < 4; i8++)
++        for (int i8 = 0; i8 < 4; ++i8)
          {
-@@ -431,7 +497,7 @@
+-            for (int l8 = 0; l8 < 4; l8++)
++            for (int l8 = 0; l8 < 4; ++l8)
+             {
+-                for (int l9 = -1; l9 < 4; l9++)
++                for (int l9 = -1; l9 < 4; ++l9)
+                 {
+                     int l10 = i6 + (l8 - 1) * l6;
+                     int l11 = k2 + l9;
+@@ -405,9 +472,9 @@
+                 }
+             }
+ 
+-            for (int i9 = 0; i9 < 4; i9++)
++            for (int i9 = 0; i9 < 4; ++i9)
+             {
+-                for (int i10 = -1; i10 < 4; i10++)
++                for (int i10 = -1; i10 < 4; ++i10)
+                 {
+                     int i11 = i6 + (i9 - 1) * l6;
+                     int i12 = k2 + i10;
+@@ -430,7 +497,7 @@
  
              while (objectiterator.hasNext())
              {
@@ -485,7 +580,7 @@
  
                  if (teleporter$portalposition == null || teleporter$portalposition.field_85087_d < i)
                  {
-@@ -450,5 +516,14 @@
+@@ -449,5 +516,14 @@
              super(p_i45747_2_.func_177958_n(), p_i45747_2_.func_177956_o(), p_i45747_2_.func_177952_p());
              this.field_85087_d = p_i45747_3_;
          }

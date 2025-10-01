@@ -1,0 +1,11 @@
+--- before/net/minecraft/entity/ai/EntityAIDoorInteract.java
++++ after/net/minecraft/entity/ai/EntityAIDoorInteract.java
+@@ -43,7 +43,7 @@
+ 
+             if (path != null && !path.func_75879_b() && pathnavigateground.func_179686_g())
+             {
+-                for (int i = 0; i < Math.min(path.func_75873_e() + 2, path.func_75874_d()); i++)
++                for (int i = 0; i < Math.min(path.func_75873_e() + 2, path.func_75874_d()); ++i)
+                 {
+                     PathPoint pathpoint = path.func_75877_a(i);
+                     this.field_179507_b = new BlockPos(pathpoint.field_75839_a, pathpoint.field_75837_b + 1, pathpoint.field_75838_c);

@@ -15,9 +15,12 @@
  
  public class ItemChorusFruit extends ItemFood
  {
-@@ -27,11 +31,21 @@
+@@ -25,13 +29,23 @@
+             double d1 = p_77654_3_.field_70163_u;
+             double d2 = p_77654_3_.field_70161_v;
  
-             for (int i = 0; i < 16; ++i)
+-            for (int i = 0; i < 16; i++)
++            for (int i = 0; i < 16; ++i)
              {
 -                double d3 = p_77654_3_.field_70165_t + (p_77654_3_.func_70681_au().nextDouble() - 0.5) * 16.0;
 -                double d4 = MathHelper.func_151237_a(

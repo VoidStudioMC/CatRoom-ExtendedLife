@@ -1,0 +1,20 @@
+--- before/net/minecraft/nbt/NBTTagByteArray.java
++++ after/net/minecraft/nbt/NBTTagByteArray.java
+@@ -28,7 +28,7 @@
+     {
+         byte[] abyte = new byte[p_193589_0_.size()];
+ 
+-        for (int i = 0; i < p_193589_0_.size(); i++)
++        for (int i = 0; i < p_193589_0_.size(); ++i)
+         {
+             Byte obyte = p_193589_0_.get(i);
+             abyte[i] = obyte == null ? 0 : obyte;
+@@ -65,7 +65,7 @@
+     {
+         StringBuilder stringbuilder = new StringBuilder("[B;");
+ 
+-        for (int i = 0; i < this.field_74754_a.length; i++)
++        for (int i = 0; i < this.field_74754_a.length; ++i)
+         {
+             if (i != 0)
+             {

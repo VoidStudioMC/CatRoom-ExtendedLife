@@ -26,3 +26,12 @@
          this.field_188509_g = null;
      }
  
+@@ -135,7 +136,7 @@
+         {
+             return false;
+         }
+-        else if (!p_179445_0_.func_70686_a((Class <? extends EntityLivingBase >)p_179445_1_.getClass()))
++        else if (!p_179445_0_.func_70686_a(p_179445_1_.getClass()))
+         {
+             return false;
+         }

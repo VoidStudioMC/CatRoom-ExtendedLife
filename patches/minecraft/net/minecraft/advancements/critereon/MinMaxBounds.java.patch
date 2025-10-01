@@ -1,0 +1,33 @@
+--- before/net/minecraft/advancements/critereon/MinMaxBounds.java
++++ after/net/minecraft/advancements/critereon/MinMaxBounds.java
+@@ -19,14 +19,26 @@
+ 
+     public boolean func_192514_a(float p_192514_1_)
+     {
+-        return this.field_192517_b != null && this.field_192517_b > p_192514_1_ ? false : this.field_192518_c == null || !(this.field_192518_c < p_192514_1_);
++        if (this.field_192517_b != null && this.field_192517_b > p_192514_1_)
++        {
++            return false;
++        }
++        else
++        {
++            return this.field_192518_c == null || !(this.field_192518_c < p_192514_1_);
++        }
+     }
+ 
+     public boolean func_192513_a(double p_192513_1_)
+     {
+-        return this.field_192517_b != null && (double)(this.field_192517_b * this.field_192517_b) > p_192513_1_
+-               ? false
+-               : this.field_192518_c == null || !((double)(this.field_192518_c * this.field_192518_c) < p_192513_1_);
++        if (this.field_192517_b != null && (double)(this.field_192517_b * this.field_192517_b) > p_192513_1_)
++        {
++            return false;
++        }
++        else
++        {
++            return this.field_192518_c == null || !((double)(this.field_192518_c * this.field_192518_c) < p_192513_1_);
++        }
+     }
+ 
+     public static MinMaxBounds func_192515_a(@Nullable JsonElement p_192515_0_)

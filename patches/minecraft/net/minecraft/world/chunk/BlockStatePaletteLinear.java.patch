@@ -1,0 +1,47 @@
+--- before/net/minecraft/world/chunk/BlockStatePaletteLinear.java
++++ after/net/minecraft/world/chunk/BlockStatePaletteLinear.java
+@@ -24,7 +24,7 @@
+     @Override
+     public int func_186041_a(IBlockState p_186041_1_)
+     {
+-        for (int i = 0; i < this.field_186045_d; i++)
++        for (int i = 0; i < this.field_186045_d; ++i)
+         {
+             if (this.field_186042_a[i] == p_186041_1_)
+             {
+@@ -37,7 +37,7 @@
+         if (j < this.field_186042_a.length)
+         {
+             this.field_186042_a[j] = p_186041_1_;
+-            this.field_186045_d++;
++            ++this.field_186045_d;
+             return j;
+         }
+         else
+@@ -59,7 +59,7 @@
+     {
+         this.field_186045_d = p_186038_1_.func_150792_a();
+ 
+-        for (int i = 0; i < this.field_186045_d; i++)
++        for (int i = 0; i < this.field_186045_d; ++i)
+         {
+             this.field_186042_a[i] = Block.field_176229_d.func_148745_a(p_186038_1_.func_150792_a());
+         }
+@@ -70,7 +70,7 @@
+     {
+         p_186037_1_.func_150787_b(this.field_186045_d);
+ 
+-        for (int i = 0; i < this.field_186045_d; i++)
++        for (int i = 0; i < this.field_186045_d; ++i)
+         {
+             p_186037_1_.func_150787_b(Block.field_176229_d.func_148747_b(this.field_186042_a[i]));
+         }
+@@ -81,7 +81,7 @@
+     {
+         int i = PacketBuffer.func_150790_a(this.field_186045_d);
+ 
+-        for (int j = 0; j < this.field_186045_d; j++)
++        for (int j = 0; j < this.field_186045_d; ++j)
+         {
+             i += PacketBuffer.func_150790_a(Block.field_176229_d.func_148747_b(this.field_186042_a[j]));
+         }

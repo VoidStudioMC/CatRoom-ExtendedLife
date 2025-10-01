@@ -1,0 +1,45 @@
+--- before/net/minecraft/pathfinding/Path.java
++++ after/net/minecraft/pathfinding/Path.java
+@@ -25,7 +25,7 @@
+ 
+     public void func_75875_a()
+     {
+-        this.field_75882_b++;
++        ++this.field_75882_b;
+     }
+ 
+     public boolean func_75879_b()
+@@ -100,7 +100,7 @@
+         }
+         else
+         {
+-            for (int i = 0; i < this.field_75884_a.length; i++)
++            for (int i = 0; i < this.field_75884_a.length; ++i)
+             {
+                 if (this.field_75884_a[i].field_75839_a != p_75876_1_.field_75884_a[i].field_75839_a
+                         || this.field_75884_a[i].field_75837_b != p_75876_1_.field_75884_a[i].field_75837_b
+@@ -139,21 +139,21 @@
+         PathPoint pathpoint = PathPoint.func_186282_b(p_186311_0_);
+         PathPoint[] apathpoint = new PathPoint[p_186311_0_.readInt()];
+ 
+-        for (int j = 0; j < apathpoint.length; j++)
++        for (int j = 0; j < apathpoint.length; ++j)
+         {
+             apathpoint[j] = PathPoint.func_186282_b(p_186311_0_);
+         }
+ 
+         PathPoint[] apathpoint1 = new PathPoint[p_186311_0_.readInt()];
+ 
+-        for (int k = 0; k < apathpoint1.length; k++)
++        for (int k = 0; k < apathpoint1.length; ++k)
+         {
+             apathpoint1[k] = PathPoint.func_186282_b(p_186311_0_);
+         }
+ 
+         PathPoint[] apathpoint2 = new PathPoint[p_186311_0_.readInt()];
+ 
+-        for (int l = 0; l < apathpoint2.length; l++)
++        for (int l = 0; l < apathpoint2.length; ++l)
+         {
+             apathpoint2[l] = PathPoint.func_186282_b(p_186311_0_);
+         }

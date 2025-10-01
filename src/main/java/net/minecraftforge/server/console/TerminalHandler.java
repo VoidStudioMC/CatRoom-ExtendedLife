@@ -42,7 +42,7 @@ public final class TerminalHandler
             return false;
 
         LineReader reader = LineReaderBuilder.builder()
-                .appName("Forge")
+                .appName("Cleanroom")
                 .terminal(terminal)
                 .completer(new org.bukkit.craftbukkit.v1_12_R1.command.ConsoleCommandCompleter(server) /* new ConsoleCommandCompleter(server) */ )
                 .build();

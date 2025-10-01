@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/particle/ParticleFallingDust.java
++++ after/net/minecraft/client/particle/ParticleFallingDust.java
+@@ -73,7 +73,7 @@
+         }
+ 
+         this.field_190015_G = this.field_190014_F;
+-        this.field_190014_F = this.field_190014_F + (float) Math.PI * this.field_190019_b * 2.0F;
++        this.field_190014_F += (float) Math.PI * this.field_190019_b * 2.0F;
+ 
+         if (this.field_187132_l)
+         {

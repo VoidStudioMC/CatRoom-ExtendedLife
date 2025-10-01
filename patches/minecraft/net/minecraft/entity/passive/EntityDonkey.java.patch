@@ -1,0 +1,19 @@
+--- before/net/minecraft/entity/passive/EntityDonkey.java
++++ after/net/minecraft/entity/passive/EntityDonkey.java
+@@ -57,11 +57,13 @@
+         {
+             return false;
+         }
++        else if (!(p_70878_1_ instanceof EntityDonkey) && !(p_70878_1_ instanceof EntityHorse))
++        {
++            return false;
++        }
+         else
+         {
+-            return !(p_70878_1_ instanceof EntityDonkey) && !(p_70878_1_ instanceof EntityHorse)
+-                   ? false
+-                   : this.func_110200_cJ() && ((AbstractHorse)p_70878_1_).func_110200_cJ();
++            return this.func_110200_cJ() && ((AbstractHorse)p_70878_1_).func_110200_cJ();
+         }
+     }
+ 

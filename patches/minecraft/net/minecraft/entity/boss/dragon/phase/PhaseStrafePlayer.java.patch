@@ -1,0 +1,40 @@
+--- before/net/minecraft/entity/boss/dragon/phase/PhaseStrafePlayer.java
++++ after/net/minecraft/entity/boss/dragon/phase/PhaseStrafePlayer.java
+@@ -62,7 +62,7 @@
+             {
+                 if (this.field_188661_a.func_70685_l(this.field_188693_f))
+                 {
+-                    this.field_188690_c++;
++                    ++this.field_188690_c;
+                     Vec3d vec3d1 = new Vec3d(
+                         this.field_188693_f.field_70165_t - this.field_188661_a.field_70165_t,
+                         0.0,
+@@ -110,12 +110,12 @@
+                 }
+                 else if (this.field_188690_c > 0)
+                 {
+-                    this.field_188690_c--;
++                    --this.field_188690_c;
+                 }
+             }
+             else if (this.field_188690_c > 0)
+             {
+-                this.field_188690_c--;
++                --this.field_188690_c;
+             }
+         }
+     }
+@@ -135,11 +135,11 @@
+ 
+             if (this.field_188694_g)
+             {
+-                j++;
++                ++j;
+             }
+             else
+             {
+-                j--;
++                --j;
+             }
+ 
+             if (this.field_188661_a.func_184664_cU() != null && this.field_188661_a.func_184664_cU().func_186092_c() > 0)

@@ -115,6 +115,15 @@
          this.func_96551_b();
      }
  
+@@ -186,7 +186,7 @@
+         List < Packet<? >> list = Lists.newArrayList();
+         list.add(new SPacketScoreboardObjective(p_96550_1_, 0));
+ 
+-        for (int i = 0; i < 19; i++)
++        for (int i = 0; i < 19; ++i)
+         {
+             if (this.func_96539_a(i) == p_96550_1_)
+             {
 @@ -206,8 +206,9 @@
      {
          List < Packet<? >> list = this.func_96550_d(p_96549_1_);
@@ -126,6 +135,15 @@
              for (Packet<?> packet : list)
              {
                  entityplayermp.field_71135_a.func_147359_a(packet);
+@@ -222,7 +223,7 @@
+         List < Packet<? >> list = Lists.newArrayList();
+         list.add(new SPacketScoreboardObjective(p_96548_1_, 1));
+ 
+-        for (int i = 0; i < 19; i++)
++        for (int i = 0; i < 19; ++i)
+         {
+             if (this.func_96539_a(i) == p_96548_1_)
+             {
 @@ -237,8 +238,9 @@
      {
          List < Packet<? >> list = this.func_96548_f(p_96546_1_);
@@ -137,7 +155,18 @@
              for (Packet<?> packet : list)
              {
                  entityplayermp.field_71135_a.func_147359_a(packet);
-@@ -261,5 +263,13 @@
+@@ -252,14 +254,22 @@
+     {
+         int i = 0;
+ 
+-        for (int j = 0; j < 19; j++)
++        for (int j = 0; j < 19; ++j)
+         {
+             if (this.func_96539_a(j) == p_96552_1_)
+             {
+-                i++;
++                ++i;
+             }
          }
  
          return i;

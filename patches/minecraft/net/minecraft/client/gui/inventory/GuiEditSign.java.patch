@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/gui/inventory/GuiEditSign.java
++++ after/net/minecraft/client/gui/inventory/GuiEditSign.java
+@@ -56,7 +56,7 @@
+     @Override
+     public void func_73876_c()
+     {
+-        this.field_146849_g++;
++        ++this.field_146849_g;
+     }
+ 
+     @Override

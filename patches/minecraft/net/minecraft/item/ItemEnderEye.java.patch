@@ -1,0 +1,23 @@
+--- before/net/minecraft/item/ItemEnderEye.java
++++ after/net/minecraft/item/ItemEnderEye.java
+@@ -60,7 +60,7 @@
+             p_180614_2_.func_175666_e(p_180614_3_, Blocks.field_150378_br);
+             itemstack.func_190918_g(1);
+ 
+-            for (int i = 0; i < 16; i++)
++            for (int i = 0; i < 16; ++i)
+             {
+                 double d0 = (double)((float)p_180614_3_.func_177958_n() + (5.0F + field_77697_d.nextFloat() * 6.0F) / 16.0F);
+                 double d1 = (double)((float)p_180614_3_.func_177956_o() + 0.8125F);
+@@ -78,9 +78,9 @@
+             {
+                 BlockPos blockpos = blockpattern$patternhelper.func_181117_a().func_177982_a(-3, 0, -3);
+ 
+-                for (int j = 0; j < 3; j++)
++                for (int j = 0; j < 3; ++j)
+                 {
+-                    for (int k = 0; k < 3; k++)
++                    for (int k = 0; k < 3; ++k)
+                     {
+                         p_180614_2_.func_180501_a(blockpos.func_177982_a(j, 0, k), Blocks.field_150384_bq.func_176223_P(), 2);
+                     }

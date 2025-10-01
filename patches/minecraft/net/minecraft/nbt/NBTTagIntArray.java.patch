@@ -1,0 +1,29 @@
+--- before/net/minecraft/nbt/NBTTagIntArray.java
++++ after/net/minecraft/nbt/NBTTagIntArray.java
+@@ -28,7 +28,7 @@
+     {
+         int[] aint = new int[p_193584_0_.size()];
+ 
+-        for (int i = 0; i < p_193584_0_.size(); i++)
++        for (int i = 0; i < p_193584_0_.size(); ++i)
+         {
+             Integer integer = p_193584_0_.get(i);
+             aint[i] = integer == null ? 0 : integer;
+@@ -56,7 +56,7 @@
+         p_152446_3_.func_152450_a((long)(32 * i));
+         this.field_74749_a = new int[i];
+ 
+-        for (int j = 0; j < i; j++)
++        for (int j = 0; j < i; ++j)
+         {
+             this.field_74749_a[j] = p_152446_1_.readInt();
+         }
+@@ -73,7 +73,7 @@
+     {
+         StringBuilder stringbuilder = new StringBuilder("[I;");
+ 
+-        for (int i = 0; i < this.field_74749_a.length; i++)
++        for (int i = 0; i < this.field_74749_a.length; ++i)
+         {
+             if (i != 0)
+             {

@@ -1,0 +1,11 @@
+--- before/net/minecraft/world/biome/BiomeEndDecorator.java
++++ after/net/minecraft/world/biome/BiomeEndDecorator.java
+@@ -58,7 +58,7 @@
+                 Collections.shuffle(list, new Random(p_load_1_));
+                 WorldGenSpikes.EndSpike[] aworldgenspikes$endspike = new WorldGenSpikes.EndSpike[10];
+ 
+-                for (int i = 0; i < 10; i++)
++                for (int i = 0; i < 10; ++i)
+                 {
+                     int j = (int)(42.0 * Math.cos(2.0 * (-Math.PI + (Math.PI / 10) * (double)i)));
+                     int k = (int)(42.0 * Math.sin(2.0 * (-Math.PI + (Math.PI / 10) * (double)i)));

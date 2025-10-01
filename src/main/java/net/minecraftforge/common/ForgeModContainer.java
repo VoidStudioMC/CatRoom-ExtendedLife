@@ -114,6 +114,8 @@ public class ForgeModContainer extends DummyModContainer implements WorldAccessC
     public static boolean disableVersionCheck = false;
     public static boolean forgeLightPipelineEnabled = true;
     public static boolean selectiveResourceReloadEnabled = false;
+    public static boolean inputMethodBlockingEnabled = true;
+    public static String[] inputMethodGuiWhiteList = new String[] {""};
     @Deprecated // TODO remove in 1.13
     public static boolean replaceVanillaBucketModel = true;
     public static boolean zoomInMissingModelTextInGui = false;
@@ -515,9 +517,9 @@ public class ForgeModContainer extends DummyModContainer implements WorldAccessC
         }
 
         List<String> all = Lists.newArrayList();
-        for (ASMData asm : evt.getASMHarvestedData().getAll(ICrashReportDetail.class.getName().replace('.', '/')))
+        for (ASMData asm : evt.getASMHarvestedData().getAll(ICrashReportDetail.class))
             all.add(asm.getClassName());
-        for (ASMData asm : evt.getASMHarvestedData().getAll(ICrashCallable.class.getName().replace('.', '/')))
+        for (ASMData asm : evt.getASMHarvestedData().getAll(ICrashCallable.class))
             all.add(asm.getClassName());
         // Add table classes for mod list tabulation
         all.add("net/minecraftforge/common/util/TextTable");
@@ -564,10 +566,10 @@ public class ForgeModContainer extends DummyModContainer implements WorldAccessC
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new catserver.server.CatServerEventHandler()); // CatServer
 
-        if (false && !ForgeModContainer.disableVersionCheck) // CatServer - diable Forge version check
+        /*if (!ForgeModContainer.disableVersionCheck) // CatServer - diable Forge version check
         {
             ForgeVersion.startVersionCheck();
-        }
+        }*/
     }
 
     @SubscribeEvent

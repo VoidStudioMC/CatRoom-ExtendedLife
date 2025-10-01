@@ -1,0 +1,11 @@
+--- before/net/minecraft/client/particle/ParticleSuspend.java
++++ after/net/minecraft/client/particle/ParticleSuspend.java
+@@ -19,7 +19,7 @@
+         this.field_70551_j = 0.7F;
+         this.func_70536_a(0);
+         this.func_187115_a(0.01F, 0.01F);
+-        this.field_70544_f = this.field_70544_f * (this.field_187136_p.nextFloat() * 0.6F + 0.2F);
++        this.field_70544_f *= this.field_187136_p.nextFloat() * 0.6F + 0.2F;
+         this.field_187129_i = p_i1231_8_ * 0.0;
+         this.field_187130_j = p_i1231_10_ * 0.0;
+         this.field_187131_k = p_i1231_12_ * 0.0;

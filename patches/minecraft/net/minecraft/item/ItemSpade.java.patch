@@ -1,0 +1,19 @@
+--- before/net/minecraft/item/ItemSpade.java
++++ after/net/minecraft/item/ItemSpade.java
+@@ -41,7 +41,15 @@
+     public boolean func_150897_b(IBlockState p_150897_1_)
+     {
+         Block block = p_150897_1_.func_177230_c();
+-        return block == Blocks.field_150431_aC ? true : block == Blocks.field_150433_aE;
++
++        if (block == Blocks.field_150431_aC)
++        {
++            return true;
++        }
++        else
++        {
++            return block == Blocks.field_150433_aE;
++        }
+     }
+ 
+     @Override

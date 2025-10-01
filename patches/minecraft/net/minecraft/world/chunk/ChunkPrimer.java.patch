@@ -1,0 +1,11 @@
+--- before/net/minecraft/world/chunk/ChunkPrimer.java
++++ after/net/minecraft/world/chunk/ChunkPrimer.java
+@@ -29,7 +29,7 @@
+     {
+         int i = (p_186138_1_ << 12 | p_186138_2_ << 8) + 256 - 1;
+ 
+-        for (int j = 255; j >= 0; j--)
++        for (int j = 255; j >= 0; --j)
+         {
+             IBlockState iblockstate = Block.field_176229_d.func_148745_a(this.field_177860_a[i + j]);
+ 

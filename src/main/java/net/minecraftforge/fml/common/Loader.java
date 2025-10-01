@@ -40,6 +40,7 @@ import java.util.Set;
 
 import catserver.server.BukkitPermissionsHandler;
 import com.cleanroommc.common.CleanroomContainer;
+import com.cleanroommc.common.MixinContainer;
 import com.cleanroommc.common.ConfigAnytimeContainer;
 import com.cleanroommc.common.MixinContainer;
 import net.minecraft.util.ResourceLocation;
@@ -380,6 +381,7 @@ public class Loader
         mods.add(new InjectedModContainer(new ConfigAnytimeContainer(), FMLSanityChecker.fmlLocation));
         mods.add(new InjectedModContainer(new MixinContainer(), FMLSanityChecker.fmlLocation));
         mods.add(new InjectedModContainer(new CleanroomContainer(), FMLSanityChecker.fmlLocation));
+
         for (String cont : injectedContainers)
         {
             ModContainer mc;
@@ -440,18 +442,13 @@ public class Loader
         return discoverer;
     }
 
-    private class ModIdComparator implements Comparator<ModContainer>
-    {
-        @Override
-        public int compare(ModContainer o1, ModContainer o2)
-        {
+    private static int compareModId(ModContainer o1, ModContainer o2){
             return o1.getModId().compareTo(o2.getModId());
-        }
     }
 
     private void identifyDuplicates(List<ModContainer> mods)
     {
-        TreeMultimap<ModContainer, File> dupsearch = TreeMultimap.create(new ModIdComparator(), Ordering.arbitrary());
+        TreeMultimap<ModContainer, File> dupsearch = TreeMultimap.create(Loader::compareModId, Ordering.arbitrary());
         for (ModContainer mc : mods)
         {
             if (mc.getSource() != null)
@@ -586,7 +583,7 @@ public class Loader
         {
             if (nonMod.isFile())
             {
-                FMLLog.log.info("FML has found a non-mod file {} in your mods directory. It will now be injected into your classpath. This could severe stability issues, it should be removed if possible.", nonMod.getName());
+                FMLLog.log.info("FML has found a non-mod file {} in your mods directory. It will now be injected into your classpath.", nonMod.getName());
                 try
                 {
                     modClassLoader.addFile(nonMod);
@@ -615,6 +612,12 @@ public class Loader
         {
             if (mod.getSigningCertificate() == null)
                 FMLLog.log.debug("\t\t{}\t({}\t{})\t{}", mod.getModId(), mod.getName(), mod.getVersion(), mod.getSource().getName());
+        }
+
+        for (ModContainer mod : getActiveModList())
+        {
+            if (mod.getMetadata() == null)
+                FMLLog.log.warn("{} missing it's ModMetadata.", mod.getModId());
         }
         if (getActiveModList().isEmpty())
         {

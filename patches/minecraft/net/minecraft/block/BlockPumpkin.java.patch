@@ -33,7 +33,8 @@
 +        BlockStateListPopulator blockList = new BlockStateListPopulator(p_180673_1_.getWorld());
          if (blockpattern$patternhelper != null)
          {
-             for (int i = 0; i < this.func_176391_l().func_177685_b(); ++i)
+-            for (int i = 0; i < this.func_176391_l().func_177685_b(); i++)
++            for (int i = 0; i < this.func_176391_l().func_177685_b(); ++i)
              {
                  BlockWorldState blockworldstate = blockpattern$patternhelper.func_177670_a(0, i, 0);
 -                p_180673_1_.func_180501_a(blockworldstate.func_177508_d(), Blocks.field_150350_a.func_176223_P(), 2);
@@ -54,7 +55,7 @@
 -                CriteriaTriggers.field_192133_m.func_192229_a(entityplayermp, entitysnowman);
 -            }
 -
--            for (int l = 0; l < 120; ++l)
+-            for (int l = 0; l < 120; l++)
 -            {
 -                p_180673_1_.func_175688_a(
 -                    EnumParticleTypes.SNOW_SHOVEL,
@@ -67,7 +68,7 @@
 -                );
 -            }
 -
--            for (int i1 = 0; i1 < this.func_176391_l().func_177685_b(); ++i1)
+-            for (int i1 = 0; i1 < this.func_176391_l().func_177685_b(); i1++)
 -            {
 -                BlockWorldState blockworldstate2 = blockpattern$patternhelper.func_177670_a(0, i1, 0);
 -                p_180673_1_.func_175722_b(blockworldstate2.func_177508_d(), Blocks.field_150350_a, false);
@@ -90,9 +91,15 @@
              }
          }
          else
-@@ -112,108 +105,78 @@
+@@ -108,112 +101,82 @@
+ 
+             if (blockpattern$patternhelper != null)
+             {
+-                for (int j = 0; j < this.func_176388_T().func_177684_c(); j++)
++                for (int j = 0; j < this.func_176388_T().func_177684_c(); ++j)
                  {
-                     for (int k = 0; k < this.func_176388_T().func_177685_b(); ++k)
+-                    for (int k = 0; k < this.func_176388_T().func_177685_b(); k++)
++                    for (int k = 0; k < this.func_176388_T().func_177685_b(); ++k)
                      {
 -                        p_180673_1_.func_180501_a(blockpattern$patternhelper.func_177670_a(j, k, 0).func_177508_d(), Blocks.field_150350_a.func_176223_P(), 2);
 +//                        worldIn.setBlockState(blockpattern$patternhelper.translateOffset(j, k, 0).getPos(), Blocks.AIR.getDefaultState(), 2);
@@ -114,7 +121,7 @@
 -                    CriteriaTriggers.field_192133_m.func_192229_a(entityplayermp1, entityirongolem);
 -                }
 -
--                for (int j1 = 0; j1 < 120; ++j1)
+-                for (int j1 = 0; j1 < 120; j1++)
 -                {
 -                    p_180673_1_.func_175688_a(
 -                        EnumParticleTypes.SNOWBALL,
@@ -127,9 +134,9 @@
 -                    );
 -                }
 -
--                for (int k1 = 0; k1 < this.func_176388_T().func_177684_c(); ++k1)
+-                for (int k1 = 0; k1 < this.func_176388_T().func_177684_c(); k1++)
 -                {
--                    for (int l1 = 0; l1 < this.func_176388_T().func_177685_b(); ++l1)
+-                    for (int l1 = 0; l1 < this.func_176388_T().func_177685_b(); l1++)
 -                    {
 -                        BlockWorldState blockworldstate1 = blockpattern$patternhelper.func_177670_a(k1, l1, 0);
 -                        p_180673_1_.func_175722_b(blockworldstate1.func_177508_d(), Blocks.field_150350_a, false);

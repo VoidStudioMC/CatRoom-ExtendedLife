@@ -9,6 +9,15 @@
  
  public class EntityEnderCrystal extends Entity
  {
+@@ -59,7 +61,7 @@
+         this.field_70169_q = this.field_70165_t;
+         this.field_70167_r = this.field_70163_u;
+         this.field_70166_s = this.field_70161_v;
+-        this.field_70261_a++;
++        ++this.field_70261_a;
+ 
+         if (!this.field_70170_p.field_72995_K)
+         {
 @@ -68,7 +70,10 @@
              if (this.field_70170_p.field_73011_w instanceof WorldProviderEnd
                      && this.field_70170_p.func_180495_p(blockpos).func_177230_c() != Blocks.field_150480_ab)

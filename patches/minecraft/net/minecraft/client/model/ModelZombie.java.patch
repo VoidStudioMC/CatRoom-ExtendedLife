@@ -1,0 +1,16 @@
+--- before/net/minecraft/client/model/ModelZombie.java
++++ after/net/minecraft/client/model/ModelZombie.java
+@@ -35,9 +35,9 @@
+         this.field_178724_i.field_78795_f = f2;
+         this.field_178723_h.field_78795_f += f * 1.2F - f1 * 0.4F;
+         this.field_178724_i.field_78795_f += f * 1.2F - f1 * 0.4F;
+-        this.field_178723_h.field_78808_h = this.field_178723_h.field_78808_h + MathHelper.func_76134_b(p_78087_3_ * 0.09F) * 0.05F + 0.05F;
+-        this.field_178724_i.field_78808_h = this.field_178724_i.field_78808_h - (MathHelper.func_76134_b(p_78087_3_ * 0.09F) * 0.05F + 0.05F);
+-        this.field_178723_h.field_78795_f = this.field_178723_h.field_78795_f + MathHelper.func_76126_a(p_78087_3_ * 0.067F) * 0.05F;
+-        this.field_178724_i.field_78795_f = this.field_178724_i.field_78795_f - MathHelper.func_76126_a(p_78087_3_ * 0.067F) * 0.05F;
++        this.field_178723_h.field_78808_h += MathHelper.func_76134_b(p_78087_3_ * 0.09F) * 0.05F + 0.05F;
++        this.field_178724_i.field_78808_h -= MathHelper.func_76134_b(p_78087_3_ * 0.09F) * 0.05F + 0.05F;
++        this.field_178723_h.field_78795_f += MathHelper.func_76126_a(p_78087_3_ * 0.067F) * 0.05F;
++        this.field_178724_i.field_78795_f -= MathHelper.func_76126_a(p_78087_3_ * 0.067F) * 0.05F;
+     }
+ }
