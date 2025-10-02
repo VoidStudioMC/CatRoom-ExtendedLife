@@ -1,6 +1,12 @@
 --- before/net/minecraft/entity/ai/EntityAIMate.java
 +++ after/net/minecraft/entity/ai/EntityAIMate.java
-@@ -6,6 +6,7 @@
+@@ -2,10 +2,13 @@
+ 
+ import java.util.List;
+ import java.util.Random;
++
++import catserver.server.utils.ModFixUtils;
+ import net.minecraft.advancements.CriteriaTriggers;
  import net.minecraft.entity.EntityAgeable;
  import net.minecraft.entity.item.EntityXPOrb;
  import net.minecraft.entity.passive.EntityAnimal;
@@ -8,7 +14,7 @@
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.stats.StatList;
  import net.minecraft.util.EnumParticleTypes;
-@@ -22,7 +23,7 @@
+@@ -22,7 +25,7 @@
  
      public EntityAIMate(EntityAnimal p_i1619_1_, double p_i1619_2_)
      {
@@ -17,7 +23,7 @@
      }
  
      public EntityAIMate(EntityAnimal p_i47306_1_, double p_i47306_2_, Class <? extends EntityAnimal > p_i47306_4_)
-@@ -34,7 +35,6 @@
+@@ -34,7 +37,6 @@
          this.func_75248_a(3);
      }
  
@@ -25,7 +31,7 @@
      public boolean func_75250_a()
      {
          if (!this.field_75390_d.func_70880_s())
-@@ -48,27 +48,24 @@
+@@ -48,27 +50,24 @@
          }
      }
  
@@ -55,7 +61,7 @@
          {
              this.func_75388_i();
          }
-@@ -76,7 +73,7 @@
+@@ -76,7 +75,7 @@
  
      private EntityAnimal func_75389_f()
      {
@@ -64,7 +70,7 @@
          double d0 = Double.MAX_VALUE;
          EntityAnimal entityanimal = null;
  
-@@ -96,8 +93,23 @@
+@@ -96,8 +95,23 @@
      {
          EntityAgeable entityageable = this.field_75390_d.func_90011_a(this.field_75391_e);
  
@@ -88,11 +94,11 @@
              EntityPlayerMP entityplayermp = this.field_75390_d.func_191993_do();
  
              if (entityplayermp == null && this.field_75391_e.func_191993_do() != null)
-@@ -105,6 +117,13 @@
+@@ -105,6 +119,13 @@
                  entityplayermp = this.field_75391_e.func_191993_do();
              }
  
-+            int experience = this.field_75390_d.func_70681_au().nextInt(7) + 1;
++            int experience = this.field_75390_d.func_70681_au().nextInt(ModFixUtils.fixNetherAPI()) + 1; // CatRoom - Fix NetherAPI
 +            org.bukkit.event.entity.EntityBreedEvent entityBreedEvent = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callEntityBreedEvent(entityageable, field_75390_d, field_75391_e, entityplayermp, this.field_75390_d.breedItem, experience);
 +            if (entityBreedEvent.isCancelled()) {
 +                return;
@@ -102,7 +108,7 @@
              if (entityplayermp != null)
              {
                  entityplayermp.func_71029_a(StatList.field_151186_x);
-@@ -117,41 +136,24 @@
+@@ -117,41 +138,24 @@
              this.field_75391_e.func_70875_t();
              entityageable.func_70873_a(-24000);
              entityageable.func_70012_b(this.field_75390_d.field_70165_t, this.field_75390_d.field_70163_u, this.field_75390_d.field_70161_v, 0.0F, 0.0F);

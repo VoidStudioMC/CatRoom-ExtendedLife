@@ -16,7 +16,7 @@ import org.bukkit.inventory.InventoryHolder;
 
 import javax.annotation.Nullable;
 
-public class CatCustomInventory implements InventoryHolder{
+public class CatCustomInventory implements InventoryHolder {
     private final IInventory inventory;
     private final CraftInventory container;
 

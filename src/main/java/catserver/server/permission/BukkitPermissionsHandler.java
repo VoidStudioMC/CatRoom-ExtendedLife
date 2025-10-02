@@ -1,6 +1,6 @@
-package catserver.server;
+package catserver.server.permission;
 
-import com.google.common.util.concurrent.Futures;
+import catserver.server.BukkitInjector;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;

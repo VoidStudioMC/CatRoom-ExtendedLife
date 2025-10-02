@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 public class ItemStackUtils {
     public static String itemStackToGiveCommand(ItemStack nmsItemStack) {
         ResourceLocation itemRl = Item.REGISTRY.getNameForObject(nmsItemStack.getItem());
-        String itemNamespacedId = itemRl != null ? itemRl.toString() : "";
+        String itemNamespacedId = itemRl != null ? itemRl.toString() : "unknown:unknown";
         if (itemNamespacedId.isBlank()) return "";
 
         int count = nmsItemStack.getCount();

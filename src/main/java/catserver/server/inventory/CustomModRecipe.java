@@ -18,7 +18,7 @@ public class CustomModRecipe implements Recipe, Keyed {
         this(iRecipe, null);
     }
 
-    public CustomModRecipe(IRecipe iRecipe, ResourceLocation key){
+    public CustomModRecipe(IRecipe iRecipe, ResourceLocation key) {
         this.iRecipe = iRecipe;
         this.output = CraftItemStack.asCraftMirror(iRecipe.getRecipeOutput());
         try {

@@ -49,8 +49,6 @@ public class CatServerGradleStart {
         argMap = null;
         extras = null;
 
-        System.setProperty("catserver.spark.enable", "false");
-
         System.gc();
         try {
             Class.forName("net.minecraft.launchwrapper.Launch").getDeclaredMethod("main", String[].class).invoke(null, new Object[] { args });

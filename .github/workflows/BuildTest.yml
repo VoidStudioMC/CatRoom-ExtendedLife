@@ -94,6 +94,7 @@ jobs:
         with:
           name: installer-jar-${{ env.CLEANROOM_VERSION }}
           path: projects/cleanroom/build/libs/*-installer.jar
+          if-no-files-found: error
 
 #      - name: Upload MMC pack zip
 #        uses: actions/upload-artifact@v4.6.2

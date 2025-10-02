@@ -8,7 +8,7 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
-@@ -49,21 +50,21 @@
+@@ -49,27 +50,36 @@
      {
          protected NioEventLoopGroup func_179280_b()
          {
@@ -33,7 +33,22 @@
          }
      };
      private final MinecraftServer field_151273_d;
-@@ -79,6 +80,7 @@
+     public volatile boolean field_151277_a;
+     private final List<ChannelFuture> field_151274_e = Collections.synchronizedList(Lists.newArrayList());
+     private final List<NetworkManager> field_151272_f = Collections.synchronizedList(Lists.newArrayList());
++    // Paper start - prevent blocking on adding a new network manager while the server is ticking
++     private final List<NetworkManager> pending = Collections.synchronizedList(Lists.newArrayList());
++     private void addPending() {
++         synchronized (pending) {
++             this.field_151272_f.addAll(pending);
++             this.pending.clear();
++         }
++     }
++     // Paper end
+ 
+     public NetworkSystem(MinecraftServer p_i45292_1_)
+     {
+@@ -79,6 +89,7 @@
  
      public void func_151265_a(InetAddress p_151265_1_, int p_151265_2_) throws IOException
      {
@@ -41,7 +56,7 @@
          synchronized (this.field_151274_e)
          {
              Class <? extends ServerSocketChannel > oclass;
-@@ -97,43 +99,26 @@
+@@ -97,43 +108,27 @@
                  field_151275_b.info("Using default channel type");
              }
  
@@ -76,7 +91,9 @@
 -                    .addLast("encoder", new NettyPacketEncoder(EnumPacketDirection.CLIENTBOUND));
 +                    p_initChannel_1_.pipeline().addLast("timeout", new ReadTimeoutHandler(net.minecraftforge.fml.common.network.internal.FMLNetworkHandler.READ_TIMEOUT)).addLast("legacy_query", new LegacyPingHandler(NetworkSystem.this)).addLast("splitter", new NettyVarint21FrameDecoder()).addLast("decoder", new NettyPacketDecoder(EnumPacketDirection.SERVERBOUND)).addLast("prepender", new NettyVarint21FrameEncoder()).addLast("encoder", new NettyPacketEncoder(EnumPacketDirection.CLIENTBOUND));
                      NetworkManager networkmanager = new NetworkManager(EnumPacketDirection.SERVERBOUND);
-                     NetworkSystem.this.field_151272_f.add(networkmanager);
+-                    NetworkSystem.this.field_151272_f.add(networkmanager);
++//                    NetworkSystem.this.networkManagers.add(networkmanager); CREF: from https://github.com/NovaEngineering-Source/CatRoom/commit/8b0eddcf29f189fbab096554f7b7fcb7d8ed1d28
++                    NetworkSystem.this.pending.add(networkmanager);
                      p_initChannel_1_.pipeline().addLast("packet_handler", networkmanager);
                      networkmanager.func_150719_a(new NetHandlerHandshakeTCP(NetworkSystem.this.field_151273_d, networkmanager));
                  }
@@ -91,7 +108,7 @@
          }
      }
  
-@@ -154,7 +139,7 @@
+@@ -154,7 +149,7 @@
                      NetworkSystem.this.field_151272_f.add(networkmanager);
                      p_initChannel_1_.pipeline().addLast("packet_handler", networkmanager);
                  }
@@ -100,7 +117,7 @@
              this.field_151274_e.add(channelfuture);
          }
  
-@@ -171,7 +156,7 @@
+@@ -171,7 +166,7 @@
              {
                  channelfuture.channel().close().sync();
              }
@@ -109,11 +126,12 @@
              {
                  field_151275_b.error("Interrupted whilst closing channel");
              }
-@@ -182,6 +167,13 @@
+@@ -182,6 +177,14 @@
      {
          synchronized (this.field_151272_f)
          {
 +            // Spigot Start
++            this.addPending(); // Paper
 +            // This prevents players from 'gaming' the server, and strategically relogging to increase their position in the tick order
 +            if (org.spigotmc.SpigotConfig.playerShuffle > 0 && MinecraftServer.currentTick % org.spigotmc.SpigotConfig.playerShuffle == 0)
 +            {
@@ -123,7 +141,7 @@
              Iterator<NetworkManager> iterator = this.field_151272_f.iterator();
  
              while (iterator.hasNext())
-@@ -227,6 +219,9 @@
+@@ -227,6 +230,9 @@
                      }
                      else
                      {

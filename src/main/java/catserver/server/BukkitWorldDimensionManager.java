@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class BukkitWorldDimensionManager {
-    private static Map<String, Integer> bukkitWorldDimIds = new LinkedHashMap<>();
+    private static final Map<String, Integer> bukkitWorldDimIds = new LinkedHashMap<>();
 
     public static int getWorldDimId(String name) {
         return bukkitWorldDimIds.getOrDefault(name, 0);

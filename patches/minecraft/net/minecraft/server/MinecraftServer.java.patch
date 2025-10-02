@@ -51,7 +51,7 @@
  import net.minecraft.server.management.PlayerList;
  import net.minecraft.server.management.PlayerProfileCache;
  import net.minecraft.util.IProgressUpdate;
-@@ -71,39 +81,52 @@
+@@ -71,39 +81,55 @@
  import net.minecraft.world.MinecraftException;
  import net.minecraft.world.ServerWorldEventHandler;
  import net.minecraft.world.World;
@@ -67,6 +67,8 @@
  import net.minecraft.world.storage.ISaveHandler;
  import net.minecraft.world.storage.WorldInfo;
 +import net.minecraftforge.common.DimensionManager;
++import net.minecraftforge.fml.common.FMLCommonHandler;
++import net.minecraftforge.fml.common.StartupQuery;
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 +
@@ -78,6 +80,7 @@
 +import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
 +import org.bukkit.craftbukkit.Main;
 +import org.bukkit.craftbukkit.v1_12_R1.SpigotTimings;
++import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
 +import org.spigotmc.SlackActivityAccountant;
 +
 +import catserver.server.BukkitInjector;
@@ -111,7 +114,7 @@
      private PlayerList field_71318_t;
      private boolean field_71317_u = true;
      private boolean field_71316_v;
-@@ -121,7 +144,8 @@
+@@ -121,7 +147,8 @@
      private int field_71280_D;
      private int field_143008_E;
      public final long[] field_71311_j = new long[100];
@@ -121,7 +124,7 @@
      private KeyPair field_71292_I;
      private String field_71293_J;
      private String field_71294_K;
-@@ -141,33 +165,73 @@
+@@ -141,33 +168,73 @@
      private final GameProfileRepository field_152365_W;
      private final PlayerProfileCache field_152366_X;
      private long field_147142_T;
@@ -213,7 +216,7 @@
  
      public ServerCommandManager func_175582_h()
      {
-@@ -184,31 +248,26 @@
+@@ -184,31 +251,26 @@
              this.func_71192_d("menu.convertingLevel");
              this.func_71254_M().func_75805_a(p_71237_1_, new IProgressUpdate()
              {
@@ -253,7 +256,7 @@
                  public void func_73719_c(String p_73719_1_)
                  {
                  }
-@@ -231,83 +290,104 @@
+@@ -231,83 +293,104 @@
  
      public void func_71247_a(String p_71247_1_, String p_71247_2_, long p_71247_3_, WorldType p_71247_5_, String p_71247_6_)
      {
@@ -424,7 +427,7 @@
      }
  
      public void func_71222_d()
-@@ -320,7 +400,7 @@
+@@ -320,7 +403,7 @@
          this.func_71192_d("menu.generatingTerrain");
          int j1 = 0;
          field_147145_h.info("Preparing start region for level 0");
@@ -433,7 +436,7 @@
          BlockPos blockpos = worldserver.func_175694_M();
          long k1 = func_130071_aq();
  
-@@ -336,11 +416,15 @@
+@@ -336,11 +419,15 @@
                      k1 = j2;
                  }
  
@@ -450,7 +453,7 @@
          this.func_71243_i();
      }
  
-@@ -354,9 +438,9 @@
+@@ -354,9 +441,9 @@
              {
                  this.func_180507_a_("level://" + URLEncoder.encode(p_175584_1_, StandardCharsets.UTF_8.toString()) + "/" + "resources.zip", "");
              }
@@ -462,7 +465,7 @@
              }
          }
      }
-@@ -379,7 +463,7 @@
+@@ -379,7 +466,7 @@
      {
          this.field_71302_d = p_71216_1_;
          this.field_71303_e = p_71216_2_;
@@ -471,7 +474,7 @@
      }
  
      protected void func_71243_i()
-@@ -390,20 +474,18 @@
+@@ -390,20 +477,18 @@
  
      public void func_71267_a(boolean p_71267_1_)
      {
@@ -495,7 +498,7 @@
                  }
                  catch (MinecraftException minecraftexception)
                  {
-@@ -413,10 +495,24 @@
+@@ -413,10 +498,24 @@
          }
      }
  
@@ -521,7 +524,7 @@
          if (this.func_147137_ag() != null)
          {
              this.func_147137_ag().func_151268_b();
-@@ -427,6 +523,7 @@
+@@ -427,6 +526,7 @@
              field_147145_h.info("Saving players");
              this.field_71318_t.func_72389_g();
              this.field_71318_t.func_72392_r();
@@ -529,7 +532,7 @@
          }
  
          if (this.field_71305_c != null)
-@@ -443,32 +540,41 @@
+@@ -443,32 +543,41 @@
  
              this.func_71267_a(false);
  
@@ -585,7 +588,7 @@
  
      public boolean func_71278_l()
      {
-@@ -480,64 +586,132 @@
+@@ -480,64 +589,135 @@
          this.field_71317_u = false;
      }
  
@@ -733,28 +736,31 @@
 +                    }
 +                    lastTick = curTime;
 +
++                    CraftEventFactory.callServerTickStartEvent(this.field_71315_w + 1); // Paper - Server Tick Events
 +                    this.func_71217_p();
++                    CraftEventFactory.callServerTickEndEvent(this.field_71315_w, lastTick, catchupTime); // Paper - Server Tick Events
++
                      this.field_71296_Q = true;
                  }
 +                // Spigot end
-+                net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStopping();
-+                net.minecraftforge.fml.common.FMLCommonHandler.instance().expectServerStopped(); // has to come before finalTick to avoid race conditions
++                FMLCommonHandler.instance().handleServerStopping();
++                FMLCommonHandler.instance().expectServerStopped(); // has to come before finalTick to avoid race conditions
              }
              else
              {
 -                this.func_71228_a(null);
-+                net.minecraftforge.fml.common.FMLCommonHandler.instance().expectServerStopped(); // has to come before finalTick to avoid race conditions
++                FMLCommonHandler.instance().expectServerStopped(); // has to come before finalTick to avoid race conditions
 +                this.func_71228_a((CrashReport)null);
              }
 +        }
-+        catch (net.minecraftforge.fml.common.StartupQuery.AbortedException e)
++        catch (StartupQuery.AbortedException e)
 +        {
 +            // ignore silently
-+            net.minecraftforge.fml.common.FMLCommonHandler.instance().expectServerStopped(); // has to come before finalTick to avoid race conditions
++            FMLCommonHandler.instance().expectServerStopped(); // has to come before finalTick to avoid race conditions
          }
          catch (Throwable throwable1)
          {
-@@ -553,26 +727,24 @@
+@@ -553,26 +733,24 @@
                  crashreport = this.func_71230_b(new CrashReport("Exception in server tick loop", throwable1));
              }
  
@@ -773,7 +779,7 @@
                  field_147145_h.error("We were unable to save this crash report to disk.");
              }
  
-+            net.minecraftforge.fml.common.FMLCommonHandler.instance().expectServerStopped(); // has to come before finalTick to avoid race conditions
++            FMLCommonHandler.instance().expectServerStopped(); // has to come before finalTick to avoid race conditions
              this.func_71228_a(crashreport);
          }
          finally
@@ -784,16 +790,16 @@
                  this.func_71260_j();
              }
              catch (Throwable throwable)
-@@ -581,6 +753,8 @@
+@@ -581,6 +759,8 @@
              }
              finally
              {
-+                net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStopped();
++                FMLCommonHandler.instance().handleServerStopped();
 +                this.field_71316_v = true;
                  this.func_71240_o();
              }
          }
-@@ -607,6 +781,7 @@
+@@ -607,6 +787,7 @@
                  ImageIO.write(bufferedimage, "PNG", new ByteBufOutputStream(bytebuf));
                  ByteBuf bytebuf1 = Base64.encode(bytebuf);
                  p_184107_1_.func_151320_a("data:image/png;base64," + bytebuf1.toString(StandardCharsets.UTF_8));
@@ -801,7 +807,7 @@
              }
              catch (Exception exception)
              {
-@@ -647,8 +822,11 @@
+@@ -647,8 +828,11 @@
  
      public void func_71217_p()
      {
@@ -814,7 +820,7 @@
  
          if (this.field_71295_T)
          {
-@@ -667,22 +845,35 @@
+@@ -667,22 +851,35 @@
              GameProfile[] agameprofile = new GameProfile[Math.min(this.func_71233_x(), 12)];
              int j = MathHelper.func_76136_a(this.field_147146_q, 0, this.func_71233_x() - agameprofile.length);
  
@@ -856,7 +862,7 @@
  
          this.field_71304_b.func_76320_a("tallying");
          this.field_71311_j[this.field_71315_w % 100] = System.nanoTime() - i;
-@@ -701,47 +892,87 @@
+@@ -701,47 +898,87 @@
  
          this.field_71304_b.func_76319_b();
          this.field_71304_b.func_76319_b();
@@ -968,7 +974,7 @@
                  }
                  catch (Throwable throwable1)
                  {
-@@ -752,7 +983,9 @@
+@@ -752,7 +989,9 @@
  
                  try
                  {
@@ -978,7 +984,7 @@
                  }
                  catch (Throwable throwable)
                  {
-@@ -761,28 +994,42 @@
+@@ -761,28 +1000,42 @@
                      throw new ReportedException(crashreport1);
                  }
  
@@ -1027,7 +1033,7 @@
  
          this.field_71304_b.func_76319_b();
      }
-@@ -792,137 +1039,14 @@
+@@ -792,137 +1045,14 @@
          return true;
      }
  
@@ -1170,7 +1176,7 @@
      }
  
      public File func_71209_f(String p_71209_1_)
-@@ -930,12 +1054,6 @@
+@@ -930,12 +1060,6 @@
          return new File(this.func_71238_n(), p_71209_1_);
      }
  
@@ -1183,7 +1189,7 @@
      public void func_71236_h(String p_71236_1_)
      {
          field_147145_h.warn(p_71236_1_);
-@@ -943,14 +1061,18 @@
+@@ -943,14 +1067,18 @@
  
      public WorldServer func_71218_a(int p_71218_1_)
      {
@@ -1210,7 +1216,7 @@
      }
  
      public String func_71249_w()
-@@ -978,30 +1100,10 @@
+@@ -978,30 +1106,10 @@
          return this.field_71318_t.func_152600_g();
      }
  
@@ -1243,7 +1249,7 @@
      }
  
      public CrashReport func_71230_b(CrashReport p_71230_1_)
-@@ -1016,21 +1118,13 @@
+@@ -1016,21 +1124,13 @@
  
          if (this.field_71318_t != null)
          {
@@ -1268,7 +1274,7 @@
          }
  
          return p_71230_1_;
-@@ -1038,7 +1132,7 @@
+@@ -1038,7 +1138,7 @@
  
      public List<String> func_184104_a(ICommandSender p_184104_1_, String p_184104_2_, @Nullable BlockPos p_184104_3_, boolean p_184104_4_)
      {
@@ -1277,7 +1283,7 @@
          boolean flag = p_184104_2_.startsWith("/");
  
          if (flag)
-@@ -1055,11 +1149,9 @@
+@@ -1055,11 +1155,9 @@
              {
                  if (CommandBase.func_71523_a(s2, s1))
                  {
@@ -1290,7 +1296,7 @@
          }
          else
          {
-@@ -1072,37 +1164,37 @@
+@@ -1072,37 +1170,37 @@
                  {
                      if (flag1 && !p_184104_4_)
                      {
@@ -1337,7 +1343,7 @@
      public boolean func_70003_b(int p_70003_1_, String p_70003_2_)
      {
          return true;
-@@ -1118,18 +1210,6 @@
+@@ -1118,18 +1216,6 @@
          return this.field_71292_I;
      }
  
@@ -1356,7 +1362,7 @@
      public String func_71214_G()
      {
          return this.field_71293_J;
-@@ -1174,24 +1254,24 @@
+@@ -1174,24 +1260,24 @@
  
      public void func_147139_a(EnumDifficulty p_147139_1_)
      {
@@ -1390,7 +1396,7 @@
                  }
              }
          }
-@@ -1238,58 +1318,55 @@
+@@ -1238,58 +1324,55 @@
          this.field_175588_P = p_180507_2_;
      }
  
@@ -1474,7 +1480,7 @@
      public boolean func_70002_Q()
      {
          return true;
-@@ -1299,7 +1376,8 @@
+@@ -1299,7 +1382,8 @@
  
      public boolean func_71266_T()
      {
@@ -1484,7 +1490,7 @@
      }
  
      public void func_71229_d(boolean p_71229_1_)
-@@ -1312,12 +1390,6 @@
+@@ -1312,12 +1396,6 @@
          return this.field_190519_A;
      }
  
@@ -1497,7 +1503,7 @@
      public boolean func_71268_U()
      {
          return this.field_71324_y;
-@@ -1394,14 +1466,14 @@
+@@ -1394,14 +1472,14 @@
  
      public void func_184105_a(PlayerList p_184105_1_)
      {
@@ -1515,7 +1521,7 @@
          }
      }
  
-@@ -1439,16 +1511,9 @@
+@@ -1439,16 +1517,9 @@
          return this.field_71307_n;
      }
  
@@ -1533,7 +1539,7 @@
      }
  
      public boolean func_175579_a(World p_175579_1_, BlockPos p_175579_2_, EntityPlayer p_175579_3_)
-@@ -1456,12 +1521,6 @@
+@@ -1456,12 +1527,6 @@
          return false;
      }
  
@@ -1546,7 +1552,7 @@
      public boolean func_104056_am()
      {
          return this.field_104057_T;
-@@ -1515,11 +1574,11 @@
+@@ -1515,11 +1580,11 @@
      @Nullable
      public Entity func_175576_a(UUID p_175576_1_)
      {
@@ -1561,7 +1567,7 @@
  
                  if (entity != null)
                  {
-@@ -1531,18 +1590,21 @@
+@@ -1531,18 +1596,21 @@
          return null;
      }
  
@@ -1586,7 +1592,7 @@
      public int func_175580_aG()
      {
          return 29999984;
-@@ -1552,37 +1614,34 @@
+@@ -1552,37 +1620,34 @@
      {
          Validate.notNull(p_175586_1_);
  
@@ -1633,7 +1639,7 @@
      public boolean func_152345_ab()
      {
          return Thread.currentThread() == this.field_175590_aa;
-@@ -1593,18 +1652,6 @@
+@@ -1593,18 +1658,6 @@
          return 256;
      }
  
@@ -1652,7 +1658,7 @@
      public int func_184108_a(@Nullable WorldServer p_184108_1_)
      {
          return p_184108_1_ != null ? p_184108_1_.func_82736_K().func_180263_c("spawnRadius") : 10;
-@@ -1612,12 +1659,12 @@
+@@ -1612,12 +1665,12 @@
  
      public AdvancementManager func_191949_aK()
      {
@@ -1667,7 +1673,7 @@
      }
  
      public void func_193031_aM()
-@@ -1625,7 +1672,7 @@
+@@ -1625,7 +1678,7 @@
          if (this.func_152345_ab())
          {
              this.func_184103_al().func_72389_g();
@@ -1676,7 +1682,7 @@
              this.func_191949_aK().func_192779_a();
              this.func_193030_aL().func_193059_f();
              this.func_184103_al().func_193244_w();
-@@ -1634,5 +1681,151 @@
+@@ -1634,5 +1687,151 @@
          {
              this.func_152344_a(this::func_193031_aM);
          }

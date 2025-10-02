@@ -209,6 +209,15 @@
  
      @Nullable
      private Chunk func_73239_e(int p_73239_1_, int p_73239_2_)
+@@ -147,7 +230,7 @@
+         }
+         catch (Exception exception)
+         {
+-            field_147417_b.error("Couldn't load chunk", (Throwable)exception);
++            field_147417_b.error("Couldn't load chunk", exception);
+             return null;
+         }
+     }
 @@ -186,7 +269,7 @@
          int i = 0;
          List<Chunk> list = Lists.newArrayList(this.field_73244_f.values());

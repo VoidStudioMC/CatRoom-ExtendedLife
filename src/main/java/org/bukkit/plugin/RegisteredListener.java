@@ -70,4 +70,17 @@ public class RegisteredListener {
     public boolean isIgnoringCancelled() {
         return ignoreCancelled;
     }
+
+    // CatRoom start
+    @Override
+    public String toString() {
+        return "RegisteredListener{"
+                + "plugin=\"" + this.plugin.getName()
+                + "\", listener=\"" + this.listener
+                + "\", executor=\"" + this.executor
+                + "\", priority=\"" + this.priority.name() + " (" + this.priority.getSlot() + ")"
+                + "\", ignoringCancelled=" + this.ignoreCancelled
+                + "}";
+    }
+    // CatRoom end
 }

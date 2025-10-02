@@ -36,7 +36,7 @@ public class CustomTimingsHandler
     {
         this.name = name;
         this.parent = parent;
-        HANDLERS.add( this );
+        // HANDLERS.add( this ); // CatRoom
     }
 
     /**

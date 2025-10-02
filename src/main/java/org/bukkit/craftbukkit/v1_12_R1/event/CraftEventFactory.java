@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
 
+import com.destroystokyo.paper.event.server.ServerTickEndEvent;
+import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 
@@ -36,6 +38,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.CPacketCloseWindow;
 import net.minecraft.network.play.server.SPacketSetSlot;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
@@ -1201,4 +1204,17 @@ public class CraftEventFactory {
         return blockBreakEvent;
     }
     // CatServer end
+    // CatRoom start - Server tick events
+    public static void callServerTickStartEvent(final int tickNumber) {
+        if (ServerTickStartEvent.getHandlerList().getRegisteredListeners().length == 0) return;
+        Bukkit.getPluginManager().callEvent(new ServerTickStartEvent(tickNumber));
+    }
+
+    public static void callServerTickEndEvent(final int tickNumber, final long lastTick, final long catchupTime) {
+        if (ServerTickEndEvent.getHandlerList().getRegisteredListeners().length == 0) return;
+        long endTime = System.nanoTime();
+        long remaining = (MinecraftServer.TICK_TIME - (endTime - lastTick)) - catchupTime;
+        Bukkit.getPluginManager().callEvent(new ServerTickEndEvent(tickNumber, ((double) (endTime - lastTick) / 1000000D), remaining));
+    }
+    // CatRoom end - Server tick events
 }

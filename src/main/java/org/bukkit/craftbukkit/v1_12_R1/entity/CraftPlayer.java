@@ -1543,6 +1543,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         return new CraftAdvancementProgress(craft, data, progress);
     }
 
+    // CatRoom start - Backport APIs
+    @Override
+    public int getPing() {
+        return this.getHandle().ping;
+    }
+    // CatRoom end - Backport APIs
+
     @Override
     public String getLocale() {
         return getHandle().language;

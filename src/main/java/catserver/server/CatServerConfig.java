@@ -20,15 +20,15 @@ public class CatServerConfig {
     public boolean enableSkipEntityTick = true;
     public boolean enableSkipTileEntityTick = false;
     public int worldGenMaxTickTime = 15;
-    public List<String> disableForgeGenerateWorlds = Lists.<String>newArrayList("ExampleCustomWorld");
+    public List<String> disableForgeGenerateWorlds = Lists.newArrayList("ExampleCustomWorld");
     public boolean preventBlockLoadChunk = false;
-    public List<Integer> autoUnloadDimensions = Lists.<Integer>newArrayList(99999999);
+    public List<Integer> autoUnloadDimensions = Lists.newArrayList(99999999);
     public boolean enableRealtime = false;
     public boolean forceSaveOnWatchdog = true;
     public int maxEntityCollision = 8;
     public boolean saveBukkitWorldDimensionId = true;
 
-    public List<String> fakePlayerPermissions = Lists.<String>newArrayList("essentials.build");
+    public List<String> fakePlayerPermissions = Lists.newArrayList("essentials.build");
     public boolean fakePlayerEventPass = false;
 
     public boolean fixPlayBossSoundToOtherWorld = true;
@@ -49,6 +49,7 @@ public class CatServerConfig {
     public boolean waitForgeServerChatEvent = false;
 
     public boolean bridgeForgeExplosionEventToBukkit = true; // CatRoom
+    public boolean bridgeForgeAttackEventToBukkit = true; // CREF
 
     public int craftRequestThrottle = 20;
     public int itemNBTThrottle = 200;
@@ -64,6 +65,8 @@ public class CatServerConfig {
 
     public boolean enableAffinity = false;
     public BitSet affinity = Affinity.getAffinity();
+
+//    public boolean disableAsyncCatcher = false; // CREF: i don't understand why this is necessary
 
     public CatServerConfig(String file) {
         this.configFile = new File(file);
@@ -111,9 +114,9 @@ public class CatServerConfig {
         releaseUseItemThrottle = getOrWriteIntConfig("network.packetLimit.releaseUseItemThrottle", releaseUseItemThrottle);
         disableFMLHandshake = getOrWriteBooleanConfig("network.fml.disableHandshake", config.getBoolean("disableFMLHandshake", disableFMLHandshake));
         disableFMLStatusModInfo = getOrWriteBooleanConfig("network.fml.disableStatusModInfo", config.getBoolean("disableFMLStatusModInfo", disableFMLStatusModInfo));
-        // Event bridge // CatRoom start - Handle mod explosion event
-        bridgeForgeExplosionEventToBukkit = getOrWriteBooleanConfig("event-bridge.bridgeForgeExplosionEventToBukkit", bridgeForgeExplosionEventToBukkit);
-        // CatRoom end - Handle mod explosion event
+        // compatibility
+        bridgeForgeExplosionEventToBukkit = getOrWriteBooleanConfig("compatibility.bridgeForgeExplosionEventToBukkit", bridgeForgeExplosionEventToBukkit);
+        bridgeForgeAttackEventToBukkit = getOrWriteBooleanConfig("compatibility.bridgeForgeAttackEventToBukkit", bridgeForgeAttackEventToBukkit);
         // general
         disableUpdateGameProfile = getOrWriteBooleanConfig("disableUpdateGameProfile", disableUpdateGameProfile);
         disableAsyncCatchWarn = getOrWriteBooleanConfig("disableAsyncCatchWarn", disableAsyncCatchWarn);
@@ -126,6 +129,8 @@ public class CatServerConfig {
             Affinity.setAffinity(affinity);
             MinecraftServer.LOGGER.info("[CatRoom] Server Thread is bound cpu: {}", affinity);
         }
+        // disable async catcher
+//        disableAsyncCatcher = getOrWriteBooleanConfig("disableAsyncCatcher", disableAsyncCatcher); // CREF: i don't understand why this is necessary
         // remove old config
         config.set("vanilla.limitFastClickGUI", null);
         config.set("disableFMLHandshake", null);

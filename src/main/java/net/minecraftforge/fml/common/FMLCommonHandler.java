@@ -441,7 +441,7 @@ public class FMLCommonHandler
                 }
             }
         }
-        catserver.server.CatServer.onWorldDataLave(handler, worldInfo, tagCompound); // CatServer
+        catserver.server.CatServer.onWorldDataLoad(handler, worldInfo, tagCompound); // CatServer
     }
 
     public void confirmBackupLevelDatUse(SaveHandler handler)

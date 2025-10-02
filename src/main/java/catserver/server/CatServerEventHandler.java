@@ -56,9 +56,10 @@ public class CatServerEventHandler {
         bukkitBlockBreakEventCapture.put(bukkitEvent);
     }
 
-    // funkyra start - Handle mod attack event (for check attacks in regions)
+    // CREF start - Handle mod attack event
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onAttack(LivingAttackEvent e) {
+        if (!CatServer.getConfig().bridgeForgeExplosionEventToBukkit) return;
         if (e.getSource() instanceof EntityDamageSource && e.getSource().getTrueSource() instanceof EntityPlayerMP) {
             CraftEntity source = e.getSource().getTrueSource().getBukkitEntity();
             CraftEntity target = e.getEntityLiving().getBukkitEntity();
@@ -70,21 +71,21 @@ public class CatServerEventHandler {
             }
         }
     }
-    // funkyra end - Handle mod attack event (for check attacks in regions)
+    // CREF end - Handle mod attack event
 
     // CatRoom start - Handle mod explosion event
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onExplode(ExplosionEvent.Detonate event) {
+    public void onExplosionDetonate(ExplosionEvent.Detonate event) {
         if (!CatServer.getConfig().bridgeForgeExplosionEventToBukkit) return;
         Explosion explosion = event.getExplosion();
         if (explosion.getClass() != Explosion.class) {
+            // Copied from Explosion class
             Entity exploder = explosion.exploder;
             World bworld = event.getWorld().getWorld();
             Vec3d explosionPos = explosion.getPosition();
             Location location = new Location(bworld, explosionPos.x, explosionPos.y, explosionPos.z);
             List<Block> bukkitBlocks;
             boolean cancelled;
-            float yield;
             final List<Block> blockList = Lists.newArrayList();
             List<BlockPos> affectedBlockPositions = event.getAffectedBlocks();
             for (int i1 = affectedBlockPositions.size() - 1; i1 >= 0; i1--) {
@@ -99,25 +100,23 @@ public class CatServerEventHandler {
                 Bukkit.getServer().getPluginManager().callEvent(bukkitEvent);
                 cancelled = bukkitEvent.isCancelled();
                 bukkitBlocks = bukkitEvent.blockList();
-                yield = bukkitEvent.getYield();
             } else {
                 BlockExplodeEvent bukkitEvent = new BlockExplodeEvent(location.getBlock(), blockList, 1.0F / explosion.size);
                 Bukkit.getServer().getPluginManager().callEvent(bukkitEvent);
                 cancelled = bukkitEvent.isCancelled();
                 bukkitBlocks = bukkitEvent.blockList();
-                yield = bukkitEvent.getYield();
             }
             explosion.getAffectedBlockPositions().clear();
 
             if (cancelled) {
                 event.getAffectedEntities().clear();
+                event.setCanceled(true); // CREF: i think it should be here
                 explosion.wasCanceled = true;
             } else {
                 for (Block bblock : bukkitBlocks) {
                     BlockPos coords = new BlockPos(bblock.getX(), bblock.getY(), bblock.getZ());
                     explosion.getAffectedBlockPositions().add(coords);
                 }
-                explosion.size = yield * explosion.size;
             }
         }
     }

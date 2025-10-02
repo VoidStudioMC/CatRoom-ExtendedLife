@@ -2,6 +2,7 @@ package org.bukkit.entity;
 
 import java.net.InetSocketAddress;
 
+import catserver.api.annotation.Backported;
 import org.bukkit.Achievement;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -1426,6 +1427,24 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @return object detailing the player's progress
      */
     public AdvancementProgress getAdvancementProgress(Advancement advancement);
+
+    // CatRoom start - Backport APIs
+    /**
+     * Gets the player's estimated ping in milliseconds.
+     *
+     * In Vanilla this value represents a weighted average of the response time
+     * to application layer ping packets sent. This value does not represent the
+     * network round trip time and as such may have less granularity and be
+     * impacted by other sources. For these reasons it <b>should not</b> be used
+     * for anti-cheat purposes. Its recommended use is only as a
+     * <b>qualitative</b> indicator of connection quality (Vanilla uses it for
+     * this purpose in the tab list).
+     *
+     * @return player ping
+     */
+    @Backported(from = "1.17")
+    public int getPing();
+    // CatRoom end - Backport APIs
 
     /**
      * Gets the player's current locale.

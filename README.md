@@ -1,22 +1,18 @@
-# Cleanroom Minecraft
+<img src="./images/catroom.png" height="160" alt="CatRoom" align="right">
 
-## Features
-### Implemented
+# CatRoom
 
-- 1.12.2 on Java 21
-- *Latest* LWJGL3
-- A working *mod development template/kit*
-- Patches for loading incompatible mods
-- Built-in Mixin w/ handy bootstrapping
-- Develop using Scala 3 + Kotlin 2
-- Compatibility to 99% of Forge mods
+CatRoom is a Cleanroom+Bukkit+Spigot server software forked from [CatServer](https://github.com/Luohuayu/CatServer).
 
-### Planning
+## Features:
 
-- CleanroomGradle to replace ForgeGradle
-- Classfile API
-- Actually useful APIs (See [here](https://github.com/orgs/CleanroomMC/projects/4/))
-- Optimized
+- Replaced Forge with Cleanroom
+- Enhanced mod compatibility
+- Built-in Forge-Bukkit permission bridge
+- Make use of modern Java features
+- Optimized plugin performance
+
+For all fixes, see [fixed upstream issues](FIXED_UPSTREAM_ISSUES.md)
 
 ## Components:
 
@@ -29,29 +25,6 @@
 - Javassist
 - [Scalar](https://www.curseforge.com/minecraft/mc-mods/scalar-legacy), a Scala provider. We made Scala libraries become a standalone mod so it can be updated.
 - [Forgelin-Continuous](https://www.curseforge.com/minecraft/mc-mods/forgelin-continuous) and [LibrarianLib-Continuous](https://www.curseforge.com/minecraft/mc-mods/librarianlib-continuous)
-
-## Download & Installation:
-
-- For MultiMC-based launchers (PolyMC, PrismLauncher), download the MMC instance from [release](https://github.com/CleanroomMC/Cleanroom/releases), import it in your launcher(alternatively unzip patches and json inside to your 1.12 instance).
-- For regular launcher (official launcher, AT launcher, FTB, HMCL), install the [relauncher](https://www.curseforge.com/minecraft/mc-mods/cleanroom-relauncher), launch the game and follow instructions.
-- **WARNING:** Only MultiMC-based launchers are officially supported. This is because of the limit on removing vanilla libraries in other launchers.
-- **Remember to install [Fugue](https://www.curseforge.com/minecraft/mc-mods/fugue)!**
-- **And [Scalar](https://www.curseforge.com/minecraft/mc-mods/scalar-legacy)!**
-- If you were told to use **action builds** (aka bleeding edge), here: [Cleanroom](https://github.com/CleanroomMC/Cleanroom/actions), [Fugue](https://github.com/CleanroomMC/Fugue/actions)
-- You need to log in your GitHub account to download action artifacts. 
-
-## Cleanroom on Server
-
-- Cleanroom can be installed on server.
-- Just use the installer mentioned in previous section, and run the jar with `--intallServer`. See [this page](https://minecraft.fandom.com/wiki/Tutorials/Setting_up_a_Minecraft_Forge_server) for more detail. 
-
-## Pack-making with Cleanroom
-
-### Steps of Migrating to Cleanroom
-
-1. Add Scalar and Fugue in your pack.
-2. Add Relauncher (optional, this will make your pack a full Cleanroom pack)
-3. Test launching and remove incompatible mods
 
 ### About Cross-compat Between Forge and Cleanroom
 
