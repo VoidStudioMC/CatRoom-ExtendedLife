@@ -44,7 +44,8 @@ public class ModClassLoader extends URLClassLoader
 {
     private static final List<String> STANDARD_LIBRARIES = ImmutableList.of("jinput.jar", "lwjgl.jar", "lwjgl_util.jar", "rt.jar");
     private LaunchClassLoader mainClassLoader;
-    private List<File> sources;
+    private final List<File> sources;
+    private List<URL> parentURLs = null;
 
     public ModClassLoader(ClassLoader parent) {
         super(new URL[0], null);
@@ -52,22 +53,28 @@ public class ModClassLoader extends URLClassLoader
 
         if (parent instanceof LaunchClassLoader) {
             this.mainClassLoader = (LaunchClassLoader)parent;
-            File customLibFolder = new File("./libraries/customize_libraries");
-            if (!customLibFolder.exists()) customLibFolder.mkdir();
 
-            if (customLibFolder.isDirectory()) {
-                File[] files = customLibFolder.listFiles();
-                if (files != null) {
-                    for (File file : files) {
-                        if (file.isFile() && file.getName().endsWith(".jar")) {
-                            try {
-                                this.addFile(file);
-                                FMLLog.log.info("Loaded custom library {}", file.getName());
-                            } catch (MalformedURLException e) {
-                                FMLLog.log.error("Unable to add custom mod file {} to the mod classloader", file.getAbsolutePath(), e);
-                            }
-                        }
-                    }
+            File customLibFolder = new File("./customize_libraries");
+            if (!customLibFolder.exists()) customLibFolder.mkdir();
+            this.loadCustomizeLibraries(customLibFolder);
+        }
+    }
+
+    private void loadCustomizeLibraries(File file) {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    this.loadCustomizeLibraries(f);
+                }
+            }
+        } else {
+            if (file.isFile() && file.getName().endsWith(".jar")) {
+                try {
+                    this.addFile(file);
+                    FMLLog.log.info("Loaded custom library {}", file.getName());
+                } catch (MalformedURLException e) {
+                    FMLLog.log.error("Unable to add custom lib file {} to the mod classloader", file.getAbsolutePath(), e);
                 }
             }
         }
@@ -75,21 +82,21 @@ public class ModClassLoader extends URLClassLoader
 
     public void addFile(File modFile) throws MalformedURLException
     {
-        mainClassLoader.addURL(modFile.getAbsoluteFile().toURI().toURL());
+        this.mainClassLoader.addURL(modFile.getAbsoluteFile().toURI().toURL());
         this.sources.add(modFile);
     }
 
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException
     {
-        return mainClassLoader.loadClass(name);
+        return this.mainClassLoader.loadClass(name);
     }
 
     public File[] getParentSources() {
         try
         {
             List<File> files=new ArrayList<File>();
-            for(URL url : mainClassLoader.getSources())
+            for(URL url : this.mainClassLoader.getSources())
             {
                 URI uri = url.toURI();
                 if(uri.getScheme().equals("file"))
@@ -178,7 +185,7 @@ public class ModClassLoader extends URLClassLoader
 
     public void clearNegativeCacheFor(Set<String> classList)
     {
-        mainClassLoader.clearNegativeEntries(classList);
+        this.mainClassLoader.clearNegativeEntries(classList);
     }
 
     public ModAPITransformer addModAPITransformer(ASMDataTable dataTable)
@@ -189,15 +196,14 @@ public class ModClassLoader extends URLClassLoader
         return modAPI;
     }
 
-    List<URL> parentURLs = null;
     public boolean containsSource(File source)
     {
-        if (parentURLs == null) {
-            parentURLs = Arrays.asList(mainClassLoader.getURLs());
+        if (this.parentURLs == null) {
+            this.parentURLs = Arrays.asList(this.mainClassLoader.getURLs());
         }
         try
         {
-            return parentURLs.contains(source.toURI().toURL());
+            return this.parentURLs.contains(source.toURI().toURL());
         } catch (MalformedURLException e)
         {
             // shouldn't happen

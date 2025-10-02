@@ -56,7 +56,7 @@ public class CatClassLoader extends ClassLoader {
     }
 
     private Class<?> remappedFindClass(String name, byte[] stream, ProtectionDomain protectionDomain) throws ClassFormatError {
-        Class<?> result = null;
+        Class<?> result;
 
         try {
             byte[] bytecode = remapper.remapClassFile(stream, RuntimeRepo.getInstance());
