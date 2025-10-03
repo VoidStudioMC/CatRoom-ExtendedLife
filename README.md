@@ -1,4 +1,4 @@
-<img src="./images/catroom.png" height="160" alt="CatRoom" align="right">
+<img src="./images/catroom.png" height="615" alt="CatRoom" align="right">
 
 # CatRoom
 
