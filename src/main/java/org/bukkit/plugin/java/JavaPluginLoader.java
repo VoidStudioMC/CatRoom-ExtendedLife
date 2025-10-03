@@ -204,7 +204,7 @@ public final class JavaPluginLoader implements PluginLoader {
             }
         } catch (NullPointerException ex) {
             // Boggle!
-            // (Native methods throwing NPEs is not fun when you can't stop it before-hand)
+            // (Native methods throwing NPEs are not fun when you can't stop it before-hand)
         }
     }
 
@@ -218,7 +218,7 @@ public final class JavaPluginLoader implements PluginLoader {
         try {
             Method[] publicMethods = listener.getClass().getMethods();
             Method[] privateMethods = listener.getClass().getDeclaredMethods();
-            methods = new HashSet<Method>(publicMethods.length + privateMethods.length, 1.0f);
+            methods = new HashSet<>(publicMethods.length + privateMethods.length, 1.0f);
             for (Method method : publicMethods) {
                 methods.add(method);
             }
@@ -247,7 +247,7 @@ public final class JavaPluginLoader implements PluginLoader {
             method.setAccessible(true);
             Set<RegisteredListener> eventSet = ret.get(eventClass);
             if (eventSet == null) {
-                eventSet = new HashSet<RegisteredListener>();
+                eventSet = new HashSet<>();
                 ret.put(eventClass, eventSet);
             }
 

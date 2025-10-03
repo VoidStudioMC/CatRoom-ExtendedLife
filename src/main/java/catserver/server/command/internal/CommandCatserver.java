@@ -35,7 +35,7 @@ public class CommandCatserver extends Command {
         super(name);
         this.description = "CatServer related commands";
         this.usageMessage = "/catserver worlds|reload|reloadall|dumpitem|dumplisteners";
-        setPermission("catserver.command.catserver");
+        this.setPermission("catserver.command.catserver");
     }
 
     private static final MethodHandle EVENT_TYPES_HANDLE;
@@ -111,9 +111,11 @@ public class CommandCatserver extends Command {
 
     private static String formatStringLength(String str, int size) {
         int formatLength = size - str.length();
-        for (int i = 0; i < formatLength; i++) {
+        /*for (int i = 0; i < formatLength; i++) { // CREF start - i wanna rewrite it
             str += " ";
-        }
+        }*/
+        str = str + " ".repeat(Math.max(0, formatLength));
+        // CREF end
         return str;
     }
 

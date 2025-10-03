@@ -39,7 +39,7 @@ public class BukkitInjector {
                 int itemId = Item.getIdFromItem(item);
                 Material material = Material.addMaterial(EnumHackery.addEnumEntry(Material.class, materialName, new Class[]{int.class, int.class, Material.MaterialType.class}, new Object[]{itemId, item.getItemStackLimit(), Material.MaterialType.MOD_ITEM}));
                 if (material != null) {
-                    FMLLog.log(Level.INFO, "Injected new Forge item material %s with ID %d.", material.name(), material.getId());
+                    FMLLog.log(Level.DEBUG, "Injected new Forge item material %s with ID %d.", material.name(), material.getId());
                 } else {
                     FMLLog.log(Level.INFO, "Inject item failure %s with ID %d.", materialName, itemId);
                 }
@@ -65,7 +65,7 @@ public class BukkitInjector {
                         new Object[]{blockId, Material.MaterialType.MOD_BLOCK})
                 );
                 if (material != null) {
-                    FMLLog.log(Level.INFO, "Injected new Forge block material %s with ID %d.", material.name(), material.getId());
+                    FMLLog.log(Level.DEBUG, "Injected new Forge block material %s with ID %d.", material.name(), material.getId());
                 } else {
                     if (blockId < 256) {
                         throw new RuntimeException("Can't inject Forge block material. Registry remap is not support! (level.dat is from the old version or corrupted)");

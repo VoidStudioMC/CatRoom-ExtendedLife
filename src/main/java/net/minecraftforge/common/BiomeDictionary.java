@@ -174,7 +174,7 @@ public class BiomeDictionary
     private static class BiomeInfo
     {
 
-        private final Set<Type> types = new HashSet<Type>();
+        private final Set<Type> types = new HashSet<>();
         private final Set<Type> typesUn = Collections.unmodifiableSet(this.types);
 
     }
