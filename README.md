@@ -1,7 +1,6 @@
-<img src="./images/catroom.png" height="615" alt="CatRoom" align="right">
+<img src="./images/catroom.png" height="160" alt="CatRoom" align="right">
 
 # CatRoom
-
 CatRoom is a Cleanroom+Bukkit+Spigot server software forked from [CatServer](https://github.com/Luohuayu/CatServer).
 
 ## Features:
