@@ -32,7 +32,7 @@ public class CatServerHooks {
 
     public static ITextComponent onServerChatEvent(NetHandlerPlayServer net, String raw, ITextComponent comp) {
         ServerChatEvent event = new ServerChatEvent(net.player, raw, comp);
-        if (AsyncCatcher.isMainThread()) {
+        if (CatAsyncCatcher.isMainThread()) {
             if (MinecraftForge.EVENT_BUS.post(event)) {
                 return null;
             }

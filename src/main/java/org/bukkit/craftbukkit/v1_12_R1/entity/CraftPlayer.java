@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.v1_12_R1.entity;
 
+import catserver.server.CatAsyncCatcher;
 import catserver.server.entity.CraftFakePlayer;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
@@ -214,7 +215,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void kickPlayer(String message) {
-        org.spigotmc.AsyncCatcher.catchOp( "player kick"); // Spigot
+        CatAsyncCatcher.catchOp( "player kick"); // Spigot
         if (getHandle().connection == null) return;
 
         getHandle().connection.disconnect(message == null ? "" : message);

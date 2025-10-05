@@ -1,6 +1,13 @@
 --- before/net/minecraft/server/management/PlayerChunkMap.java
 +++ after/net/minecraft/server/management/PlayerChunkMap.java
-@@ -10,9 +10,12 @@
+@@ -1,5 +1,6 @@
+ package net.minecraft.server.management;
+ 
++import catserver.server.CatAsyncCatcher;
+ import com.google.common.base.Predicate;
+ import com.google.common.collect.AbstractIterator;
+ import com.google.common.collect.ComparisonChain;
+@@ -10,9 +11,12 @@
  import java.util.Collections;
  import java.util.Comparator;
  import java.util.Iterator;
@@ -13,7 +20,7 @@
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.ChunkPos;
-@@ -38,12 +41,12 @@
+@@ -38,12 +42,12 @@
          }
      };
      private final WorldServer field_72701_a;
@@ -32,7 +39,7 @@
      private int field_72698_e;
      private long field_111192_g;
      private boolean field_187312_l = true;
-@@ -52,7 +55,7 @@
+@@ -52,7 +56,7 @@
      public PlayerChunkMap(WorldServer p_i1176_1_)
      {
          this.field_72701_a = p_i1176_1_;
@@ -41,7 +48,7 @@
      }
  
      public WorldServer func_72688_a()
-@@ -104,7 +107,7 @@
+@@ -104,7 +108,7 @@
          {
              this.field_111192_g = i;
  
@@ -50,7 +57,7 @@
              {
                  PlayerChunkMapEntry playerchunkmapentry = this.field_111193_e.get(j);
                  playerchunkmapentry.func_187280_d();
-@@ -150,6 +153,12 @@
+@@ -150,6 +154,12 @@
          {
              long l = System.nanoTime() + 50000000L;
              int k = 49;
@@ -63,7 +70,7 @@
              Iterator<PlayerChunkMapEntry> iterator = this.field_187311_h.iterator();
  
              while (iterator.hasNext())
-@@ -169,13 +178,20 @@
+@@ -169,13 +179,20 @@
                              this.field_187310_g.remove(playerchunkmapentry1);
                          }
  
@@ -85,7 +92,7 @@
          }
  
          if (!this.field_187310_g.isEmpty())
-@@ -247,8 +263,17 @@
+@@ -247,8 +264,17 @@
          return playerchunkmapentry;
      }
  
@@ -99,11 +106,11 @@
 +
      public void func_180244_a(BlockPos p_180244_1_)
      {
-+        if (catserver.server.AsyncCatcher.checkAndPostPrimaryThread("update block", () -> func_180244_a(p_180244_1_))) return; // CatServer
++        if (CatAsyncCatcher.checkAndPostPrimaryThread("update block", () -> func_180244_a(p_180244_1_))) return; // CatServer
          int i = p_180244_1_.func_177958_n() >> 4;
          int j = p_180244_1_.func_177952_p() >> 4;
          PlayerChunkMapEntry playerchunkmapentry = this.func_187301_b(i, j);
-@@ -266,12 +291,20 @@
+@@ -266,12 +292,20 @@
          p_72683_1_.field_71131_d = p_72683_1_.field_70165_t;
          p_72683_1_.field_71132_e = p_72683_1_.field_70161_v;
  
@@ -127,7 +134,7 @@
          }
  
          this.field_72699_b.add(p_72683_1_);
-@@ -283,9 +316,9 @@
+@@ -283,9 +317,9 @@
          int i = (int)p_72695_1_.field_71131_d >> 4;
          int j = (int)p_72695_1_.field_71132_e >> 4;
  
@@ -139,7 +146,7 @@
              {
                  PlayerChunkMapEntry playerchunkmapentry = this.func_187301_b(k, l);
  
-@@ -304,7 +337,15 @@
+@@ -304,7 +338,15 @@
      {
          int i = p_72684_1_ - p_72684_3_;
          int j = p_72684_2_ - p_72684_4_;
@@ -156,7 +163,7 @@
      }
  
      public void func_72685_d(EntityPlayerMP p_72685_1_)
-@@ -323,15 +364,18 @@
+@@ -323,15 +365,18 @@
              int j1 = i - k;
              int k1 = j - l;
  
@@ -178,7 +185,7 @@
                          }
  
                          if (!this.func_72684_a(l1 - j1, i2 - k1, i, j, i1))
-@@ -349,6 +393,12 @@
+@@ -349,6 +394,12 @@
                  p_72685_1_.field_71131_d = p_72685_1_.field_70165_t;
                  p_72685_1_.field_71132_e = p_72685_1_.field_70161_v;
                  this.func_187306_e();
@@ -191,7 +198,7 @@
              }
          }
      }
-@@ -374,9 +424,9 @@
+@@ -374,9 +425,9 @@
  
                  if (i > 0)
                  {
@@ -203,7 +210,7 @@
                          {
                              PlayerChunkMapEntry playerchunkmapentry = this.func_187302_c(j1, k1);
  
-@@ -389,9 +439,9 @@
+@@ -389,9 +440,9 @@
                  }
                  else
                  {
@@ -215,21 +222,21 @@
                          {
                              if (!this.func_72684_a(l, i1, j, k, p_152622_1_))
                              {
-@@ -425,11 +475,13 @@
+@@ -425,11 +476,13 @@
  
      public void func_187304_a(PlayerChunkMapEntry p_187304_1_)
      {
-+        org.spigotmc.AsyncCatcher.catchOp("Async Player Chunk Add"); // Paper
++        CatAsyncCatcher.catchOp("Async Player Chunk Add"); // Paper
          this.field_72697_d.add(p_187304_1_);
      }
  
      public void func_187305_b(PlayerChunkMapEntry p_187305_1_)
      {
-+        org.spigotmc.AsyncCatcher.catchOp("Async Player Chunk Remove"); // Paper
++        CatAsyncCatcher.catchOp("Async Player Chunk Remove"); // Paper
          ChunkPos chunkpos = p_187305_1_.func_187264_a();
          long i = func_187307_d(chunkpos.field_77276_a, chunkpos.field_77275_b);
          p_187305_1_.func_187279_c();
-@@ -440,9 +492,78 @@
+@@ -440,9 +493,78 @@
          this.field_187311_h.remove(p_187305_1_);
          Chunk chunk = p_187305_1_.func_187266_f();
  

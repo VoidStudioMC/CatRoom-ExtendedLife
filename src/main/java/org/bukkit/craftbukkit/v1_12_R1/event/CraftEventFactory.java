@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
 
+import catserver.server.CatAsyncCatcher;
 import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 
-import catserver.server.CatServer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -845,7 +845,7 @@ public class CraftEventFactory {
     }
 
     public static Container callInventoryOpenEvent(EntityPlayerMP player, Container container, boolean cancelled) {
-        if (catserver.server.AsyncCatcher.checkAsync("call InventoryOpenEvent")) return catserver.server.AsyncCatcher.ensureExecuteOnPrimaryThread(() -> callInventoryOpenEvent(player, container, cancelled)); // CatServer
+        if (CatAsyncCatcher.checkAsync("call InventoryOpenEvent")) return CatAsyncCatcher.ensureExecuteOnPrimaryThread(() -> callInventoryOpenEvent(player, container, cancelled)); // CatServer
         if (player.openContainer != player.inventoryContainer) { // fire INVENTORY_CLOSE if one already open
             player.connection.processCloseWindow(new CPacketCloseWindow());
         }
@@ -984,7 +984,7 @@ public class CraftEventFactory {
     }
 
     public static void handleInventoryCloseEvent(EntityPlayer human) {
-        if (catserver.server.AsyncCatcher.checkAsync("call InventoryCloseEvent")) { catserver.server.AsyncCatcher.ensureExecuteOnPrimaryThread(() -> handleInventoryCloseEvent(human)); return; }; // CatServer
+        if (CatAsyncCatcher.checkAsync("call InventoryCloseEvent")) { CatAsyncCatcher.ensureExecuteOnPrimaryThread(() -> handleInventoryCloseEvent(human)); return; }; // CatServer
         InventoryCloseEvent event = new InventoryCloseEvent(human.openContainer.getBukkitView());
         if(human.openContainer.getBukkitView() != null) human.world.getServer().getPluginManager().callEvent(event); // CatServer - mods bypass
         human.openContainer.transferTo(human.inventoryContainer, human.getBukkitEntity());

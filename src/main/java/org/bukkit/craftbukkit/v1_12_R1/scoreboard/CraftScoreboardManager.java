@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.v1_12_R1.scoreboard;
 
+import catserver.server.CatAsyncCatcher;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketScoreboardObjective;
 import net.minecraft.network.play.server.SPacketTeams;
@@ -30,7 +31,7 @@ public final class CraftScoreboardManager implements ScoreboardManager {
     }
 
     public CraftScoreboard getNewScoreboard() {
-        org.spigotmc.AsyncCatcher.catchOp( "scoreboard creation"); // Spigot
+        CatAsyncCatcher.catchOp( "scoreboard creation"); // Spigot
         CraftScoreboard scoreboard = new CraftScoreboard(new ServerScoreboard(server));
         scoreboards.add(scoreboard);
         return scoreboard;

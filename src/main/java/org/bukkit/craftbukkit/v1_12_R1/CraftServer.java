@@ -22,17 +22,14 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import catserver.server.CatAsyncCatcher;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandSenderWrapper;
 import net.minecraft.command.ICommand;
-import net.minecraft.command.ICommandListener;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.ServerCommandManager;
-import net.minecraft.entity.EntityTracker;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
@@ -47,25 +44,17 @@ import net.minecraft.server.dedicated.PendingCommand;
 import net.minecraft.server.dedicated.PropertyManager;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.server.management.UserListEntry;
-import net.minecraft.util.IProgressUpdate;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.GameType;
 import net.minecraft.world.MinecraftException;
-import net.minecraft.world.ServerWorldEventHandler;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
-import net.minecraft.world.WorldType;
-import net.minecraft.world.chunk.storage.AnvilSaveConverter;
-import net.minecraft.world.chunk.storage.AnvilSaveHandler;
-import net.minecraft.world.storage.ISaveFormat;
-import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.SaveHandler;
-import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -178,7 +167,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_12_R1.util.CraftNamespacedKey;
 import org.bukkit.event.server.TabCompleteEvent;
 
-import catserver.server.CatServer;
 import catserver.server.command.CraftSimpleCommandMap;
 import catserver.server.remapper.ReflectionTransformer;
 
@@ -702,7 +690,7 @@ public final class CraftServer implements Server {
 
     @Override
     public boolean dispatchCommand(CommandSender sender, String commandLine) {
-        if (catserver.server.AsyncCatcher.checkAsync("dispatch command")) return catserver.server.AsyncCatcher.ensureExecuteOnPrimaryThread(() -> dispatchCommand(sender, commandLine)); // CatServer
+        if (CatAsyncCatcher.checkAsync("dispatch command")) return CatAsyncCatcher.ensureExecuteOnPrimaryThread(() -> dispatchCommand(sender, commandLine)); // CatServer
         Validate.notNull(sender, "Sender cannot be null");
         Validate.notNull(commandLine, "CommandLine cannot be null");
 

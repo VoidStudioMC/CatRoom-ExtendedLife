@@ -1,9 +1,9 @@
 package catserver.server.utils;
 
+import catserver.server.CatAsyncCatcher;
 import catserver.server.CatServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
-import org.spigotmc.AsyncCatcher;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,8 +12,8 @@ import java.util.Properties;
 public class ServerUtils {
     public static void forceSaveWorlds() {
         CatServer.log.info("Force save worlds:");
-        boolean oldAsyncCatcher = AsyncCatcher.enabled;
-        AsyncCatcher.enabled = false;
+        boolean oldAsyncCatcher = CatAsyncCatcher.enabled;
+        CatAsyncCatcher.enabled = false;
 
         try {
             CatServer.log.info("Force saving players..");
@@ -32,7 +32,7 @@ public class ServerUtils {
             e.printStackTrace();
         }
 
-        AsyncCatcher.enabled = oldAsyncCatcher;
+        CatAsyncCatcher.enabled = oldAsyncCatcher;
         CatServer.log.info("Force save complete!");
     }
 

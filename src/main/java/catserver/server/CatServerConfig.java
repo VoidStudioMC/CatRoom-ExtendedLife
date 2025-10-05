@@ -66,7 +66,7 @@ public class CatServerConfig {
     public boolean enableAffinity = false;
     public BitSet affinity = Affinity.getAffinity();
 
-//    public boolean disableAsyncCatcher = false; // CREF: i don't understand why this is necessary
+    public boolean enableAsyncCatcher = true;
 
     public CatServerConfig(String file) {
         this.configFile = new File(file);
@@ -129,8 +129,8 @@ public class CatServerConfig {
             Affinity.setAffinity(affinity);
             MinecraftServer.LOGGER.info("[CatRoom] Server Thread is bound cpu: {}", affinity);
         }
-        // disable async catcher
-//        disableAsyncCatcher = getOrWriteBooleanConfig("disableAsyncCatcher", disableAsyncCatcher); // CREF: i don't understand why this is necessary
+        // enable async catcher
+        enableAsyncCatcher = getOrWriteBooleanConfig("enableAsyncCatcher", enableAsyncCatcher);
         // remove old config
         config.set("vanilla.limitFastClickGUI", null);
         config.set("disableFMLHandshake", null);

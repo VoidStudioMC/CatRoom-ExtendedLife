@@ -3,7 +3,6 @@ package catserver.server;
 import catserver.server.threads.AsyncChatThread;
 import catserver.server.threads.AsyncTaskThread;
 import catserver.server.threads.RealtimeThread;
-import catserver.server.utils.VersionCheck;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.storage.SaveHandler;
@@ -53,7 +52,7 @@ public class CatServer {
     }
 
     public static boolean asyncCatch(String reason) {
-        return AsyncCatcher.checkAsync(reason);
+        return CatAsyncCatcher.checkAsync(reason);
     }
 
     public static void postPrimaryThread(Runnable runnable) {

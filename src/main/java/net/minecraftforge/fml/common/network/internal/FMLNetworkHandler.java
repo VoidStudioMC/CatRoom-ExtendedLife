@@ -19,6 +19,7 @@
 
 package net.minecraftforge.fml.common.network.internal;
 
+import catserver.server.CatAsyncCatcher;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.embedded.EmbeddedChannel;
 
@@ -89,7 +90,7 @@ public class FMLNetworkHandler
 
     public static void openGui(EntityPlayer entityPlayer, Object mod, int modGuiId, World world, int x, int y, int z)
     {
-        if (catserver.server.AsyncCatcher.checkAsync("open gui")) { catserver.server.AsyncCatcher.ensureExecuteOnPrimaryThread(() -> openGui(entityPlayer, mod, modGuiId, world, x, y, z)); return; } // CatServer - prevent crash caused by async open gui
+        if (CatAsyncCatcher.checkAsync("open gui")) { CatAsyncCatcher.ensureExecuteOnPrimaryThread(() -> openGui(entityPlayer, mod, modGuiId, world, x, y, z)); return; } // CatServer - prevent crash caused by async open gui
         ModContainer mc = FMLCommonHandler.instance().findContainerFor(mod);
         if (entityPlayer instanceof EntityPlayerMP && !(entityPlayer instanceof FakePlayer))
         {

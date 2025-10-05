@@ -1,5 +1,6 @@
 package org.spigotmc;
 
+import catserver.server.CatAsyncCatcher;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.command.Command;
@@ -43,7 +44,7 @@ public class RestartCommand extends Command
 
     public static void restart(final File script)
     {
-        AsyncCatcher.enabled = false; // Disable async catcher incase it interferes with us
+        CatAsyncCatcher.enabled = false; // Disable async catcher incase it interferes with us
         try
         {
             if ( script.isFile() )
