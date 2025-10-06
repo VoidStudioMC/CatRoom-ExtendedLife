@@ -16,6 +16,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+import catserver.server.launch.Java11Support;
 import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraft.server.MinecraftServer;
@@ -39,7 +40,7 @@ import net.md_5.specialsource.repo.RuntimeRepo;
  */
 public /* CatServer - protected -> public */ final class PluginClassLoader extends URLClassLoader {
     private final JavaPluginLoader loader;
-    private final Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
+    private final Map<String, Class<?>> classes = new HashMap<>();
     private final PluginDescriptionFile description;
     private final File dataFolder;
     private final File file;
@@ -124,10 +125,10 @@ public /* CatServer - protected -> public */ final class PluginClassLoader exten
                 if (checkGlobal) {
                     result = loader.getClassByName(name);
                 }
-    
+
                 if (result == null) {
                     result = remappedFindClass(name);
-    
+
                     if (result != null) {
                         loader.setClass(name, result);
                     }
@@ -246,17 +247,17 @@ public /* CatServer - protected -> public */ final class PluginClassLoader exten
             Attributes attr = manifest.getMainAttributes();
             if (attr != null) {
                 try {
-                    if (catserver.server.launch.Java11Support.enable) {
+                    if (Java11Support.enable) {
                         try {
-                            Object versionInfo = catserver.server.launch.Java11Support.FieldHelper.get(pkg, Package.class.getDeclaredField("versionInfo"));
+                            Object versionInfo = Java11Support.FieldHelper.get(pkg, Package.class.getDeclaredField("versionInfo"));
                             if (versionInfo != null) {
                                 Class<?> classVersionInfo = Class.forName("java.lang.Package$VersionInfo");
-                                catserver.server.launch.Java11Support.FieldHelper.set(versionInfo, classVersionInfo.getDeclaredField("specTitle"), attr.getValue(Attributes.Name.SPECIFICATION_TITLE));
-                                catserver.server.launch.Java11Support.FieldHelper.set(versionInfo, classVersionInfo.getDeclaredField("specVersion"), attr.getValue(Attributes.Name.SPECIFICATION_VERSION));
-                                catserver.server.launch.Java11Support.FieldHelper.set(versionInfo, classVersionInfo.getDeclaredField("specVendor"), attr.getValue(Attributes.Name.SPECIFICATION_VENDOR));
-                                catserver.server.launch.Java11Support.FieldHelper.set(versionInfo, classVersionInfo.getDeclaredField("implTitle"), attr.getValue(Attributes.Name.IMPLEMENTATION_TITLE));
-                                catserver.server.launch.Java11Support.FieldHelper.set(versionInfo, classVersionInfo.getDeclaredField("implVersion"), attr.getValue(Attributes.Name.IMPLEMENTATION_VERSION));
-                                catserver.server.launch.Java11Support.FieldHelper.set(versionInfo, classVersionInfo.getDeclaredField("implVendor"), attr.getValue(Attributes.Name.IMPLEMENTATION_VENDOR));
+                                Java11Support.FieldHelper.set(versionInfo, classVersionInfo.getDeclaredField("specTitle"), attr.getValue(Attributes.Name.SPECIFICATION_TITLE));
+                                Java11Support.FieldHelper.set(versionInfo, classVersionInfo.getDeclaredField("specVersion"), attr.getValue(Attributes.Name.SPECIFICATION_VERSION));
+                                Java11Support.FieldHelper.set(versionInfo, classVersionInfo.getDeclaredField("specVendor"), attr.getValue(Attributes.Name.SPECIFICATION_VENDOR));
+                                Java11Support.FieldHelper.set(versionInfo, classVersionInfo.getDeclaredField("implTitle"), attr.getValue(Attributes.Name.IMPLEMENTATION_TITLE));
+                                Java11Support.FieldHelper.set(versionInfo, classVersionInfo.getDeclaredField("implVersion"), attr.getValue(Attributes.Name.IMPLEMENTATION_VERSION));
+                                Java11Support.FieldHelper.set(versionInfo, classVersionInfo.getDeclaredField("implVendor"), attr.getValue(Attributes.Name.IMPLEMENTATION_VENDOR));
                             }
                             return;
                         } catch (Exception ignored) {}

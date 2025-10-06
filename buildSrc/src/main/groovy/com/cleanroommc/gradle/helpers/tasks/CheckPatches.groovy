@@ -10,8 +10,10 @@ import java.nio.file.Paths
 import java.util.regex.Pattern
 
 public class CheckPatches extends DefaultTask {
-    @InputDirectory File patchDir
-    @Input boolean autoFix = false
+    @InputDirectory
+    File patchDir
+    @Input
+    boolean autoFix = false
 
     @TaskAction
     protected void exec() {
@@ -38,7 +40,7 @@ public class CheckPatches extends DefaultTask {
         def method_pattern = Pattern.compile('^[+\\-][\\s]*((public|protected|private)[\\s]*)?(static[\\s]*)?(final)?([^(]*)[(]([^)]*)?[)]\\s*[{]\\s*$')
         def class_pattern = Pattern.compile('^[+\\-][\\s]*((public|protected|private)[\\s]*)?(static[\\s]*)?(final[\\s]*)?(class|interface)([^{]*)[{]\\s*$')
 
-        def accessMap = [("private"):0, (null):1, ("protected"):2, ("public"):3]
+        def accessMap = [("private"): 0, (null): 1, ("protected"): 2, ("public"): 3]
 
         def hasProblem = false;
         def lines = patch.readLines()
@@ -67,13 +69,11 @@ public class CheckPatches extends DefaultTask {
                         while (toRemove-- > 0)
                             newLines.remove(newLines.size() - 1)
                         didFix = true
-                    }
-                    else {
+                    } else {
                         logger.lifecycle("Patch contains only white space hunk starting at line {}, file: {}", hunksStart + 1, patchPath)
                         hasProblem = true
                     }
-                }
-                else {
+                } else {
                     if (!whiteSpaceErrors.empty)
                         hasProblem = true
                     whiteSpaceErrors.each { error -> logger.lifecycle(error) }
@@ -84,11 +84,11 @@ public class CheckPatches extends DefaultTask {
                 continue
             }
 
-            if (line.startsWithAny('+','-')) {
+            if (line.startsWithAny('+', '-')) {
                 def prefixChange = false
                 def prevLine = lines[i - 1]
 
-                if (line.charAt(0) == (char)'+' && prevLine.charAt(0) == (char)'-') {
+                if (line.charAt(0) == (char) '+' && prevLine.charAt(0) == (char) '-') {
                     def prevTrim = prevLine.substring(1).replaceAll("\\s", "")
                     def currTrim = line.substring(1).replaceAll("\\s", "")
 
@@ -100,10 +100,10 @@ public class CheckPatches extends DefaultTask {
                     def cMatcher = field_pattern.matcher(line)
 
                     if (pMatcher.find() && cMatcher.find() &&
-                            pMatcher.group(6) == cMatcher.group(6) && // = ...
-                            pMatcher.group(5) == cMatcher.group(5) && // field name
-                            pMatcher.group(3) == cMatcher.group(3) && // static
-                            (accessMap[pMatcher.group(2)] < accessMap[cMatcher.group(2)] || pMatcher.group(4) != cMatcher.group(4))) {
+                        pMatcher.group(6) == cMatcher.group(6) && // = ...
+                        pMatcher.group(5) == cMatcher.group(5) && // field name
+                        pMatcher.group(3) == cMatcher.group(3) && // static
+                        (accessMap[pMatcher.group(2)] < accessMap[cMatcher.group(2)] || pMatcher.group(4) != cMatcher.group(4))) {
                         logger.lifecycle("Patch contains access changes or final removal at line {}, file: {}", i + 1, patchPath)
                         hasProblem = true
                     }
@@ -112,10 +112,10 @@ public class CheckPatches extends DefaultTask {
                     cMatcher = method_pattern.matcher(line)
 
                     if (pMatcher.find() && cMatcher.find() &&
-                            pMatcher.group(6) == cMatcher.group(6) && // params
-                            pMatcher.group(5) == cMatcher.group(5) && // <T> void name
-                            pMatcher.group(3) == cMatcher.group(3) && // static
-                            (accessMap[pMatcher.group(2)] < accessMap[cMatcher.group(2)] || pMatcher.group(4) != cMatcher.group(4))) {
+                        pMatcher.group(6) == cMatcher.group(6) && // params
+                        pMatcher.group(5) == cMatcher.group(5) && // <T> void name
+                        pMatcher.group(3) == cMatcher.group(3) && // static
+                        (accessMap[pMatcher.group(2)] < accessMap[cMatcher.group(2)] || pMatcher.group(4) != cMatcher.group(4))) {
                         logger.lifecycle("Patch contains access changes or final removal at line {}, file: {}", i + 1, patchPath)
                         hasProblem = true
                     }
@@ -124,18 +124,18 @@ public class CheckPatches extends DefaultTask {
                     cMatcher = class_pattern.matcher(line)
 
                     if (pMatcher.find() && cMatcher.find() &&
-                            pMatcher.group(6) == cMatcher.group(6) && // ClassName<> extends ...
-                            pMatcher.group(5) == cMatcher.group(5) && // class | interface
-                            pMatcher.group(3) == cMatcher.group(3) && // static
-                            (accessMap[pMatcher.group(2)] < accessMap[cMatcher.group(2)] || pMatcher.group(4) != cMatcher.group(4))) {
+                        pMatcher.group(6) == cMatcher.group(6) && // ClassName<> extends ...
+                        pMatcher.group(5) == cMatcher.group(5) && // class | interface
+                        pMatcher.group(3) == cMatcher.group(3) && // static
+                        (accessMap[pMatcher.group(2)] < accessMap[cMatcher.group(2)] || pMatcher.group(4) != cMatcher.group(4))) {
                         logger.lifecycle("Patch contains access changes or final removal at line {}, file: {}", i + 1, patchPath)
                         hasProblem = true
                     }
                 }
 
-                if (line.charAt(0) == (char)'-' && i + 1 < lines.size()) {
+                if (line.charAt(0) == (char) '-' && i + 1 < lines.size()) {
                     def nextLine = lines[i + 1]
-                    if (nextLine.charAt(0) == (char)'+') {
+                    if (nextLine.charAt(0) == (char) '+') {
                         def nextTrim = nextLine.substring(1).replaceAll("\\s", "")
                         def currTrim = line.substring(1).replaceAll("\\s", "")
 
@@ -149,10 +149,9 @@ public class CheckPatches extends DefaultTask {
 
                 if (!prefixChange && !isWhiteSpaceChange) {
                     onlyWhiteSpace = hasS2SArtifact && import_pattern.matcher(line).find()
-                }
-                else if (isWhiteSpaceChange) {
-                    def prevLineChange = prevLine.startsWithAny('+','-')
-                    def nextLineChange = i + 1 < lines.size() && lines[i + 1].startsWithAny('+','-')
+                } else if (isWhiteSpaceChange) {
+                    def prevLineChange = prevLine.startsWithAny('+', '-')
+                    def nextLineChange = i + 1 < lines.size() && lines[i + 1].startsWithAny('+', '-')
 
                     if (!prevLineChange && !nextLineChange) {
                         whiteSpaceErrors.add(String.format("Patch contains white space change in valid hunk at line %d (cannot auto fix), file: %s", i + 1, patchPath))
@@ -163,8 +162,7 @@ public class CheckPatches extends DefaultTask {
                     if (!fix) {
                         logger.lifecycle("Patch contains tabs on line {}, file: {}", i + 1, patchPath)
                         hasProblem = true
-                    }
-                    else {
+                    } else {
                         logger.lifecycle("Fixing tabs on line {}, file: {}", i + 1, patchPath)
                         line = line.replaceAll('\t', '    ')
                         newLines.remove(newLines.size() - 1)
@@ -187,13 +185,11 @@ public class CheckPatches extends DefaultTask {
                 while (toRemove-- > 0)
                     newLines.remove(newLines.size() - 1)
                 didFix = true
-            }
-            else {
+            } else {
                 logger.lifecycle("Patch contains only white space hunk starting at line {}, file: {}", hunksStart + 1, patchPath)
                 hasProblem = true
             }
-        }
-        else {
+        } else {
             if (!whiteSpaceErrors.empty)
                 hasProblem = true
             whiteSpaceErrors.each { error -> logger.lifecycle(error) }
@@ -203,8 +199,7 @@ public class CheckPatches extends DefaultTask {
             if (newLines.size() <= 2) {
                 logger.lifecycle("Patch is now empty removing, file: {}", patchPath)
                 Files.delete(patch.toPath())
-            }
-            else {
+            } else {
                 if (!hasS2SArtifact)
                     logger.lifecycle("*** Updating patch file. Please run setup then genPatches again. ***")
                 patch.withWriter('UTF-8') { writer ->
