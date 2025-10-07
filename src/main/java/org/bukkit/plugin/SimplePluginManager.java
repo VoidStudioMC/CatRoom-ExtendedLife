@@ -742,7 +742,7 @@ public final class SimplePluginManager implements PluginManager {
      *
      * @param use True if per event timing code should be used
      */
-    @Deprecated(forRemoval = true) // CatRoom - for removal
+    @Deprecated(forRemoval = true) // TODO: CREF - remove for 1.0.+ version
     public void useTimings(boolean use) {
         useTimings = false; // CatRoom - Force disable Timings
     }

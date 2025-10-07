@@ -34,7 +34,6 @@ import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.FMLThrowingEventBus;
 import net.minecraftforge.fml.common.versioning.ArtifactVersion;
-import net.minecraftforge.fml.relauncher.MixinBooterPlugin;
 import net.minecraftforge.fml.relauncher.libraries.LibraryManager;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.message.FormattedMessage;

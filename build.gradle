@@ -189,8 +189,8 @@ project(':catroom') {
 
             target.withWriter { def writer ->
                 template.eachLine { def line ->
-                    def newLine = line.replace("%VERSION%", rootProject.version.toString())
-                            .replace("%BUILD_VERSION%", rootProject.version.toString())
+                    def newLine = line.replace("%VERSION%", props.cleanroom_version.toString())
+                            .replace("%BUILD_VERSION%", props.cleanroom_version.toString())
                     writer.write(newLine + "\n");
                 }
             }

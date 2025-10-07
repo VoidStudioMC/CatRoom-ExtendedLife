@@ -12,7 +12,7 @@ import org.bukkit.World;
 /**
  * Provides custom timing sections for /timings merged.
  */
-@Deprecated(forRemoval = true) // TODO: CREF - it will remove for releases 1.+
+@Deprecated(forRemoval = true) // TODO: CREF - remove for 1.0.+ version
 public class CustomTimingsHandler
 {
 

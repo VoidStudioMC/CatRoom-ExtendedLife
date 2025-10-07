@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 /**
  * Extends RegisteredListener to include timing information
  */
-@Deprecated(forRemoval = true) // CatRoom - for removal
+@Deprecated(forRemoval = true) // TODO: CREF - remove for 1.0.+ version
 public class TimedRegisteredListener extends RegisteredListener {
     private int count;
     private long totalTime;
