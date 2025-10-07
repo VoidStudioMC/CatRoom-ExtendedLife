@@ -3,7 +3,12 @@
 # CatRoom
 CatRoom is a Cleanroom+Bukkit+Spigot server software forked from [CatServer](https://github.com/Luohuayu/CatServer).
 
-Cleanroom version: 
+Cleanroom version: 0.3.19-alpha
+
+## Warnings
+
+- Default WorldGuard doesn't support (guava was updated API for `Futures.transform` and `Futures.callback`)
+- Java 25 is unstable and may cause problems
 
 ## Features:
 
