@@ -1,3 +1,5 @@
+# TODO: rewrite it
+
 import glob
 import json
 import os
@@ -11,8 +13,8 @@ import metautil
 # Init
 print('---> Initialize')
 PATH_TO_EXIST_INSTALLER = os.getenv('PATH_TO_EXIST_INSTALLER')
-BRANCH = os.getenv('CLEANROOM_BRANCH')
-VERSION = os.getenv('CLEANROOM_VERSION')
+BRANCH = os.getenv('CATROOM_BRANCH')
+VERSION = os.getenv('CATROOM_VERSION')
 IS_RELEASE = True 
 if '+' in VERSION:
     IS_RELEASE = False
@@ -46,7 +48,7 @@ for cleaningDir in [cache_path, output_path]:
             os.remove(path)
 
 # Get download branch from env
-installer_pattern = [cache_path, 'cleanroom']  # Default installer pattern path
+installer_pattern = [cache_path, 'catroom']  # Default installer pattern path
 if not PATH_TO_EXIST_INSTALLER:
     print('No installer supplied')
     exit(1)
@@ -63,24 +65,24 @@ else:
 print('---> Prepare installer and template')
 
 # print('-----> Download Icons from Github')
-# Util.download_file("https://raw.githubusercontent.com/CleanroomMC/Resources/refs/heads/master/Art/cleanroom-logo.png", "template/cleanroom.png")
+# Util.download_file("https://github.com/funkyra/CatRoom-ExtendedLife/blob/foundation/images/catroom.png", "template/catroom.png")
 
 Util.extractArchive(installer_pattern[0], installer_pattern[1], os.path.join(cache_path, 'installer'))
 shutil.copytree('template', output_path, dirs_exist_ok=True, ignore=shutil.ignore_patterns('*net.minecraft.json'))
 
-print('Cleanroom version: ' + VERSION)
+print('CatRoom version: ' + VERSION)
 
 # Create libraries folder and copy required
 print('---> Create libraries folder and copy required files')
 os.mkdir(os.path.join(output_path, 'libraries'))
 if not IS_RELEASE:
     shutil.copyfile(
-        glob.glob(os.path.join(cache_path, 'installer', '**', 'cleanroom*.jar'), recursive=True)[0],
-        os.path.join(output_path, 'libraries', 'cleanroom-{version}-universal.jar'.format(version=VERSION)))
+        glob.glob(os.path.join(cache_path, 'installer', '**', 'catroom*.jar'), recursive=True)[0],
+        os.path.join(output_path, 'libraries', 'catroom-{version}-universal.jar'.format(version=VERSION)))
 
-# Create patch file for Cleanroom
-print('---> Create patch file for Cleanroom')
-cleanroom_patches_output_path = os.path.join(output_path, 'patches', 'net.minecraftforge.json')
+# Create patch file for CatRoom
+print('---> Create patch file for CatRoom')
+catroom_patches_output_path = os.path.join(output_path, 'patches', 'net.minecraftforge.json')
 lwjgl_patches_output_path = os.path.join(output_path, 'patches', 'org.lwjgl3.json')
 shutil.copyfile(
     os.path.join(template_path, 'patches', 'net.minecraft.json'),
@@ -89,13 +91,13 @@ shutil.copyfile(
 installer_patches_path = os.path.join(cache_path, 'installer', 'version.json')
 
 with (open(installer_patches_path, 'r') as __in,
-      open(cleanroom_patches_output_path, 'r') as cleanroom_patches_out,
+      open(catroom_patches_output_path, 'r') as catroom_patches_out,
       open(lwjgl_patches_output_path, 'r') as lwjgl_patches_out):
     print('Parsing template patch file')
     version_json = json.load(__in)
     data = version_json['libraries']
     mainClass = version_json['mainClass']
-    cleanroom_patches_json = json.load(cleanroom_patches_out)
+    catroom_patches_json = json.load(catroom_patches_out)
     lwjgl_patches_json = json.load(lwjgl_patches_out)
 
     for kd in data:
@@ -114,21 +116,21 @@ with (open(installer_patches_path, 'r') as __in,
                     kd['downloads']['artifact']['url'] = ('https://repo.cleanroommc.com/releases/com/cleanroommc'
                                                           '/cleanroom/{version}/cleanroom-{'
                                                           'version}-universal.jar').format(version=VERSION)
-                    cleanroom_patches_json['libraries'].append(kd)
+                    catroom_patches_json['libraries'].append(kd)
                 else:
                     dep = metautil.DependencyBuilder()
                     dep.set_name(f"{kd['name']}-universal")
                     dep.set_mmc_hint('local')
-                    cleanroom_patches_json['libraries'].append(dep.build())
+                    catroom_patches_json['libraries'].append(dep.build())
             else:
-                cleanroom_patches_json['libraries'].append(kd)
+                catroom_patches_json['libraries'].append(kd)
 
-    cleanroom_patches_json['version'] = VERSION
-    cleanroom_patches_json['mainClass'] = mainClass
+    catroom_patches_json['version'] = VERSION
+    catroom_patches_json['mainClass'] = mainClass
     lwjgl_patches_json['version'] = lwjgl_version
-with (open(cleanroom_patches_output_path, "w") as __cleanroom_out,
+with (open(catroom_patches_output_path, "w") as __catroom_out,
       open(lwjgl_patches_output_path, 'w') as __lwjgl_out):
-    json.dump(cleanroom_patches_json, __cleanroom_out, indent=4)
+    json.dump(catroom_patches_json, __catroom_out, indent=4)
     json.dump(lwjgl_patches_json, __lwjgl_out, indent=4)
     print('Patch file created')
 
@@ -155,4 +157,4 @@ with open(mmc_pack_path, 'w') as __out:
 
 # Pack everything to a single archive
 print('---> Archiving instance')
-print('Saved in: ' + shutil.make_archive(os.path.join(working_path, 'build', 'CleanroomMMC'), 'zip', output_path))
+print('Saved in: ' + shutil.make_archive(os.path.join(working_path, 'build', 'CatRoom'), 'zip', output_path))

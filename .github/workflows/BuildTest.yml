@@ -4,6 +4,7 @@
 # documentation.
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+# TODO: rewrite it too
 
 name: Build and Upload Test Artifact
 
@@ -65,7 +66,7 @@ jobs:
         run: ./gradlew build -Prun_number=${{ github.run_number }}
 
       - name: Get version
-        run: echo "CLEANROOM_VERSION=$(cat version.txt)" >> $GITHUB_ENV
+        run: echo "CATROOM_VERSION=$(cat version.txt)" >> $GITHUB_ENV
 
       - name: setup python
         uses: actions/setup-python@v5.6.0
@@ -76,28 +77,28 @@ jobs:
         run: python main.py
         working-directory: ./script/MMC-Builder
         env:
-          PATH_TO_EXIST_INSTALLER: ../../projects/cleanroom/build/libs/cleanroom-${{ env.CLEANROOM_VERSION }}-installer.jar
+          PATH_TO_EXIST_INSTALLER: ../../projects/catroom/build/libs/catroom-${{ env.CATROOM_VERSION }}-installer.jar
           BRANCH: ${{ steps.branch-names.outputs.current_branch }}
-          VERSION: ${{ env.CLEANROOM_VERSION }}
+          VERSION: ${{ env.CATROOM_VERSION }}
 
       - name: Copy MMC Pack
-        run: cp script/MMC-Builder/build/CleanroomMMC.zip ./projects/cleanroom/build/libs/Cleanroom-MMC-instance-${{ env.CLEANROOM_VERSION }}.zip
+        run: cp script/MMC-Builder/build/CatRoom.zip ./projects/catroom/build/libs/CatRoom-MMC-instance-${{ env.CATROOM_VERSION }}.zip
 
       - name: Upload Universal Jar
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: universal-jar-${{ env.CLEANROOM_VERSION }}
-          path: projects/cleanroom/build/libs/*-universal.jar
+          name: universal-jar-${{ env.CATROOM_VERSION }}
+          path: projects/catroom/build/libs/*-universal.jar
 
       - name: Upload Installer Jar
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: installer-jar-${{ env.CLEANROOM_VERSION }}
-          path: projects/cleanroom/build/libs/*-installer.jar
+          name: installer-jar-${{ env.CATROOM_VERSION }}
+          path: projects/catroom/build/libs/*-installer.jar
           if-no-files-found: error
 
 #      - name: Upload MMC pack zip
 #        uses: actions/upload-artifact@v4.6.2
 #        with:
-#          name: mmc-pack-zip-${{ env.CLEANROOM_VERSION }}
-#          path: projects/cleanroom/build/libs/*.zip
+#          name: mmc-pack-zip-${{ env.CATROOM_VERSION }}
+#          path: projects/catroom/build/libs/*.zip
