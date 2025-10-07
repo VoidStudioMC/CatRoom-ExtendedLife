@@ -1,6 +1,25 @@
 --- before/net/minecraft/world/gen/layer/GenLayerVoronoiZoom.java
 +++ after/net/minecraft/world/gen/layer/GenLayerVoronoiZoom.java
-@@ -22,12 +22,12 @@
+@@ -11,25 +11,28 @@
+     @Override
+     public int[] func_75904_a(int p_75904_1_, int p_75904_2_, int p_75904_3_, int p_75904_4_)
+     {
+-        p_75904_1_ -= 2;
+-        p_75904_2_ -= 2;
++        // CREF start - FIXED: in some cases, arraycopy throws an ArrayIndexOutOfBoundsException
++        //areaX -= 2;
++        //areaY -= 2;
+         int i = p_75904_1_ >> 2;
+         int j = p_75904_2_ >> 2;
+-        int k = (p_75904_3_ >> 2) + 2;
+-        int l = (p_75904_4_ >> 2) + 2;
++        //int k = (areaWidth >> 2) + 2;
++        //int l = (areaHeight >> 2) + 2;
++        int k = (p_75904_3_ >> 2) + 3;
++        int l = (p_75904_4_ >> 2) + 3;
++        // CREF end
+         int[] aint = this.field_75909_a.func_75904_a(i, j, k, l);
+         int i1 = k - 1 << 2;
          int j1 = l - 1 << 2;
          int[] aint1 = IntCache.func_76445_a(i1 * j1);
  
@@ -8,15 +27,22 @@
 +        for (int k1 = 0; k1 < l - 1; ++k1)
          {
              int l1 = 0;
-             int i2 = aint[l1 + 0 + (k1 + 0) * k];
+-            int i2 = aint[l1 + 0 + (k1 + 0) * k];
++            int i2 = aint[l1 + k1 * k];
  
 -            for (int j2 = aint[l1 + 0 + (k1 + 1) * k]; l1 < k - 1; l1++)
-+            for (int j2 = aint[l1 + 0 + (k1 + 1) * k]; l1 < k - 1; ++l1)
++            for (int j2 = aint[l1 + (k1 + 1) * k]; l1 < k - 1; ++l1)
              {
-                 double d0 = 3.6;
+-                double d0 = 3.6;
                  this.func_75903_a((long)(l1 + i << 2), (long)(k1 + j << 2));
-@@ -45,11 +45,11 @@
-                 int k2 = aint[l1 + 1 + (k1 + 0) * k] & 0xFF;
+                 double d1 = ((double)this.func_75902_a(1024) / 1024.0 - 0.5) * 3.6;
+                 double d2 = ((double)this.func_75902_a(1024) / 1024.0 - 0.5) * 3.6;
+@@ -42,14 +45,14 @@
+                 this.func_75903_a((long)(l1 + i + 1 << 2), (long)(k1 + j + 1 << 2));
+                 double d7 = ((double)this.func_75902_a(1024) / 1024.0 - 0.5) * 3.6 + 4.0;
+                 double d8 = ((double)this.func_75902_a(1024) / 1024.0 - 0.5) * 3.6 + 4.0;
+-                int k2 = aint[l1 + 1 + (k1 + 0) * k] & 0xFF;
++                int k2 = aint[l1 + 1 + k1 * k] & 0xFF;
                  int l2 = aint[l1 + 1 + (k1 + 1) * k] & 0xFF;
  
 -                for (int i3 = 0; i3 < 4; i3++)
@@ -29,7 +55,7 @@
                      {
                          double d9 = ((double)i3 - d2) * ((double)i3 - d2) + ((double)k3 - d1) * ((double)k3 - d1);
                          double d10 = ((double)i3 - d4) * ((double)i3 - d4) + ((double)k3 - d3) * ((double)k3 - d3);
-@@ -82,7 +82,7 @@
+@@ -82,7 +85,7 @@
  
          int[] aint2 = IntCache.func_76445_a(p_75904_3_ * p_75904_4_);
  
