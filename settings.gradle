@@ -2,8 +2,8 @@ rootProject.name = 'CatRoomEF'
 
 include ':mcp'
 include ':minecraft'
-include ':cleanroom'
+include ':catroom'
 
 project(":mcp").projectDir = file("projects/mcp")
 project(":minecraft").projectDir = file("projects/minecraft")
-project(":cleanroom").projectDir = file("projects/cleanroom")
+project(":catroom").projectDir = file("projects/catroom")

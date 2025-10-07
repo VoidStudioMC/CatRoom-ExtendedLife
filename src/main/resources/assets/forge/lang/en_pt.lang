@@ -37,8 +37,8 @@ commands.tree_base.invalid_cmd.list_subcommands=Arr! Invalid subcommand '%s'! Su
 commands.tree_base.available_subcommands=SubCommands ye can use be: %s
 forge.texture.preload.warning=Beware! Texture %s ain’t preloaded, and will cause renderin’ glitches, ye swab!
 forge.client.shutdown.internal=Shuttin’ down internal server... All hands abandon ship!
-forge.update.newversion=A new Cleanroom version be waitin’: %s
-forge.update.beta.1=%sArrr! %sCleanroom Beta
+forge.update.newversion=A new CatRoom version be waitin’: %s
+forge.update.beta.1=%sArrr! %sCatRoom Beta
 forge.update.beta.2=Issues may arise, so check afore reportin’, ye scallywag!
 
 forge.configgui.forgeConfigTitle=Minecraft Forge Captain's Log

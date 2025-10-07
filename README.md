@@ -3,6 +3,8 @@
 # CatRoom
 CatRoom is a Cleanroom+Bukkit+Spigot server software forked from [CatServer](https://github.com/Luohuayu/CatServer).
 
+Cleanroom version: 
+
 ## Features:
 
 - Replaced Forge with Cleanroom

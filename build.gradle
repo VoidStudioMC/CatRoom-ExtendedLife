@@ -47,19 +47,19 @@ def props = project.properties
 def sysProps = System.getProperties()
 def details = versionDetails()
 
-group 'com.cleanroommc'
+group 'catserver'
 
 //version details.lastTag + (project.hasProperty("release") ?
 //        "" : ("+build." + details.commitDistance + (project.hasProperty("run_number") ?
 //                (".run." + props.run_number) : "")))
 
-version "0.3.16-alpha"
+version props.version
 
 def version_txt = new File(project.projectDir, "version.txt")
 version_txt.write(version.toString())
 def spec_version = details.lastTag
 
-println "Setting up Cleanroom $version"
+println "Setting up CatRoom-ExtendedLife $version"
 if (project.hasProperty("run_number")) println("On GitHub runs #" + props.run_number)
 println "Java: ${ -> sysProps['java.version']} | JVM: ${ -> sysProps['java.vm.version']} | Vendor: ${ -> sysProps['java.vendor']} | Architecture: ${ -> sysProps['os.arch']}"
 
@@ -171,16 +171,16 @@ project(':minecraft') {
     }
 }
 
-// Cleanroom
-project(':cleanroom') {
+// CatRoom
+project(':catroom') {
     evaluationDependsOn(':minecraft')
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
     apply plugin: 'net.minecraftforge.gradle.patcher'
 
     //  = 'net.minecraftforge'
-    group = 'com.cleanroommc'
-    version = rootProject.version
+    group = 'catserver'
+    version = project.version
 
     compileJava {
         doFirst {
@@ -1222,7 +1222,7 @@ tasks.register('setup') {
     group 'setup'
     // These must be strings so that we can do lazy resolution. Else we need evaluationDependsOnChildren above
     dependsOn ':minecraft:extractMapped'
-    dependsOn ':cleanroom:extractMapped'
+    dependsOn ':catroom:extractMapped'
 }
 
 subprojects {

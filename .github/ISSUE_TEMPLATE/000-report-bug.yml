@@ -13,9 +13,9 @@ body:
   - type: input
     id: version
     attributes:
-      label: Cleanroom Version
-      description: "What version of the Cleanroom are you using?"
-      placeholder: "Example: 0.2.4-alpha"
+      label: CatRoom Version
+      description: "What version of the CatRoom are you using?"
+      placeholder: "Example: 0.3.19-alpha"
     validations:
       required: true
   - type: dropdown
