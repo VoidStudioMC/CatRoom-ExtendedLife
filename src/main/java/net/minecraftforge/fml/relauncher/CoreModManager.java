@@ -229,7 +229,6 @@ public class CoreModManager {
         try
         {
             classLoader.registerTransformer("net.minecraftforge.fml.common.asm.transformers.PatchingTransformer");
-            classLoader.registerTransformer("catroom.asm.transformers.GuavaFuturesFix"); // CREF - Commented in GuavaFuturesFix
         }
         catch (Exception e)
         {

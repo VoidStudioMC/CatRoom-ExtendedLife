@@ -8,14 +8,14 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
- * It can be disabled if you know that your mods and plugins don't use old Guava Futures API,
+ * It can be disabled if you know that your plugins don't use old Guava Futures API,
  * but I think It should be enabled always.
- * Some mods and plugins use old Guava Futures API. For example, WorldEdit and FAWE.
+ * Some plugins use old Guava Futures API. For example, WorldEdit and FAWE.
  * This class fixes Guava Futures API compatibility issues by transforming old API calls to new ones:
  * - Futures.addCallback(future, callback) -> Futures.addCallback(future, callback, executor)
  * - Futures.transform(future, function) -> Futures.transform(future, function, executor)
  */
-public class GuavaFuturesFix implements IClassTransformer {
+public class GuavaFuturesFix {
     public static byte[] transform(byte[] bytecode) {
         try {
             ClassReader classReader = new ClassReader(bytecode);
@@ -26,22 +26,6 @@ public class GuavaFuturesFix implements IClassTransformer {
         } catch (Exception e) {
             return bytecode;
         }
-    }
-
-    @Override
-    public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if (basicClass == null) {
-            return null;
-        }
-
-        if (transformedName.startsWith("java.") ||
-            transformedName.startsWith("javax.") ||
-            transformedName.startsWith("sun.") ||
-            transformedName.startsWith("com.google.")) {
-            return basicClass;
-        }
-
-        return transform(basicClass);
     }
 
     private static class GuavaFuturesClassVisitor extends ClassVisitor {
