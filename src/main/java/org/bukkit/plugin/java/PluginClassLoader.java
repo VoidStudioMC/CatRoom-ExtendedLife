@@ -16,6 +16,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+import catroom.asm.GuavaFuturesFix;
 import catserver.server.launch.Java11Support;
 import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.launchwrapper.LaunchClassLoader;
@@ -25,7 +26,6 @@ import org.apache.commons.lang3.Validate;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginDescriptionFile;
 
-import catserver.server.CatServer;
 import catserver.server.patcher.IPatcher;
 import catserver.server.patcher.PatcherManager;
 import catserver.server.remapper.*;
@@ -38,6 +38,7 @@ import net.md_5.specialsource.repo.RuntimeRepo;
 /**
  * A ClassLoader for plugins, to allow shared classes across multiple plugins
  */
+// TODO: i think this possible to optimize
 public /* CatServer - protected -> public */ final class PluginClassLoader extends URLClassLoader {
     private final JavaPluginLoader loader;
     private final Map<String, Class<?>> classes = new HashMap<>();
@@ -194,9 +195,10 @@ public /* CatServer - protected -> public */ final class PluginClassLoader exten
                     URL jarURL = jarURLConnection.getJarFileURL();
 
                     // Remap the classes
-                    byte[] bytecode = remapper.remapClassFile(stream, RuntimeRepo.getInstance());
+                    byte[] bytecode = this.remapper.remapClassFile(stream, RuntimeRepo.getInstance());
                     if (this.patcher != null) bytecode = this.patcher.transform(name.replace("/", "."), bytecode);
                     bytecode = ReflectionTransformer.transform(bytecode);
+                    bytecode = GuavaFuturesFix.transform(bytecode); // CREF - Commented in GuavaFuturesFix
 
                     // Fix the package
                     int dot = name.lastIndexOf('.');

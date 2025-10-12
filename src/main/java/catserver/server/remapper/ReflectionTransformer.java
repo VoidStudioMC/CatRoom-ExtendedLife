@@ -63,12 +63,8 @@ public class ReflectionTransformer {
         }
 
         for (MethodNode method : node.methods) { // Taken from SpecialSource
-            ListIterator<AbstractInsnNode> insnIterator = method.instructions.iterator();
-            while (insnIterator.hasNext()) {
-                AbstractInsnNode next = insnIterator.next();
-
-                if (next instanceof TypeInsnNode && next.getOpcode() == Opcodes.NEW) { // remap new URLClassLoader
-                    TypeInsnNode insn = (TypeInsnNode) next;
+            for (AbstractInsnNode next : method.instructions) {
+                if (next instanceof TypeInsnNode insn && next.getOpcode() == Opcodes.NEW) { // remap new URLClassLoader
                     Class<?> remappedClass = RemapRules.getSuperClassTarget(insn.desc);
                     if (remappedClass != null) {
                         insn.desc = Type.getInternalName(remappedClass);
@@ -76,8 +72,7 @@ public class ReflectionTransformer {
                     }
                 }
 
-                if (next instanceof MethodInsnNode) {
-                    MethodInsnNode insn = (MethodInsnNode) next;
+                if (next instanceof MethodInsnNode insn) {
                     switch (insn.getOpcode()) {
                         case Opcodes.INVOKEVIRTUAL:
                             remapVirtual(insn);
