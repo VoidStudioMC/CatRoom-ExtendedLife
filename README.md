@@ -7,7 +7,6 @@ Cleanroom version: 0.3.19-alpha
 
 ## Warnings
 
-- Default WorldGuard doesn't support (guava was updated API for `Futures.transform` and `Futures.callback`)
 - Java 25 is unstable and may cause problems (I think that's netty's problem)
 
 ## Features:
