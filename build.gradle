@@ -421,7 +421,7 @@ project(':catroom') {
 
     dependencies {
         compileOnly "com.cleanroommc:lwjglx:1.0.0"
-        installer "com.cleanroommc:lwjglxx:1.1.9"
+        installer "com.cleanroommc:lwjglxx:1.1.8" // TODO: update
         lwjglLibraries[0].each {
             installer "org.lwjgl:$it:$props.lwjgl_version"
             runtimeOnly "org.lwjgl:$it::$lwjglArch"
@@ -440,7 +440,7 @@ project(':catroom') {
         // Added back deprecated features for mods to load up properly
         installer "org.ow2.asm:asm-deprecated:$props.asm_deprecated"
 
-        installer "top.outlands:foundation:0.17.1"
+        installer "top.outlands:foundation:0.15.4" // TODO: update
         installer 'net.lenni0451:Reflect:1.5.0'
         installer 'org.javassist:javassist:3.30.2-GA'
         installer "zone.rong:imaginebreaker:2.1"
@@ -509,7 +509,7 @@ project(':catroom') {
 
 
         // Mixin
-        installer 'com.cleanroommc:sponge-mixin:0.20.12+mixin.0.8.7'
+        installer 'com.cleanroommc:sponge-mixin:0.20.10+mixin.0.8.7' // TODO: update
         installer annotationProcessor('io.github.llamalad7:mixinextras-common:0.5.0')
 
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.13.4'

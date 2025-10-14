@@ -28,7 +28,6 @@ public class GuavaFuturesFix {
     }
 
     private static class GuavaFuturesClassVisitor extends ClassVisitor {
-
         public GuavaFuturesClassVisitor(int api, ClassVisitor classVisitor) {
             super(api, classVisitor);
         }
@@ -41,7 +40,6 @@ public class GuavaFuturesFix {
     }
 
     private static class GuavaFuturesMethodVisitor extends MethodVisitor {
-
         public GuavaFuturesMethodVisitor(int api, MethodVisitor methodVisitor) {
             super(api, methodVisitor);
         }
