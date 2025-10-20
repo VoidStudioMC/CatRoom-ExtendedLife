@@ -503,6 +503,7 @@ public class GameData
     {
         RegistryNamespaced<ResourceLocation, EntityEntry> reg = getWrapper(EntityEntry.class);
         reg.register(id, key, new EntityEntry(clazz, oldName));
+        EntityList.REGISTRY.register(id, key, clazz);
     }
 
     private static class EntityCallbacks implements IForgeRegistry.AddCallback<EntityEntry>, IForgeRegistry.ClearCallback<EntityEntry>, IForgeRegistry.CreateCallback<EntityEntry>

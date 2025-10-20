@@ -19,7 +19,7 @@ public class CatServerLaunch {
 
     public static void checkJavaVersion() {
         if (!(CatServerLaunch.class.getClassLoader() instanceof URLClassLoader)) {
-            System.out.println(String.format(LanguageUtils.I18nToString("launch.java_wrong"), System.getProperty("java.version")));
+            System.out.printf((LanguageUtils.I18nToString("launch.java_wrong")) + "%n", System.getProperty("java.version"));
             try {
                 System.out.println(LanguageUtils.I18nToString("launch.java11_compatibility"));
                 Thread.sleep(5000);

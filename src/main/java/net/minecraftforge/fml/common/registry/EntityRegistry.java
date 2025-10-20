@@ -20,14 +20,11 @@
 package net.minecraftforge.fml.common.registry;
 
 import com.google.common.collect.Maps;
+import net.minecraft.entity.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList.EntityEggInfo;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityTracker;
-import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -88,6 +85,9 @@ public class EntityRegistry
                         return String.valueOf(EntityRegistration.this.getRegistryName());
                     }
                 };
+            if (EntityList.REGISTRY.getNameForObject(entityClass) == null && id >= 0) {
+                EntityList.REGISTRY.register(id, registryName, entityClass);
+            }
         }
         public ResourceLocation getRegistryName()
         {

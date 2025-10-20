@@ -421,7 +421,7 @@ project(':catroom') {
 
     dependencies {
         compileOnly "com.cleanroommc:lwjglx:1.0.0"
-        installer "com.cleanroommc:lwjglxx:1.1.8" // TODO: update
+        installer "com.cleanroommc:lwjglxx:1.1.9"
         lwjglLibraries[0].each {
             installer "org.lwjgl:$it:$props.lwjgl_version"
             runtimeOnly "org.lwjgl:$it::$lwjglArch"
@@ -440,7 +440,7 @@ project(':catroom') {
         // Added back deprecated features for mods to load up properly
         installer "org.ow2.asm:asm-deprecated:$props.asm_deprecated"
 
-        installer "top.outlands:foundation:0.15.4" // TODO: update
+        installer "top.outlands:foundation:0.17.1" // TODO: update
         installer 'net.lenni0451:Reflect:1.5.0'
         installer 'org.javassist:javassist:3.30.2-GA'
         installer "zone.rong:imaginebreaker:2.1"
@@ -509,7 +509,7 @@ project(':catroom') {
 
 
         // Mixin
-        installer 'com.cleanroommc:sponge-mixin:0.20.10+mixin.0.8.7' // TODO: update
+        installer 'com.cleanroommc:sponge-mixin:0.20.12+mixin.0.8.7' // TODO: update
         installer annotationProcessor('io.github.llamalad7:mixinextras-common:0.5.0')
 
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.13.4'
@@ -677,10 +677,10 @@ project(':catroom') {
 
     // TODO: Include?
     def extra_files = [
-            rootProject.file('CREDITS.txt'),
-            rootProject.file('LICENSE.txt'),
-            rootProject.file('LICENSE-Paulscode IBXM Library.txt'),
-            rootProject.file('LICENSE-Paulscode SoundSystem CodecIBXM.txt')
+        rootProject.file('CREDITS.txt'),
+        rootProject.file('LICENSE.txt'),
+        rootProject.file('LICENSE-Paulscode IBXM Library.txt'),
+        rootProject.file('LICENSE-Paulscode SoundSystem CodecIBXM.txt')
     ]
 
     def changelog = rootProject.file('build/changelog.txt')
@@ -860,7 +860,7 @@ project(':catroom') {
                     def mtd = json[cls]['methods'][desc]
                     lines.add(cls + ' ' + desc.replace(' ', '') + (comment == null ? '' : ' ' + comment))
                     def children = json.values().findAll { it.methods != null && it.methods[desc] != null && it.methods[desc].override == cls }
-                            .collect { it.name + ' ' + desc.replace(' ', '') } as TreeSet
+                        .collect { it.name + ' ' + desc.replace(' ', '') } as TreeSet
                     children.each { lines.add('\t' + it) }
                 }
                 f.text = lines.join('\n')
@@ -953,11 +953,11 @@ project(':catroom') {
                     name: "${project.group}:${project.name}:${project.version}",
                     downloads: [
                         artifact: [
-                                path: "${project.group.replace('.', '/')}/${project.name}/${project.version}/${project.name}-${project.version}.jar",
-                                // Do not include the URL so that the installer/launcher won't grab it. This is also why we don't have the universal classifier
-                                url: '',
-                                sha1: Util.sha1(universalJar.archivePath),
-                                size: universalJar.archivePath.length()
+                            path: "${project.group.replace('.', '/')}/${project.name}/${project.version}/${project.name}-${project.version}.jar",
+                            // Do not include the URL so that the installer/launcher won't grab it. This is also why we don't have the universal classifier
+                            url: '',
+                            sha1: Util.sha1(universalJar.archivePath),
+                            size: universalJar.archivePath.length()
                         ]
                     ]
                 ]

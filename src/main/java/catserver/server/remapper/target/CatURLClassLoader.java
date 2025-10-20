@@ -7,6 +7,7 @@ import net.md_5.specialsource.JarMapping;
 import net.md_5.specialsource.provider.ClassLoaderProvider;
 import net.md_5.specialsource.provider.JointProvider;
 import net.md_5.specialsource.repo.RuntimeRepo;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -25,12 +26,12 @@ import java.util.jar.Manifest;
 
 public class CatURLClassLoader extends URLClassLoader
 {
-    private JarMapping jarMapping;
-    private CatServerRemapper remapper;
+    private final JarMapping jarMapping;
+    private final CatServerRemapper remapper;
     private final Map<String, Class<?>> classes = new HashMap<>();
-    private LaunchClassLoader launchClassLoader;
+    private final LaunchClassLoader launchClassLoader;
 
-    private ConcurrentSet<Package> fixedPackages = new ConcurrentSet<Package>();
+    private final ConcurrentSet<Package> fixedPackages = new ConcurrentSet<>();
 
     {
         this.launchClassLoader = (LaunchClassLoader) MinecraftServer.getServerInst().getClass().getClassLoader();
