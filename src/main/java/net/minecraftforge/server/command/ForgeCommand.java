@@ -50,12 +50,6 @@ public class ForgeCommand extends CommandTreeBase
     }
 
     @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 2;
-    }
-
-    @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender sender)
     {
         return sender.canUseCommand(this.getRequiredPermissionLevel(), this.getName());
