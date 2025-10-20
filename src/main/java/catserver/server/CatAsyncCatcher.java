@@ -8,25 +8,24 @@ import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.chunkio.ChunkIOExecutor;
 import org.bukkit.craftbukkit.v1_12_R1.util.Waitable;
+import org.spigotmc.AsyncCatcher;
 
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 public class CatAsyncCatcher {
-    public static boolean enabled = CatServer.getConfig().enableAsyncCatcher;
-
     public static boolean isMainThread() {
         return Thread.currentThread() == MinecraftServer.getServerInst().primaryThread;
     }
 
     public static void catchOp(String reason) {
-        if (enabled && !isMainThread()) {
+        if (AsyncCatcher.enabled && !isMainThread()) {
             throw new IllegalStateException( "Asynchronous " + reason + "!" );
         }
     }
 
     public static boolean checkAsync(String reason) {
-        if (CatAsyncCatcher.enabled && !isMainThread()) {
+        if (AsyncCatcher.enabled && !isMainThread()) {
             if (!CatServer.getConfig().disableAsyncCatchWarn) {
                 CatServer.log.warn("A Mod/Plugin try to async " + reason + ", it will be executed safely on the main server thread until return!");
                 CatServer.log.warn("Please check the stacktrace in debug.log and report the author.");

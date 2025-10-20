@@ -44,7 +44,7 @@ public class RestartCommand extends Command
 
     public static void restart(final File script)
     {
-        CatAsyncCatcher.enabled = false; // Disable async catcher incase it interferes with us
+        AsyncCatcher.enabled = false; // Disable async catcher incase it interferes with us
         try
         {
             if ( script.isFile() )
