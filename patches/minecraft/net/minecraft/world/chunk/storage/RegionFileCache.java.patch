@@ -19,7 +19,7 @@
  public class RegionFileCache
  {
 -    private static final Map<File, RegionFile> field_76553_a = Maps.newHashMap();
-+    public static final Map<File, RegionFile> field_76553_a = new LinkedHashMap(256, 0.75f, true); // Spigot - private -> public, Paper - HashMap -> LinkedHashMap
++    public static final Map<File, RegionFile> field_76553_a = new LinkedHashMap<>(256, 0.75f, true); // Spigot - private -> public, Paper - HashMap -> LinkedHashMap
  
      public static synchronized RegionFile func_76550_a(File p_76550_0_, int p_76550_1_, int p_76550_2_)
      {

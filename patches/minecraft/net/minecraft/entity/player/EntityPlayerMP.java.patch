@@ -1381,9 +1381,9 @@
 +
 +        pluginRainPositionPrevious = pluginRainPosition;
 +        if (weather == WeatherType.DOWNFALL) {
-+            pluginRainPosition += 0.01;
++            pluginRainPosition += 0.01F;
 +        } else {
-+            pluginRainPosition -= 0.01;
++            pluginRainPosition -= 0.01F;
 +        }
 +
 +        pluginRainPosition = MathHelper.func_76131_a(pluginRainPosition, 0.0F, 1.0F);
