@@ -30,7 +30,7 @@
      public void func_70071_h_()
      {
          super.func_70071_h_();
-@@ -58,43 +56,36 @@
+@@ -58,43 +56,37 @@
          }
      }
  
@@ -49,7 +49,9 @@
 -    @Override
      public boolean func_70097_a(DamageSource p_70097_1_, float p_70097_2_)
      {
-         return this.func_180431_b(p_70097_1_) ? false : super.func_70097_a(p_70097_1_, p_70097_2_);
+-        return this.func_180431_b(p_70097_1_) ? false : super.func_70097_a(p_70097_1_, p_70097_2_);
++//        return this.isEntityInvulnerable(source) ? false : super.attackEntityFrom(source, amount);
++        return super.func_70097_a(p_70097_1_, p_70097_2_); // CREF - we're calling this method in super.attackEntityFrom
      }
  
 -    @Override
@@ -74,7 +76,7 @@
      public boolean func_70652_k(Entity p_70652_1_)
      {
          float f = (float)this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111126_e();
-@@ -112,22 +103,24 @@
+@@ -112,22 +104,24 @@
          {
              if (i > 0 && p_70652_1_ instanceof EntityLivingBase)
              {
@@ -109,7 +111,7 @@
              }
  
              if (p_70652_1_ instanceof EntityPlayer)
-@@ -136,16 +129,13 @@
+@@ -136,16 +130,13 @@
                  ItemStack itemstack = this.func_184614_ca();
                  ItemStack itemstack1 = entityplayer.func_184587_cr() ? entityplayer.func_184607_cu() : ItemStack.field_190927_a;
  
@@ -128,7 +130,7 @@
                          this.field_70170_p.func_72960_a(entityplayer, (byte)30);
                      }
                  }
-@@ -157,7 +147,6 @@
+@@ -157,7 +148,6 @@
          return flag;
      }
  
@@ -136,7 +138,7 @@
      public float func_180484_a(BlockPos p_180484_1_)
      {
          return 0.5F - this.field_70170_p.func_175724_o(p_180484_1_);
-@@ -187,20 +176,17 @@
+@@ -187,20 +177,17 @@
          }
      }
  
