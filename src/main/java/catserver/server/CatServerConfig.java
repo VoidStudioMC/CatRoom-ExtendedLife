@@ -2,6 +2,7 @@ package catserver.server;
 
 import com.google.common.collect.Lists;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.common.FMLLog;
 import net.openhft.affinity.Affinity;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -184,19 +185,19 @@ public class CatServerConfig {
         }
 
         int maxAvailable = Runtime.getRuntime().availableProcessors();
-        MinecraftServer.LOGGER.info("[CatRoom] Available CPU: {}", maxAvailable);
+        FMLLog.info("[CatRoom] Available CPU: {}", maxAvailable);
 
         BitSet affinity = new BitSet(config.size());
         for (int cpuId : config) {
             if (cpuId < 0 || cpuId >= maxAvailable) {
-                MinecraftServer.LOGGER.warn(String.format("[CatRoom] Unusable CPU #%d, ignored.", cpuId));
+                FMLLog.warning(String.format("[CatRoom] Unusable CPU #%d, ignored.", cpuId));
                 continue;
             }
             affinity.set(cpuId);
         }
 
         if (affinity.isEmpty()) {
-            MinecraftServer.LOGGER.warn("[CatRoom] Invalid CPU affinity config! Using default affinity (All CPU)...");
+            FMLLog.warning("[CatRoom] Invalid CPU affinity config! Using default affinity (All CPU)...");
             IntStream.range(0, maxAvailable).forEach(affinity::set);
         }
 

@@ -1,6 +1,7 @@
 package org.bukkit.plugin.java;
 
 import catserver.server.executor.ReflectionExecutor;
+import net.minecraft.server.MinecraftServer;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Server;
 import org.bukkit.Warning;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -34,7 +36,7 @@ import java.util.regex.Pattern;
 public final class JavaPluginLoader implements PluginLoader {
     final Server server;
     private final Pattern[] fileFilters = new Pattern[] { Pattern.compile("\\.jar$"), };
-    private final Map<String, Class<?>> classes = new java.util.concurrent.ConcurrentHashMap<String, Class<?>>(); // Spigot
+    private final Map<String, Class<?>> classes = new ConcurrentHashMap<>(); // Spigot
     private final List<PluginClassLoader> loaders = new CopyOnWriteArrayList<PluginClassLoader>();
     public static final CustomTimingsHandler pluginParentTimer = new CustomTimingsHandler("** Plugins"); // Spigot
 
@@ -141,21 +143,19 @@ public final class JavaPluginLoader implements PluginLoader {
 
             return new PluginDescriptionFile(stream);
 
-        } catch (IOException ex) {
-            throw new InvalidDescriptionException(ex);
-        } catch (YAMLException ex) {
+        } catch (IOException | YAMLException ex) {
             throw new InvalidDescriptionException(ex);
         } finally {
             if (jar != null) {
                 try {
                     jar.close();
-                } catch (IOException e) {
+                } catch (IOException ignored) {
                 }
             }
             if (stream != null) {
                 try {
                     stream.close();
-                } catch (IOException e) {
+                } catch (IOException ignored) {
                 }
             }
         }
@@ -337,8 +337,7 @@ public final class JavaPluginLoader implements PluginLoader {
                 server.getLogger().log(Level.SEVERE, "Error occurred while disabling " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
             }
 
-            if (cloader instanceof PluginClassLoader) {
-                PluginClassLoader loader = (PluginClassLoader) cloader;
+            if (cloader instanceof PluginClassLoader loader) {
                 loaders.remove(loader);
 
                 Set<String> names = loader.getClasses();
@@ -346,7 +345,7 @@ public final class JavaPluginLoader implements PluginLoader {
                 for (String name : names) {
                     removeClass(name);
                 }
-                if (net.minecraft.server.MinecraftServer.getServerInst().isServerStopping()) return; // CatServer - Prevent shutdown hooks error
+                if (MinecraftServer.getServerInst().isServerStopping()) return; // CatServer - Prevent shutdown hooks error
                 // Paper start - close Class Loader on disable
                 try {
                     loader.close();

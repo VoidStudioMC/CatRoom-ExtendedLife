@@ -1,6 +1,49 @@
 --- before/net/minecraft/util/math/BlockPos.java
 +++ after/net/minecraft/util/math/BlockPos.java
-@@ -237,18 +237,18 @@
+@@ -21,7 +21,7 @@
+     private static final int field_177990_b = 1 + MathHelper.func_151239_c(MathHelper.func_151236_b(30000000));
+     private static final int field_177991_c = field_177990_b;
+     private static final int field_177989_d = 64 - field_177990_b - field_177991_c;
+-    private static final int field_177987_f = 0 + field_177991_c;
++    private static final int field_177987_f = field_177991_c;
+     private static final int field_177988_g = field_177987_f + field_177989_d;
+     private static final long field_177994_h = (1L << field_177990_b) - 1L;
+     private static final long field_177995_i = (1L << field_177989_d) - 1L;
+@@ -154,18 +154,12 @@
+ 
+     public BlockPos func_190942_a(Rotation p_190942_1_)
+     {
+-        switch (p_190942_1_)
+-        {
+-            case NONE:
+-            default:
+-                return this;
+-            case CLOCKWISE_90:
+-                return new BlockPos(-this.func_177952_p(), this.func_177956_o(), this.func_177958_n());
+-            case CLOCKWISE_180:
+-                return new BlockPos(-this.func_177958_n(), this.func_177956_o(), -this.func_177952_p());
+-            case COUNTERCLOCKWISE_90:
+-                return new BlockPos(this.func_177952_p(), this.func_177956_o(), -this.func_177958_n());
+-        }
++        return switch (p_190942_1_) {
++            case CLOCKWISE_90 -> new BlockPos(-this.func_177952_p(), this.func_177956_o(), this.func_177958_n());
++            case CLOCKWISE_180 -> new BlockPos(-this.func_177958_n(), this.func_177956_o(), -this.func_177952_p());
++            case COUNTERCLOCKWISE_90 -> new BlockPos(this.func_177952_p(), this.func_177956_o(), -this.func_177958_n());
++            default -> this;
++        };
+     }
+ 
+     public BlockPos func_177955_d(Vec3i p_177955_1_)
+@@ -181,7 +175,7 @@
+     {
+         return ((long)this.func_177958_n() & field_177994_h) << field_177988_g
+                | ((long)this.func_177956_o() & field_177995_i) << field_177987_f
+-               | ((long)this.func_177952_p() & field_177993_j) << 0;
++               | ((long) this.func_177952_p() & field_177993_j);
+     }
+ 
+     public static BlockPos func_177969_a(long p_177969_0_)
+@@ -237,18 +231,18 @@
                          {
                              if (this.field_191535_c < p_191532_3_)
                              {
@@ -22,7 +65,7 @@
                              }
  
                              return new BlockPos(this.field_191535_c, this.field_191536_d, this.field_191537_e);
-@@ -305,18 +305,18 @@
+@@ -305,18 +299,18 @@
                          {
                              if (this.field_179314_b.field_177997_b < p_191531_3_)
                              {

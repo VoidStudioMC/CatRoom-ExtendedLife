@@ -21,6 +21,7 @@ package net.minecraftforge.fml.common;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.fml.common.asm.transformers.ModAPITransformer;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
@@ -49,10 +50,14 @@ public class ModClassLoader extends URLClassLoader
 
     public ModClassLoader(ClassLoader parent) {
         super(new URL[0], null);
+        try {
+            System.out.println("PIZDAAAAAAAAAAA   " + Class.forName("org.spigotmc.CustomTimingsHandler") + "   " + Launch.class.getClassLoader().loadClass("org.spigotmc.CustomTimingsHandler"));
+        } catch (Exception e) {}
         this.sources = Lists.newArrayList();
 
         if (parent instanceof LaunchClassLoader) {
-            this.mainClassLoader = (LaunchClassLoader)parent;
+//            System.out.println("EEEEEEEEEEEEEE    " + Launch.minecraftHome.getAbsolutePath());
+            this.mainClassLoader = (LaunchClassLoader) parent;
 
             File customLibFolder = new File("./customize_libraries");
             if (!customLibFolder.exists()) customLibFolder.mkdir();

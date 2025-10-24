@@ -1,6 +1,19 @@
 --- before/net/minecraft/util/math/Vec3i.java
 +++ after/net/minecraft/util/math/Vec3i.java
-@@ -42,9 +42,13 @@
+@@ -30,21 +30,23 @@
+         {
+             return true;
+         }
+-        else if (!(p_equals_1_ instanceof Vec3i))
++        else if (!(p_equals_1_ instanceof Vec3i vec3i))
+         {
+             return false;
+         }
+         else
+         {
+-            Vec3i vec3i = (Vec3i)p_equals_1_;
+-
+             if (this.func_177958_n() != vec3i.func_177958_n())
              {
                  return false;
              }
@@ -15,3 +28,45 @@
              }
          }
      }
+@@ -95,31 +97,31 @@
+ 
+     public double func_185332_f(int p_185332_1_, int p_185332_2_, int p_185332_3_)
+     {
+-        double d0 = (double)(this.func_177958_n() - p_185332_1_);
+-        double d1 = (double)(this.func_177956_o() - p_185332_2_);
+-        double d2 = (double)(this.func_177952_p() - p_185332_3_);
++        double d0 = this.func_177958_n() - p_185332_1_;
++        double d1 = this.func_177956_o() - p_185332_2_;
++        double d2 = this.func_177952_p() - p_185332_3_;
+         return Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+     }
+ 
+     public double func_177954_c(double p_177954_1_, double p_177954_3_, double p_177954_5_)
+     {
+-        double d0 = (double)this.func_177958_n() - p_177954_1_;
+-        double d1 = (double)this.func_177956_o() - p_177954_3_;
+-        double d2 = (double)this.func_177952_p() - p_177954_5_;
++        double d0 = (double) this.func_177958_n() - p_177954_1_;
++        double d1 = (double) this.func_177956_o() - p_177954_3_;
++        double d2 = (double) this.func_177952_p() - p_177954_5_;
+         return d0 * d0 + d1 * d1 + d2 * d2;
+     }
+ 
+     public double func_177957_d(double p_177957_1_, double p_177957_3_, double p_177957_5_)
+     {
+-        double d0 = (double)this.func_177958_n() + 0.5 - p_177957_1_;
+-        double d1 = (double)this.func_177956_o() + 0.5 - p_177957_3_;
+-        double d2 = (double)this.func_177952_p() + 0.5 - p_177957_5_;
++        double d0 = (double) this.func_177958_n() + 0.5 - p_177957_1_;
++        double d1 = (double) this.func_177956_o() + 0.5 - p_177957_3_;
++        double d2 = (double) this.func_177952_p() + 0.5 - p_177957_5_;
+         return d0 * d0 + d1 * d1 + d2 * d2;
+     }
+ 
+     public double func_177951_i(Vec3i p_177951_1_)
+     {
+-        return this.func_177954_c((double)p_177951_1_.func_177958_n(), (double)p_177951_1_.func_177956_o(), (double)p_177951_1_.func_177952_p());
++        return this.func_177954_c(p_177951_1_.func_177958_n(), p_177951_1_.func_177956_o(), p_177951_1_.func_177952_p());
+     }
+ 
+     @Override

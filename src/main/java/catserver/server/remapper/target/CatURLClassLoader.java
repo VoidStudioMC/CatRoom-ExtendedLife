@@ -1,13 +1,11 @@
 package catserver.server.remapper.target;
 
-import catserver.server.CatServer;
 import catserver.server.remapper.*;
 import io.netty.util.internal.ConcurrentSet;
 import net.md_5.specialsource.JarMapping;
 import net.md_5.specialsource.provider.ClassLoaderProvider;
 import net.md_5.specialsource.provider.JointProvider;
 import net.md_5.specialsource.repo.RuntimeRepo;
-import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -26,10 +24,10 @@ import java.util.jar.Manifest;
 
 public class CatURLClassLoader extends URLClassLoader
 {
-    private final JarMapping jarMapping;
-    private final CatServerRemapper remapper;
-    private final Map<String, Class<?>> classes = new HashMap<>();
-    private final LaunchClassLoader launchClassLoader;
+    private JarMapping jarMapping;
+    private CatServerRemapper remapper;
+    private Map<String, Class<?>> classes = new HashMap<>();
+    private LaunchClassLoader launchClassLoader;
 
     private final ConcurrentSet<Package> fixedPackages = new ConcurrentSet<>();
 
@@ -56,6 +54,7 @@ public class CatURLClassLoader extends URLClassLoader
     }
 
     protected Class<?> findClass(final String name) throws ClassNotFoundException {
+        System.out.println("EBAT   " + name);
         if (RemapRules.isNMSPackage(name)) {
             final String remappedClass = this.jarMapping.classes.getOrDefault(name.replace(".", "/"), name);
             return launchClassLoader.findClass(remappedClass);

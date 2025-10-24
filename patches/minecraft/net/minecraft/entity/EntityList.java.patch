@@ -32,7 +32,7 @@
 -    public static final Map<ResourceLocation, EntityList.EntityEggInfo> field_75627_a = Maps.newLinkedHashMap();
 -    public static final Set<ResourceLocation> field_191309_d = Sets.newHashSet();
 -    private static final List<String> field_191311_g = Lists.newArrayList();
-+    public static final RegistryNamespaced<ResourceLocation, Class<? extends Entity>> field_191308_b = new CatEntityRegistry<>(); // CatServer - compatible with bukkit plugin
++    public static final CatEntityRegistry<ResourceLocation, Class<? extends Entity>> field_191308_b = new CatEntityRegistry<>(); // CatServer - compatible with bukkit plugin
 +    public static final Map<ResourceLocation, EntityEggInfo> field_75627_a = Maps.<ResourceLocation, EntityEggInfo>newLinkedHashMap();
 +    private static final Set<ResourceLocation> EXTRA_NAMES = Sets.newHashSet();
 +    public static final Set<ResourceLocation> KNOWN_TYPES_Legacy = Sets.<ResourceLocation>newHashSet(); // CatServer

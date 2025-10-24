@@ -14,12 +14,12 @@ import java.util.Set;
 public class RemapRules {
     private static final String NMSPackage = "net.minecraft.server." + CatServer.getNativeVersion();
 
-    private static Set<String> remapPackages = Sets.newHashSet();
+    private static final Set<String> remapPackages = Sets.newHashSet();
 
-    private static Map<String, Class<?>> remapStaticMethod = Maps.newHashMap();
-    private static Map<String, Class<?>> remapVirtualMethod = Maps.newHashMap();
-    private static Map<String, Class<?>> remapVirtualMethodToStatic = Maps.newHashMap();
-    private static Map<String, Class<?>> remapSuperClass = Maps.newHashMap();
+    private static final Map<String, Class<?>> remapStaticMethod = Maps.newHashMap();
+    private static final Map<String, Class<?>> remapVirtualMethod = Maps.newHashMap();
+    private static final Map<String, Class<?>> remapVirtualMethodToStatic = Maps.newHashMap();
+    private static final Map<String, Class<?>> remapSuperClass = Maps.newHashMap();
 
     static {
         remapPackages.add(NMSPackage);
