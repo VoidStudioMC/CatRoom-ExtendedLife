@@ -152,6 +152,7 @@ class Util {
             "https://repo.cleanroommc.com/releases/",
             "https://maven.arcseekers.com/releases/",
             "https://maven.minecraftforge.net/",
+            "https://jitpack.io/"
         ]
         try {
             return urlList.stream().map(original -> original + path)

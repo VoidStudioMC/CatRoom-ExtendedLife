@@ -47,7 +47,7 @@ def props = project.properties
 def sysProps = System.getProperties()
 def details = versionDetails()
 
-group 'catserver'
+group 'catroom'
 
 //version details.lastTag + (project.hasProperty("release") ?
 //        "" : ("+build." + details.commitDistance + (project.hasProperty("run_number") ?
@@ -240,6 +240,9 @@ project(':catroom') {
         }
         maven {
             url "https://maven.outlands.top/releases/"
+        }
+        maven {
+            url 'https://jitpack.io'
         }
     }
 
@@ -440,8 +443,7 @@ project(':catroom') {
         // Added back deprecated features for mods to load up properly
         installer "org.ow2.asm:asm-deprecated:$props.asm_deprecated"
 
-        installer "top.outlands:foundation:0.17.1" // TODO: update
-//        installer "top.outlands:foundation:0.16.3" // TODO: update
+        installer 'com.github.voidsutdio:foundation:f014b991e3'
         installer 'net.lenni0451:Reflect:1.5.0'
         installer 'org.javassist:javassist:3.30.2-GA'
         installer "zone.rong:imaginebreaker:2.1"
@@ -1108,6 +1110,7 @@ project(':catroom') {
         artifacts.each { key, lib ->
             libraries.add(lib.name)
         }
+
         libraries.add('net.minecraftforge:legacydev:0.2.3.+:fatjar')
         universalFilters.add('^(?!binpatches\\.pack\\.lzma$).*$')
 
