@@ -228,7 +228,7 @@ public final class AsynchronousExecutor<P, T, C, E extends Throwable> {
         this.provider = provider;
 
         // We have an unbound queue size so do not need a max thread size
-        pool = new ThreadPoolExecutor(coreSize, Integer.MAX_VALUE, 60l, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), provider);
+        pool = new ThreadPoolExecutor(coreSize, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), provider);
     }
 
     /**

@@ -58,7 +58,7 @@ For all fixes, see [fixed upstream issues](FIXED_UPSTREAM_ISSUES.md)
 
 ## Development Tips:
 
-- Only modify `projects/cleanroom/src/` directory if you want to change vanilla
+- Only modify `projects/catroom/src/` directory if you want to change vanilla
 - Run `gradlew genPatches` before commit, or the changes won't exist
 - Modifications on `src/` doesn't need generating patches
 - [Tips from Forge](https://github.com/MinecraftForge/MinecraftForge/wiki/If-you-want-to-contribute-to-Forge) are still apply, keep the patches clean!

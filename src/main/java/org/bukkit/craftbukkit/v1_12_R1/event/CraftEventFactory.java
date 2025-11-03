@@ -1176,22 +1176,20 @@ public class CraftEventFactory {
     }
 
     // CatServer start
-    public static BlockBreakEvent callBlockBreakEvent(net.minecraft.world.World world, BlockPos pos, IBlockState iBlockState, net.minecraft.entity.player.EntityPlayerMP player)
+    public static BlockBreakEvent callBlockBreakEvent(net.minecraft.world.World world, BlockPos pos, IBlockState iBlockState, EntityPlayerMP player)
     {
-        Block bukkitBlock = world.getWorld().getBlockAt(pos.getX(),pos.getY(),pos.getZ());
-        BlockBreakEvent blockBreakEvent = new BlockBreakEvent(bukkitBlock, ((EntityPlayerMP)player).getBukkitEntity());
-        EntityPlayerMP playermp = (EntityPlayerMP)player;
+        org.bukkit.block.Block bukkitBlock = world.getWorld().getBlockAt(pos.getX(),pos.getY(),pos.getZ());
+        BlockBreakEvent blockBreakEvent = new BlockBreakEvent(bukkitBlock, player.getBukkitEntity());
         net.minecraft.block.Block block = iBlockState.getBlock();
-        if (!(playermp instanceof FakePlayer))
+        if (!(player instanceof FakePlayer))
         {
-            boolean isSwordNoBreak = playermp.interactionManager.getGameType().isCreative() && !playermp.getHeldItemMainhand().isEmpty() && playermp.getHeldItemMainhand().getItem() instanceof ItemSword;
+            boolean isSwordNoBreak = player.interactionManager.getGameType().isCreative() && !player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof ItemSword;
             if (!isSwordNoBreak)
             {
                 int exp = 0;
                 if (!(block == null || !player.canHarvestBlock(block.getDefaultState()) || // Handle empty block or player unable to break block scenario
-                         block.canSilkHarvest(world, pos, block.getBlockState().getBaseState(), player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH,player.getHeldItemMainhand()) > 0)) // If the block is being silk harvested, the exp dropped is 0
+                         block.canSilkHarvest(world, pos, block.getBlockState().getBaseState(), player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, player.getHeldItemMainhand()) > 0)) // If the block is being silk harvested, the exp dropped is 0
                 {
-                    int meta = block.getMetaFromState(block.getBlockState().getBaseState());
                     int bonusLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, player.getHeldItemMainhand());
                     exp = block.getExpDrop(iBlockState,world, pos, bonusLevel);
                 }

@@ -546,7 +546,7 @@
          return true;
      }
 +    // CatServer start
-+    public static WorldProvider getProviderForDimension(int dimensionId){
++    public static WorldProvider getProviderForDimension(int dimensionId) {
 +        return DimensionManager.createProviderFor(dimensionId);
 +    }
 +    // CatServer end

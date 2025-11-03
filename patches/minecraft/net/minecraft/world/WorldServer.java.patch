@@ -470,7 +470,7 @@
              this.field_72984_F.func_76320_a("pollingChunks");
  
 -            for (Iterator<Chunk> iterator = this.field_73063_M.func_187300_b(); iterator.hasNext(); this.field_72984_F.func_76319_b())
-+            for (Iterator<Chunk> iterator = getPersistentChunkIterable(this.field_73063_M.func_187300_b()); iterator.hasNext(); this.field_72984_F.func_76319_b())
++            for (Iterator<Chunk> iterator = this.getPersistentChunkIterable(this.field_73063_M.func_187300_b()); iterator.hasNext(); this.field_72984_F.func_76319_b())
              {
                  this.field_72984_F.func_76320_a("getChunk");
                  Chunk chunk = iterator.next();
@@ -692,10 +692,11 @@
                  {
                      NextTickListEntry nextticklistentry1 = iterator.next();
                      iterator.remove();
+-                    int k = 0;
 +                    //Keeping here as a note for future when it may be restored.
 +                    //boolean isForced = getPersistentChunks().containsKey(new ChunkPos(nextticklistentry.xCoord >> 4, nextticklistentry.zCoord >> 4));
 +                    //byte b0 = isForced ? 0 : 8;
-                     int k = 0;
++                    int k = 0; // for asm?
  
                      if (this.func_175707_a(nextticklistentry1.field_180282_a.func_177982_a(0, 0, 0), nextticklistentry1.field_180282_a.func_177982_a(0, 0, 0)))
                      {

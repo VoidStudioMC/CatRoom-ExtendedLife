@@ -33,8 +33,8 @@ public class ServerLaunchWrapper {
      */
     public static void main(String[] args)
     {
-        Java11Support.setup();
-        Java14Support.setup();
+//        Java11Support.setup();
+//        Java14Support.setup();
         new ServerLaunchWrapper().run(args);
     }
 
@@ -53,7 +53,7 @@ public class ServerLaunchWrapper {
         Class<?> launchwrapper = null;
         try
         {
-            launchwrapper = Class.forName("top.outlands.foundation.boot.Foundation",true,getClass().getClassLoader());
+            launchwrapper = Class.forName("top.outlands.foundation.boot.Foundation", true, getClass().getClassLoader());
             Class.forName("org.objectweb.asm.Type",true,getClass().getClassLoader());
         }
         catch (Exception e)

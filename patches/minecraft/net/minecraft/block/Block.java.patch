@@ -887,7 +887,7 @@
 +     */
 +    public boolean canSilkHarvest(World world, BlockPos pos, IBlockState state, EntityPlayer player)
 +    {
-+        silk_check_state.set(state);;
++        silk_check_state.set(state);
 +        boolean ret = this.func_149700_E();
 +        silk_check_state.set(null);
 +        return ret;

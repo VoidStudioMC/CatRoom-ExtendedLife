@@ -1,9 +1,10 @@
 --- before/net/minecraft/world/gen/ChunkProviderServer.java
 +++ after/net/minecraft/world/gen/ChunkProviderServer.java
-@@ -1,9 +1,11 @@
+@@ -1,9 +1,12 @@
  package net.minecraft.world.gen;
  
 +import catserver.server.CatAsyncCatcher;
++import catserver.server.CatServer;
  import com.google.common.collect.Lists;
  import com.google.common.collect.Sets;
  import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -12,12 +13,13 @@
  import java.io.IOException;
  import java.util.Collection;
  import java.util.Iterator;
-@@ -22,18 +24,25 @@
+@@ -22,18 +25,26 @@
  import net.minecraft.world.biome.Biome;
  import net.minecraft.world.chunk.Chunk;
  import net.minecraft.world.chunk.IChunkProvider;
 +import net.minecraft.world.chunk.storage.AnvilChunkLoader;
  import net.minecraft.world.chunk.storage.IChunkLoader;
++import net.minecraftforge.common.DimensionManager;
 +import net.minecraftforge.common.ForgeChunkManager;
 +import net.minecraftforge.common.chunkio.ChunkIOExecutor;
 +import net.minecraftforge.fml.common.FMLLog;
@@ -40,7 +42,7 @@
  
      public ChunkProviderServer(WorldServer p_i46838_1_, IChunkLoader p_i46838_2_, IChunkGenerator p_i46838_3_)
      {
-@@ -51,21 +60,23 @@
+@@ -51,21 +62,23 @@
      {
          if (this.field_73251_h.field_73011_w.func_186056_c(p_189549_1_.field_76635_g, p_189549_1_.field_76647_h))
          {
@@ -67,11 +69,11 @@
      public Chunk func_186026_b(int p_186026_1_, int p_186026_2_)
      {
          long i = ChunkPos.func_77272_a(p_186026_1_, p_186026_2_);
-@@ -79,33 +90,80 @@
+@@ -79,33 +92,80 @@
          return chunk;
      }
  
-+    // Is it copy of method above?
++    // Is it copy of method above? // no
 +    public Chunk getChunkIfLoaded(int x, int z) {
 +        return field_73244_f.get(ChunkPos.func_77272_a(x, z));
 +    }
@@ -157,7 +159,7 @@
              long i = ChunkPos.func_77272_a(p_186025_1_, p_186025_2_);
  
              try
-@@ -117,18 +175,52 @@
+@@ -117,18 +177,52 @@
                  CrashReport crashreport = CrashReport.func_85055_a(throwable, "Exception generating new chunk");
                  CrashReportCategory crashreportcategory = crashreport.func_85058_a("Chunk to be generated");
                  crashreportcategory.func_71507_a("Location", String.format("%d,%d", p_186025_1_, p_186025_2_));
@@ -222,7 +224,7 @@
  
      @Nullable
      private Chunk func_73239_e(int p_73239_1_, int p_73239_2_)
-@@ -147,7 +239,7 @@
+@@ -147,7 +241,7 @@
          }
          catch (Exception exception)
          {
@@ -231,7 +233,7 @@
              return null;
          }
      }
-@@ -186,7 +278,7 @@
+@@ -186,7 +280,7 @@
          int i = 0;
          List<Chunk> list = Lists.newArrayList(this.field_73244_f.values());
  
@@ -240,7 +242,7 @@
          {
              Chunk chunk = list.get(j);
  
-@@ -199,8 +291,9 @@
+@@ -199,8 +293,9 @@
              {
                  this.func_73242_b(chunk);
                  chunk.func_177427_f(false);
@@ -251,7 +253,7 @@
                  {
                      return false;
                  }
-@@ -215,30 +308,51 @@
+@@ -215,30 +310,52 @@
          this.field_73247_e.func_75818_b();
      }
  
@@ -307,11 +309,12 @@
 +                activityAccountant.endActivity(); // Spigot
              }
 +
-+            if (this.field_73244_f.isEmpty() && !net.minecraftforge.common.DimensionManager.isBukkitDimension(this.field_73251_h.field_73011_w.getDimension()) && catserver.server.CatServer.getConfig().autoUnloadDimensions.contains(this.field_73251_h.field_73011_w.getDimension())) net.minecraftforge.common.DimensionManager.unloadWorld(this.field_73251_h.field_73011_w.getDimension()); // CatServer - Ignore Bukkit world and use unload list
++            if (this.field_73244_f.isEmpty() && !DimensionManager.isBukkitDimension(this.field_73251_h.field_73011_w.getDimension()) && CatServer.getConfig().autoUnloadDimensions.contains(this.field_73251_h.field_73011_w.getDimension()))
++                DimensionManager.unloadWorld(this.field_73251_h.field_73011_w.getDimension()); // CatServer - Ignore Bukkit world and use unload list
  
              this.field_73247_e.func_75817_a();
          }
-@@ -246,12 +360,44 @@
+@@ -246,12 +363,44 @@
          return false;
      }
  
@@ -357,7 +360,7 @@
      public String func_73148_d()
      {
          return "ServerChunkCache: " + this.field_73244_f.size() + " Drop: " + this.field_73248_b.size();
-@@ -283,7 +429,6 @@
+@@ -283,7 +432,6 @@
          return this.field_73244_f.containsKey(ChunkPos.func_77272_a(p_73149_1_, p_73149_2_));
      }
  

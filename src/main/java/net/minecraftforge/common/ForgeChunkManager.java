@@ -469,7 +469,7 @@ public class ForgeChunkManager
 
         forcedChunks.put(world, ImmutableSetMultimap.of());
 
-        if (!(world instanceof WorldServer))
+        if (!(world instanceof WorldServer worldServer))
         {
             return;
         }
@@ -478,7 +478,7 @@ public class ForgeChunkManager
         { // only put into cache if we're using dormant chunk caching
             dormantChunkCache.put(world, CacheBuilder.newBuilder().maximumSize(dormantChunkCacheSize).build());
         }
-        WorldServer worldServer = (WorldServer) world;
+
         File chunkDir = worldServer.getChunkSaveLocation();
         File chunkLoaderData = new File(chunkDir, "forcedchunks.dat");
 
@@ -580,9 +580,8 @@ public class ForgeChunkManager
                 }
                 int maxTicketLength = getMaxTicketLengthFor(modId);
                 List<Ticket> tickets = loadedTickets.get(modId);
-                if (loadingCallback instanceof OrderedLoadingCallback)
+                if (loadingCallback instanceof OrderedLoadingCallback orderedLoadingCallback)
                 {
-                    OrderedLoadingCallback orderedLoadingCallback = (OrderedLoadingCallback) loadingCallback;
                     tickets = orderedLoadingCallback.ticketsLoaded(ImmutableList.copyOf(tickets), world, maxTicketLength);
                 }
                 if (tickets.size() > maxTicketLength)
@@ -601,9 +600,8 @@ public class ForgeChunkManager
                     continue;
                 }
                 ListMultimap<String,Ticket> tickets = playerLoadedTickets.get(modId);
-                if (loadingCallback instanceof PlayerOrderedLoadingCallback)
+                if (loadingCallback instanceof PlayerOrderedLoadingCallback orderedLoadingCallback)
                 {
-                    PlayerOrderedLoadingCallback orderedLoadingCallback = (PlayerOrderedLoadingCallback) loadingCallback;
                     tickets = orderedLoadingCallback.playerTicketsLoaded(ImmutableListMultimap.copyOf(tickets), world);
                     playerTickets.putAll(tickets);
                 }
@@ -899,11 +897,11 @@ public class ForgeChunkManager
     static void saveWorld(World world)
     {
         // only persist persistent worlds
-        if (!(world instanceof WorldServer))
+        if (!(world instanceof WorldServer worldServer))
         {
             return;
         }
-        WorldServer worldServer = (WorldServer) world;
+
         File chunkDir = worldServer.getChunkSaveLocation();
         File chunkLoaderData = new File(chunkDir, "forcedchunks.dat");
 
