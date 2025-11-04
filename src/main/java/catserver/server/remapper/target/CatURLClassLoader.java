@@ -33,7 +33,7 @@ public class CatURLClassLoader extends URLClassLoader
     private final ConcurrentSet<Package> fixedPackages = new ConcurrentSet<>();
 
     {
-        this.launchClassLoader = (LaunchClassLoader) Launch.appClassLoader;
+        this.launchClassLoader = (LaunchClassLoader) MinecraftServer.getServerInst().getClass().getClassLoader();
         this.jarMapping = MappingLoader.loadMapping();
         final JointProvider provider = new JointProvider();
         provider.add(new ClassInheritanceProvider());

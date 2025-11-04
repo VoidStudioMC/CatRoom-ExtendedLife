@@ -25,6 +25,7 @@ import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.fml.common.asm.transformers.ModAPITransformer;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import top.outlands.foundation.TransformerDelegate;
+import top.outlands.foundation.boot.ActualClassLoader;
 
 import java.io.File;
 import java.net.*;
@@ -53,6 +54,7 @@ public class ModClassLoader extends URLClassLoader
 
         if (parent instanceof LaunchClassLoader) {
             this.mainClassLoader = (LaunchClassLoader) parent;
+            this.applyClassLoaderInclusions();
 
             File customLibFolder = new File("./customize_libraries");
             if (!customLibFolder.exists()) customLibFolder.mkdir();
@@ -64,8 +66,8 @@ public class ModClassLoader extends URLClassLoader
         if (file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {
-                for (File f : files) {
-                    this.loadCustomizeLibraries(f);
+                for (File lib : files) {
+                    this.loadCustomizeLibraries(lib);
                 }
             }
         } else {
@@ -80,34 +82,36 @@ public class ModClassLoader extends URLClassLoader
         }
     }
 
-    public void addFile(File modFile) throws MalformedURLException
-    {
+    // CREF - fix for new foundation
+    private void applyClassLoaderInclusions() {
+        ActualClassLoader.classLoaderInclusions.put("catserver.", true);
+        ActualClassLoader.classLoaderInclusions.put("org.bukkit.", true);
+        ActualClassLoader.classLoaderInclusions.put("org.spigotmc.", true);
+        ActualClassLoader.classLoaderInclusions.put("com.destroystokyo.paper.", true);
+    }
+
+    public void addFile(File modFile) throws MalformedURLException {
         this.mainClassLoader.addURL(modFile.getAbsoluteFile().toURI().toURL());
         this.sources.add(modFile);
     }
 
     @Override
-    public Class<?> loadClass(String name) throws ClassNotFoundException
-    {
+    public Class<?> loadClass(String name) throws ClassNotFoundException {
         return this.mainClassLoader.loadClass(name);
     }
 
     public File[] getParentSources() {
-        try
-        {
-            List<File> files=new ArrayList<File>();
-            for(URL url : this.mainClassLoader.getSources())
-            {
+        try {
+            List<File> files = new ArrayList<File>();
+            for(URL url : this.mainClassLoader.getSources()) {
                 URI uri = url.toURI();
-                if(uri.getScheme().equals("file"))
-                {
+                if(uri.getScheme().equals("file")) {
                     files.add(new File(uri));
                 }
             }
             return files.toArray(new File[]{});
         }
-        catch (URISyntaxException e)
-        {
+        catch (URISyntaxException e) {
             FMLLog.log.error("Unable to process our input to locate the minecraft code", e);
             throw new LoaderException(e);
         }
