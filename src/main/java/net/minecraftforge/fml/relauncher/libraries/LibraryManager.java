@@ -22,7 +22,6 @@ package net.minecraftforge.fml.relauncher.libraries;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +37,6 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -441,6 +439,25 @@ public class LibraryManager
     public static List<File> gatherLegacyCanidates(File mcDir)
     {
         List<File> list = new ArrayList<>();
+        
+        String extrapath = System.getProperty("crl.dev.extrapath");
+        if (extrapath != null) 
+        {
+            for (String mod : extrapath.split(File.pathSeparator))
+            {
+                File file = new File(mod);
+                if (file.exists())
+                {
+                    list.add(file);
+                    FMLLog.log.info("Adding extra mod file {}", file);
+                }
+                else
+                {
+                    FMLLog.log.debug("Mod file {} does not exist", file);
+                }
+            }
+        }
+
         @SuppressWarnings("unchecked")
         Map<String,String> args = (Map<String, String>)Launch.blackboard.get("forgeLaunchArgs");
         String extraMods = args.get("--mods");
@@ -507,16 +524,22 @@ public class LibraryManager
             }
             try (JarFile jar = new JarFile(candidate))
             {
-                // Check for Bansoukou's existence
-                Attributes attributes = jar.getManifest().getMainAttributes();
-                String bansoukou = attributes.getValue("Bansoukou");
-                if (bansoukou != null) {
-                    Launch.classLoader.addURL(candidate.toURI().toURL());
-                    Launch.classLoader.addTransformerExclusion(bansoukou);
-                    Class<?> cleanBansoukou = Class.forName(bansoukou, true, Launch.classLoader);
-                    bansoukouMethod = cleanBansoukou.getMethod("bansoukou", List.class);
-                    break; // We found Bansoukou
+                Attributes attributes = jar.getManifest() == null ? null : jar.getManifest().getMainAttributes();
+                if (attributes == null)
+                {
+                    continue;
                 }
+                // Check for Bansoukou's existence
+                String bansoukou = attributes.getValue("Bansoukou");
+                if (bansoukou == null)
+                {
+                    continue;
+                }
+                Launch.classLoader.addURL(candidate.toURI().toURL());
+                Launch.classLoader.addTransformerExclusion(bansoukou);
+                Class<?> cleanBansoukou = Class.forName(bansoukou, true, Launch.classLoader);
+                bansoukouMethod = cleanBansoukou.getMethod("bansoukou", List.class);
+                break; // We found Bansoukou
             }
             catch (IOException ignore) { }
             catch (ClassNotFoundException | NoSuchMethodException e)

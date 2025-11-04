@@ -14,6 +14,7 @@ on:
       - 'src/**'
       - 'buildSrc/**'
       - 'patches/**'
+      - 'projects/**/build.gradle'
       - 'build.gradle'
       - 'gradle.properties'
       - 'script/**'
