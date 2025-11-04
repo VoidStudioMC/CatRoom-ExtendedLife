@@ -18,16 +18,16 @@
  
  public class RegionFileCache
  {
--    private static final Map<File, RegionFile> field_76553_a = Maps.newHashMap();
-+    public static final Map<File, RegionFile> field_76553_a = new LinkedHashMap<>(256, 0.75f, true); // Spigot - private -> public, Paper - HashMap -> LinkedHashMap
+-    private static final Map<File, RegionFile> REGIONS_BY_FILE = Maps.newHashMap();
++    public static final Map<File, RegionFile> REGIONS_BY_FILE = new LinkedHashMap<>(256, 0.75f, true); // Spigot - private -> public, Paper - HashMap -> LinkedHashMap
  
-     public static synchronized RegionFile func_76550_a(File p_76550_0_, int p_76550_1_, int p_76550_2_)
+     public static synchronized RegionFile createOrLoadRegionFile(File worldDir, int chunkX, int chunkZ)
      {
 @@ -30,7 +36,7 @@
  
-             if (field_76553_a.size() >= 256)
+             if (REGIONS_BY_FILE.size() >= 256)
              {
--                func_76551_a();
+-                clearRegionFileReferences();
 +                trimCache(); // Paper
              }
  
@@ -39,11 +39,11 @@
 +
 +    // Paper Start
 +    private static synchronized void trimCache() {
-+        Iterator<Map.Entry<File, RegionFile>> itr = RegionFileCache.field_76553_a.entrySet().iterator();
-+        int count = RegionFileCache.field_76553_a.size() - 256;
++        Iterator<Map.Entry<File, RegionFile>> itr = RegionFileCache.REGIONS_BY_FILE.entrySet().iterator();
++        int count = RegionFileCache.REGIONS_BY_FILE.size() - 256;
 +        while (count-- >= 0 && itr.hasNext()) {
 +            try {
-+                itr.next().getValue().func_76708_c();
++                itr.next().getValue().close();
 +            } catch (IOException ioexception) {
 +                ioexception.printStackTrace();
 +            }
@@ -52,31 +52,31 @@
 +    }
 +    // Paper End
  
-     public static synchronized RegionFile func_191065_b(File p_191065_0_, int p_191065_1_, int p_191065_2_)
+     public static synchronized RegionFile getRegionFileIfExists(File worldDir, int chunkX, int chunkZ)
      {
 @@ -86,16 +107,44 @@
-         field_76553_a.clear();
+         REGIONS_BY_FILE.clear();
      }
  
 +    @Nullable
-     public static DataInputStream func_76549_c(File p_76549_0_, int p_76549_1_, int p_76549_2_)
+     public static DataInputStream getChunkInputStream(File worldDir, int chunkX, int chunkZ)
      {
-         RegionFile regionfile = func_76550_a(p_76549_0_, p_76549_1_, p_76549_2_);
-         return regionfile.func_76704_a(p_76549_1_ & 31, p_76549_2_ & 31);
+         RegionFile regionfile = createOrLoadRegionFile(worldDir, chunkX, chunkZ);
+         return regionfile.getChunkDataInputStream(chunkX & 31, chunkZ & 31);
      }
  
 +    @Nullable
 +    public static synchronized NBTTagCompound getChunkInputStreamCB(File worldDir, int chunkX, int chunkZ) throws IOException
 +    {
-+        RegionFile regionfile = func_76550_a(worldDir, chunkX, chunkZ);
-+        DataInputStream datainputstream = regionfile.func_76704_a(chunkX & 31, chunkZ & 31);
++        RegionFile regionfile = createOrLoadRegionFile(worldDir, chunkX, chunkZ);
++        DataInputStream datainputstream = regionfile.getChunkDataInputStream(chunkX & 31, chunkZ & 31);
 +
 +        if (datainputstream == null) {
 +            return null;
 +        }
 +
 +        // CatRoom start - close stream after reading
-+        NBTTagCompound chunkNBT = CompressedStreamTools.func_74794_a(datainputstream);
++        NBTTagCompound chunkNBT = CompressedStreamTools.read(datainputstream);
 +        datainputstream.close();
 +        // CatRoom end
 +
@@ -84,18 +84,18 @@
 +    }
 +
 +    @Nullable
-     public static DataOutputStream func_76552_d(File p_76552_0_, int p_76552_1_, int p_76552_2_)
+     public static DataOutputStream getChunkOutputStream(File worldDir, int chunkX, int chunkZ)
      {
-         RegionFile regionfile = func_76550_a(p_76552_0_, p_76552_1_, p_76552_2_);
-         return regionfile.func_76710_b(p_76552_1_ & 31, p_76552_2_ & 31);
+         RegionFile regionfile = createOrLoadRegionFile(worldDir, chunkX, chunkZ);
+         return regionfile.getChunkDataOutputStream(chunkX & 31, chunkZ & 31);
 +    }
 +
 +    public static synchronized void getChunkOutputStream(File worldDir, int chunkX, int chunkZ, NBTTagCompound nbttagcompound) throws IOException
 +    {
-+        RegionFile regionfile = func_76550_a(worldDir, chunkX, chunkZ);
-+        DataOutputStream dataoutputstream = regionfile.func_76710_b(chunkX & 31, chunkZ & 31);
-+        CompressedStreamTools.func_74800_a(nbttagcompound, dataoutputstream);
++        RegionFile regionfile = createOrLoadRegionFile(worldDir, chunkX, chunkZ);
++        DataOutputStream dataoutputstream = regionfile.getChunkDataOutputStream(chunkX & 31, chunkZ & 31);
++        CompressedStreamTools.write(nbttagcompound, dataoutputstream);
 +        dataoutputstream.close();
      }
  
-     public static boolean func_191064_f(File p_191064_0_, int p_191064_1_, int p_191064_2_)
+     public static boolean chunkExists(File worldDir, int chunkX, int chunkZ)

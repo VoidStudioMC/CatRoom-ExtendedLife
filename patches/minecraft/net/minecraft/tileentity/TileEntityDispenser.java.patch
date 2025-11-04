@@ -14,8 +14,8 @@
  import net.minecraft.inventory.Container;
 @@ -17,8 +22,30 @@
  {
-     private static final Random field_174913_f = new Random();
-     private NonNullList<ItemStack> field_146022_i = NonNullList.func_191197_a(9, ItemStack.field_190927_a);
+     private static final Random RNG = new Random();
+     private NonNullList<ItemStack> stacks = NonNullList.withSize(9, ItemStack.EMPTY);
 -
 -    @Override
 +    // CraftBukkit start - add fields and methods
@@ -23,7 +23,7 @@
 +    private int maxStack = MAX_STACK;
 +    
 +    public List<ItemStack> getContents() {
-+        return this.field_146022_i;
++        return this.stacks;
 +    }
 +        
 +    public void onOpen(CraftHumanEntity who) {
@@ -42,30 +42,30 @@
 +        maxStack = size;
 +    }
 +    // CraftBukkit end
-     public int func_70302_i_()
+     public int getSizeInventory()
      {
          return 9;
 @@ -44,7 +71,7 @@
          int i = -1;
          int j = 1;
  
--        for (int k = 0; k < this.field_146022_i.size(); k++)
-+        for (int k = 0; k < this.field_146022_i.size(); ++k)
+-        for (int k = 0; k < this.stacks.size(); k++)
++        for (int k = 0; k < this.stacks.size(); ++k)
          {
-             if (!this.field_146022_i.get(k).func_190926_b() && field_174913_f.nextInt(j++) == 0)
+             if (!this.stacks.get(k).isEmpty() && RNG.nextInt(j++) == 0)
              {
 @@ -57,7 +84,7 @@
  
-     public int func_146019_a(ItemStack p_146019_1_)
+     public int addItemStack(ItemStack stack)
      {
--        for (int i = 0; i < this.field_146022_i.size(); i++)
-+        for (int i = 0; i < this.field_146022_i.size(); ++i)
+-        for (int i = 0; i < this.stacks.size(); i++)
++        for (int i = 0; i < this.stacks.size(); ++i)
          {
-             if (this.field_146022_i.get(i).func_190926_b())
+             if (this.stacks.get(i).isEmpty())
              {
 @@ -118,7 +145,7 @@
      @Override
-     public int func_70297_j_()
+     public int getInventoryStackLimit()
      {
 -        return 64;
 +        return maxStack;

@@ -2,18 +2,18 @@
 +++ after/net/minecraft/entity/monster/EntitySkeleton.java
 @@ -62,7 +62,7 @@
      @Override
-     public void func_70645_a(DamageSource p_70645_1_)
+     public void onDeath(DamageSource cause)
      {
--        super.func_70645_a(p_70645_1_);
+-        super.onDeath(cause);
 +        // super.onDeath(cause); // CraftBukkit - moved down
  
-         if (p_70645_1_.func_76346_g() instanceof EntityCreeper)
+         if (cause.getTrueSource() instanceof EntityCreeper)
          {
 @@ -74,6 +74,7 @@
-                 this.func_70099_a(new ItemStack(Items.field_151144_bL, 1, 0), 0.0F);
+                 this.entityDropItem(new ItemStack(Items.SKULL, 1, 0), 0.0F);
              }
          }
-+        super.func_70645_a(p_70645_1_); // CraftBukkit - moved from above
++        super.onDeath(cause); // CraftBukkit - moved from above
      }
  
      @Override

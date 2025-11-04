@@ -1,89 +1,80 @@
 --- before/net/minecraft/entity/passive/EntityAnimal.java
 +++ after/net/minecraft/entity/passive/EntityAnimal.java
 @@ -25,6 +25,8 @@
-     private int field_70881_d;
-     private UUID field_146084_br;
+     private int inLove;
+     private UUID playerInLove;
  
 +    public ItemStack breedItem; // CraftBukkit - Add breedItem variable
 +
-     public EntityAnimal(World p_i1681_1_)
+     public EntityAnimal(World worldIn)
      {
-         super(p_i1681_1_);
+         super(worldIn);
 @@ -53,7 +55,7 @@
  
-         if (this.field_70881_d > 0)
+         if (this.inLove > 0)
          {
--            this.field_70881_d--;
-+            --this.field_70881_d;
+-            this.inLove--;
++            --this.inLove;
  
-             if (this.field_70881_d % 10 == 0)
+             if (this.inLove % 10 == 0)
              {
-@@ -74,19 +76,21 @@
+@@ -74,7 +76,8 @@
          }
      }
  
 -    @Override
--    public boolean func_70097_a(DamageSource p_70097_1_, float p_70097_2_)
 +    /* CraftBukkit start
 +    // Function disabled as it has no special function anymore after setSitting is disabled.
-+    public boolean attackEntityFrom(DamageSource source, float amount)
+     public boolean attackEntityFrom(DamageSource source, float amount)
      {
--        if (this.func_180431_b(p_70097_1_))
-+        if (this.isEntityInvulnerable(source))
-         {
-             return false;
-         }
-         else
-         {
--            this.field_70881_d = 0;
--            return super.func_70097_a(p_70097_1_, p_70097_2_);
-+            this.inLove = 0;
-+            return super.attackEntityFrom(source, amount);
+         if (this.isEntityInvulnerable(source))
+@@ -87,6 +90,7 @@
+             return super.attackEntityFrom(source, amount);
          }
      }
 +    // CraftBukkit end */
  
      @Override
-     public float func_180484_a(BlockPos p_180484_1_)
+     public float getBlockPathWeight(BlockPos pos)
 @@ -140,8 +144,7 @@
          return 120;
      }
  
 -    @Override
--    protected boolean func_70692_ba()
-+    public boolean func_70692_ba()
+-    protected boolean canDespawn()
++    public boolean canDespawn()
      {
          return false;
      }
 @@ -197,6 +200,7 @@
-         if (p_146082_1_ != null)
+         if (player != null)
          {
-             this.field_146084_br = p_146082_1_.func_110124_au();
-+            this.breedItem = p_146082_1_.field_71071_by.func_70448_g();
+             this.playerInLove = player.getUniqueID();
++            this.breedItem = player.inventory.getCurrentItem();
          }
  
-         this.field_70170_p.func_72960_a(this, (byte)18);
+         this.world.setEntityState(this, (byte)18);
 @@ -232,9 +236,13 @@
          {
              return false;
          }
-+        else if (p_70878_1_.getClass() != this.getClass())
++        else if (otherAnimal.getClass() != this.getClass())
 +        {
 +            return false;
 +        }
          else
          {
--            return p_70878_1_.getClass() != this.getClass() ? false : this.func_70880_s() && p_70878_1_.func_70880_s();
-+            return this.func_70880_s() && p_70878_1_.func_70880_s();
+-            return otherAnimal.getClass() != this.getClass() ? false : this.isInLove() && otherAnimal.isInLove();
++            return this.isInLove() && otherAnimal.isInLove();
          }
      }
  
 @@ -244,7 +252,7 @@
      {
-         if (p_70103_1_ == 18)
+         if (id == 18)
          {
 -            for (int i = 0; i < 7; i++)
 +            for (int i = 0; i < 7; ++i)
              {
-                 double d0 = this.field_70146_Z.nextGaussian() * 0.02;
-                 double d1 = this.field_70146_Z.nextGaussian() * 0.02;
+                 double d0 = this.rand.nextGaussian() * 0.02;
+                 double d1 = this.rand.nextGaussian() * 0.02;

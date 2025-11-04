@@ -21,52 +21,52 @@
  public class EntityLightningBolt extends EntityWeatherEffect
  {
 @@ -19,9 +24,13 @@
-     private int field_70263_c;
-     private final boolean field_184529_d;
+     private int boltLivingTime;
+     private final boolean effectOnly;
  
 +    public boolean isEffect; // CraftBukkit
 +    public boolean isSilent = false; // Spigot
 +
-     public EntityLightningBolt(World p_i46780_1_, double p_i46780_2_, double p_i46780_4_, double p_i46780_6_, boolean p_i46780_8_)
+     public EntityLightningBolt(World worldIn, double x, double y, double z, boolean effectOnlyIn)
      {
-         super(p_i46780_1_);
-+        this.isEffect = p_i46780_8_;
-         this.func_70012_b(p_i46780_2_, p_i46780_4_, p_i46780_6_, 0.0F, 0.0F);
-         this.field_70262_b = 2;
-         this.field_70264_a = this.field_70146_Z.nextLong();
+         super(worldIn);
++        this.isEffect = effectOnlyIn;
+         this.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
+         this.lightningState = 2;
+         this.boltVertex = this.rand.nextLong();
 @@ -29,68 +38,71 @@
-         this.field_184529_d = p_i46780_8_;
+         this.effectOnly = effectOnlyIn;
          BlockPos blockpos = new BlockPos(this);
  
--        if (!p_i46780_8_
--                && !p_i46780_1_.field_72995_K
--                && p_i46780_1_.func_82736_K().func_82766_b("doFireTick")
--                && (p_i46780_1_.func_175659_aa() == EnumDifficulty.NORMAL || p_i46780_1_.func_175659_aa() == EnumDifficulty.HARD)
--                && p_i46780_1_.func_175697_a(blockpos, 10))
-+        if (!p_i46780_8_ && !p_i46780_1_.field_72995_K && p_i46780_1_.func_82736_K().func_82766_b("doFireTick") && (p_i46780_1_.func_175659_aa() == EnumDifficulty.NORMAL || p_i46780_1_.func_175659_aa() == EnumDifficulty.HARD) && p_i46780_1_.func_175697_a(blockpos, 10))
+-        if (!effectOnlyIn
+-                && !worldIn.isRemote
+-                && worldIn.getGameRules().getBoolean("doFireTick")
+-                && (worldIn.getDifficulty() == EnumDifficulty.NORMAL || worldIn.getDifficulty() == EnumDifficulty.HARD)
+-                && worldIn.isAreaLoaded(blockpos, 10))
++        if (!effectOnlyIn && !worldIn.isRemote && worldIn.getGameRules().getBoolean("doFireTick") && (worldIn.getDifficulty() == EnumDifficulty.NORMAL || worldIn.getDifficulty() == EnumDifficulty.HARD) && worldIn.isAreaLoaded(blockpos, 10))
          {
-             if (p_i46780_1_.func_180495_p(blockpos).func_185904_a() == Material.field_151579_a && Blocks.field_150480_ab.func_176196_c(p_i46780_1_, blockpos))
+             if (worldIn.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(worldIn, blockpos))
              {
--                p_i46780_1_.func_175656_a(blockpos, Blocks.field_150480_ab.func_176223_P());
+-                worldIn.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 +                // worldIn.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
-+                if (!CraftEventFactory.callBlockIgniteEvent(field_70170_p, blockpos.func_177958_n(), blockpos.func_177956_o(), blockpos.func_177952_p(), this).isCancelled()) {
-+                    field_70170_p.func_175656_a(blockpos, Blocks.field_150480_ab.func_176223_P());
++                if (!CraftEventFactory.callBlockIgniteEvent(world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), this).isCancelled()) {
++                    world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 +                }
              }
  
 -            for (int i = 0; i < 4; i++)
 +            for (int i = 0; i < 4; ++i)
              {
-                 BlockPos blockpos1 = blockpos.func_177982_a(this.field_70146_Z.nextInt(3) - 1, this.field_70146_Z.nextInt(3) - 1, this.field_70146_Z.nextInt(3) - 1);
+                 BlockPos blockpos1 = blockpos.add(this.rand.nextInt(3) - 1, this.rand.nextInt(3) - 1, this.rand.nextInt(3) - 1);
  
--                if (p_i46780_1_.func_180495_p(blockpos1).func_185904_a() == Material.field_151579_a && Blocks.field_150480_ab.func_176196_c(p_i46780_1_, blockpos1)
+-                if (worldIn.getBlockState(blockpos1).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(worldIn, blockpos1)
 -                   )
-+                if (p_i46780_1_.func_180495_p(blockpos1).func_185904_a() == Material.field_151579_a && Blocks.field_150480_ab.func_176196_c(p_i46780_1_, blockpos1))
++                if (worldIn.getBlockState(blockpos1).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(worldIn, blockpos1))
                  {
--                    p_i46780_1_.func_175656_a(blockpos1, Blocks.field_150480_ab.func_176223_P());
+-                    worldIn.setBlockState(blockpos1, Blocks.FIRE.getDefaultState());
 +                    // worldIn.setBlockState(blockpos1, Blocks.FIRE.getDefaultState());
-+                    if (!CraftEventFactory.callBlockIgniteEvent(field_70170_p, blockpos1.func_177958_n(), blockpos1.func_177956_o(), blockpos1.func_177952_p(), this).isCancelled()) {
-+                        field_70170_p.func_175656_a(blockpos1, Blocks.field_150480_ab.func_176223_P());
++                    if (!CraftEventFactory.callBlockIgniteEvent(world, blockpos1.getX(), blockpos1.getY(), blockpos1.getZ(), this).isCancelled()) {
++                        world.setBlockState(blockpos1, Blocks.FIRE.getDefaultState());
 +                    }
                  }
              }
@@ -82,142 +82,142 @@
 +    }
 +    // Spigot end
 +
-     public SoundCategory func_184176_by()
+     public SoundCategory getSoundCategory()
      {
          return SoundCategory.WEATHER;
      }
  
 -    @Override
-     public void func_70071_h_()
+     public void onUpdate()
      {
-         super.func_70071_h_();
+         super.onUpdate();
  
--        if (this.field_70262_b == 2)
-+        if (!isSilent && this.field_70262_b == 2) // Spigot
+-        if (this.lightningState == 2)
++        if (!isSilent && this.lightningState == 2) // Spigot
          {
--            this.field_70170_p
--            .func_184148_a(
+-            this.world
+-            .playSound(
 -                null,
--                this.field_70165_t,
--                this.field_70163_u,
--                this.field_70161_v,
--                SoundEvents.field_187754_de,
+-                this.posX,
+-                this.posY,
+-                this.posZ,
+-                SoundEvents.ENTITY_LIGHTNING_THUNDER,
 -                SoundCategory.WEATHER,
 -                10000.0F,
--                0.8F + this.field_70146_Z.nextFloat() * 0.2F
+-                0.8F + this.rand.nextFloat() * 0.2F
 -            );
--            this.field_70170_p
--            .func_184148_a(
+-            this.world
+-            .playSound(
 -                null,
--                this.field_70165_t,
--                this.field_70163_u,
--                this.field_70161_v,
--                SoundEvents.field_187752_dd,
+-                this.posX,
+-                this.posY,
+-                this.posZ,
+-                SoundEvents.ENTITY_LIGHTNING_IMPACT,
 -                SoundCategory.WEATHER,
 -                2.0F,
--                0.5F + this.field_70146_Z.nextFloat() * 0.2F
+-                0.5F + this.rand.nextFloat() * 0.2F
 -            );
 +            // CraftBukkit start - Use relative location for far away sounds
 +            // this.world.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, 10000.0F, 0.8F + this.rand.nextFloat() * 0.2F);
-+            float pitch = 0.8F + this.field_70146_Z.nextFloat() * 0.2F;
-+            int viewDistance = ((WorldServer) this.field_70170_p).getServer().getViewDistance() * 16;
-+            for (EntityPlayerMP player : (List<EntityPlayerMP>) (List) this.field_70170_p.field_73010_i) {
-+                double deltaX = this.field_70165_t - player.field_70165_t;
-+                double deltaZ = this.field_70161_v - player.field_70161_v;
++            float pitch = 0.8F + this.rand.nextFloat() * 0.2F;
++            int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16;
++            for (EntityPlayerMP player : (List<EntityPlayerMP>) (List) this.world.playerEntities) {
++                double deltaX = this.posX - player.posX;
++                double deltaZ = this.posZ - player.posZ;
 +                double distanceSquared = deltaX * deltaX + deltaZ * deltaZ;
 +                if (distanceSquared > viewDistance * viewDistance) {
 +                    double deltaLength = Math.sqrt(distanceSquared);
-+                    double relativeX = player.field_70165_t + (deltaX / deltaLength) * viewDistance;
-+                    double relativeZ = player.field_70161_v + (deltaZ / deltaLength) * viewDistance;
-+                    player.field_71135_a.func_147359_a(new SPacketSoundEffect(SoundEvents.field_187754_de, SoundCategory.WEATHER, relativeX, this.field_70163_u, relativeZ, 10000.0F, pitch));
++                    double relativeX = player.posX + (deltaX / deltaLength) * viewDistance;
++                    double relativeZ = player.posZ + (deltaZ / deltaLength) * viewDistance;
++                    player.connection.sendPacket(new SPacketSoundEffect(SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, relativeX, this.posY, relativeZ, 10000.0F, pitch));
 +                } else {
-+                    player.field_71135_a.func_147359_a(new SPacketSoundEffect(SoundEvents.field_187754_de, SoundCategory.WEATHER, this.field_70165_t, this.field_70163_u, this.field_70161_v, 10000.0F, pitch));
++                    player.connection.sendPacket(new SPacketSoundEffect(SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, this.posX, this.posY, this.posZ, 10000.0F, pitch));
 +                }
 +            }
-+            this.field_70170_p.func_184148_a((EntityPlayer)null, this.field_70165_t, this.field_70163_u, this.field_70161_v, SoundEvents.field_187752_dd, SoundCategory.WEATHER, 2.0F, 0.5F + this.field_70146_Z.nextFloat() * 0.2F);
++            this.world.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.WEATHER, 2.0F, 0.5F + this.rand.nextFloat() * 0.2F);
          }
  
--        this.field_70262_b--;
-+        --this.field_70262_b;
+-        this.lightningState--;
++        --this.lightningState;
  
-         if (this.field_70262_b < 0)
+         if (this.lightningState < 0)
          {
 @@ -100,7 +112,7 @@
              }
-             else if (this.field_70262_b < -this.field_70146_Z.nextInt(10))
+             else if (this.lightningState < -this.rand.nextInt(10))
              {
--                this.field_70263_c--;
-+                --this.field_70263_c;
-                 this.field_70262_b = 1;
+-                this.boltLivingTime--;
++                --this.boltLivingTime;
+                 this.lightningState = 1;
  
-                 if (!this.field_184529_d && !this.field_70170_p.field_72995_K)
+                 if (!this.effectOnly && !this.world.isRemote)
 @@ -108,18 +120,17 @@
-                     this.field_70264_a = this.field_70146_Z.nextLong();
+                     this.boltVertex = this.rand.nextLong();
                      BlockPos blockpos = new BlockPos(this);
  
--                    if (this.field_70170_p.func_82736_K().func_82766_b("doFireTick")
--                            && this.field_70170_p.func_175697_a(blockpos, 10)
--                            && this.field_70170_p.func_180495_p(blockpos).func_185904_a() == Material.field_151579_a
--                            && Blocks.field_150480_ab.func_176196_c(this.field_70170_p, blockpos))
-+                    if (this.field_70170_p.func_82736_K().func_82766_b("doFireTick") && this.field_70170_p.func_175697_a(blockpos, 10) && this.field_70170_p.func_180495_p(blockpos).func_185904_a() == Material.field_151579_a && Blocks.field_150480_ab.func_176196_c(this.field_70170_p, blockpos))
+-                    if (this.world.getGameRules().getBoolean("doFireTick")
+-                            && this.world.isAreaLoaded(blockpos, 10)
+-                            && this.world.getBlockState(blockpos).getMaterial() == Material.AIR
+-                            && Blocks.FIRE.canPlaceBlockAt(this.world, blockpos))
++                    if (this.world.getGameRules().getBoolean("doFireTick") && this.world.isAreaLoaded(blockpos, 10) && this.world.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(this.world, blockpos))
                      {
--                        this.field_70170_p.func_175656_a(blockpos, Blocks.field_150480_ab.func_176223_P());
-+                        if (!isEffect && !CraftEventFactory.callBlockIgniteEvent(field_70170_p, blockpos.func_177958_n(), blockpos.func_177956_o(), blockpos.func_177952_p(), this).isCancelled()) {
-+                            this.field_70170_p.func_175656_a(blockpos, Blocks.field_150480_ab.func_176223_P());
+-                        this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
++                        if (!isEffect && !CraftEventFactory.callBlockIgniteEvent(world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), this).isCancelled()) {
++                            this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 +                        }
                      }
                  }
              }
          }
  
--        if (this.field_70262_b >= 0)
-+        if (this.field_70262_b >= 0 && !this.isEffect) // CraftBukkit - add !this.isEffect
+-        if (this.lightningState >= 0)
++        if (this.lightningState >= 0 && !this.isEffect) // CraftBukkit - add !this.isEffect
          {
-             if (this.field_70170_p.field_72995_K)
+             if (this.world.isRemote)
              {
 @@ -127,40 +138,27 @@
              }
-             else if (!this.field_184529_d)
+             else if (!this.effectOnly)
              {
 -                double d0 = 3.0;
--                List<Entity> list = this.field_70170_p
--                                    .func_72839_b(
+-                List<Entity> list = this.world
+-                                    .getEntitiesWithinAABBExcludingEntity(
 -                                        this,
 -                                        new AxisAlignedBB(
--                                            this.field_70165_t - 3.0,
--                                            this.field_70163_u - 3.0,
--                                            this.field_70161_v - 3.0,
--                                            this.field_70165_t + 3.0,
--                                            this.field_70163_u + 6.0 + 3.0,
--                                            this.field_70161_v + 3.0
+-                                            this.posX - 3.0,
+-                                            this.posY - 3.0,
+-                                            this.posZ - 3.0,
+-                                            this.posX + 3.0,
+-                                            this.posY + 6.0 + 3.0,
+-                                            this.posZ + 3.0
 -                                        )
 -                                    );
 +                double d0 = 3.0D;
-+                List<Entity> list = this.field_70170_p.func_72839_b(this, new AxisAlignedBB(this.field_70165_t - 3.0D, this.field_70163_u - 3.0D, this.field_70161_v - 3.0D, this.field_70165_t + 3.0D, this.field_70163_u + 6.0D + 3.0D, this.field_70161_v + 3.0D));
++                List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB(this.posX - 3.0D, this.posY - 3.0D, this.posZ - 3.0D, this.posX + 3.0D, this.posY + 6.0D + 3.0D, this.posZ + 3.0D));
  
 -                for (int i = 0; i < list.size(); i++)
 +                for (int i = 0; i < list.size(); ++i)
                  {
                      Entity entity = list.get(i);
--                    entity.func_70077_a(this);
+-                    entity.onStruckByLightning(this);
 +                    if (!net.minecraftforge.event.ForgeEventFactory.onEntityStruckByLightning(entity, this))
-+                        entity.func_70077_a(this);
++                        entity.onStruckByLightning(this);
                  }
              }
          }
      }
  
 -    @Override
-     protected void func_70088_a()
+     protected void entityInit()
      {
      }
  
 -    @Override
-     protected void func_70037_a(NBTTagCompound p_70037_1_)
+     protected void readEntityFromNBT(NBTTagCompound compound)
      {
      }
  
 -    @Override
-     protected void func_70014_b(NBTTagCompound p_70014_1_)
+     protected void writeEntityToNBT(NBTTagCompound compound)
      {
      }

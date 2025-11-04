@@ -1,30 +1,30 @@
 --- before/net/minecraft/pathfinding/PathFinder.java
 +++ after/net/minecraft/pathfinding/PathFinder.java
 @@ -88,7 +88,7 @@
-             pathpoint1.field_75842_i = true;
-             int j = this.field_176190_c.func_186320_a(this.field_75864_d, pathpoint1, p_186335_2_, p_186335_3_);
+             pathpoint1.visited = true;
+             int j = this.nodeProcessor.findPathOptions(this.pathOptions, pathpoint1, pathTo, maxDistance);
  
 -            for (int k = 0; k < j; k++)
 +            for (int k = 0; k < j; ++k)
              {
-                 PathPoint pathpoint2 = this.field_75864_d[k];
-                 float f = pathpoint1.func_186281_c(pathpoint2);
+                 PathPoint pathpoint2 = this.pathOptions[k];
+                 float f = pathpoint1.distanceManhattan(pathpoint2);
 @@ -124,17 +124,17 @@
  
-         for (PathPoint pathpoint = p_75853_2_; pathpoint.field_75841_h != null; pathpoint = pathpoint.field_75841_h)
+         for (PathPoint pathpoint = end; pathpoint.previous != null; pathpoint = pathpoint.previous)
          {
 -            i++;
 +            ++i;
          }
  
          PathPoint[] apathpoint = new PathPoint[i];
-         PathPoint pathpoint1 = p_75853_2_;
+         PathPoint pathpoint1 = end;
 -        i--;
 +        --i;
  
-         for (apathpoint[i] = p_75853_2_; pathpoint1.field_75841_h != null; apathpoint[i] = pathpoint1)
+         for (apathpoint[i] = end; pathpoint1.previous != null; apathpoint[i] = pathpoint1)
          {
-             pathpoint1 = pathpoint1.field_75841_h;
+             pathpoint1 = pathpoint1.previous;
 -            i--;
 +            --i;
          }

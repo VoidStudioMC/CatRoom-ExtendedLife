@@ -3,15 +3,15 @@
 @@ -43,7 +43,7 @@
  public class BlockShulkerBox extends BlockContainer
  {
-     public static final PropertyEnum<EnumFacing> field_190957_a = PropertyDirection.func_177714_a("facing");
--    private final EnumDyeColor field_190958_b;
-+    public final EnumDyeColor field_190958_b;
+     public static final PropertyEnum<EnumFacing> FACING = PropertyDirection.create("facing");
+-    private final EnumDyeColor color;
++    public final EnumDyeColor color;
  
-     public BlockShulkerBox(EnumDyeColor p_i47248_1_)
+     public BlockShulkerBox(EnumDyeColor colorIn)
      {
 @@ -273,11 +273,11 @@
                  {
-                     if (!itemstack.func_190926_b())
+                     if (!itemstack.isEmpty())
                      {
 -                        j++;
 +                        ++j;
@@ -20,81 +20,81 @@
                          {
 -                            i++;
 +                            ++i;
-                             p_190948_3_.add(String.format("%s x%d", itemstack.func_82833_r(), itemstack.func_190916_E()));
+                             tooltip.add(String.format("%s x%d", itemstack.getDisplayName(), itemstack.getCount()));
                          }
                      }
 @@ -345,42 +345,24 @@
  
-     public static Block func_190952_a(EnumDyeColor p_190952_0_)
+     public static Block getBlockByColor(EnumDyeColor colorIn)
      {
--        switch (p_190952_0_)
+-        switch (colorIn)
 -        {
 -            case WHITE:
--                return Blocks.field_190977_dl;
+-                return Blocks.WHITE_SHULKER_BOX;
 -            case ORANGE:
--                return Blocks.field_190978_dm;
+-                return Blocks.ORANGE_SHULKER_BOX;
 -            case MAGENTA:
--                return Blocks.field_190979_dn;
+-                return Blocks.MAGENTA_SHULKER_BOX;
 -            case LIGHT_BLUE:
--                return Blocks.field_190980_do;
+-                return Blocks.LIGHT_BLUE_SHULKER_BOX;
 -            case YELLOW:
--                return Blocks.field_190981_dp;
+-                return Blocks.YELLOW_SHULKER_BOX;
 -            case LIME:
--                return Blocks.field_190982_dq;
+-                return Blocks.LIME_SHULKER_BOX;
 -            case PINK:
--                return Blocks.field_190983_dr;
+-                return Blocks.PINK_SHULKER_BOX;
 -            case GRAY:
--                return Blocks.field_190984_ds;
+-                return Blocks.GRAY_SHULKER_BOX;
 -            case SILVER:
--                return Blocks.field_190985_dt;
+-                return Blocks.SILVER_SHULKER_BOX;
 -            case CYAN:
--                return Blocks.field_190986_du;
+-                return Blocks.CYAN_SHULKER_BOX;
 -            case PURPLE:
 -            default:
--                return Blocks.field_190987_dv;
+-                return Blocks.PURPLE_SHULKER_BOX;
 -            case BLUE:
--                return Blocks.field_190988_dw;
+-                return Blocks.BLUE_SHULKER_BOX;
 -            case BROWN:
--                return Blocks.field_190989_dx;
+-                return Blocks.BROWN_SHULKER_BOX;
 -            case GREEN:
--                return Blocks.field_190990_dy;
+-                return Blocks.GREEN_SHULKER_BOX;
 -            case RED:
--                return Blocks.field_190991_dz;
+-                return Blocks.RED_SHULKER_BOX;
 -            case BLACK:
--                return Blocks.field_190975_dA;
+-                return Blocks.BLACK_SHULKER_BOX;
 -        }
-+        return switch (p_190952_0_) {
-+            case WHITE -> Blocks.field_190977_dl;
-+            case ORANGE -> Blocks.field_190978_dm;
-+            case MAGENTA -> Blocks.field_190979_dn;
-+            case LIGHT_BLUE -> Blocks.field_190980_do;
-+            case YELLOW -> Blocks.field_190981_dp;
-+            case LIME -> Blocks.field_190982_dq;
-+            case PINK -> Blocks.field_190983_dr;
-+            case GRAY -> Blocks.field_190984_ds;
-+            case SILVER -> Blocks.field_190985_dt;
-+            case CYAN -> Blocks.field_190986_du;
-+            case BLUE -> Blocks.field_190988_dw;
-+            case BROWN -> Blocks.field_190989_dx;
-+            case GREEN -> Blocks.field_190990_dy;
-+            case RED -> Blocks.field_190991_dz;
-+            case BLACK -> Blocks.field_190975_dA;
-+            default -> Blocks.field_190987_dv;
++        return switch (colorIn) {
++            case WHITE -> Blocks.WHITE_SHULKER_BOX;
++            case ORANGE -> Blocks.ORANGE_SHULKER_BOX;
++            case MAGENTA -> Blocks.MAGENTA_SHULKER_BOX;
++            case LIGHT_BLUE -> Blocks.LIGHT_BLUE_SHULKER_BOX;
++            case YELLOW -> Blocks.YELLOW_SHULKER_BOX;
++            case LIME -> Blocks.LIME_SHULKER_BOX;
++            case PINK -> Blocks.PINK_SHULKER_BOX;
++            case GRAY -> Blocks.GRAY_SHULKER_BOX;
++            case SILVER -> Blocks.SILVER_SHULKER_BOX;
++            case CYAN -> Blocks.CYAN_SHULKER_BOX;
++            case BLUE -> Blocks.BLUE_SHULKER_BOX;
++            case BROWN -> Blocks.BROWN_SHULKER_BOX;
++            case GREEN -> Blocks.GREEN_SHULKER_BOX;
++            case RED -> Blocks.RED_SHULKER_BOX;
++            case BLACK -> Blocks.BLACK_SHULKER_BOX;
++            default -> Blocks.PURPLE_SHULKER_BOX;
 +        };
      }
  
      @SideOnly(Side.CLIENT)
 @@ -411,8 +393,12 @@
      {
-         p_193383_2_ = this.func_176221_a(p_193383_2_, p_193383_1_, p_193383_3_);
-         EnumFacing enumfacing = p_193383_2_.func_177229_b(field_190957_a);
--        TileEntityShulkerBox.AnimationStatus tileentityshulkerbox$animationstatus = ((TileEntityShulkerBox)p_193383_1_.func_175625_s(p_193383_3_))
--                .func_190591_p();
-+        TileEntityShulkerBox te = (TileEntityShulkerBox) p_193383_1_.func_175625_s(p_193383_3_);
+         state = this.getActualState(state, worldIn, pos);
+         EnumFacing enumfacing = state.getValue(FACING);
+-        TileEntityShulkerBox.AnimationStatus tileentityshulkerbox$animationstatus = ((TileEntityShulkerBox)worldIn.getTileEntity(pos))
+-                .getAnimationStatus();
++        TileEntityShulkerBox te = (TileEntityShulkerBox) worldIn.getTileEntity(pos);
 +
 +        // CREF: getTileEntity may return null
 +        TileEntityShulkerBox.AnimationStatus tileentityshulkerbox$animationstatus =
-+            te == null ? TileEntityShulkerBox.AnimationStatus.CLOSED : te.func_190591_p();
++            te == null ? TileEntityShulkerBox.AnimationStatus.CLOSED : te.getAnimationStatus();
 +
          return tileentityshulkerbox$animationstatus != TileEntityShulkerBox.AnimationStatus.CLOSED
                 && (

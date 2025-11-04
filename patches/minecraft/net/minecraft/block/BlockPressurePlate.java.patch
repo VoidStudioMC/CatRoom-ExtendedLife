@@ -18,15 +18,15 @@
          {
              for (Entity entity : list)
              {
-+                if (this.func_176576_e(p_180669_1_.func_180495_p(p_180669_2_)) == 0) {
-+                    org.bukkit.World bworld = p_180669_1_.getWorld();
-+                    org.bukkit.plugin.PluginManager manager = p_180669_1_.getServer().getPluginManager();
++                if (this.getRedstoneStrength(worldIn.getBlockState(pos)) == 0) {
++                    org.bukkit.World bworld = worldIn.getWorld();
++                    org.bukkit.plugin.PluginManager manager = worldIn.getServer().getPluginManager();
 +                    org.bukkit.event.Cancellable cancellable;
 +
 +                    if (entity instanceof EntityPlayer) {
-+                        cancellable = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerInteractEvent((EntityPlayer) entity, org.bukkit.event.block.Action.PHYSICAL, p_180669_2_, null, null, null);
++                        cancellable = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerInteractEvent((EntityPlayer) entity, org.bukkit.event.block.Action.PHYSICAL, pos, null, null, null);
 +                    } else {
-+                        cancellable = new EntityInteractEvent(entity.getBukkitEntity(), bworld.getBlockAt(p_180669_2_.func_177958_n(), p_180669_2_.func_177956_o(), p_180669_2_.func_177952_p()));
++                        cancellable = new EntityInteractEvent(entity.getBukkitEntity(), bworld.getBlockAt(pos.getX(), pos.getY(), pos.getZ()));
 +                        manager.callEvent((EntityInteractEvent) cancellable);
 +                    }
 +
@@ -36,6 +36,6 @@
 +                    }
 +                }
 +
-                 if (!entity.func_145773_az())
+                 if (!entity.doesEntityNotTriggerPressurePlate())
                  {
                      return 15;

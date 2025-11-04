@@ -1,26 +1,26 @@
 --- before/net/minecraft/client/gui/inventory/GuiBeacon.java
 +++ after/net/minecraft/client/gui/inventory/GuiBeacon.java
 @@ -65,12 +65,12 @@
-             this.field_147027_y = false;
+             this.buttonsNotDrawn = false;
              int j = 100;
  
 -            for (int k = 0; k <= 2; k++)
 +            for (int k = 0; k <= 2; ++k)
              {
-                 int l = TileEntityBeacon.field_146009_a[k].length;
+                 int l = TileEntityBeacon.EFFECTS_LIST[k].length;
                  int i1 = l * 22 + (l - 1) * 2;
  
 -                for (int j1 = 0; j1 < l; j1++)
 +                for (int j1 = 0; j1 < l; ++j1)
                  {
-                     Potion potion2 = TileEntityBeacon.field_146009_a[k][j1];
+                     Potion potion2 = TileEntityBeacon.EFFECTS_LIST[k][j1];
                      GuiBeacon.PowerButton guibeacon$powerbutton = new GuiBeacon.PowerButton(
 @@ -93,7 +93,7 @@
-             int l1 = TileEntityBeacon.field_146009_a[3].length + 1;
+             int l1 = TileEntityBeacon.EFFECTS_LIST[3].length + 1;
              int i2 = l1 * 22 + (l1 - 1) * 2;
  
 -            for (int j2 = 0; j2 < l1 - 1; j2++)
 +            for (int j2 = 0; j2 < l1 - 1; ++j2)
              {
-                 Potion potion3 = TileEntityBeacon.field_146009_a[3][j2];
+                 Potion potion3 = TileEntityBeacon.EFFECTS_LIST[3][j2];
                  GuiBeacon.PowerButton guibeacon$powerbutton2 = new GuiBeacon.PowerButton(

@@ -23,89 +23,89 @@
  
  public class ContainerEnchantment extends Container
  {
--    public IInventory field_75168_e = new InventoryBasic("Enchant", true, 2)
+-    public IInventory tableInventory = new InventoryBasic("Enchant", true, 2)
 -    {
 -        @Override
--        public int func_70297_j_()
+-        public int getInventoryStackLimit()
 -        {
 -            return 64;
 -        }
 -        @Override
--        public void func_70296_d()
+-        public void markDirty()
 -        {
--            super.func_70296_d();
--            ContainerEnchantment.this.func_75130_a(this);
+-            super.markDirty();
+-            ContainerEnchantment.this.onCraftMatrixChanged(this);
 -        }
 -    };
--    private final World field_75172_h;
-+    public IInventory field_75168_e;
-+    private World field_75172_h;
-     private final BlockPos field_178150_j;
--    private final Random field_75169_l = new Random();
-+    private final Random field_75169_l;
-     public int field_178149_f;
--    public int[] field_75167_g = new int[3];
--    public int[] field_185001_h = new int[] { -1, -1, -1};
--    public int[] field_185002_i = new int[] { -1, -1, -1};
-+    public int[] field_75167_g;
-+    public int[] field_185001_h;
-+    public int[] field_185002_i;
+-    private final World world;
++    public IInventory tableInventory;
++    private World world;
+     private final BlockPos position;
+-    private final Random rand = new Random();
++    private final Random rand;
+     public int xpSeed;
+-    public int[] enchantLevels = new int[3];
+-    public int[] enchantClue = new int[] { -1, -1, -1};
+-    public int[] worldClue = new int[] { -1, -1, -1};
++    public int[] enchantLevels;
++    public int[] enchantClue;
++    public int[] worldClue;
 +
 +    private CraftInventoryView bukkitEntity = null;
 +    private Player player;
  
      @SideOnly(Side.CLIENT)
-     public ContainerEnchantment(InventoryPlayer p_i45797_1_, World p_i45797_2_)
+     public ContainerEnchantment(InventoryPlayer playerInv, World worldIn)
 @@ -54,17 +53,36 @@
  
-     public ContainerEnchantment(InventoryPlayer p_i45798_1_, World p_i45798_2_, BlockPos p_i45798_3_)
+     public ContainerEnchantment(InventoryPlayer playerInv, World worldIn, BlockPos pos)
      {
-+        this.field_75168_e = new InventoryBasic("Enchant", true, 2)
++        this.tableInventory = new InventoryBasic("Enchant", true, 2)
 +        {
-+            public int func_70297_j_()
++            public int getInventoryStackLimit()
 +            {
 +                return 64;
 +            }
-+            public void func_70296_d()
++            public void markDirty()
 +            {
-+                super.func_70296_d();
-+                ContainerEnchantment.this.func_75130_a(this);
++                super.markDirty();
++                ContainerEnchantment.this.onCraftMatrixChanged(this);
 +            }
 +
 +            @Override
 +            public Location getLocation() {
-+                return new org.bukkit.Location(p_i45798_2_.getWorld(), field_178150_j.func_177958_n(), field_178150_j.func_177956_o(), field_178150_j.func_177952_p());
++                return new org.bukkit.Location(worldIn.getWorld(), position.getX(), position.getY(), position.getZ());
 +            }
 +        };
-+        this.field_75169_l = new Random();
-+        this.field_75167_g = new int[3];
-+        this.field_185001_h = new int[] { -1, -1, -1};
-+        this.field_185002_i = new int[] { -1, -1, -1};
-         this.field_75172_h = p_i45798_2_;
-         this.field_178150_j = p_i45798_3_;
-         this.field_178149_f = p_i45798_1_.field_70458_d.func_175138_ci();
-         this.func_75146_a(new Slot(this.field_75168_e, 0, 15, 47)
++        this.rand = new Random();
++        this.enchantLevels = new int[3];
++        this.enchantClue = new int[] { -1, -1, -1};
++        this.worldClue = new int[] { -1, -1, -1};
+         this.world = worldIn;
+         this.position = pos;
+         this.xpSeed = playerInv.player.getXPSeed();
+         this.addSlotToContainer(new Slot(this.tableInventory, 0, 15, 47)
          {
 -            @Override
-             public boolean func_75214_a(ItemStack p_75214_1_)
+             public boolean isItemValid(ItemStack stack)
              {
                  return true;
              }
 -            @Override
-             public int func_75219_a()
+             public int getSlotStackLimit()
              {
                  return 1;
 @@ -72,25 +90,29 @@
          });
-         this.func_75146_a(new Slot(this.field_75168_e, 1, 35, 47)
+         this.addSlotToContainer(new Slot(this.tableInventory, 1, 35, 47)
          {
 -            @Override
 +            java.util.List<ItemStack> ores = net.minecraftforge.oredict.OreDictionary.getOres("gemLapis");
-             public boolean func_75214_a(ItemStack p_75214_1_)
+             public boolean isItemValid(ItemStack stack)
              {
--                return p_75214_1_.func_77973_b() == Items.field_151100_aR && EnumDyeColor.func_176766_a(p_75214_1_.func_77960_j()) == EnumDyeColor.BLUE;
+-                return stack.getItem() == Items.DYE && EnumDyeColor.byDyeDamage(stack.getMetadata()) == EnumDyeColor.BLUE;
 +                for (ItemStack ore : ores)
-+                    if (net.minecraftforge.oredict.OreDictionary.itemMatches(ore, p_75214_1_, false)) return true;
++                    if (net.minecraftforge.oredict.OreDictionary.itemMatches(ore, stack, false)) return true;
 +                return false;
              }
          });
@@ -116,64 +116,64 @@
 -            for (int j = 0; j < 9; j++)
 +            for (int j = 0; j < 9; ++j)
              {
-                 this.func_75146_a(new Slot(p_i45798_1_, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                 this.addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
              }
          }
  
 -        for (int k = 0; k < 9; k++)
 +        for (int k = 0; k < 9; ++k)
          {
-             this.func_75146_a(new Slot(p_i45798_1_, k, 8 + k * 18, 142));
+             this.addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 142));
          }
 +
-+        player = (Player) p_i45798_1_.field_70458_d.getBukkitEntity();
++        player = (Player) playerInv.player.getBukkitEntity();
      }
  
-     protected void func_185000_c(IContainerListener p_185000_1_)
+     protected void broadcastData(IContainerListener crafting)
 @@ -107,19 +129,17 @@
-         p_185000_1_.func_71112_a(this, 9, this.field_185002_i[2]);
+         crafting.sendWindowProperty(this, 9, this.worldClue[2]);
      }
  
 -    @Override
-     public void func_75132_a(IContainerListener p_75132_1_)
+     public void addListener(IContainerListener listener)
      {
-         super.func_75132_a(p_75132_1_);
-         this.func_185000_c(p_75132_1_);
+         super.addListener(listener);
+         this.broadcastData(listener);
      }
  
 -    @Override
-     public void func_75142_b()
+     public void detectAndSendChanges()
      {
-         super.func_75142_b();
+         super.detectAndSendChanges();
  
--        for (int i = 0; i < this.field_75149_d.size(); i++)
-+        for (int i = 0; i < this.field_75149_d.size(); ++i)
+-        for (int i = 0; i < this.listeners.size(); i++)
++        for (int i = 0; i < this.listeners.size(); ++i)
          {
-             IContainerListener icontainerlistener = this.field_75149_d.get(i);
-             this.func_185000_c(icontainerlistener);
+             IContainerListener icontainerlistener = this.listeners.get(i);
+             this.broadcastData(icontainerlistener);
 @@ -127,7 +147,6 @@
      }
  
      @SideOnly(Side.CLIENT)
 -    @Override
-     public void func_75137_b(int p_75137_1_, int p_75137_2_)
+     public void updateProgressBar(int id, int data)
      {
-         if (p_75137_1_ >= 0 && p_75137_1_ <= 2)
+         if (id >= 0 && id <= 2)
 @@ -152,58 +171,33 @@
          }
      }
  
 -    @Override
-     public void func_75130_a(IInventory p_75130_1_)
+     public void onCraftMatrixChanged(IInventory inventoryIn)
      {
-         if (p_75130_1_ == this.field_75168_e)
+         if (inventoryIn == this.tableInventory)
          {
-             ItemStack itemstack = p_75130_1_.func_70301_a(0);
+             ItemStack itemstack = inventoryIn.getStackInSlot(0);
  
--            if (!itemstack.func_190926_b() && itemstack.func_77956_u())
-+            if (!itemstack.func_190926_b()/* && itemstack.isItemEnchantable()*/) // CraftBukkit - relax condition
+-            if (!itemstack.isEmpty() && itemstack.isItemEnchantable())
++            if (!itemstack.isEmpty()/* && itemstack.isItemEnchantable()*/) // CraftBukkit - relax condition
              {
-                 if (!this.field_75172_h.field_72995_K)
+                 if (!this.world.isRemote)
                  {
                      int l = 0;
 +                    float power = 0;
@@ -185,73 +185,73 @@
 +                        for (int k = -1; k <= 1; ++k)
                          {
 -                            if ((j != 0 || k != 0)
--                                    && this.field_75172_h.func_175623_d(this.field_178150_j.func_177982_a(k, 0, j))
--                                    && this.field_75172_h.func_175623_d(this.field_178150_j.func_177982_a(k, 1, j)))
-+                            if ((j != 0 || k != 0) && this.field_75172_h.func_175623_d(this.field_178150_j.func_177982_a(k, 0, j)) && this.field_75172_h.func_175623_d(this.field_178150_j.func_177982_a(k, 1, j)))
+-                                    && this.world.isAirBlock(this.position.add(k, 0, j))
+-                                    && this.world.isAirBlock(this.position.add(k, 1, j)))
++                            if ((j != 0 || k != 0) && this.world.isAirBlock(this.position.add(k, 0, j)) && this.world.isAirBlock(this.position.add(k, 1, j)))
                              {
--                                if (this.field_75172_h.func_180495_p(this.field_178150_j.func_177982_a(k * 2, 0, j * 2)).func_177230_c() == Blocks.field_150342_X)
+-                                if (this.world.getBlockState(this.position.add(k * 2, 0, j * 2)).getBlock() == Blocks.BOOKSHELF)
 -                                {
 -                                    l++;
 -                                }
 -
--                                if (this.field_75172_h.func_180495_p(this.field_178150_j.func_177982_a(k * 2, 1, j * 2)).func_177230_c() == Blocks.field_150342_X)
+-                                if (this.world.getBlockState(this.position.add(k * 2, 1, j * 2)).getBlock() == Blocks.BOOKSHELF)
 -                                {
 -                                    l++;
 -                                }
 -
-+                                power += net.minecraftforge.common.ForgeHooks.getEnchantPower(field_75172_h, field_178150_j.func_177982_a(k * 2, 0, j * 2));
-+                                power += net.minecraftforge.common.ForgeHooks.getEnchantPower(field_75172_h, field_178150_j.func_177982_a(k * 2, 1, j * 2));
++                                power += net.minecraftforge.common.ForgeHooks.getEnchantPower(world, position.add(k * 2, 0, j * 2));
++                                power += net.minecraftforge.common.ForgeHooks.getEnchantPower(world, position.add(k * 2, 1, j * 2));
                                  if (k != 0 && j != 0)
                                  {
--                                    if (this.field_75172_h.func_180495_p(this.field_178150_j.func_177982_a(k * 2, 0, j)).func_177230_c() == Blocks.field_150342_X)
+-                                    if (this.world.getBlockState(this.position.add(k * 2, 0, j)).getBlock() == Blocks.BOOKSHELF)
 -                                    {
 -                                        l++;
 -                                    }
 -
--                                    if (this.field_75172_h.func_180495_p(this.field_178150_j.func_177982_a(k * 2, 1, j)).func_177230_c() == Blocks.field_150342_X)
+-                                    if (this.world.getBlockState(this.position.add(k * 2, 1, j)).getBlock() == Blocks.BOOKSHELF)
 -                                    {
 -                                        l++;
 -                                    }
 -
--                                    if (this.field_75172_h.func_180495_p(this.field_178150_j.func_177982_a(k, 0, j * 2)).func_177230_c() == Blocks.field_150342_X)
+-                                    if (this.world.getBlockState(this.position.add(k, 0, j * 2)).getBlock() == Blocks.BOOKSHELF)
 -                                    {
 -                                        l++;
 -                                    }
 -
--                                    if (this.field_75172_h.func_180495_p(this.field_178150_j.func_177982_a(k, 1, j * 2)).func_177230_c() == Blocks.field_150342_X)
+-                                    if (this.world.getBlockState(this.position.add(k, 1, j * 2)).getBlock() == Blocks.BOOKSHELF)
 -                                    {
 -                                        l++;
 -                                    }
-+                                    power += net.minecraftforge.common.ForgeHooks.getEnchantPower(field_75172_h, field_178150_j.func_177982_a(k * 2, 0, j));
-+                                    power += net.minecraftforge.common.ForgeHooks.getEnchantPower(field_75172_h, field_178150_j.func_177982_a(k * 2, 1, j));
-+                                    power += net.minecraftforge.common.ForgeHooks.getEnchantPower(field_75172_h, field_178150_j.func_177982_a(k, 0, j * 2));
-+                                    power += net.minecraftforge.common.ForgeHooks.getEnchantPower(field_75172_h, field_178150_j.func_177982_a(k, 1, j * 2));
++                                    power += net.minecraftforge.common.ForgeHooks.getEnchantPower(world, position.add(k * 2, 0, j));
++                                    power += net.minecraftforge.common.ForgeHooks.getEnchantPower(world, position.add(k * 2, 1, j));
++                                    power += net.minecraftforge.common.ForgeHooks.getEnchantPower(world, position.add(k, 0, j * 2));
++                                    power += net.minecraftforge.common.ForgeHooks.getEnchantPower(world, position.add(k, 1, j * 2));
                                  }
                              }
                          }
 @@ -211,9 +205,9 @@
  
-                     this.field_75169_l.setSeed((long)this.field_178149_f);
+                     this.rand.setSeed((long)this.xpSeed);
  
 -                    for (int i1 = 0; i1 < 3; i1++)
 +                    for (int i1 = 0; i1 < 3; ++i1)
                      {
--                        this.field_75167_g[i1] = EnchantmentHelper.func_77514_a(this.field_75169_l, i1, l, itemstack);
-+                        this.field_75167_g[i1] = EnchantmentHelper.func_77514_a(this.field_75169_l, i1, (int)power, itemstack);
-                         this.field_185001_h[i1] = -1;
-                         this.field_185002_i[i1] = -1;
+-                        this.enchantLevels[i1] = EnchantmentHelper.calcItemStackEnchantability(this.rand, i1, l, itemstack);
++                        this.enchantLevels[i1] = EnchantmentHelper.calcItemStackEnchantability(this.rand, i1, (int)power, itemstack);
+                         this.enchantClue[i1] = -1;
+                         this.worldClue[i1] = -1;
  
 @@ -221,9 +215,10 @@
                          {
-                             this.field_75167_g[i1] = 0;
+                             this.enchantLevels[i1] = 0;
                          }
-+                        this.field_75167_g[i1] = net.minecraftforge.event.ForgeEventFactory.onEnchantmentLevelSet(field_75172_h, field_178150_j, i1, (int)power, itemstack, field_75167_g[i1]);
++                        this.enchantLevels[i1] = net.minecraftforge.event.ForgeEventFactory.onEnchantmentLevelSet(world, position, i1, (int)power, itemstack, enchantLevels[i1]);
                      }
  
 -                    for (int j1 = 0; j1 < 3; j1++)
 +                    for (int j1 = 0; j1 < 3; ++j1)
                      {
-                         if (this.field_75167_g[j1] > 0)
+                         if (this.enchantLevels[j1] > 0)
                          {
 @@ -238,12 +233,47 @@
                          }
@@ -261,19 +261,19 @@
 +                    CraftItemStack item = CraftItemStack.asCraftMirror(itemstack);
 +                    org.bukkit.enchantments.EnchantmentOffer[] offers = new EnchantmentOffer[3];
 +                    for (int j = 0; j < 3; ++j) {
-+                        org.bukkit.enchantments.Enchantment enchantment = (this.field_185001_h[j] >= 0) ? org.bukkit.enchantments.Enchantment.getById(this.field_185001_h[j]) : null;
-+                        offers[j] = (enchantment != null) ? new EnchantmentOffer(enchantment, this.field_185002_i[j], this.field_75167_g[j]) : null;
++                        org.bukkit.enchantments.Enchantment enchantment = (this.enchantClue[j] >= 0) ? org.bukkit.enchantments.Enchantment.getById(this.enchantClue[j]) : null;
++                        offers[j] = (enchantment != null) ? new EnchantmentOffer(enchantment, this.worldClue[j], this.enchantLevels[j]) : null;
 +                    }
 +
-+                    PrepareItemEnchantEvent event = new PrepareItemEnchantEvent(player, this.getBukkitView(), this.field_75172_h.getWorld().getBlockAt(field_178150_j.func_177958_n(), field_178150_j.func_177956_o(), field_178150_j.func_177952_p()), item, offers, (int) power);
-+                    event.setCancelled(!itemstack.func_77956_u());
-+                    if (this.getBukkitView() != null) this.field_75172_h.getServer().getPluginManager().callEvent(event); // CatServer - mods bypass
++                    PrepareItemEnchantEvent event = new PrepareItemEnchantEvent(player, this.getBukkitView(), this.world.getWorld().getBlockAt(position.getX(), position.getY(), position.getZ()), item, offers, (int) power);
++                    event.setCancelled(!itemstack.isItemEnchantable());
++                    if (this.getBukkitView() != null) this.world.getServer().getPluginManager().callEvent(event); // CatServer - mods bypass
 +
 +                    if (event.isCancelled()) {
 +                        for (int j = 0; j < 3; ++j) {
-+                            this.field_75167_g[j] = 0;
-+                            this.field_185001_h[j] = -1;
-+                            this.field_185002_i[j] = -1;
++                            this.enchantLevels[j] = 0;
++                            this.enchantClue[j] = -1;
++                            this.worldClue[j] = -1;
 +                        }
 +                        return;
 +                    }
@@ -281,18 +281,18 @@
 +                    for (int j = 0; j < 3; j++) {
 +                        EnchantmentOffer offer = event.getOffers()[j];
 +                        if (offer != null) {
-+                            this.field_75167_g[j] = offer.getCost();
-+                            this.field_185001_h[j] = offer.getEnchantment().getId();
-+                            this.field_185002_i[j] = offer.getEnchantmentLevel();
++                            this.enchantLevels[j] = offer.getCost();
++                            this.enchantClue[j] = offer.getEnchantment().getId();
++                            this.worldClue[j] = offer.getEnchantmentLevel();
 +                        } else {
-+                            this.field_75167_g[j] = 0;
-+                            this.field_185001_h[j] = -1;
-+                            this.field_185002_i[j] = -1;
++                            this.enchantLevels[j] = 0;
++                            this.enchantClue[j] = -1;
++                            this.worldClue[j] = -1;
 +                        }
 +                    }
 +                    // CraftBukkit end
 +
-                     this.func_75142_b();
+                     this.detectAndSendChanges();
                  }
              }
              else
@@ -300,55 +300,55 @@
 -                for (int i = 0; i < 3; i++)
 +                for (int i = 0; i < 3; ++i)
                  {
-                     this.field_75167_g[i] = 0;
-                     this.field_185001_h[i] = -1;
+                     this.enchantLevels[i] = 0;
+                     this.enchantClue[i] = -1;
 @@ -253,7 +283,6 @@
          }
      }
  
 -    @Override
-     public boolean func_75140_a(EntityPlayer p_75140_1_, int p_75140_2_)
+     public boolean enchantItem(EntityPlayer playerIn, int id)
      {
-         ItemStack itemstack = this.field_75168_e.func_70301_a(0);
+         ItemStack itemstack = this.tableInventory.getStackInSlot(0);
 @@ -264,39 +293,69 @@
          {
              return false;
          }
--        else if (this.field_75167_g[p_75140_2_] > 0
--                 && !itemstack.func_190926_b()
--                 && (p_75140_1_.field_71068_ca >= i && p_75140_1_.field_71068_ca >= this.field_75167_g[p_75140_2_] || p_75140_1_.field_71075_bZ.field_75098_d))
-+        else if (this.field_75167_g[p_75140_2_] > 0 && !itemstack.func_190926_b() && (p_75140_1_.field_71068_ca >= i && p_75140_1_.field_71068_ca >= this.field_75167_g[p_75140_2_] || p_75140_1_.field_71075_bZ.field_75098_d))
+-        else if (this.enchantLevels[id] > 0
+-                 && !itemstack.isEmpty()
+-                 && (playerIn.experienceLevel >= i && playerIn.experienceLevel >= this.enchantLevels[id] || playerIn.capabilities.isCreativeMode))
++        else if (this.enchantLevels[id] > 0 && !itemstack.isEmpty() && (playerIn.experienceLevel >= i && playerIn.experienceLevel >= this.enchantLevels[id] || playerIn.capabilities.isCreativeMode))
          {
-             if (!this.field_75172_h.field_72995_K)
+             if (!this.world.isRemote)
              {
-                 List<EnchantmentData> list = this.func_178148_a(itemstack, p_75140_2_, this.field_75167_g[p_75140_2_]);
+                 List<EnchantmentData> list = this.getEnchantmentList(itemstack, id, this.enchantLevels[id]);
  
 -                if (!list.isEmpty())
 +                if (true || !list.isEmpty())
                  {
--                    p_75140_1_.func_192024_a(itemstack, i);
+-                    playerIn.onEnchant(itemstack, i);
 +//                    playerIn.onEnchant(itemstack, i); // Moved down
-                     boolean flag = itemstack.func_77973_b() == Items.field_151122_aG;
+                     boolean flag = itemstack.getItem() == Items.BOOK;
  
 +                    Map<org.bukkit.enchantments.Enchantment, Integer> enchants = new java.util.HashMap<org.bukkit.enchantments.Enchantment, Integer>();
 +                    for (Object obj : list) {
 +                        EnchantmentData instance = (EnchantmentData) obj;
-+                        enchants.put(org.bukkit.enchantments.Enchantment.getById(Enchantment.func_185258_b(instance.field_76302_b)), instance.field_76303_c);
++                        enchants.put(org.bukkit.enchantments.Enchantment.getById(Enchantment.getEnchantmentID(instance.enchantment)), instance.enchantmentLevel);
 +                    }
 +                    CraftItemStack item = CraftItemStack.asCraftMirror(itemstack);
 +
-+                    EnchantItemEvent event = new EnchantItemEvent((Player) p_75140_1_.getBukkitEntity(), this.getBukkitView(), this.field_75172_h.getWorld().getBlockAt(field_178150_j.func_177958_n(), field_178150_j.func_177956_o(), field_178150_j.func_177952_p()), item, this.field_75167_g[p_75140_2_], enchants, p_75140_2_);
-+                    if (this.getBukkitView() != null) this.field_75172_h.getServer().getPluginManager().callEvent(event); // CatServer - mods bypass
++                    EnchantItemEvent event = new EnchantItemEvent((Player) playerIn.getBukkitEntity(), this.getBukkitView(), this.world.getWorld().getBlockAt(position.getX(), position.getY(), position.getZ()), item, this.enchantLevels[id], enchants, id);
++                    if (this.getBukkitView() != null) this.world.getServer().getPluginManager().callEvent(event); // CatServer - mods bypass
 +
 +                    int level = event.getExpLevelCost();
-+                    if (event.isCancelled() || (level > p_75140_1_.field_71068_ca && !p_75140_1_.field_71075_bZ.field_75098_d) || event.getEnchantsToAdd().isEmpty()) {
++                    if (event.isCancelled() || (level > playerIn.experienceLevel && !playerIn.capabilities.isCreativeMode) || event.getEnchantsToAdd().isEmpty()) {
 +                        return false;
 +                    }
 +
                      if (flag)
                      {
-                         itemstack = new ItemStack(Items.field_151134_bR);
-                         this.field_75168_e.func_70299_a(0, itemstack);
+                         itemstack = new ItemStack(Items.ENCHANTED_BOOK);
+                         this.tableInventory.setInventorySlotContents(0, itemstack);
                      }
  
 -                    for (int j = 0; j < list.size(); j++)
@@ -357,11 +357,11 @@
 -
 -                        if (flag)
 -                        {
--                            ItemEnchantedBook.func_92115_a(itemstack, enchantmentdata);
+-                            ItemEnchantedBook.addEnchantment(itemstack, enchantmentdata);
 -                        }
 -                        else
 -                        {
--                            itemstack.func_77966_a(enchantmentdata.field_76302_b, enchantmentdata.field_76303_c);
+-                            itemstack.addEnchantment(enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
 +//                    for (int j = 0; j < list.size(); ++j)
 +//                    {
 +//                        EnchantmentData enchantmentdata = list.get(j);
@@ -369,7 +369,7 @@
 +                        try {
 +                            if (flag) {
 +                                int enchantId = entry.getKey().getId();
-+                                if (Enchantment.func_185262_c(enchantId) == null) {
++                                if (Enchantment.getEnchantmentByID(enchantId) == null) {
 +                                    continue;
 +                                }
 +//                        if (flag)
@@ -379,8 +379,8 @@
 +//                        else
 +//                        {
 +//                            itemstack.addEnchantment(enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
-+                                EnchantmentData weightedrandomenchant = new EnchantmentData(Enchantment.func_185262_c(enchantId), entry.getValue());
-+                                ItemEnchantedBook.func_92115_a(itemstack, weightedrandomenchant);
++                                EnchantmentData weightedrandomenchant = new EnchantmentData(Enchantment.getEnchantmentByID(enchantId), entry.getValue());
++                                ItemEnchantedBook.addEnchantment(itemstack, weightedrandomenchant);
 +                            } else {
 +                                item.addUnsafeEnchantment(entry.getKey(), entry.getValue());
 +                            }
@@ -389,100 +389,100 @@
                          }
                      }
  
-+                    p_75140_1_.func_192024_a(itemstack, i);
++                    playerIn.onEnchant(itemstack, i);
 +
 +
 +                    // CraftBukkit - TODO: let plugins change this
-                     if (!p_75140_1_.field_71075_bZ.field_75098_d)
+                     if (!playerIn.capabilities.isCreativeMode)
                      {
-                         itemstack1.func_190918_g(i);
+                         itemstack1.shrink(i);
 @@ -317,15 +376,7 @@
-                     this.field_75168_e.func_70296_d();
-                     this.field_178149_f = p_75140_1_.func_175138_ci();
-                     this.func_75130_a(this.field_75168_e);
--                    this.field_75172_h
--                    .func_184133_a(
+                     this.tableInventory.markDirty();
+                     this.xpSeed = playerIn.getXPSeed();
+                     this.onCraftMatrixChanged(this.tableInventory);
+-                    this.world
+-                    .playSound(
 -                        null,
--                        this.field_178150_j,
--                        SoundEvents.field_190021_aL,
+-                        this.position,
+-                        SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE,
 -                        SoundCategory.BLOCKS,
 -                        1.0F,
--                        this.field_75172_h.field_73012_v.nextFloat() * 0.1F + 0.9F
+-                        this.world.rand.nextFloat() * 0.1F + 0.9F
 -                    );
-+                    this.field_75172_h.func_184133_a((EntityPlayer)null, this.field_178150_j, SoundEvents.field_190021_aL, SoundCategory.BLOCKS, 1.0F, this.field_75172_h.field_73012_v.nextFloat() * 0.1F + 0.9F);
++                    this.world.playSound((EntityPlayer)null, this.position, SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, this.world.rand.nextFloat() * 0.1F + 0.9F);
                  }
              }
  
 @@ -357,33 +408,33 @@
-         return itemstack.func_190926_b() ? 0 : itemstack.func_190916_E();
+         return itemstack.isEmpty() ? 0 : itemstack.getCount();
      }
  
 -    @Override
-     public void func_75134_a(EntityPlayer p_75134_1_)
+     public void onContainerClosed(EntityPlayer playerIn)
      {
-         super.func_75134_a(p_75134_1_);
+         super.onContainerClosed(playerIn);
 -
 +        // CraftBukkit Start - If an enchantable was opened from a null location, set the world to the player's world, preventing a crash
-+        if (this.field_75172_h == null) {
-+            this.field_75172_h = p_75134_1_.func_130014_f_();
++        if (this.world == null) {
++            this.world = playerIn.getEntityWorld();
 +        }
 +        // CraftBukkit end
-         if (!this.field_75172_h.field_72995_K)
+         if (!this.world.isRemote)
          {
-             this.func_193327_a(p_75134_1_, p_75134_1_.field_70170_p, this.field_75168_e);
+             this.clearContainer(playerIn, playerIn.world, this.tableInventory);
          }
      }
  
 -    @Override
-     public boolean func_75145_c(EntityPlayer p_75145_1_)
+     public boolean canInteractWith(EntityPlayer playerIn)
      {
--        return this.field_75172_h.func_180495_p(this.field_178150_j).func_177230_c() != Blocks.field_150381_bn
+-        return this.world.getBlockState(this.position).getBlock() != Blocks.ENCHANTING_TABLE
 -               ? false
 -               : !(
--                   p_75145_1_.func_70092_e(
--                       (double)this.field_178150_j.func_177958_n() + 0.5,
--                       (double)this.field_178150_j.func_177956_o() + 0.5,
--                       (double)this.field_178150_j.func_177952_p() + 0.5
+-                   playerIn.getDistanceSq(
+-                       (double)this.position.getX() + 0.5,
+-                       (double)this.position.getY() + 0.5,
+-                       (double)this.position.getZ() + 0.5
 -                   )
 -                   > 64.0
 -               );
 +        if (!this.checkReachable) return true;
-+        if (this.field_75172_h.func_180495_p(this.field_178150_j).func_177230_c() != Blocks.field_150381_bn)
++        if (this.world.getBlockState(this.position).getBlock() != Blocks.ENCHANTING_TABLE)
 +        {
 +            return false;
 +        }
 +        else
 +        {
-+            return p_75145_1_.func_70092_e((double)this.field_178150_j.func_177958_n() + 0.5D, (double)this.field_178150_j.func_177956_o() + 0.5D, (double)this.field_178150_j.func_177952_p() + 0.5D) <= 64.0D;
++            return playerIn.getDistanceSq((double)this.position.getX() + 0.5D, (double)this.position.getY() + 0.5D, (double)this.position.getZ() + 0.5D) <= 64.0D;
 +        }
      }
  
 -    @Override
-     public ItemStack func_82846_b(EntityPlayer p_82846_1_, int p_82846_2_)
+     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
      {
-         ItemStack itemstack = ItemStack.field_190927_a;
+         ItemStack itemstack = ItemStack.EMPTY;
 @@ -417,19 +468,18 @@
              }
              else
              {
--                if (this.field_75151_b.get(0).func_75216_d() || !this.field_75151_b.get(0).func_75214_a(itemstack1))
-+                if (((Slot)this.field_75151_b.get(0)).func_75216_d() || !((Slot)this.field_75151_b.get(0)).func_75214_a(itemstack1))
+-                if (this.inventorySlots.get(0).getHasStack() || !this.inventorySlots.get(0).isItemValid(itemstack1))
++                if (((Slot)this.inventorySlots.get(0)).getHasStack() || !((Slot)this.inventorySlots.get(0)).isItemValid(itemstack1))
                  {
-                     return ItemStack.field_190927_a;
+                     return ItemStack.EMPTY;
                  }
  
--                if (itemstack1.func_77942_o() && itemstack1.func_190916_E() == 1)
-+                if (itemstack1.func_77942_o())// Forge: Fix MC-17431
+-                if (itemstack1.hasTagCompound() && itemstack1.getCount() == 1)
++                if (itemstack1.hasTagCompound())// Forge: Fix MC-17431
                  {
--                    this.field_75151_b.get(0).func_75215_d(itemstack1.func_77946_l());
--                    itemstack1.func_190920_e(0);
-+                    ((Slot)this.field_75151_b.get(0)).func_75215_d(itemstack1.func_77979_a(1));
+-                    this.inventorySlots.get(0).putStack(itemstack1.copy());
+-                    itemstack1.setCount(0);
++                    ((Slot)this.inventorySlots.get(0)).putStack(itemstack1.splitStack(1));
                  }
-                 else if (!itemstack1.func_190926_b())
+                 else if (!itemstack1.isEmpty())
                  {
--                    this.field_75151_b.get(0).func_75215_d(new ItemStack(itemstack1.func_77973_b(), 1, itemstack1.func_77960_j()));
-+                    ((Slot)this.field_75151_b.get(0)).func_75215_d(new ItemStack(itemstack1.func_77973_b(), 1, itemstack1.func_77960_j()));
-                     itemstack1.func_190918_g(1);
+-                    this.inventorySlots.get(0).putStack(new ItemStack(itemstack1.getItem(), 1, itemstack1.getMetadata()));
++                    ((Slot)this.inventorySlots.get(0)).putStack(new ItemStack(itemstack1.getItem(), 1, itemstack1.getMetadata()));
+                     itemstack1.shrink(1);
                  }
              }
 @@ -452,5 +502,16 @@
@@ -497,7 +497,7 @@
 +            return bukkitEntity;
 +        }
 +
-+        CraftInventoryEnchanting inventory = new CraftInventoryEnchanting(this.field_75168_e);
++        CraftInventoryEnchanting inventory = new CraftInventoryEnchanting(this.tableInventory);
 +        bukkitEntity = new CraftInventoryView(this.player, inventory, this);
 +        return bukkitEntity;
      }

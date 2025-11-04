@@ -1,11 +1,11 @@
 --- before/net/minecraft/command/server/CommandTeleport.java
 +++ after/net/minecraft/command/server/CommandTeleport.java
 @@ -61,7 +61,7 @@
-                 CommandBase.CoordinateArg commandbase$coordinatearg3 = func_175770_a(
-                             p_184881_3_.length > j ? (double)entity1.field_70177_z : (double)entity.field_70177_z, p_184881_3_.length > j ? p_184881_3_[j] : "~", false
+                 CommandBase.CoordinateArg commandbase$coordinatearg3 = parseCoordinate(
+                             args.length > j ? (double)entity1.rotationYaw : (double)entity.rotationYaw, args.length > j ? args[j] : "~", false
                          );
 -                j++;
 +                ++j;
-                 CommandBase.CoordinateArg commandbase$coordinatearg4 = func_175770_a(
-                             p_184881_3_.length > j ? (double)entity1.field_70125_A : (double)entity.field_70125_A, p_184881_3_.length > j ? p_184881_3_[j] : "~", false
+                 CommandBase.CoordinateArg commandbase$coordinatearg4 = parseCoordinate(
+                             args.length > j ? (double)entity1.rotationPitch : (double)entity.rotationPitch, args.length > j ? args[j] : "~", false
                          );

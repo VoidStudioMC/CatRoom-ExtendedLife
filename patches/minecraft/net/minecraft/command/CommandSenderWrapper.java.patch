@@ -4,8 +4,8 @@
  
  public class CommandSenderWrapper implements ICommandSender
  {
--    private final ICommandSender field_193043_a;
-+    public final ICommandSender field_193043_a;
+-    private final ICommandSender delegate;
++    public final ICommandSender delegate;
      @Nullable
-     private final Vec3d field_194002_b;
+     private final Vec3d positionVector;
      @Nullable

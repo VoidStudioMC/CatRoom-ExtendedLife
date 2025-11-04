@@ -12,26 +12,26 @@
                      }
                      else
                      {
--                        this.field_75299_d.func_70624_b(entitylivingbase);
-+                        this.field_75299_d.setGoalTarget(entitylivingbase, EntityTargetEvent.TargetReason.CLOSEST_ENTITY, true);
+-                        this.taskOwner.setAttackTarget(entitylivingbase);
++                        this.taskOwner.setGoalTarget(entitylivingbase, EntityTargetEvent.TargetReason.CLOSEST_ENTITY, true);
                          return true;
                      }
                  }
 @@ -117,7 +118,7 @@
      @Override
-     public void func_75251_c()
+     public void resetTask()
      {
--        this.field_75299_d.func_70624_b(null);
-+        this.field_75299_d.setGoalTarget((EntityLivingBase)null, EntityTargetEvent.TargetReason.FORGOT_TARGET, true);
-         this.field_188509_g = null;
+-        this.taskOwner.setAttackTarget(null);
++        this.taskOwner.setGoalTarget((EntityLivingBase)null, EntityTargetEvent.TargetReason.FORGOT_TARGET, true);
+         this.target = null;
      }
  
 @@ -135,7 +136,7 @@
          {
              return false;
          }
--        else if (!p_179445_0_.func_70686_a((Class <? extends EntityLivingBase >)p_179445_1_.getClass()))
-+        else if (!p_179445_0_.func_70686_a(p_179445_1_.getClass()))
+-        else if (!attacker.canAttackClass((Class <? extends EntityLivingBase >)target.getClass()))
++        else if (!attacker.canAttackClass(target.getClass()))
          {
              return false;
          }

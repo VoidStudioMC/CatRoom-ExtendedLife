@@ -10,9 +10,9 @@
  
  public class InventoryBasic implements IInventory
  {
-@@ -19,12 +22,52 @@
-     private List<IInventoryChangedListener> field_70480_d;
-     private boolean field_94051_e;
+@@ -19,8 +22,48 @@
+     private List<IInventoryChangedListener> changeListeners;
+     private boolean hasCustomName;
  
 +    // CraftBukkit start - add fields and methods
 +    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
@@ -20,7 +20,7 @@
 +    protected org.bukkit.inventory.InventoryHolder bukkitOwner;
 +        
 +    public List<ItemStack> getContents() {
-+        return this.field_70482_c;
++        return this.inventoryContents;
 +    }
 +    
 +    public void onOpen(CraftHumanEntity who) {
@@ -49,39 +49,31 @@
 +    }
 +    // CraftBukkit end
 +
-     public InventoryBasic(String p_i1561_1_, boolean p_i1561_2_, int p_i1561_3_)
+     public InventoryBasic(String title, boolean customName, int slotCount)
      {
--        this.field_70483_a = p_i1561_1_;
--        this.field_94051_e = p_i1561_2_;
--        this.field_70481_b = p_i1561_3_;
--        this.field_70482_c = NonNullList.func_191197_a(p_i1561_3_, ItemStack.field_190927_a);
-+        this(p_i1561_1_, p_i1561_2_, p_i1561_3_, null);
++        this(title, customName, slotCount, null);
 +    }
 +
 +    public InventoryBasic(String title, boolean customName, int slotCount, org.bukkit.inventory.InventoryHolder owner) {
 +        this.bukkitOwner = owner;
-+        this.field_70483_a = title;
-+        this.field_94051_e = customName;
-+        this.field_70481_b = slotCount;
-+        this.field_70482_c = NonNullList.func_191197_a(slotCount, ItemStack.field_190927_a);
-     }
- 
-     @SideOnly(Side.CLIENT)
+         this.inventoryTitle = title;
+         this.hasCustomName = customName;
+         this.slotsCount = slotCount;
 @@ -71,7 +114,7 @@
      {
-         ItemStack itemstack = p_174894_1_.func_77946_l();
+         ItemStack itemstack = stack.copy();
  
--        for (int i = 0; i < this.field_70481_b; i++)
-+        for (int i = 0; i < this.field_70481_b; ++i)
+-        for (int i = 0; i < this.slotsCount; i++)
++        for (int i = 0; i < this.slotsCount; ++i)
          {
-             ItemStack itemstack1 = this.func_70301_a(i);
+             ItemStack itemstack1 = this.getStackInSlot(i);
  
 @@ -193,7 +236,7 @@
      {
-         if (this.field_70480_d != null)
+         if (this.changeListeners != null)
          {
--            for (int i = 0; i < this.field_70480_d.size(); i++)
-+            for (int i = 0; i < this.field_70480_d.size(); ++i)
+-            for (int i = 0; i < this.changeListeners.size(); i++)
++            for (int i = 0; i < this.changeListeners.size(); ++i)
              {
-                 this.field_70480_d.get(i).func_76316_a(this);
+                 this.changeListeners.get(i).onInventoryChanged(this);
              }

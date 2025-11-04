@@ -2,22 +2,22 @@
 +++ after/net/minecraft/client/tutorial/MovementStep.java
 @@ -38,17 +38,17 @@
      @Override
-     public void func_193245_a()
+     public void update()
      {
--        this.field_193261_h++;
-+        ++this.field_193261_h;
+-        this.timeWaiting++;
++        ++this.timeWaiting;
  
-         if (this.field_193264_k)
+         if (this.moved)
          {
--            this.field_193262_i++;
-+            ++this.field_193262_i;
-             this.field_193264_k = false;
+-            this.timeMoved++;
++            ++this.timeMoved;
+             this.moved = false;
          }
  
-         if (this.field_193265_l)
+         if (this.turned)
          {
--            this.field_193263_j++;
-+            ++this.field_193263_j;
-             this.field_193265_l = false;
+-            this.timeLooked++;
++            ++this.timeLooked;
+             this.turned = false;
          }
  

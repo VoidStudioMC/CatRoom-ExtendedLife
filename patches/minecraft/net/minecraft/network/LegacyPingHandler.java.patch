@@ -3,50 +3,50 @@
 @@ -58,15 +58,15 @@
                          }
  
-                         field_151258_a.debug("Ping: (1.4-1.5.x) from {}:{}", inetsocketaddress.getAddress(), inetsocketaddress.getPort());
+                         LOGGER.debug("Ping: (1.4-1.5.x) from {}:{}", inetsocketaddress.getAddress(), inetsocketaddress.getPort());
 -                        String s1 = String.format(
 -                                        "\u00a71\u0000%d\u0000%s\u0000%s\u0000%d\u0000%d",
 -                                        127,
--                                        minecraftserver.func_71249_w(),
--                                        minecraftserver.func_71273_Y(),
--                                        minecraftserver.func_71233_x(),
--                                        minecraftserver.func_71275_y()
+-                                        minecraftserver.getMinecraftVersion(),
+-                                        minecraftserver.getMOTD(),
+-                                        minecraftserver.getCurrentPlayerCount(),
+-                                        minecraftserver.getMaxPlayers()
 -                                    );
--                        this.func_151256_a(p_channelRead_1_, this.func_151255_a(s1));
+-                        this.writeAndFlush(p_channelRead_1_, this.getStringBuffer(s1));
 +                        String s = String.format(
 +                                       "\u00a71\u0000%d\u0000%s\u0000%s\u0000%d\u0000%d",
 +                                       127,
-+                                       minecraftserver.func_71249_w(),
-+                                       minecraftserver.func_71273_Y(),
-+                                       minecraftserver.func_71233_x(),
-+                                       minecraftserver.func_71275_y()
++                                       minecraftserver.getMinecraftVersion(),
++                                       minecraftserver.getMOTD(),
++                                       minecraftserver.getCurrentPlayerCount(),
++                                       minecraftserver.getMaxPlayers()
 +                                   );
-+                        this.func_151256_a(p_channelRead_1_, this.func_151255_a(s));
++                        this.writeAndFlush(p_channelRead_1_, this.getStringBuffer(s));
                          break;
                      default:
                          boolean flag1 = bytebuf.readUnsignedByte() == 1;
 @@ -84,15 +84,15 @@
                          }
  
-                         field_151258_a.debug("Ping: (1.6) from {}:{}", inetsocketaddress.getAddress(), inetsocketaddress.getPort());
+                         LOGGER.debug("Ping: (1.6) from {}:{}", inetsocketaddress.getAddress(), inetsocketaddress.getPort());
 -                        String s = String.format(
 -                                       "\u00a71\u0000%d\u0000%s\u0000%s\u0000%d\u0000%d",
 -                                       127,
--                                       minecraftserver.func_71249_w(),
--                                       minecraftserver.func_71273_Y(),
--                                       minecraftserver.func_71233_x(),
--                                       minecraftserver.func_71275_y()
+-                                       minecraftserver.getMinecraftVersion(),
+-                                       minecraftserver.getMOTD(),
+-                                       minecraftserver.getCurrentPlayerCount(),
+-                                       minecraftserver.getMaxPlayers()
 -                                   );
--                        ByteBuf bytebuf1 = this.func_151255_a(s);
+-                        ByteBuf bytebuf1 = this.getStringBuffer(s);
 +                        String s1 = String.format(
 +                                        "\u00a71\u0000%d\u0000%s\u0000%s\u0000%d\u0000%d",
 +                                        127,
-+                                        minecraftserver.func_71249_w(),
-+                                        minecraftserver.func_71273_Y(),
-+                                        minecraftserver.func_71233_x(),
-+                                        minecraftserver.func_71275_y()
++                                        minecraftserver.getMinecraftVersion(),
++                                        minecraftserver.getMOTD(),
++                                        minecraftserver.getCurrentPlayerCount(),
++                                        minecraftserver.getMaxPlayers()
 +                                    );
-+                        ByteBuf bytebuf1 = this.func_151255_a(s1);
++                        ByteBuf bytebuf1 = this.getStringBuffer(s1);
  
                          try
                          {

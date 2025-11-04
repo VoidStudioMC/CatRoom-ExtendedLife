@@ -9,9 +9,9 @@
  import net.minecraft.item.ItemStack;
  import net.minecraft.world.IWorldNameable;
 @@ -37,4 +39,29 @@
-     int func_174890_g();
+     int getFieldCount();
  
-     void func_174888_l();
+     void clear();
 +
 +    // CraftBukkit start
 +    default java.util.List<ItemStack> getContents() { return java.util.Collections.emptyList(); }
@@ -28,8 +28,8 @@
 +
 +    default org.bukkit.Location getLocation() {
 +        if (this instanceof net.minecraft.tileentity.TileEntity) {
-+            net.minecraft.util.math.BlockPos pos = ((net.minecraft.tileentity.TileEntity) this).func_174877_v();
-+            return new org.bukkit.Location(((net.minecraft.tileentity.TileEntity) this).func_145831_w().getWorld(), pos.func_177958_n(), pos.func_177956_o(), pos.func_177952_p());
++            net.minecraft.util.math.BlockPos pos = ((net.minecraft.tileentity.TileEntity) this).getPos();
++            return new org.bukkit.Location(((net.minecraft.tileentity.TileEntity) this).getWorld().getWorld(), pos.getX(), pos.getY(), pos.getZ());
 +        } else {
 +            return null;
 +        }

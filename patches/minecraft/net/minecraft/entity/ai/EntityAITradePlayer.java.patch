@@ -4,14 +4,14 @@
              {
                  return false;
              }
-+            else if (this.field_75276_a.func_70068_e(entityplayer) > 16.0)
++            else if (this.villager.getDistanceSq(entityplayer) > 16.0)
 +            {
 +                return false;
 +            }
              else
              {
--                return this.field_75276_a.func_70068_e(entityplayer) > 16.0 ? false : entityplayer.field_71070_bA != null;
-+                return entityplayer.field_71070_bA != null;
+-                return this.villager.getDistanceSq(entityplayer) > 16.0 ? false : entityplayer.openContainer != null;
++                return entityplayer.openContainer != null;
              }
          }
      }

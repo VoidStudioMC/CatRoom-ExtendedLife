@@ -16,20 +16,20 @@
                  if (k > j)
                  {
 @@ -116,8 +118,6 @@
-                         this.field_150278_b.add(this.func_150272_a(i1));
+                         this.children.add(this.getFormatArgumentAsComponent(i1));
                      }
                  }
 -
 -                j = l;
              }
  
-             if (j < p_150269_1_.length())
+             if (j < format.length())
 @@ -207,7 +207,7 @@
      {
-         Object[] aobject = new Object[this.field_150277_e.length];
+         Object[] aobject = new Object[this.formatArgs.length];
  
--        for (int i = 0; i < this.field_150277_e.length; i++)
-+        for (int i = 0; i < this.field_150277_e.length; ++i)
+-        for (int i = 0; i < this.formatArgs.length; i++)
++        for (int i = 0; i < this.formatArgs.length; ++i)
          {
-             if (this.field_150277_e[i] instanceof ITextComponent)
+             if (this.formatArgs[i] instanceof ITextComponent)
              {

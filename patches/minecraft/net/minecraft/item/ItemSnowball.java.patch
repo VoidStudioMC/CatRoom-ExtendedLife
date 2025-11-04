@@ -10,44 +10,42 @@
  import net.minecraft.stats.StatList;
 @@ -24,27 +25,28 @@
      {
-         ItemStack itemstack = p_77659_2_.func_184586_b(p_77659_3_);
+         ItemStack itemstack = playerIn.getHeldItem(handIn);
  
--        if (!p_77659_2_.field_71075_bZ.field_75098_d)
 +        // CraftBukkit start - moved down
 +        /*
-+        if (!playerIn.capabilities.isCreativeMode)
+         if (!playerIn.capabilities.isCreativeMode)
          {
--            itemstack.func_190918_g(1);
-+            itemstack.shrink(1);
+             itemstack.shrink(1);
          }
  
--        p_77659_1_.func_184148_a(
+-        worldIn.playSound(
 -            null,
--            p_77659_2_.field_70165_t,
--            p_77659_2_.field_70163_u,
--            p_77659_2_.field_70161_v,
--            SoundEvents.field_187797_fA,
+-            playerIn.posX,
+-            playerIn.posY,
+-            playerIn.posZ,
+-            SoundEvents.ENTITY_SNOWBALL_THROW,
 -            SoundCategory.NEUTRAL,
 -            0.5F,
--            0.4F / (field_77697_d.nextFloat() * 0.4F + 0.8F)
+-            0.4F / (itemRand.nextFloat() * 0.4F + 0.8F)
 -        );
 -
 +        worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 +        */
-         if (!p_77659_1_.field_72995_K)
+         if (!worldIn.isRemote)
          {
-             EntitySnowball entitysnowball = new EntitySnowball(p_77659_1_, p_77659_2_);
-             entitysnowball.func_184538_a(p_77659_2_, p_77659_2_.field_70125_A, p_77659_2_.field_70177_z, 0.0F, 1.5F, 1.0F);
--            p_77659_1_.func_72838_d(entitysnowball);
-+            if (p_77659_1_.func_72838_d(entitysnowball)) {
-+                if (!p_77659_2_.field_71075_bZ.field_75098_d) {
-+                    itemstack.func_190918_g(1);
+             EntitySnowball entitysnowball = new EntitySnowball(worldIn, playerIn);
+             entitysnowball.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
+-            worldIn.spawnEntity(entitysnowball);
++            if (worldIn.spawnEntity(entitysnowball)) {
++                if (!playerIn.capabilities.isCreativeMode) {
++                    itemstack.shrink(1);
 +                }
 +
-+                p_77659_1_.func_184148_a(null, p_77659_2_.field_70165_t, p_77659_2_.field_70163_u, p_77659_2_.field_70161_v, SoundEvents.field_187797_fA, SoundCategory.NEUTRAL, 0.5F, 0.4F / (ItemSnowball.field_77697_d.nextFloat() * 0.4F + 0.8F));
-+            } else if (p_77659_2_ instanceof EntityPlayerMP) {
-+                ((EntityPlayerMP) p_77659_2_).getBukkitEntity().updateInventory();
++                worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (ItemSnowball.itemRand.nextFloat() * 0.4F + 0.8F));
++            } else if (playerIn instanceof EntityPlayerMP) {
++                ((EntityPlayerMP) playerIn).getBukkitEntity().updateInventory();
 +            }
          }
  
-         p_77659_2_.func_71029_a(StatList.func_188057_b(this));
+         playerIn.addStat(StatList.getObjectUseStats(this));

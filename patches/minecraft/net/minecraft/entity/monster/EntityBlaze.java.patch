@@ -7,43 +7,43 @@
 -            for (int i = 0; i < 2; i++)
 +            for (int i = 0; i < 2; ++i)
              {
-                 this.field_70170_p
-                 .func_175688_a(
+                 this.world
+                 .spawnParticle(
 @@ -163,7 +163,7 @@
-             this.func_70097_a(DamageSource.field_76369_e, 1.0F);
+             this.attackEntityFrom(DamageSource.DROWN, 1.0F);
          }
  
--        this.field_70848_e--;
-+        --this.field_70848_e;
+-        this.heightOffsetUpdateTime--;
++        --this.heightOffsetUpdateTime;
  
-         if (this.field_70848_e <= 0)
+         if (this.heightOffsetUpdateTime <= 0)
          {
 @@ -177,7 +177,7 @@
-                 && entitylivingbase.field_70163_u + (double)entitylivingbase.func_70047_e()
-                 > this.field_70163_u + (double)this.func_70047_e() + (double)this.field_70847_d)
+                 && entitylivingbase.posY + (double)entitylivingbase.getEyeHeight()
+                 > this.posY + (double)this.getEyeHeight() + (double)this.heightOffset)
          {
--            this.field_70181_x = this.field_70181_x + (0.3F - this.field_70181_x) * 0.3F;
-+            this.field_70181_x += (0.3F - this.field_70181_x) * 0.3F;
-             this.field_70160_al = true;
+-            this.motionY = this.motionY + (0.3F - this.motionY) * 0.3F;
++            this.motionY += (0.3F - this.motionY) * 0.3F;
+             this.isAirBorne = true;
          }
  
 @@ -263,7 +263,7 @@
              @Override
-             public void func_75246_d()
+             public void updateTask()
              {
--                this.field_179468_c--;
-+                --this.field_179468_c;
-                 EntityLivingBase entitylivingbase = this.field_179469_a.func_70638_az();
-                 double d0 = this.field_179469_a.func_70068_e(entitylivingbase);
+-                this.attackTime--;
++                --this.attackTime;
+                 EntityLivingBase entitylivingbase = this.blaze.getAttackTarget();
+                 double d0 = this.blaze.getDistanceSq(entitylivingbase);
  
 @@ -289,7 +289,7 @@
  
-                     if (this.field_179468_c <= 0)
+                     if (this.attackTime <= 0)
                      {
--                        this.field_179467_b++;
-+                        ++this.field_179467_b;
+-                        this.attackStep++;
++                        ++this.attackStep;
  
-                         if (this.field_179467_b == 1)
+                         if (this.attackStep == 1)
                          {
 @@ -319,7 +319,7 @@
                                  0
@@ -53,4 +53,4 @@
 +                            for (int i = 0; i < 1; ++i)
                              {
                                  EntitySmallFireball entitysmallfireball = new EntitySmallFireball(
-                                     this.field_179469_a.field_70170_p,
+                                     this.blaze.world,

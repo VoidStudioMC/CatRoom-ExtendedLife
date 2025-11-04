@@ -1,20 +1,20 @@
 --- before/net/minecraft/network/play/server/SPacketWindowItems.java
 +++ after/net/minecraft/network/play/server/SPacketWindowItems.java
 @@ -24,7 +24,7 @@
-         this.field_148914_a = p_i47317_1_;
-         this.field_148913_b = NonNullList.func_191197_a(p_i47317_2_.size(), ItemStack.field_190927_a);
+         this.windowId = p_i47317_1_;
+         this.itemStacks = NonNullList.withSize(p_i47317_2_.size(), ItemStack.EMPTY);
  
--        for (int i = 0; i < this.field_148913_b.size(); i++)
-+        for (int i = 0; i < this.field_148913_b.size(); ++i)
+-        for (int i = 0; i < this.itemStacks.size(); i++)
++        for (int i = 0; i < this.itemStacks.size(); ++i)
          {
              ItemStack itemstack = p_i47317_2_.get(i);
-             this.field_148913_b.set(i, itemstack.func_77946_l());
+             this.itemStacks.set(i, itemstack.copy());
 @@ -38,7 +38,7 @@
-         int i = p_148837_1_.readShort();
-         this.field_148913_b = NonNullList.func_191197_a(i, ItemStack.field_190927_a);
+         int i = buf.readShort();
+         this.itemStacks = NonNullList.withSize(i, ItemStack.EMPTY);
  
 -        for (int j = 0; j < i; j++)
 +        for (int j = 0; j < i; ++j)
          {
-             this.field_148913_b.set(j, p_148837_1_.func_150791_c());
+             this.itemStacks.set(j, buf.readItemStack());
          }

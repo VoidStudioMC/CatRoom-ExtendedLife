@@ -4,16 +4,16 @@
          {
              return false;
          }
-+        else if (!this.field_193419_i.func_192482_a(p_193418_1_, p_193418_2_.func_76364_f()))
++        else if (!this.directEntity.test(player, source.getImmediateSource()))
 +        {
 +            return false;
 +        }
          else
          {
--            return !this.field_193419_i.func_192482_a(p_193418_1_, p_193418_2_.func_76364_f())
+-            return !this.directEntity.test(player, source.getImmediateSource())
 -                   ? false
--                   : this.field_193420_j.func_192482_a(p_193418_1_, p_193418_2_.func_76346_g());
-+            return this.field_193420_j.func_192482_a(p_193418_1_, p_193418_2_.func_76346_g());
+-                   : this.sourceEntity.test(player, source.getTrueSource());
++            return this.sourceEntity.test(player, source.getTrueSource());
          }
      }
  

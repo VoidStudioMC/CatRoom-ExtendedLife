@@ -2,42 +2,42 @@
 +++ after/net/minecraft/client/renderer/ImageBufferDownload.java
 @@ -72,9 +72,9 @@
  
-     private void func_189559_a(int p_189559_1_, int p_189559_2_, int p_189559_3_, int p_189559_4_)
+     private void setAreaTransparent(int x, int y, int width, int height)
      {
--        for (int i = p_189559_1_; i < p_189559_3_; i++)
-+        for (int i = p_189559_1_; i < p_189559_3_; ++i)
+-        for (int i = x; i < width; i++)
++        for (int i = x; i < width; ++i)
          {
--            for (int j = p_189559_2_; j < p_189559_4_; j++)
-+            for (int j = p_189559_2_; j < p_189559_4_; ++j)
+-            for (int j = y; j < height; j++)
++            for (int j = y; j < height; ++j)
              {
-                 int k = this.field_78438_a[i + j * this.field_78436_b];
+                 int k = this.imageData[i + j * this.imageWidth];
  
 @@ -85,22 +85,22 @@
              }
          }
  
--        for (int l = p_189559_1_; l < p_189559_3_; l++)
-+        for (int l = p_189559_1_; l < p_189559_3_; ++l)
+-        for (int l = x; l < width; l++)
++        for (int l = x; l < width; ++l)
          {
--            for (int i1 = p_189559_2_; i1 < p_189559_4_; i1++)
-+            for (int i1 = p_189559_2_; i1 < p_189559_4_; ++i1)
+-            for (int i1 = y; i1 < height; i1++)
++            for (int i1 = y; i1 < height; ++i1)
              {
--                this.field_78438_a[l + i1 * this.field_78436_b] = this.field_78438_a[l + i1 * this.field_78436_b] & 16777215;
-+                this.field_78438_a[l + i1 * this.field_78436_b] &= 16777215;
+-                this.imageData[l + i1 * this.imageWidth] = this.imageData[l + i1 * this.imageWidth] & 16777215;
++                this.imageData[l + i1 * this.imageWidth] &= 16777215;
              }
          }
      }
  
-     private void func_78433_b(int p_78433_1_, int p_78433_2_, int p_78433_3_, int p_78433_4_)
+     private void setAreaOpaque(int x, int y, int width, int height)
      {
--        for (int i = p_78433_1_; i < p_78433_3_; i++)
-+        for (int i = p_78433_1_; i < p_78433_3_; ++i)
+-        for (int i = x; i < width; i++)
++        for (int i = x; i < width; ++i)
          {
--            for (int j = p_78433_2_; j < p_78433_4_; j++)
-+            for (int j = p_78433_2_; j < p_78433_4_; ++j)
+-            for (int j = y; j < height; j++)
++            for (int j = y; j < height; ++j)
              {
--                this.field_78438_a[i + j * this.field_78436_b] = this.field_78438_a[i + j * this.field_78436_b] | 0xFF000000;
-+                this.field_78438_a[i + j * this.field_78436_b] |= -16777216;
+-                this.imageData[i + j * this.imageWidth] = this.imageData[i + j * this.imageWidth] | 0xFF000000;
++                this.imageData[i + j * this.imageWidth] |= -16777216;
              }
          }
      }

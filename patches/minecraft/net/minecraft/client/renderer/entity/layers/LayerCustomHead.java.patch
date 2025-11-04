@@ -4,8 +4,8 @@
  
                          if (!StringUtils.isBlank(s))
                          {
--                            gameprofile = TileEntitySkull.func_174884_b(new GameProfile(null, s));
+-                            gameprofile = TileEntitySkull.updateGameProfile(new GameProfile(null, s));
 +                            gameprofile = TileEntitySkull.updateGameprofile(new GameProfile(null, s));
-                             nbttagcompound.func_74782_a("SkullOwner", NBTUtil.func_180708_a(new NBTTagCompound(), gameprofile));
+                             nbttagcompound.setTag("SkullOwner", NBTUtil.writeGameProfile(new NBTTagCompound(), gameprofile));
                          }
                      }

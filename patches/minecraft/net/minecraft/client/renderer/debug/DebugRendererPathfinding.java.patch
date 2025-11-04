@@ -4,26 +4,26 @@
                          0.5F
                      );
  
--                    for (int j = 0; j < path.func_75874_d(); j++)
-+                    for (int j = 0; j < path.func_75874_d(); ++j)
+-                    for (int j = 0; j < path.getCurrentPathLength(); j++)
++                    for (int j = 0; j < path.getCurrentPathLength(); ++j)
                      {
-                         PathPoint pathpoint1 = path.func_75877_a(j);
+                         PathPoint pathpoint1 = path.getPathPointFromIndex(j);
  
 @@ -168,7 +168,7 @@
                      }
                  }
  
--                for (int k = 0; k < path1.func_75874_d(); k++)
-+                for (int k = 0; k < path1.func_75874_d(); ++k)
+-                for (int k = 0; k < path1.getCurrentPathLength(); k++)
++                for (int k = 0; k < path1.getCurrentPathLength(); ++k)
                  {
-                     PathPoint pathpoint2 = path1.func_75877_a(k);
+                     PathPoint pathpoint2 = path1.getPathPointFromIndex(k);
  
 @@ -215,7 +215,7 @@
-         BufferBuilder bufferbuilder = tessellator.func_178180_c();
-         bufferbuilder.func_181668_a(3, DefaultVertexFormats.field_181706_f);
+         BufferBuilder bufferbuilder = tessellator.getBuffer();
+         bufferbuilder.begin(3, DefaultVertexFormats.POSITION_COLOR);
  
--        for (int i = 0; i < p_190067_2_.func_75874_d(); i++)
-+        for (int i = 0; i < p_190067_2_.func_75874_d(); ++i)
+-        for (int i = 0; i < pathIn.getCurrentPathLength(); i++)
++        for (int i = 0; i < pathIn.getCurrentPathLength(); ++i)
          {
-             PathPoint pathpoint = p_190067_2_.func_75877_a(i);
+             PathPoint pathpoint = pathIn.getPathPointFromIndex(i);
  

@@ -2,10 +2,10 @@
 +++ after/net/minecraft/util/datafix/fixes/SpawnerEntityTypes.java
 @@ -34,7 +34,7 @@
              {
-                 NBTTagList nbttaglist = p_188217_1_.func_150295_c("SpawnPotentials", 10);
+                 NBTTagList nbttaglist = compound.getTagList("SpawnPotentials", 10);
  
--                for (int i = 0; i < nbttaglist.func_74745_c(); i++)
-+                for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+-                for (int i = 0; i < nbttaglist.tagCount(); i++)
++                for (int i = 0; i < nbttaglist.tagCount(); ++i)
                  {
-                     NBTTagCompound nbttagcompound1 = nbttaglist.func_150305_b(i);
+                     NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
  

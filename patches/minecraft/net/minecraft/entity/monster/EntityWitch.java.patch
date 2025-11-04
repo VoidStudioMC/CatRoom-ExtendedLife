@@ -2,10 +2,10 @@
 +++ after/net/minecraft/entity/monster/EntityWitch.java
 @@ -207,7 +207,7 @@
      {
-         if (p_70103_1_ == 15)
+         if (id == 15)
          {
--            for (int i = 0; i < this.field_70146_Z.nextInt(35) + 10; i++)
-+            for (int i = 0; i < this.field_70146_Z.nextInt(35) + 10; ++i)
+-            for (int i = 0; i < this.rand.nextInt(35) + 10; i++)
++            for (int i = 0; i < this.rand.nextInt(35) + 10; ++i)
              {
-                 this.field_70170_p
-                 .func_175688_a(
+                 this.world
+                 .spawnParticle(

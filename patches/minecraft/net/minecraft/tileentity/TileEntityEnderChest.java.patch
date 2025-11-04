@@ -2,43 +2,43 @@
 +++ after/net/minecraft/tileentity/TileEntityEnderChest.java
 @@ -111,27 +111,32 @@
  
-     public void func_145969_a()
+     public void openChest()
      {
--        this.field_145973_j++;
-+        ++this.field_145973_j;
-         this.field_145850_b.func_175641_c(this.field_174879_c, Blocks.field_150477_bB, 1, this.field_145973_j);
+-        this.numPlayersUsing++;
++        ++this.numPlayersUsing;
+         this.world.addBlockEvent(this.pos, Blocks.ENDER_CHEST, 1, this.numPlayersUsing);
      }
  
-     public void func_145970_b()
+     public void closeChest()
      {
--        this.field_145973_j--;
-+        --this.field_145973_j;
-         this.field_145850_b.func_175641_c(this.field_174879_c, Blocks.field_150477_bB, 1, this.field_145973_j);
+-        this.numPlayersUsing--;
++        --this.numPlayersUsing;
+         this.world.addBlockEvent(this.pos, Blocks.ENDER_CHEST, 1, this.numPlayersUsing);
      }
  
-     public boolean func_145971_a(EntityPlayer p_145971_1_)
+     public boolean canBeUsed(EntityPlayer player)
      {
--        return this.field_145850_b.func_175625_s(this.field_174879_c) != this
+-        return this.world.getTileEntity(this.pos) != this
 -               ? false
 -               : !(
--                   p_145971_1_.func_70092_e(
--                       (double)this.field_174879_c.func_177958_n() + 0.5,
--                       (double)this.field_174879_c.func_177956_o() + 0.5,
--                       (double)this.field_174879_c.func_177952_p() + 0.5
+-                   player.getDistanceSq(
+-                       (double)this.pos.getX() + 0.5,
+-                       (double)this.pos.getY() + 0.5,
+-                       (double)this.pos.getZ() + 0.5
 -                   )
 -                   > 64.0
 -               );
-+        if (this.field_145850_b.func_175625_s(this.field_174879_c) != this)
++        if (this.world.getTileEntity(this.pos) != this)
 +        {
 +            return false;
 +        }
 +        else
 +        {
 +            return !(
-+                       p_145971_1_.func_70092_e(
-+                           (double)this.field_174879_c.func_177958_n() + 0.5,
-+                           (double)this.field_174879_c.func_177956_o() + 0.5,
-+                           (double)this.field_174879_c.func_177952_p() + 0.5
++                       player.getDistanceSq(
++                           (double)this.pos.getX() + 0.5,
++                           (double)this.pos.getY() + 0.5,
++                           (double)this.pos.getZ() + 0.5
 +                       )
 +                       > 64.0
 +                   );

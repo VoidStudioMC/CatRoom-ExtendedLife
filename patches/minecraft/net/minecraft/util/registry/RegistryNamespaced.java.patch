@@ -4,10 +4,10 @@
  
  public class RegistryNamespaced<K, V> extends RegistrySimple<K, V> implements IObjectIntIterable<V>
  {
--    protected final IntIdentityHashBiMap<V> field_148759_a = new IntIdentityHashBiMap(256);
--    protected final Map<V, K> field_148758_b = ((BiMap)this.field_82596_a).inverse();
-+    protected final IntIdentityHashBiMap<V> field_148759_a = new IntIdentityHashBiMap<>(256);
-+    protected final Map<V, K> field_148758_b = ((BiMap) this.field_82596_a).inverse();
+-    protected final IntIdentityHashBiMap<V> underlyingIntegerMap = new IntIdentityHashBiMap(256);
+-    protected final Map<V, K> inverseObjectRegistry = ((BiMap)this.registryObjects).inverse();
++    protected final IntIdentityHashBiMap<V> underlyingIntegerMap = new IntIdentityHashBiMap<>(256);
++    protected final Map<V, K> inverseObjectRegistry = ((BiMap) this.registryObjects).inverse();
  
-     public void func_177775_a(int p_177775_1_, K p_177775_2_, V p_177775_3_)
+     public void register(int id, K key, V value)
      {

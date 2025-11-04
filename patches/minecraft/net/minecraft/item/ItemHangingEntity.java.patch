@@ -11,18 +11,18 @@
  {
 @@ -45,6 +47,16 @@
              {
-                 if (!p_180614_2_.field_72995_K)
+                 if (!worldIn.isRemote)
                  {
-+                    Player who = (p_180614_1_ == null) ? null : (Player) p_180614_1_.getBukkitEntity();
-+                    org.bukkit.block.Block blockClicked = p_180614_2_.getWorld().getBlockAt(p_180614_3_.func_177958_n(), p_180614_3_.func_177956_o(), p_180614_3_.func_177952_p());
-+                    org.bukkit.block.BlockFace blockFace = org.bukkit.craftbukkit.v1_12_R1.block.CraftBlock.notchToBlockFace(p_180614_5_);
++                    Player who = (player == null) ? null : (Player) player.getBukkitEntity();
++                    org.bukkit.block.Block blockClicked = worldIn.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
++                    org.bukkit.block.BlockFace blockFace = org.bukkit.craftbukkit.v1_12_R1.block.CraftBlock.notchToBlockFace(facing);
 +
 +                    HangingPlaceEvent event = new HangingPlaceEvent((org.bukkit.entity.Hanging) entityhanging.getBukkitEntity(), who, blockClicked, blockFace);
-+                    p_180614_2_.getServer().getPluginManager().callEvent(event);
++                    worldIn.getServer().getPluginManager().callEvent(event);
 +
 +                    if (event.isCancelled()) {
 +                        return EnumActionResult.FAIL;
 +                    }
-                     entityhanging.func_184523_o();
-                     p_180614_2_.func_72838_d(entityhanging);
+                     entityhanging.playPlaceSound();
+                     worldIn.spawnEntity(entityhanging);
                  }

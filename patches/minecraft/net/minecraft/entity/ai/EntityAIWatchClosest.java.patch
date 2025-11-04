@@ -4,22 +4,22 @@
          {
              return false;
          }
-+        else if (this.field_75332_b.func_70068_e(this.field_75334_a) > (double)(this.field_75333_c * this.field_75333_c))
++        else if (this.entity.getDistanceSq(this.closestEntity) > (double)(this.maxDistance * this.maxDistance))
 +        {
 +            return false;
 +        }
          else
          {
--            return this.field_75332_b.func_70068_e(this.field_75334_a) > (double)(this.field_75333_c * this.field_75333_c) ? false : this.field_75330_d > 0;
-+            return this.field_75330_d > 0;
+-            return this.entity.getDistanceSq(this.closestEntity) > (double)(this.maxDistance * this.maxDistance) ? false : this.lookTime > 0;
++            return this.lookTime > 0;
          }
      }
  
 @@ -111,6 +115,6 @@
-             (float)this.field_75332_b.func_184649_cE(),
-             (float)this.field_75332_b.func_70646_bf()
+             (float)this.entity.getHorizontalFaceSpeed(),
+             (float)this.entity.getVerticalFaceSpeed()
          );
--        this.field_75330_d--;
-+        --this.field_75330_d;
+-        this.lookTime--;
++        --this.lookTime;
      }
  }

@@ -23,8 +23,7 @@ import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-public class CatURLClassLoader extends URLClassLoader
-{
+public class CatURLClassLoader extends URLClassLoader {
     private final JarMapping jarMapping;
     private final CatServerRemapper remapper;
     private final Map<String, Class<?>> classes = new HashMap<>();

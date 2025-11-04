@@ -2,10 +2,10 @@
 +++ after/net/minecraft/client/gui/GuiClickableScrolledSelectionListProxy.java
 @@ -98,7 +98,7 @@
      {
-         int i = this.func_148127_b();
+         int i = this.getSize();
  
 -        for (int j = 0; j < i; j++)
 +        for (int j = 0; j < i; ++j)
          {
-             int k = p_192638_2_ + j * this.field_148149_f + this.field_148160_j;
-             int l = this.field_148149_f - 4;
+             int k = insideTop + j * this.slotHeight + this.headerPadding;
+             int l = this.slotHeight - 4;

@@ -7,10 +7,10 @@
 -            for (int j = 0; j < i; j++)
 +            for (int j = 0; j < i; ++j)
              {
-                 lvt_8_1_ = StructureEndCityPieces.func_189935_b(
-                                p_191086_5_, StructureEndCityPieces.func_191090_b(p_191086_1_, lvt_8_1_, new BlockPos(0, 4, 0), "tower_piece", rotation, true)
+                 lvt_8_1_ = StructureEndCityPieces.addHelper(
+                                p_191086_5_, StructureEndCityPieces.addPiece(p_191086_1_, lvt_8_1_, new BlockPos(0, 4, 0), "tower_piece", rotation, true)
 @@ -223,7 +223,7 @@
-             structureendcitypieces$citytemplate.field_74886_g = -1;
+             structureendcitypieces$citytemplate.componentType = -1;
              int j = 0;
  
 -            for (int k = 0; k < i; k++)
@@ -19,11 +19,11 @@
                  if (p_191086_6_.nextBoolean())
                  {
 @@ -327,7 +327,7 @@
-                                                       StructureEndCityPieces.func_191090_b(p_191086_1_, structureendcitypieces$citytemplate, new BlockPos(0, 4, 0), "fat_tower_middle", rotation, true)
+                                                       StructureEndCityPieces.addPiece(p_191086_1_, structureendcitypieces$citytemplate, new BlockPos(0, 4, 0), "fat_tower_middle", rotation, true)
                                                    );
  
 -            for (int i = 0; i < 2 && p_191086_6_.nextInt(3) != 0; i++)
 +            for (int i = 0; i < 2 && p_191086_6_.nextInt(3) != 0; ++i)
              {
-                 structureendcitypieces$citytemplate = StructureEndCityPieces.func_189935_b(
+                 structureendcitypieces$citytemplate = StructureEndCityPieces.addHelper(
                                                            p_191086_5_,

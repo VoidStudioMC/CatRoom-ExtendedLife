@@ -4,17 +4,17 @@
      {
          NBTTagList nbttaglist = new NBTTagList();
  
--        for (int i = 0; i < p_191281_1_.size(); i++)
-+        for (int i = 0; i < p_191281_1_.size(); ++i)
+-        for (int i = 0; i < list.size(); i++)
++        for (int i = 0; i < list.size(); ++i)
          {
-             ItemStack itemstack = p_191281_1_.get(i);
+             ItemStack itemstack = list.get(i);
  
 @@ -54,7 +54,7 @@
      {
-         NBTTagList nbttaglist = p_191283_0_.func_150295_c("Items", 10);
+         NBTTagList nbttaglist = tag.getTagList("Items", 10);
  
--        for (int i = 0; i < nbttaglist.func_74745_c(); i++)
-+        for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+-        for (int i = 0; i < nbttaglist.tagCount(); i++)
++        for (int i = 0; i < nbttaglist.tagCount(); ++i)
          {
-             NBTTagCompound nbttagcompound = nbttaglist.func_150305_b(i);
-             int j = nbttagcompound.func_74771_c("Slot") & 255;
+             NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+             int j = nbttagcompound.getByte("Slot") & 255;

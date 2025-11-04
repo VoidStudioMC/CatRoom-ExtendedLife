@@ -19,38 +19,38 @@
  
  public class TileEntityEndGateway extends TileEntityEndPortal implements ITickable
  {
-     private static final Logger field_184314_a = LogManager.getLogger();
-     private long field_184315_f;
-     private int field_184316_g;
--    private BlockPos field_184317_h;
--    private boolean field_184318_i;
-+    public BlockPos field_184317_h;
-+    public boolean field_184318_i;
+     private static final Logger LOGGER = LogManager.getLogger();
+     private long age;
+     private int teleportCooldown;
+-    private BlockPos exitPortal;
+-    private boolean exactTeleport;
++    public BlockPos exitPortal;
++    public boolean exactTeleport;
  
      @Override
-     public NBTTagCompound func_189515_b(NBTTagCompound p_189515_1_)
+     public NBTTagCompound writeToNBT(NBTTagCompound compound)
 @@ -78,11 +83,11 @@
      {
-         boolean flag = this.func_184309_b();
-         boolean flag1 = this.func_184310_d();
--        this.field_184315_f++;
-+        ++this.field_184315_f;
+         boolean flag = this.isSpawning();
+         boolean flag1 = this.isCoolingDown();
+-        this.age++;
++        ++this.age;
  
          if (flag1)
          {
--            this.field_184316_g--;
-+            --this.field_184316_g;
+-            this.teleportCooldown--;
++            --this.teleportCooldown;
          }
-         else if (!this.field_145850_b.field_72995_K)
+         else if (!this.world.isRemote)
          {
 @@ -178,7 +183,23 @@
-             if (this.field_184317_h != null)
+             if (this.exitPortal != null)
              {
-                 BlockPos blockpos = this.field_184318_i ? this.field_184317_h : this.func_184303_j();
--                p_184306_1_.func_70634_a((double)blockpos.func_177958_n() + 0.5, (double)blockpos.func_177956_o() + 0.5, (double)blockpos.func_177952_p() + 0.5);
-+                if (p_184306_1_ instanceof EntityPlayerMP) {
-+                    org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer player = (CraftPlayer) p_184306_1_.getBukkitEntity();
-+                    org.bukkit.Location location = new Location(field_145850_b.getWorld(), (double) blockpos.func_177958_n() + 0.5D, (double) blockpos.func_177956_o() + 0.5D, (double) blockpos.func_177952_p() + 0.5D);
+                 BlockPos blockpos = this.exactTeleport ? this.exitPortal : this.findExitPosition();
+-                entityIn.setPositionAndUpdate((double)blockpos.getX() + 0.5, (double)blockpos.getY() + 0.5, (double)blockpos.getZ() + 0.5);
++                if (entityIn instanceof EntityPlayerMP) {
++                    org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer player = (CraftPlayer) entityIn.getBukkitEntity();
++                    org.bukkit.Location location = new Location(world.getWorld(), (double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.5D, (double) blockpos.getZ() + 0.5D);
 +                    location.setPitch(player.getLocation().getPitch());
 +                    location.setYaw(player.getLocation().getYaw());
 +
@@ -60,14 +60,14 @@
 +                        return;
 +                    }
 +
-+                    ((EntityPlayerMP) p_184306_1_).field_71135_a.teleport(teleEvent.getTo());
-+                    this.func_184300_h(); // CraftBukkit - call at end of method
++                    ((EntityPlayerMP) entityIn).connection.teleport(teleEvent.getTo());
++                    this.triggerCooldown(); // CraftBukkit - call at end of method
 +                    return;
 +                }
-+                p_184306_1_.func_70634_a((double)blockpos.func_177958_n() + 0.5D, (double)blockpos.func_177956_o() + 0.5D, (double)blockpos.func_177952_p() + 0.5D);
++                entityIn.setPositionAndUpdate((double)blockpos.getX() + 0.5D, (double)blockpos.getY() + 0.5D, (double)blockpos.getZ() + 0.5D);
              }
  
-             this.func_184300_h();
+             this.triggerCooldown();
 @@ -233,13 +254,13 @@
      {
          BlockPos blockpos = null;
@@ -80,8 +80,8 @@
              {
                  if (i != 0 || j != 0 || p_184308_3_)
                  {
--                    for (int k = 255; k > (blockpos == null ? 0 : blockpos.func_177956_o()); k--)
-+                    for (int k = 255; k > (blockpos == null ? 0 : blockpos.func_177956_o()); --k)
+-                    for (int k = 255; k > (blockpos == null ? 0 : blockpos.getY()); k--)
++                    for (int k = 255; k > (blockpos == null ? 0 : blockpos.getY()); --k)
                      {
-                         BlockPos blockpos1 = new BlockPos(p_184308_1_.func_177958_n() + i, k, p_184308_1_.func_177952_p() + j);
-                         IBlockState iblockstate = p_184308_0_.func_180495_p(blockpos1);
+                         BlockPos blockpos1 = new BlockPos(p_184308_1_.getX() + i, k, p_184308_1_.getZ() + j);
+                         IBlockState iblockstate = p_184308_0_.getBlockState(blockpos1);

@@ -2,9 +2,9 @@
 +++ after/net/minecraft/block/BlockDaylightDetector.java
 @@ -77,6 +77,7 @@
  
-             if (iblockstate.func_177229_b(field_176436_a) != i)
+             if (iblockstate.getValue(POWER) != i)
              {
-+                i = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callRedstoneChange(p_180677_1_, p_180677_2_.func_177958_n(), p_180677_2_.func_177956_o(), p_180677_2_.func_177952_p(), iblockstate.func_177229_b(field_176436_a), i).getNewCurrent();
-                 p_180677_1_.func_180501_a(p_180677_2_, iblockstate.func_177226_a(field_176436_a, i), 3);
++                i = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callRedstoneChange(worldIn, pos.getX(), pos.getY(), pos.getZ(), iblockstate.getValue(POWER), i).getNewCurrent();
+                 worldIn.setBlockState(pos, iblockstate.withProperty(POWER, i), 3);
              }
          }

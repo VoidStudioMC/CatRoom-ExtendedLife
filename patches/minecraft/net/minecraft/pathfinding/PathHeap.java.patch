@@ -1,25 +1,25 @@
 --- before/net/minecraft/pathfinding/PathHeap.java
 +++ after/net/minecraft/pathfinding/PathHeap.java
 @@ -65,11 +65,11 @@
-     private void func_75847_a(int p_75847_1_)
+     private void sortBack(int index)
      {
-         PathPoint pathpoint = this.field_75852_a[p_75847_1_];
--        float f = pathpoint.field_75834_g;
+         PathPoint pathpoint = this.pathPoints[index];
+-        float f = pathpoint.distanceToTarget;
 +        int i;
  
--        while (p_75847_1_ > 0)
-+        for (float f = pathpoint.field_75834_g; p_75847_1_ > 0; p_75847_1_ = i)
+-        while (index > 0)
++        for (float f = pathpoint.distanceToTarget; index > 0; index = i)
          {
--            int i = p_75847_1_ - 1 >> 1;
-+            i = p_75847_1_ - 1 >> 1;
-             PathPoint pathpoint1 = this.field_75852_a[i];
+-            int i = index - 1 >> 1;
++            i = index - 1 >> 1;
+             PathPoint pathpoint1 = this.pathPoints[i];
  
-             if (!(f < pathpoint1.field_75834_g))
+             if (!(f < pathpoint1.distanceToTarget))
 @@ -79,7 +79,6 @@
  
-             this.field_75852_a[p_75847_1_] = pathpoint1;
-             pathpoint1.field_75835_d = p_75847_1_;
--            p_75847_1_ = i;
+             this.pathPoints[index] = pathpoint1;
+             pathpoint1.index = index;
+-            index = i;
          }
  
-         this.field_75852_a[p_75847_1_] = pathpoint;
+         this.pathPoints[index] = pathpoint;

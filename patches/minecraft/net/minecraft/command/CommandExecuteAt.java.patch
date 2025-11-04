@@ -16,8 +16,8 @@
  
              try
              {
--                int j = icommandmanager.func_71556_a(icommandsender, s);
-+                org.bukkit.command.CommandSender bukkitSender = CommandBlockBaseLogic.unwrapSender(p_184881_2_);
+-                int j = icommandmanager.executeCommand(icommandsender, s);
++                org.bukkit.command.CommandSender bukkitSender = CommandBlockBaseLogic.unwrapSender(sender);
 +                int j = CommandBlockBaseLogic.executeCommand(icommandsender, new ProxiedNativeCommandSender(icommandsender, bukkitSender, entity.getBukkitEntity()), s);
  
                  if (j < 1)

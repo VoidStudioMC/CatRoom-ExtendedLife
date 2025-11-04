@@ -2,28 +2,28 @@
 +++ after/net/minecraft/entity/ai/EntityAIMoveToBlock.java
 @@ -28,7 +28,7 @@
      {
-         if (this.field_179496_a > 0)
+         if (this.runDelay > 0)
          {
--            this.field_179496_a--;
-+            --this.field_179496_a;
+-            this.runDelay--;
++            --this.runDelay;
              return false;
          }
          else
 @@ -67,7 +67,7 @@
-         if (this.field_179495_c.func_174831_c(this.field_179494_b.func_177984_a()) > 1.0)
+         if (this.creature.getDistanceSqToCenter(this.destinationBlock.up()) > 1.0)
          {
-             this.field_179491_g = false;
--            this.field_179493_e++;
-+            ++this.field_179493_e;
+             this.isAboveDestination = false;
+-            this.timeoutCounter++;
++            ++this.timeoutCounter;
  
-             if (this.field_179493_e % 40 == 0)
+             if (this.timeoutCounter % 40 == 0)
              {
 @@ -84,7 +84,7 @@
          else
          {
-             this.field_179491_g = true;
--            this.field_179493_e--;
-+            --this.field_179493_e;
+             this.isAboveDestination = true;
+-            this.timeoutCounter--;
++            --this.timeoutCounter;
          }
      }
  

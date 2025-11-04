@@ -2,10 +2,10 @@
 +++ after/net/minecraft/world/gen/structure/StructureOceanMonument.java
 @@ -203,7 +203,7 @@
                  {
-                     NBTTagList nbttaglist = p_143017_1_.func_150295_c("Processed", 10);
+                     NBTTagList nbttaglist = tagCompound.getTagList("Processed", 10);
  
--                    for (int i = 0; i < nbttaglist.func_74745_c(); i++)
-+                    for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+-                    for (int i = 0; i < nbttaglist.tagCount(); i++)
++                    for (int i = 0; i < nbttaglist.tagCount(); ++i)
                      {
-                         NBTTagCompound nbttagcompound = nbttaglist.func_150305_b(i);
-                         this.field_175791_c.add(new ChunkPos(nbttagcompound.func_74762_e("X"), nbttagcompound.func_74762_e("Z")));
+                         NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+                         this.processed.add(new ChunkPos(nbttagcompound.getInteger("X"), nbttagcompound.getInteger("Z")));

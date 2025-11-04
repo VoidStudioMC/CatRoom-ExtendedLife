@@ -4,8 +4,8 @@
          {
              int i = 0;
  
--            for (int j = this.field_189519_a.size(); i < j; i++)
-+            for (int j = this.field_189519_a.size(); i < j; ++i)
+-            for (int j = this.navigations.size(); i < j; i++)
++            for (int j = this.navigations.size(); i < j; ++i)
              {
-                 PathNavigate pathnavigate = this.field_189519_a.get(i);
+                 PathNavigate pathnavigate = this.navigations.get(i);
  

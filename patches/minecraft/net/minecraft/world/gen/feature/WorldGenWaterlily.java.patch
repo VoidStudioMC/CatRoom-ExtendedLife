@@ -2,10 +2,10 @@
 +++ after/net/minecraft/world/gen/feature/WorldGenWaterlily.java
 @@ -10,7 +10,7 @@
      @Override
-     public boolean func_180709_b(World p_180709_1_, Random p_180709_2_, BlockPos p_180709_3_)
+     public boolean generate(World worldIn, Random rand, BlockPos position)
      {
 -        for (int i = 0; i < 10; i++)
 +        for (int i = 0; i < 10; ++i)
          {
-             int j = p_180709_3_.func_177958_n() + p_180709_2_.nextInt(8) - p_180709_2_.nextInt(8);
-             int k = p_180709_3_.func_177956_o() + p_180709_2_.nextInt(4) - p_180709_2_.nextInt(4);
+             int j = position.getX() + rand.nextInt(8) - rand.nextInt(8);
+             int k = position.getY() + rand.nextInt(4) - rand.nextInt(4);

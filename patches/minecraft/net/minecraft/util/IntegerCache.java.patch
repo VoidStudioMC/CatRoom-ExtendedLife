@@ -4,8 +4,8 @@
      {
          int i = 0;
  
--        for (int j = field_181757_a.length; i < j; i++)
-+        for (int j = field_181757_a.length; i < j; ++i)
+-        for (int j = CACHE.length; i < j; i++)
++        for (int j = CACHE.length; i < j; ++i)
          {
-             field_181757_a[i] = i;
+             CACHE[i] = i;
          }

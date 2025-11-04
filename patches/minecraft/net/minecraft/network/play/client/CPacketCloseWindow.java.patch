@@ -9,14 +9,14 @@
  
  public class CPacketCloseWindow implements Packet<INetHandlerPlayServer>
  {
--    private int field_149556_a;
-+    public int field_149556_a;
+-    private int windowId;
++    public int windowId;
  
      public CPacketCloseWindow()
      {
      }
  
 -    @SideOnly(Side.CLIENT)
-     public CPacketCloseWindow(int p_i46881_1_)
+     public CPacketCloseWindow(int windowIdIn)
      {
-         this.field_149556_a = p_i46881_1_;
+         this.windowId = windowIdIn;

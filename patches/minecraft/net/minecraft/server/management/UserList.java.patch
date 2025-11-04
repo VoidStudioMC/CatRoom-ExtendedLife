@@ -2,19 +2,19 @@
 +++ after/net/minecraft/server/management/UserList.java
 @@ -157,12 +157,16 @@
  
-     protected UserListEntry<K> func_152682_a(JsonObject p_152682_1_)
+     protected UserListEntry<K> createEntry(JsonObject entryData)
      {
--        return new UserListEntry<>(null, p_152682_1_);
-+        return new UserListEntry<>((K)null, p_152682_1_);
+-        return new UserListEntry<>(null, entryData);
++        return new UserListEntry<>((K)null, entryData);
      }
  
-     protected Map<String, V> func_152688_e()
+     protected Map<String, V> getValues()
      {
-         return this.field_152696_d;
+         return this.values;
 +    }
 +
 +    public Collection<V> getValuesCB() {
-+        return this.field_152696_d.values();
++        return this.values.values();
      }
  
-     public void func_152678_f() throws IOException
+     public void writeChanges() throws IOException

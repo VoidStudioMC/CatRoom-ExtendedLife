@@ -4,8 +4,8 @@
          float f = 0.0F;
          float f1 = 0.0F;
  
--        for (int i = this.field_192332_e.size() - 1; i >= 0; i--)
-+        for (int i = this.field_192332_e.size() - 1; i >= 0; --i)
+-        for (int i = this.children.size() - 1; i >= 0; i--)
++        for (int i = this.children.size() - 1; i >= 0; --i)
          {
-             AdvancementTreeNode advancementtreenode = this.field_192332_e.get(i);
-             advancementtreenode.field_192336_i += f;
+             AdvancementTreeNode advancementtreenode = this.children.get(i);
+             advancementtreenode.y += f;

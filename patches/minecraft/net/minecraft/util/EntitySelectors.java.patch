@@ -3,7 +3,7 @@
 @@ -86,11 +86,18 @@
                      else
                      {
-                         boolean flag = team != null && team.func_142054_a(team1);
+                         boolean flag = team != null && team.isSameTeam(team1);
 -                        return (team$collisionrule == Team.CollisionRule.HIDE_FOR_OWN_TEAM || team$collisionrule1 == Team.CollisionRule.HIDE_FOR_OWN_TEAM)
 -                               && flag
 -                               ? false
@@ -26,7 +26,7 @@
                  else
 @@ -155,9 +162,13 @@
                      {
-                         return ((EntityLiving)entitylivingbase).func_98052_bS();
+                         return ((EntityLiving)entitylivingbase).canPickUpLoot();
                      }
 +                    else if (entitylivingbase instanceof EntityArmorStand)
 +                    {

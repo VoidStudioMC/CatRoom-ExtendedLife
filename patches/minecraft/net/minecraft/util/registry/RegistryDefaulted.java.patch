@@ -1,10 +1,10 @@
 --- before/net/minecraft/util/registry/RegistryDefaulted.java
 +++ after/net/minecraft/util/registry/RegistryDefaulted.java
 @@ -17,6 +17,6 @@
-     public V func_82594_a(@Nullable K p_82594_1_)
+     public V getObject(@Nullable K name)
      {
-         V v = super.func_82594_a(p_82594_1_);
--        return v == null ? this.field_82597_b : v;
-+        return (V)(v == null ? this.field_82597_b : v);
+         V v = super.getObject(name);
+-        return v == null ? this.defaultObject : v;
++        return (V)(v == null ? this.defaultObject : v);
      }
  }

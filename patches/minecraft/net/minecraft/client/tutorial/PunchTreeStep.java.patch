@@ -2,19 +2,19 @@
 +++ after/net/minecraft/client/tutorial/PunchTreeStep.java
 @@ -36,7 +36,7 @@
      @Override
-     public void func_193245_a()
+     public void update()
      {
--        this.field_193279_f++;
-+        ++this.field_193279_f;
+-        this.timeWaiting++;
++        ++this.timeWaiting;
  
-         if (this.field_193277_d.func_194072_f() != GameType.SURVIVAL)
+         if (this.tutorial.getGameType() != GameType.SURVIVAL)
          {
 @@ -108,7 +108,7 @@
          }
          else if (flag)
          {
--            this.field_193280_g++;
-+            ++this.field_193280_g;
+-            this.resetCount++;
++            ++this.resetCount;
          }
      }
  

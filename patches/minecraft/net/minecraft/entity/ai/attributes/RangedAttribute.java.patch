@@ -3,20 +3,20 @@
 @@ -6,7 +6,7 @@
  public class RangedAttribute extends BaseAttribute
  {
-     private final double field_111120_a;
--    private final double field_111118_b;
-+    public double field_111118_b;  // Spigot
-     private String field_111119_c;
+     private final double minimumValue;
+-    private final double maximumValue;
++    public double maximumValue;  // Spigot
+     private String description;
  
-     public RangedAttribute(@Nullable IAttribute p_i45891_1_, String p_i45891_2_, double p_i45891_3_, double p_i45891_5_, double p_i45891_7_)
+     public RangedAttribute(@Nullable IAttribute parentIn, String unlocalizedNameIn, double defaultValue, double minimumValueIn, double maximumValueIn)
 @@ -43,6 +43,9 @@
      @Override
-     public double func_111109_a(double p_111109_1_)
+     public double clampValue(double value)
      {
--        return MathHelper.func_151237_a(p_111109_1_, this.field_111120_a, this.field_111118_b);
-+        if (p_111109_1_ != p_111109_1_) return func_111110_b(); // CraftBukkit
+-        return MathHelper.clamp(value, this.minimumValue, this.maximumValue);
++        if (value != value) return getDefaultValue(); // CraftBukkit
 +
-+        p_111109_1_ = MathHelper.func_151237_a(p_111109_1_, this.field_111120_a, this.field_111118_b);
-+        return p_111109_1_;
++        value = MathHelper.clamp(value, this.minimumValue, this.maximumValue);
++        return value;
      }
  }

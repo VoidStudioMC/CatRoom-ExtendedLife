@@ -2,10 +2,10 @@
 +++ after/net/minecraft/network/play/server/SPacketTeams.java
 @@ -89,7 +89,7 @@
          {
-             int i = p_148837_1_.func_150792_a();
+             int i = buf.readVarInt();
  
 -            for (int j = 0; j < i; j++)
 +            for (int j = 0; j < i; ++j)
              {
-                 this.field_149317_e.add(p_148837_1_.func_150789_c(40));
+                 this.players.add(buf.readString(40));
              }

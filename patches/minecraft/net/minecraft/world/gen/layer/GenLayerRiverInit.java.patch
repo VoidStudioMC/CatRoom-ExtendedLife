@@ -1,14 +1,14 @@
 --- before/net/minecraft/world/gen/layer/GenLayerRiverInit.java
 +++ after/net/minecraft/world/gen/layer/GenLayerRiverInit.java
 @@ -14,9 +14,9 @@
-         int[] aint = this.field_75909_a.func_75904_a(p_75904_1_, p_75904_2_, p_75904_3_, p_75904_4_);
-         int[] aint1 = IntCache.func_76445_a(p_75904_3_ * p_75904_4_);
+         int[] aint = this.parent.getInts(areaX, areaY, areaWidth, areaHeight);
+         int[] aint1 = IntCache.getIntCache(areaWidth * areaHeight);
  
--        for (int i = 0; i < p_75904_4_; i++)
-+        for (int i = 0; i < p_75904_4_; ++i)
+-        for (int i = 0; i < areaHeight; i++)
++        for (int i = 0; i < areaHeight; ++i)
          {
--            for (int j = 0; j < p_75904_3_; j++)
-+            for (int j = 0; j < p_75904_3_; ++j)
+-            for (int j = 0; j < areaWidth; j++)
++            for (int j = 0; j < areaWidth; ++j)
              {
-                 this.func_75903_a((long)(j + p_75904_1_), (long)(i + p_75904_2_));
-                 aint1[j + i * p_75904_3_] = aint[j + i * p_75904_3_] > 0 ? this.func_75902_a(299999) + 2 : 0;
+                 this.initChunkSeed((long)(j + areaX), (long)(i + areaY));
+                 aint1[j + i * areaWidth] = aint[j + i * areaWidth] > 0 ? this.nextInt(299999) + 2 : 0;

@@ -2,10 +2,10 @@
 +++ after/net/minecraft/advancements/Criterion.java
 @@ -70,7 +70,7 @@
          Map<String, Criterion> map = Maps.newHashMap();
-         int i = p_192142_0_.func_150792_a();
+         int i = bus.readVarInt();
  
 -        for (int j = 0; j < i; j++)
 +        for (int j = 0; j < i; ++j)
          {
-             map.put(p_192142_0_.func_150789_c(32767), func_192146_b(p_192142_0_));
+             map.put(bus.readString(32767), criterionFromNetwork(bus));
          }

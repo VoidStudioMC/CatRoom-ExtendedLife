@@ -6,7 +6,7 @@
              {
 -                IProperty<?> iproperty = p_apply_1_.getKey();
 +                IProperty<?> iproperty = (IProperty)p_apply_1_.getKey();
-                 return iproperty.func_177701_a() + "=" + this.func_185886_a(iproperty, p_apply_1_.getValue());
+                 return iproperty.getName() + "=" + this.getPropertyName(iproperty, p_apply_1_.getValue());
              }
          }
 @@ -34,7 +34,6 @@
@@ -14,9 +14,9 @@
      };
  
 -    @Override
-     public <T extends Comparable<T>> IBlockState func_177231_a(IProperty<T> p_177231_1_)
+     public <T extends Comparable<T>> IBlockState cycleProperty(IProperty<T> property)
      {
-         return this.func_177226_a(p_177231_1_, func_177232_a(p_177231_1_.func_177700_c(), this.func_177229_b(p_177231_1_)));
+         return this.withProperty(property, cyclePropertyValue(property.getAllowedValues(), this.getValue(property)));
 @@ -60,7 +59,6 @@
          return iterator.next();
      }

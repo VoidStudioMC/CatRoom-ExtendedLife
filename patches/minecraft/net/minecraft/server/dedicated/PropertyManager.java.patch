@@ -18,20 +18,20 @@
 @@ -14,8 +14,9 @@
  public class PropertyManager
  {
-     private static final Logger field_164440_a = LogManager.getLogger();
--    private final Properties field_73672_b = new Properties();
-+    public final Properties field_73672_b = new Properties();
-     private final File field_73673_c;
+     private static final Logger LOGGER = LogManager.getLogger();
+-    private final Properties serverProperties = new Properties();
++    public final Properties serverProperties = new Properties();
+     private final File serverPropertiesFile;
 +    private OptionSet options = null;
  
-     public PropertyManager(File p_i46372_1_)
+     public PropertyManager(File propertiesFile)
      {
 @@ -28,7 +29,7 @@
              try
              {
-                 fileinputstream = new FileInputStream(p_i46372_1_);
--                this.field_73672_b.load(fileinputstream);
-+                this.field_73672_b.load(new InputStreamReader(fileinputstream, StandardCharsets.UTF_8));
+                 fileinputstream = new FileInputStream(propertiesFile);
+-                this.serverProperties.load(fileinputstream);
++                this.serverProperties.load(new InputStreamReader(fileinputstream, StandardCharsets.UTF_8));
              }
              catch (Exception exception)
              {
@@ -51,45 +51,45 @@
 +        return value;
 +    }
 +
-     public void func_73666_a()
+     public void generateNewProperties()
      {
-         field_164440_a.info("Generating new properties file");
+         LOGGER.info("Generating new properties file");
 @@ -68,8 +81,13 @@
  
          try
          {
 +            // CraftBukkit start - Don't attempt writing to file if it's read only
-+            if (this.field_73673_c.exists() && !this.field_73673_c.canWrite()) {
++            if (this.serverPropertiesFile.exists() && !this.serverPropertiesFile.canWrite()) {
 +                return;
 +            }
 +            // CraftBukkit end
-             fileoutputstream = new FileOutputStream(this.field_73673_c);
--            this.field_73672_b.store(fileoutputstream, "Minecraft server properties");
-+            this.field_73672_b.store(new OutputStreamWriter(fileoutputstream, StandardCharsets.UTF_8), "Minecraft server properties");
+             fileoutputstream = new FileOutputStream(this.serverPropertiesFile);
+-            this.serverProperties.store(fileoutputstream, "Minecraft server properties");
++            this.serverProperties.store(new OutputStreamWriter(fileoutputstream, StandardCharsets.UTF_8), "Minecraft server properties");
          }
          catch (Exception exception)
          {
 @@ -105,20 +123,20 @@
-             this.func_73668_b();
+             this.saveProperties();
          }
  
--        return this.field_73672_b.getProperty(p_73671_1_, p_73671_2_);
-+        return getOverride(p_73671_1_, this.field_73672_b.getProperty(p_73671_1_, p_73671_2_));
+-        return this.serverProperties.getProperty(key, defaultValue);
++        return getOverride(key, this.serverProperties.getProperty(key, defaultValue));
      }
  
-     public int func_73669_a(String p_73669_1_, int p_73669_2_)
+     public int getIntProperty(String key, int defaultValue)
      {
          try
          {
--            return Integer.parseInt(this.func_73671_a(p_73669_1_, "" + p_73669_2_));
-+            return getOverride(p_73669_1_, Integer.parseInt(this.func_73671_a(p_73669_1_, "" + p_73669_2_)));
+-            return Integer.parseInt(this.getStringProperty(key, "" + defaultValue));
++            return getOverride(key, Integer.parseInt(this.getStringProperty(key, "" + defaultValue)));
          }
          catch (Exception exception)
          {
-             this.field_73672_b.setProperty(p_73669_1_, "" + p_73669_2_);
-             this.func_73668_b();
--            return p_73669_2_;
-+            return getOverride(p_73669_1_, p_73669_2_);
+             this.serverProperties.setProperty(key, "" + defaultValue);
+             this.saveProperties();
+-            return defaultValue;
++            return getOverride(key, defaultValue);
          }
      }
  
@@ -97,15 +97,15 @@
      {
          try
          {
--            return Long.parseLong(this.func_73671_a(p_179885_1_, "" + p_179885_2_));
-+            return getOverride(p_179885_1_, Long.parseLong(this.func_73671_a(p_179885_1_, "" + p_179885_2_)));
+-            return Long.parseLong(this.getStringProperty(key, "" + defaultValue));
++            return getOverride(key, Long.parseLong(this.getStringProperty(key, "" + defaultValue)));
          }
          catch (Exception exception)
          {
-             this.field_73672_b.setProperty(p_179885_1_, "" + p_179885_2_);
-             this.func_73668_b();
--            return p_179885_2_;
-+            return getOverride(p_179885_1_, p_179885_2_);
+             this.serverProperties.setProperty(key, "" + defaultValue);
+             this.saveProperties();
+-            return defaultValue;
++            return getOverride(key, defaultValue);
          }
      }
  
@@ -113,15 +113,15 @@
      {
          try
          {
--            return Boolean.parseBoolean(this.func_73671_a(p_73670_1_, "" + p_73670_2_));
-+            return getOverride(p_73670_1_, Boolean.parseBoolean(this.func_73671_a(p_73670_1_, "" + p_73670_2_)));
+-            return Boolean.parseBoolean(this.getStringProperty(key, "" + defaultValue));
++            return getOverride(key, Boolean.parseBoolean(this.getStringProperty(key, "" + defaultValue)));
          }
          catch (Exception exception)
          {
-             this.field_73672_b.setProperty(p_73670_1_, "" + p_73670_2_);
-             this.func_73668_b();
--            return p_73670_2_;
-+            return getOverride(p_73670_1_, p_73670_2_);
+             this.serverProperties.setProperty(key, "" + defaultValue);
+             this.saveProperties();
+-            return defaultValue;
++            return getOverride(key, defaultValue);
          }
      }
  

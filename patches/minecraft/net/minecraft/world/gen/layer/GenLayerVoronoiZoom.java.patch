@@ -2,26 +2,26 @@
 +++ after/net/minecraft/world/gen/layer/GenLayerVoronoiZoom.java
 @@ -11,25 +11,28 @@
      @Override
-     public int[] func_75904_a(int p_75904_1_, int p_75904_2_, int p_75904_3_, int p_75904_4_)
+     public int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight)
      {
--        p_75904_1_ -= 2;
--        p_75904_2_ -= 2;
+-        areaX -= 2;
+-        areaY -= 2;
 +        // CREF start - FIXED: in some cases, arraycopy throws an ArrayIndexOutOfBoundsException
 +        //areaX -= 2;
 +        //areaY -= 2;
-         int i = p_75904_1_ >> 2;
-         int j = p_75904_2_ >> 2;
--        int k = (p_75904_3_ >> 2) + 2;
--        int l = (p_75904_4_ >> 2) + 2;
+         int i = areaX >> 2;
+         int j = areaY >> 2;
+-        int k = (areaWidth >> 2) + 2;
+-        int l = (areaHeight >> 2) + 2;
 +        //int k = (areaWidth >> 2) + 2;
 +        //int l = (areaHeight >> 2) + 2;
-+        int k = (p_75904_3_ >> 2) + 3;
-+        int l = (p_75904_4_ >> 2) + 3;
++        int k = (areaWidth >> 2) + 3;
++        int l = (areaHeight >> 2) + 3;
 +        // CREF end
-         int[] aint = this.field_75909_a.func_75904_a(i, j, k, l);
+         int[] aint = this.parent.getInts(i, j, k, l);
          int i1 = k - 1 << 2;
          int j1 = l - 1 << 2;
-         int[] aint1 = IntCache.func_76445_a(i1 * j1);
+         int[] aint1 = IntCache.getIntCache(i1 * j1);
  
 -        for (int k1 = 0; k1 < l - 1; k1++)
 +        for (int k1 = 0; k1 < l - 1; ++k1)
@@ -34,13 +34,13 @@
 +            for (int j2 = aint[l1 + (k1 + 1) * k]; l1 < k - 1; ++l1)
              {
 -                double d0 = 3.6;
-                 this.func_75903_a((long)(l1 + i << 2), (long)(k1 + j << 2));
-                 double d1 = ((double)this.func_75902_a(1024) / 1024.0 - 0.5) * 3.6;
-                 double d2 = ((double)this.func_75902_a(1024) / 1024.0 - 0.5) * 3.6;
+                 this.initChunkSeed((long)(l1 + i << 2), (long)(k1 + j << 2));
+                 double d1 = ((double)this.nextInt(1024) / 1024.0 - 0.5) * 3.6;
+                 double d2 = ((double)this.nextInt(1024) / 1024.0 - 0.5) * 3.6;
 @@ -42,14 +45,14 @@
-                 this.func_75903_a((long)(l1 + i + 1 << 2), (long)(k1 + j + 1 << 2));
-                 double d7 = ((double)this.func_75902_a(1024) / 1024.0 - 0.5) * 3.6 + 4.0;
-                 double d8 = ((double)this.func_75902_a(1024) / 1024.0 - 0.5) * 3.6 + 4.0;
+                 this.initChunkSeed((long)(l1 + i + 1 << 2), (long)(k1 + j + 1 << 2));
+                 double d7 = ((double)this.nextInt(1024) / 1024.0 - 0.5) * 3.6 + 4.0;
+                 double d8 = ((double)this.nextInt(1024) / 1024.0 - 0.5) * 3.6 + 4.0;
 -                int k2 = aint[l1 + 1 + (k1 + 0) * k] & 0xFF;
 +                int k2 = aint[l1 + 1 + k1 * k] & 0xFF;
                  int l2 = aint[l1 + 1 + (k1 + 1) * k] & 0xFF;
@@ -57,10 +57,10 @@
                          double d10 = ((double)i3 - d4) * ((double)i3 - d4) + ((double)k3 - d3) * ((double)k3 - d3);
 @@ -82,7 +85,7 @@
  
-         int[] aint2 = IntCache.func_76445_a(p_75904_3_ * p_75904_4_);
+         int[] aint2 = IntCache.getIntCache(areaWidth * areaHeight);
  
--        for (int l3 = 0; l3 < p_75904_4_; l3++)
-+        for (int l3 = 0; l3 < p_75904_4_; ++l3)
+-        for (int l3 = 0; l3 < areaHeight; l3++)
++        for (int l3 = 0; l3 < areaHeight; ++l3)
          {
-             System.arraycopy(aint1, (l3 + (p_75904_2_ & 3)) * i1 + (p_75904_1_ & 3), aint2, l3 * p_75904_3_, p_75904_3_);
+             System.arraycopy(aint1, (l3 + (areaY & 3)) * i1 + (areaX & 3), aint2, l3 * areaWidth, areaWidth);
          }

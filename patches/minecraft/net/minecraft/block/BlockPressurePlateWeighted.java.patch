@@ -16,12 +16,12 @@
  {
 @@ -32,7 +34,29 @@
      @Override
-     protected int func_180669_e(World p_180669_1_, BlockPos p_180669_2_)
+     protected int computeRedstoneStrength(World worldIn, BlockPos pos)
      {
--        int i = Math.min(p_180669_1_.func_72872_a(Entity.class, field_185511_c.func_186670_a(p_180669_2_)).size(), this.field_150068_a);
+-        int i = Math.min(worldIn.getEntitiesWithinAABB(Entity.class, PRESSURE_AABB.offset(pos)).size(), this.maxWeight);
 +//        int i = Math.min(worldIn.getEntitiesWithinAABB(Entity.class, PRESSURE_AABB.offset(pos)).size(), this.maxWeight);
 +        int i = 0;
-+        java.util.Iterator iterator = p_180669_1_.func_72872_a(Entity.class, BlockPressurePlateWeighted.field_185511_c.func_186670_a(p_180669_2_)).iterator();
++        java.util.Iterator iterator = worldIn.getEntitiesWithinAABB(Entity.class, BlockPressurePlateWeighted.PRESSURE_AABB.offset(pos)).iterator();
 +
 +        while (iterator.hasNext()) {
 +            Entity entity = (Entity) iterator.next();
@@ -29,10 +29,10 @@
 +            org.bukkit.event.Cancellable cancellable;
 +
 +            if (entity instanceof EntityPlayer) {
-+                cancellable = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerInteractEvent((EntityPlayer) entity, org.bukkit.event.block.Action.PHYSICAL, p_180669_2_, null, null, null);
++                cancellable = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerInteractEvent((EntityPlayer) entity, org.bukkit.event.block.Action.PHYSICAL, pos, null, null, null);
 +            } else {
-+                cancellable = new EntityInteractEvent(entity.getBukkitEntity(), p_180669_1_.getWorld().getBlockAt(p_180669_2_.func_177958_n(), p_180669_2_.func_177956_o(), p_180669_2_.func_177952_p()));
-+                p_180669_1_.getServer().getPluginManager().callEvent((EntityInteractEvent) cancellable);
++                cancellable = new EntityInteractEvent(entity.getBukkitEntity(), worldIn.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ()));
++                worldIn.getServer().getPluginManager().callEvent((EntityInteractEvent) cancellable);
 +            }
 +
 +            // We only want to block turning the plate on if all events are cancelled
@@ -41,7 +41,7 @@
 +            }
 +        }
 +
-+        i = Math.min(i, this.field_150068_a);
++        i = Math.min(i, this.maxWeight);
  
          if (i > 0)
          {

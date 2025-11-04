@@ -1,11 +1,11 @@
 --- before/net/minecraft/client/model/ModelBoat.java
 +++ after/net/minecraft/client/model/ModelBoat.java
 @@ -62,7 +62,7 @@
-         EntityBoat entityboat = (EntityBoat)p_78088_1_;
-         this.func_78087_a(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, p_78088_1_);
+         EntityBoat entityboat = (EntityBoat)entityIn;
+         this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
  
 -        for (int i = 0; i < 5; i++)
 +        for (int i = 0; i < 5; ++i)
          {
-             this.field_78103_a[i].func_78785_a(p_78088_7_);
+             this.boatSides[i].render(scale);
          }

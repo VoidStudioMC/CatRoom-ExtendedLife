@@ -10,13 +10,13 @@
  import net.minecraft.server.dedicated.DedicatedServer;
  import net.minecraft.server.dedicated.PropertyManager;
 @@ -39,25 +41,6 @@
-     public static final File field_152730_c = new File("ops.txt");
-     public static final File field_152731_d = new File("white-list.txt");
+     public static final File OLD_OPS_FILE = new File("ops.txt");
+     public static final File OLD_WHITELIST_FILE = new File("white-list.txt");
  
 -    @SideOnly(Side.SERVER)
--    static List<String> func_152721_a(File p_152721_0_, Map<String, String[]> p_152721_1_) throws IOException
+-    static List<String> readFile(File inFile, Map<String, String[]> read) throws IOException
 -    {
--        List<String> list = Files.readLines(p_152721_0_, StandardCharsets.UTF_8);
+-        List<String> list = Files.readLines(inFile, StandardCharsets.UTF_8);
 -
 -        for (String s : list)
 -        {
@@ -25,72 +25,72 @@
 -            if (!s.startsWith("#") && s.length() >= 1)
 -            {
 -                String[] astring = s.split("\\|");
--                p_152721_1_.put(astring[0].toLowerCase(Locale.ROOT), astring);
+-                read.put(astring[0].toLowerCase(Locale.ROOT), astring);
 -            }
 -        }
 -
 -        return list;
 -    }
 -
-     private static void func_152717_a(MinecraftServer p_152717_0_, Collection<String> p_152717_1_, ProfileLookupCallback p_152717_2_)
+     private static void lookupNames(MinecraftServer server, Collection<String> names, ProfileLookupCallback callback)
      {
-         String[] astring = Iterators.toArray(Iterators.filter(p_152717_1_.iterator(), new Predicate<String>()
+         String[] astring = Iterators.toArray(Iterators.filter(names.iterator(), new Predicate<String>()
 @@ -68,7 +51,7 @@
              }
          }), String.class);
  
--        if (p_152717_0_.func_71266_T())
-+        if (p_152717_0_.func_71266_T() || org.spigotmc.SpigotConfig.bungee) // Spigot: bungee = online mode, for now.
+-        if (server.isServerInOnlineMode())
++        if (server.isServerInOnlineMode() || org.spigotmc.SpigotConfig.bungee) // Spigot: bungee = online mode, for now.
          {
-             p_152717_0_.func_152359_aw().findProfilesByNames(astring, Agent.MINECRAFT, p_152717_2_);
+             server.getGameProfileRepository().findProfilesByNames(astring, Agent.MINECRAFT, callback);
          }
 @@ -83,6 +66,64 @@
          }
      }
  
-+    public static String func_187473_a(final MinecraftServer p_187473_0_, String p_187473_1_)
++    public static String convertMobOwnerIfNeeded(final MinecraftServer server, String username)
 +    {
-+        if (!StringUtils.func_151246_b(p_187473_1_) && p_187473_1_.length() <= 16)
++        if (!StringUtils.isNullOrEmpty(username) && username.length() <= 16)
 +        {
-+            GameProfile gameprofile = p_187473_0_.func_152358_ax().func_152655_a(p_187473_1_);
++            GameProfile gameprofile = server.getPlayerProfileCache().getGameProfileForUsername(username);
 +
 +            if (gameprofile != null && gameprofile.getId() != null)
 +            {
 +                return gameprofile.getId().toString();
 +            }
-+            else if (!p_187473_0_.func_71264_H() && p_187473_0_.func_71266_T())
++            else if (!server.isSinglePlayer() && server.isServerInOnlineMode())
 +            {
 +                final List<GameProfile> list = Lists.<GameProfile>newArrayList();
 +                ProfileLookupCallback profilelookupcallback = new ProfileLookupCallback()
 +                {
 +                    public void onProfileLookupSucceeded(GameProfile p_onProfileLookupSucceeded_1_)
 +                    {
-+                        p_187473_0_.func_152358_ax().func_152649_a(p_onProfileLookupSucceeded_1_);
++                        server.getPlayerProfileCache().addEntry(p_onProfileLookupSucceeded_1_);
 +                        list.add(p_onProfileLookupSucceeded_1_);
 +                    }
 +                    public void onProfileLookupFailed(GameProfile p_onProfileLookupFailed_1_, Exception p_onProfileLookupFailed_2_)
 +                    {
-+                        PreYggdrasilConverter.field_152732_e.warn("Could not lookup user whitelist entry for {}", p_onProfileLookupFailed_1_.getName(), p_onProfileLookupFailed_2_);
++                        PreYggdrasilConverter.LOGGER.warn("Could not lookup user whitelist entry for {}", p_onProfileLookupFailed_1_.getName(), p_onProfileLookupFailed_2_);
 +                    }
 +                };
-+                func_152717_a(p_187473_0_, Lists.newArrayList(p_187473_1_), profilelookupcallback);
++                lookupNames(server, Lists.newArrayList(username), profilelookupcallback);
 +                return !list.isEmpty() && ((GameProfile)list.get(0)).getId() != null ? ((GameProfile)list.get(0)).getId().toString() : "";
 +            }
 +            else
 +            {
-+                return EntityPlayer.func_146094_a(new GameProfile((UUID)null, p_187473_1_)).toString();
++                return EntityPlayer.getUUID(new GameProfile((UUID)null, username)).toString();
 +            }
 +        }
 +        else
 +        {
-+            return p_187473_1_;
++            return username;
 +        }
 +    }
 +
 +    @SideOnly(Side.SERVER)
-+    static List<String> func_152721_a(File p_152721_0_, Map<String, String[]> p_152721_1_) throws IOException
++    static List<String> readFile(File inFile, Map<String, String[]> read) throws IOException
 +    {
-+        List<String> list = Files.readLines(p_152721_0_, StandardCharsets.UTF_8);
++        List<String> list = Files.readLines(inFile, StandardCharsets.UTF_8);
 +
 +        for (String s : list)
 +        {
@@ -99,7 +99,7 @@
 +            if (!s.startsWith("#") && s.length() >= 1)
 +            {
 +                String[] astring = s.split("\\|");
-+                p_152721_1_.put(astring[0].toLowerCase(Locale.ROOT), astring);
++                read.put(astring[0].toLowerCase(Locale.ROOT), astring);
 +            }
 +        }
 +
@@ -107,25 +107,25 @@
 +    }
 +
      @SideOnly(Side.SERVER)
-     public static boolean func_152724_a(final MinecraftServer p_152724_0_) throws IOException
+     public static boolean convertUserBanlist(final MinecraftServer server) throws IOException
      {
 @@ -96,9 +137,10 @@
                  {
-                     userlistbans.func_152679_g();
+                     userlistbans.readSavedFile();
                  }
 -                catch (FileNotFoundException filenotfoundexception)
 +                // CraftBukkit start - FileNotFoundException -> IOException, don't print stacktrace
 +                catch (IOException filenotfoundexception)
                  {
--                    field_152732_e.warn("Could not load existing file {}", userlistbans.func_152691_c().getName(), filenotfoundexception);
-+                    field_152732_e.warn("Could not load existing file {}", userlistbans.func_152691_c().getName());
+-                    LOGGER.warn("Could not load existing file {}", userlistbans.getSaveFile().getName(), filenotfoundexception);
++                    LOGGER.warn("Could not load existing file {}", userlistbans.getSaveFile().getName());
                  }
              }
  
 @@ -112,7 +154,7 @@
                      public void onProfileLookupSucceeded(GameProfile p_onProfileLookupSucceeded_1_)
                      {
-                         p_152724_0_.func_152358_ax().func_152649_a(p_onProfileLookupSucceeded_1_);
+                         server.getPlayerProfileCache().addEntry(p_onProfileLookupSucceeded_1_);
 -                        String[] astring = map.get(p_onProfileLookupSucceeded_1_.getName().toLowerCase(Locale.ROOT));
 +                        String[] astring = (String[])map.get(p_onProfileLookupSucceeded_1_.getName().toLowerCase(Locale.ROOT));
  
@@ -133,14 +133,14 @@
                          {
 @@ -177,9 +219,10 @@
                  {
-                     userlistipbans.func_152679_g();
+                     userlistipbans.readSavedFile();
                  }
 -                catch (FileNotFoundException filenotfoundexception)
 +                // CraftBukkit start - FileNotFoundException -> IOException, don't print stacktrace
 +                catch (IOException filenotfoundexception)
                  {
--                    field_152732_e.warn("Could not load existing file {}", userlistipbans.func_152691_c().getName(), filenotfoundexception);
-+                    field_152732_e.warn("Could not load existing file {}", userlistipbans.func_152691_c().getName());
+-                    LOGGER.warn("Could not load existing file {}", userlistipbans.getSaveFile().getName(), filenotfoundexception);
++                    LOGGER.warn("Could not load existing file {}", userlistipbans.getSaveFile().getName());
                  }
              }
  
@@ -150,32 +150,32 @@
                  {
 -                    String[] astring = map.get(s);
 +                    String[] astring = (String[])map.get(s);
-                     Date date = astring.length > 1 ? func_152713_b(astring[1], null) : null;
+                     Date date = astring.length > 1 ? parseDate(astring[1], null) : null;
                      String s1 = astring.length > 2 ? astring[2] : null;
-                     Date date1 = astring.length > 3 ? func_152713_b(astring[3], null) : null;
+                     Date date1 = astring.length > 3 ? parseDate(astring[3], null) : null;
 @@ -227,9 +270,10 @@
                  {
-                     userlistops.func_152679_g();
+                     userlistops.readSavedFile();
                  }
 -                catch (FileNotFoundException filenotfoundexception)
 +                // CraftBukkit start - FileNotFoundException -> IOException, don't print stacktrace
 +                catch (IOException filenotfoundexception)
                  {
--                    field_152732_e.warn("Could not load existing file {}", userlistops.func_152691_c().getName(), filenotfoundexception);
-+                    field_152732_e.warn("Could not load existing file {}", userlistops.func_152691_c().getName());
+-                    LOGGER.warn("Could not load existing file {}", userlistops.getSaveFile().getName(), filenotfoundexception);
++                    LOGGER.warn("Could not load existing file {}", userlistops.getSaveFile().getName());
                  }
              }
  
 @@ -293,9 +337,10 @@
                  {
-                     userlistwhitelist.func_152679_g();
+                     userlistwhitelist.readSavedFile();
                  }
 -                catch (FileNotFoundException filenotfoundexception)
 +                // CraftBukkit start - FileNotFoundException -> IOException, don't print stacktrace
 +                catch (IOException filenotfoundexception)
                  {
--                    field_152732_e.warn("Could not load existing file {}", userlistwhitelist.func_152691_c().getName(), filenotfoundexception);
-+                    field_152732_e.warn("Could not load existing file {}", userlistwhitelist.func_152691_c().getName());
+-                    LOGGER.warn("Could not load existing file {}", userlistwhitelist.getSaveFile().getName(), filenotfoundexception);
++                    LOGGER.warn("Could not load existing file {}", userlistwhitelist.getSaveFile().getName());
                  }
              }
  
@@ -194,17 +194,17 @@
          }
      }
  
--    public static String func_187473_a(final MinecraftServer p_187473_0_, String p_187473_1_)
+-    public static String convertMobOwnerIfNeeded(final MinecraftServer server, String username)
 -    {
--        if (!StringUtils.func_151246_b(p_187473_1_) && p_187473_1_.length() <= 16)
+-        if (!StringUtils.isNullOrEmpty(username) && username.length() <= 16)
 -        {
--            GameProfile gameprofile = p_187473_0_.func_152358_ax().func_152655_a(p_187473_1_);
+-            GameProfile gameprofile = server.getPlayerProfileCache().getGameProfileForUsername(username);
 -
 -            if (gameprofile != null && gameprofile.getId() != null)
 -            {
 -                return gameprofile.getId().toString();
 -            }
--            else if (!p_187473_0_.func_71264_H() && p_187473_0_.func_71266_T())
+-            else if (!server.isSinglePlayer() && server.isServerInOnlineMode())
 -            {
 -                final List<GameProfile> list = Lists.newArrayList();
 -                ProfileLookupCallback profilelookupcallback = new ProfileLookupCallback()
@@ -212,32 +212,32 @@
 -                    @Override
 -                    public void onProfileLookupSucceeded(GameProfile p_onProfileLookupSucceeded_1_)
 -                    {
--                        p_187473_0_.func_152358_ax().func_152649_a(p_onProfileLookupSucceeded_1_);
+-                        server.getPlayerProfileCache().addEntry(p_onProfileLookupSucceeded_1_);
 -                        list.add(p_onProfileLookupSucceeded_1_);
 -                    }
 -                    @Override
 -                    public void onProfileLookupFailed(GameProfile p_onProfileLookupFailed_1_, Exception p_onProfileLookupFailed_2_)
 -                    {
--                        PreYggdrasilConverter.field_152732_e
+-                        PreYggdrasilConverter.LOGGER
 -                        .warn("Could not lookup user whitelist entry for {}", p_onProfileLookupFailed_1_.getName(), p_onProfileLookupFailed_2_);
 -                    }
 -                };
--                func_152717_a(p_187473_0_, Lists.newArrayList(p_187473_1_), profilelookupcallback);
+-                lookupNames(server, Lists.newArrayList(username), profilelookupcallback);
 -                return !list.isEmpty() && list.get(0).getId() != null ? list.get(0).getId().toString() : "";
 -            }
 -            else
 -            {
--                return EntityPlayer.func_146094_a(new GameProfile(null, p_187473_1_)).toString();
+-                return EntityPlayer.getUUID(new GameProfile(null, username)).toString();
 -            }
 -        }
 -        else
 -        {
--            return p_187473_1_;
+-            return username;
 -        }
 -    }
 -
      @SideOnly(Side.SERVER)
-     public static boolean func_152723_a(final DedicatedServer p_152723_0_, PropertyManager p_152723_1_)
+     public static boolean convertSaveFiles(final DedicatedServer server, PropertyManager p_152723_1_)
      {
 @@ -457,6 +458,29 @@
                      {
@@ -247,32 +247,32 @@
 +                        NBTTagCompound root = null;
 +
 +                        try {
-+                            root = CompressedStreamTools.func_74796_a(new java.io.FileInputStream(file1));
++                            root = CompressedStreamTools.readCompressed(new java.io.FileInputStream(file1));
 +                        } catch (Exception exception) {
 +                            exception.printStackTrace();
 +                        }
 +
 +                        if (root != null) {
-+                            if (!root.func_74764_b("bukkit")) {
-+                                root.func_74782_a("bukkit", new NBTTagCompound());
++                            if (!root.hasKey("bukkit")) {
++                                root.setTag("bukkit", new NBTTagCompound());
 +                            }
-+                            NBTTagCompound data = root.func_74775_l("bukkit");
-+                            data.func_74778_a("lastKnownName", p_152743_2_);
++                            NBTTagCompound data = root.getCompoundTag("bukkit");
++                            data.setString("lastKnownName", p_152743_2_);
 +
 +                            try {
-+                                CompressedStreamTools.func_74799_a(root, new java.io.FileOutputStream(file2));
++                                CompressedStreamTools.writeCompressed(root, new java.io.FileOutputStream(file2));
 +                            } catch (Exception exception) {
 +                                exception.printStackTrace();
 +                            }
 +                        }
 +                        // CraftBukkit end
-                         PreYggdrasilConverter.func_152711_b(p_152743_1_);
+                         PreYggdrasilConverter.mkdir(p_152743_1_);
  
                          if (!file5.renameTo(file6))
 @@ -611,7 +635,7 @@
-     private static File func_152725_d(PropertyManager p_152725_0_)
+     private static File getPlayersDirectory(PropertyManager properties)
      {
-         String s = p_152725_0_.func_73671_a("level-name", "world");
+         String s = properties.getStringProperty("level-name", "world");
 -        File file1 = new File(s);
 +        File file1 = new File(MinecraftServer.getServerInst().server.getWorldContainer(), s); // CraftBukkit - Respect container setting
          return new File(file1, "players");

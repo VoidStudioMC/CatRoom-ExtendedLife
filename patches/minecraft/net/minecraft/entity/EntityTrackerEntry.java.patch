@@ -19,32 +19,32 @@
  public class EntityTrackerEntry
  {
 @@ -90,11 +95,11 @@
-     private boolean field_73144_s;
-     private final boolean field_73143_t;
-     private int field_73142_u;
--    private List<Entity> field_187263_w = Collections.emptyList();
-+    private List<Entity> field_187263_w = Collections.<Entity>emptyList();
-     private boolean field_73141_v;
-     private boolean field_180234_y;
-     public boolean field_73133_n;
--    public final Set<EntityPlayerMP> field_73134_o = Sets.newHashSet();
-+    public final Set<EntityPlayerMP> field_73134_o = Sets.<EntityPlayerMP>newHashSet();
+     private boolean updatedPlayerVisibility;
+     private final boolean sendVelocityUpdates;
+     private int ticksSinceLastForcedTeleport;
+-    private List<Entity> passengers = Collections.emptyList();
++    private List<Entity> passengers = Collections.<Entity>emptyList();
+     private boolean ridingEntity;
+     private boolean onGround;
+     public boolean playerEntitiesUpdated;
+-    public final Set<EntityPlayerMP> trackingPlayers = Sets.newHashSet();
++    public final Set<EntityPlayerMP> trackingPlayers = Sets.<EntityPlayerMP>newHashSet();
  
-     public EntityTrackerEntry(Entity p_i46837_1_, int p_i46837_2_, int p_i46837_3_, int p_i46837_4_, boolean p_i46837_5_)
+     public EntityTrackerEntry(Entity entityIn, int rangeIn, int maxRangeIn, int updateFrequencyIn, boolean sendVelocityUpdatesIn)
      {
 @@ -112,15 +117,18 @@
-         this.field_180234_y = p_i46837_1_.field_70122_E;
+         this.onGround = entityIn.onGround;
      }
  
 -    @Override
      public boolean equals(Object p_equals_1_)
      {
 -        return p_equals_1_ instanceof EntityTrackerEntry
--               ? ((EntityTrackerEntry)p_equals_1_).field_73132_a.func_145782_y() == this.field_73132_a.func_145782_y()
+-               ? ((EntityTrackerEntry)p_equals_1_).trackedEntity.getEntityId() == this.trackedEntity.getEntityId()
 -               : false;
 +        if (p_equals_1_ instanceof EntityTrackerEntry)
 +        {
-+            return ((EntityTrackerEntry)p_equals_1_).field_73132_a.func_145782_y() == this.field_73132_a.func_145782_y();
++            return ((EntityTrackerEntry)p_equals_1_).trackedEntity.getEntityId() == this.trackedEntity.getEntityId();
 +        }
 +        else
 +        {
@@ -55,39 +55,39 @@
 -    @Override
      public int hashCode()
      {
-         return this.field_73132_a.func_145782_y();
+         return this.trackedEntity.getEntityId();
 @@ -130,7 +138,7 @@
      {
-         this.field_73133_n = false;
+         this.playerEntitiesUpdated = false;
  
--        if (!this.field_73144_s || this.field_73132_a.func_70092_e(this.field_73147_p, this.field_73146_q, this.field_73145_r) > 16.0)
-+        if (!this.field_73144_s || this.field_73132_a.func_70092_e(this.field_73147_p, this.field_73146_q, this.field_73145_r) > 16.0D)
+-        if (!this.updatedPlayerVisibility || this.trackedEntity.getDistanceSq(this.lastTrackedEntityPosX, this.lastTrackedEntityPosY, this.lastTrackedEntityPosZ) > 16.0)
++        if (!this.updatedPlayerVisibility || this.trackedEntity.getDistanceSq(this.lastTrackedEntityPosX, this.lastTrackedEntityPosY, this.lastTrackedEntityPosZ) > 16.0D)
          {
-             this.field_73147_p = this.field_73132_a.field_70165_t;
-             this.field_73146_q = this.field_73132_a.field_70163_u;
+             this.lastTrackedEntityPosX = this.trackedEntity.posX;
+             this.lastTrackedEntityPosY = this.trackedEntity.posY;
 @@ -148,20 +156,20 @@
-             this.func_151259_a(new SPacketSetPassengers(this.field_73132_a));
+             this.sendPacketToTrackedPlayers(new SPacketSetPassengers(this.trackedEntity));
          }
  
--        if (this.field_73132_a instanceof EntityItemFrame && this.field_73136_m % 10 == 0)
-+        if (this.field_73132_a instanceof EntityItemFrame /*&& this.updateCounter % 10 == 0*/) // CraftBukkit - Moved below, should always enter this block
+-        if (this.trackedEntity instanceof EntityItemFrame && this.updateCounter % 10 == 0)
++        if (this.trackedEntity instanceof EntityItemFrame /*&& this.updateCounter % 10 == 0*/) // CraftBukkit - Moved below, should always enter this block
          {
-             EntityItemFrame entityitemframe = (EntityItemFrame)this.field_73132_a;
-             ItemStack itemstack = entityitemframe.func_82335_i();
+             EntityItemFrame entityitemframe = (EntityItemFrame)this.trackedEntity;
+             ItemStack itemstack = entityitemframe.getDisplayedItem();
  
--            if (itemstack.func_77973_b() instanceof ItemMap)
-+            if (this.field_73136_m % 10 == 0 && itemstack.func_77973_b() instanceof ItemMap)// CraftBukkit - Moved this.updateCounter % 10 logic here so item frames do not enter the other blocks
+-            if (itemstack.getItem() instanceof ItemMap)
++            if (this.updateCounter % 10 == 0 && itemstack.getItem() instanceof ItemMap)// CraftBukkit - Moved this.updateCounter % 10 logic here so item frames do not enter the other blocks
              {
--                MapData mapdata = Items.field_151098_aY.func_77873_a(itemstack, this.field_73132_a.field_70170_p);
-+                MapData mapdata = ((ItemMap) itemstack.func_77973_b()).func_77873_a(itemstack, this.field_73132_a.field_70170_p);
+-                MapData mapdata = Items.FILLED_MAP.getMapData(itemstack, this.trackedEntity.world);
++                MapData mapdata = ((ItemMap) itemstack.getItem()).getMapData(itemstack, this.trackedEntity.world);
  
--                for (EntityPlayer entityplayer : p_73122_1_)
-+                for (EntityPlayer entityplayer : field_73134_o)
+-                for (EntityPlayer entityplayer : players)
++                for (EntityPlayer entityplayer : trackingPlayers)
                  {
                      EntityPlayerMP entityplayermp = (EntityPlayerMP)entityplayer;
-                     mapdata.func_76191_a(entityplayermp, itemstack);
--                    Packet<?> packet = Items.field_151098_aY.func_150911_c(itemstack, this.field_73132_a.field_70170_p, entityplayermp);
-+                    Packet<?> packet = ((ItemMap) itemstack.func_77973_b()).func_150911_c(itemstack, this.field_73132_a.field_70170_p, entityplayermp);
+                     mapdata.updateVisiblePlayers(entityplayermp, itemstack);
+-                    Packet<?> packet = Items.FILLED_MAP.createMapDataPacket(itemstack, this.trackedEntity.world, entityplayermp);
++                    Packet<?> packet = ((ItemMap) itemstack.getItem()).createMapDataPacket(itemstack, this.trackedEntity.world, entityplayermp);
  
                      if (packet != null)
                      {
@@ -95,41 +95,41 @@
  
                  if (flag3)
                  {
--                    this.func_151259_a(
--                        new SPacketEntity.S16PacketEntityLook(this.field_73132_a.func_145782_y(), (byte)j1, (byte)l1, this.field_73132_a.field_70122_E)
+-                    this.sendPacketToTrackedPlayers(
+-                        new SPacketEntity.S16PacketEntityLook(this.trackedEntity.getEntityId(), (byte)j1, (byte)l1, this.trackedEntity.onGround)
 -                    );
-+                    this.func_151259_a(new SPacketEntity.S16PacketEntityLook(this.field_73132_a.func_145782_y(), (byte)j1, (byte)l1, this.field_73132_a.field_70122_E));
-                     this.field_73127_g = j1;
-                     this.field_73139_h = l1;
++                    this.sendPacketToTrackedPlayers(new SPacketEntity.S16PacketEntityLook(this.trackedEntity.getEntityId(), (byte)j1, (byte)l1, this.trackedEntity.onGround));
+                     this.encodedRotationYaw = j1;
+                     this.encodedRotationPitch = l1;
                  }
 @@ -198,7 +204,7 @@
              }
              else
              {
--                this.field_73142_u++;
-+                ++this.field_73142_u;
-                 long i1 = EntityTracker.func_187253_a(this.field_73132_a.field_70165_t);
-                 long i2 = EntityTracker.func_187253_a(this.field_73132_a.field_70163_u);
-                 long j2 = EntityTracker.func_187253_a(this.field_73132_a.field_70161_v);
+-                this.ticksSinceLastForcedTeleport++;
++                ++this.ticksSinceLastForcedTeleport;
+                 long i1 = EntityTracker.getPositionLong(this.trackedEntity.posX);
+                 long i2 = EntityTracker.getPositionLong(this.trackedEntity.posY);
+                 long j2 = EntityTracker.getPositionLong(this.trackedEntity.posZ);
 @@ -210,18 +216,23 @@
                  Packet<?> packet1 = null;
-                 boolean flag = j * j + k * k + l * l >= 128L || this.field_73136_m % 60 == 0;
-                 boolean flag1 = Math.abs(k2 - this.field_73127_g) >= 1 || Math.abs(i - this.field_73139_h) >= 1;
+                 boolean flag = j * j + k * k + l * l >= 128L || this.updateCounter % 60 == 0;
+                 boolean flag1 = Math.abs(k2 - this.encodedRotationYaw) >= 1 || Math.abs(i - this.encodedRotationPitch) >= 1;
 +                // CraftBukkit start - Code moved from below
 +                if (flag)
 +                {
-+                    this.field_73128_d = i1;
-+                    this.field_73129_e = i2;
-+                    this.field_73126_f = j2;
++                    this.encodedPosX = i1;
++                    this.encodedPosY = i2;
++                    this.encodedPosZ = j2;
 +                }
  
 +                if (flag1)
 +                {
-+                    this.field_73127_g = k2;
-+                    this.field_73139_h = i;
++                    this.encodedRotationYaw = k2;
++                    this.encodedRotationPitch = i;
 +                }
 +                // CraftBukkit end
-                 if (this.field_73136_m > 0 || this.field_73132_a instanceof EntityArrow)
+                 if (this.updateCounter > 0 || this.trackedEntity instanceof EntityArrow)
                  {
 -                    if (j >= -32768L
 -                            && j < 32768L
@@ -137,96 +137,86 @@
 -                            && k < 32768L
 -                            && l >= -32768L
 -                            && l < 32768L
--                            && this.field_73142_u <= 400
--                            && !this.field_73141_v
--                            && this.field_180234_y == this.field_73132_a.field_70122_E)
-+                    if (j >= -32768L && j < 32768L && k >= -32768L && k < 32768L && l >= -32768L && l < 32768L && this.field_73142_u <= 400 && !this.field_73141_v && this.field_180234_y == this.field_73132_a.field_70122_E)
+-                            && this.ticksSinceLastForcedTeleport <= 400
+-                            && !this.ridingEntity
+-                            && this.onGround == this.trackedEntity.onGround)
++                    if (j >= -32768L && j < 32768L && k >= -32768L && k < 32768L && l >= -32768L && l < 32768L && this.ticksSinceLastForcedTeleport <= 400 && !this.ridingEntity && this.onGround == this.trackedEntity.onGround)
                      {
-                         if ((!flag || !flag1) && !(this.field_73132_a instanceof EntityArrow))
+                         if ((!flag || !flag1) && !(this.trackedEntity instanceof EntityArrow))
                          {
 @@ -236,15 +247,18 @@
                          }
                          else
                          {
 -                            packet1 = new SPacketEntity.S17PacketEntityLookMove(
--                                this.field_73132_a.func_145782_y(), j, k, l, (byte)k2, (byte)i, this.field_73132_a.field_70122_E
+-                                this.trackedEntity.getEntityId(), j, k, l, (byte)k2, (byte)i, this.trackedEntity.onGround
 -                            );
-+                            packet1 = new SPacketEntity.S17PacketEntityLookMove(this.field_73132_a.func_145782_y(), j, k, l, (byte)k2, (byte)i, this.field_73132_a.field_70122_E);
++                            packet1 = new SPacketEntity.S17PacketEntityLookMove(this.trackedEntity.getEntityId(), j, k, l, (byte)k2, (byte)i, this.trackedEntity.onGround);
                          }
                      }
                      else
                      {
-                         this.field_180234_y = this.field_73132_a.field_70122_E;
-                         this.field_73142_u = 0;
+                         this.onGround = this.trackedEntity.onGround;
+                         this.ticksSinceLastForcedTeleport = 0;
 +                        // CraftBukkit start - Refresh list of who can see a player before sending teleport packet
-+                        if (this.field_73132_a instanceof EntityPlayer) {
-+                            this.func_73125_b(new java.util.ArrayList<>(this.field_73134_o));
++                        if (this.trackedEntity instanceof EntityPlayer) {
++                            this.updatePlayerEntities(new java.util.ArrayList<>(this.trackingPlayers));
 +                        }
 +                        // CraftBukkit end
-                         this.func_187261_c();
-                         packet1 = new SPacketEntityTeleport(this.field_73132_a);
+                         this.resetPlayerVisibility();
+                         packet1 = new SPacketEntityTeleport(this.trackedEntity);
                      }
 @@ -262,11 +276,10 @@
-                     double d0 = this.field_73132_a.field_70159_w - this.field_73137_j;
-                     double d1 = this.field_73132_a.field_70181_x - this.field_73138_k;
-                     double d2 = this.field_73132_a.field_70179_y - this.field_73135_l;
+                     double d0 = this.trackedEntity.motionX - this.lastTrackedEntityMotionX;
+                     double d1 = this.trackedEntity.motionY - this.lastTrackedEntityMotionY;
+                     double d2 = this.trackedEntity.motionZ - this.motionZ;
 -                    double d3 = 0.02;
 +                    double d3 = 0.02D;
                      double d4 = d0 * d0 + d1 * d1 + d2 * d2;
  
 -                    if (d4 > 4.0E-4
--                            || d4 > 0.0 && this.field_73132_a.field_70159_w == 0.0 && this.field_73132_a.field_70181_x == 0.0 && this.field_73132_a.field_70179_y == 0.0)
-+                    if (d4 > 4.0E-4D || d4 > 0.0D && this.field_73132_a.field_70159_w == 0.0D && this.field_73132_a.field_70181_x == 0.0D && this.field_73132_a.field_70179_y == 0.0D)
+-                            || d4 > 0.0 && this.trackedEntity.motionX == 0.0 && this.trackedEntity.motionY == 0.0 && this.trackedEntity.motionZ == 0.0)
++                    if (d4 > 4.0E-4D || d4 > 0.0D && this.trackedEntity.motionX == 0.0D && this.trackedEntity.motionY == 0.0D && this.trackedEntity.motionZ == 0.0D)
                      {
-                         this.field_73137_j = this.field_73132_a.field_70159_w;
-                         this.field_73138_k = this.field_73132_a.field_70181_x;
-@@ -282,19 +295,20 @@
+                         this.lastTrackedEntityMotionX = this.trackedEntity.motionX;
+                         this.lastTrackedEntityMotionY = this.trackedEntity.motionY;
+@@ -282,6 +295,7 @@
  
-                 this.func_111190_b();
+                 this.sendMetadata();
  
 +                /* CraftBukkit start - Code moved up
                  if (flag)
                  {
--                    this.field_73128_d = i1;
--                    this.field_73129_e = i2;
--                    this.field_73126_f = j2;
-+                    this.encodedPosX = i1;
-+                    this.encodedPosY = i2;
-+                    this.encodedPosZ = j2;
-                 }
- 
-                 if (flag1)
-                 {
--                    this.field_73127_g = k2;
--                    this.field_73139_h = i;
-+                    this.encodedRotationYaw = k2;
-+                    this.encodedRotationPitch = i;
+                     this.encodedPosX = i1;
+@@ -294,7 +308,7 @@
+                     this.encodedRotationYaw = k2;
+                     this.encodedRotationPitch = i;
                  }
 -
 +                // CraftBukkit end */
-                 this.field_73141_v = false;
+                 this.ridingEntity = false;
              }
  
 @@ -309,11 +323,32 @@
-             this.field_73132_a.field_70160_al = false;
+             this.trackedEntity.isAirBorne = false;
          }
  
--        this.field_73136_m++;
-+        ++this.field_73136_m;
+-        this.updateCounter++;
++        ++this.updateCounter;
  
-         if (this.field_73132_a.field_70133_I)
+         if (this.trackedEntity.velocityChanged)
          {
--            this.func_151261_b(new SPacketEntityVelocity(this.field_73132_a));
+-            this.sendToTrackingAndSelf(new SPacketEntityVelocity(this.trackedEntity));
 +            // this.sendToTrackingAndSelf(new SPacketEntityVelocity(this.trackedEntity));
 +            // CraftBukkit start - Create PlayerVelocity event
 +            boolean cancelled = false;
 +
-+            if (this.field_73132_a instanceof EntityPlayer) {
-+                Player player = (Player) this.field_73132_a.getBukkitEntity();
++            if (this.trackedEntity instanceof EntityPlayer) {
++                Player player = (Player) this.trackedEntity.getBukkitEntity();
 +                org.bukkit.util.Vector velocity = player.getVelocity();
 +
 +                PlayerVelocityEvent event = new PlayerVelocityEvent(player, velocity.clone());
-+                this.field_73132_a.field_70170_p.getServer().getPluginManager().callEvent(event);
++                this.trackedEntity.world.getServer().getPluginManager().callEvent(event);
 +
 +                if (event.isCancelled()) {
 +                    cancelled = true;
@@ -236,10 +226,10 @@
 +            }
 +
 +            if (!cancelled) {
-+                this.func_151261_b(new SPacketEntityVelocity(this.field_73132_a));
++                this.sendToTrackingAndSelf(new SPacketEntityVelocity(this.trackedEntity));
 +            }
 +            // CraftBukkit end
-             this.field_73132_a.field_70133_I = false;
+             this.trackedEntity.velocityChanged = false;
          }
      }
 @@ -334,6 +369,11 @@
@@ -247,172 +237,172 @@
              if (!set.isEmpty())
              {
 +                // CraftBukkit start - Send scaled max health
-+                if (this.field_73132_a instanceof EntityPlayerMP) {
-+                    ((EntityPlayerMP) this.field_73132_a).getBukkitEntity().injectScaledMaxHealth(set, false);
++                if (this.trackedEntity instanceof EntityPlayerMP) {
++                    ((EntityPlayerMP) this.trackedEntity).getBukkitEntity().injectScaledMaxHealth(set, false);
 +                }
 +                // CraftBukkit end
-                 this.func_151261_b(new SPacketEntityProperties(this.field_73132_a.func_145782_y(), set));
+                 this.sendToTrackingAndSelf(new SPacketEntityProperties(this.trackedEntity.getEntityId(), set));
              }
  
 @@ -370,6 +410,7 @@
  
-     public void func_73118_a(EntityPlayerMP p_73118_1_)
+     public void removeFromTrackedPlayers(EntityPlayerMP playerMP)
      {
 +        CatAsyncCatcher.catchOp("player tracker clear"); // Spigot
-         if (this.field_73134_o.contains(p_73118_1_))
+         if (this.trackingPlayers.contains(playerMP))
          {
-             this.field_73132_a.func_184203_c(p_73118_1_);
+             this.trackedEntity.removeTrackingPlayer(playerMP);
 @@ -380,20 +421,30 @@
  
-     public void func_73117_b(EntityPlayerMP p_73117_1_)
+     public void updatePlayerEntity(EntityPlayerMP playerMP)
      {
 +        CatAsyncCatcher.catchOp("player tracker update"); // Spigot
-         if (p_73117_1_ != this.field_73132_a)
+         if (playerMP != this.trackedEntity)
          {
-             if (this.func_180233_c(p_73117_1_))
+             if (this.isVisibleTo(playerMP))
              {
-                 if (!this.field_73134_o.contains(p_73117_1_) && (this.func_73121_d(p_73117_1_) || this.field_73132_a.field_98038_p))
+                 if (!this.trackingPlayers.contains(playerMP) && (this.isPlayerWatchingThisChunk(playerMP) || this.trackedEntity.forceSpawn))
                  {
 +                    // CraftBukkit start - respect vanish API
-+                    if (this.field_73132_a instanceof EntityPlayerMP) {
-+                        Player player = ((EntityPlayerMP) this.field_73132_a).getBukkitEntity();
-+                        if (!p_73117_1_.getBukkitEntity().canSee(player)) {
++                    if (this.trackedEntity instanceof EntityPlayerMP) {
++                        Player player = ((EntityPlayerMP) this.trackedEntity).getBukkitEntity();
++                        if (!playerMP.getBukkitEntity().canSee(player)) {
 +                            return;
 +                        }
 +                    }
 +
-+                    p_73117_1_.field_71130_g.remove(Integer.valueOf(this.field_73132_a.func_145782_y()));
++                    playerMP.entityRemoveQueue.remove(Integer.valueOf(this.trackedEntity.getEntityId()));
 +                    // CraftBukkit end
-                     this.field_73134_o.add(p_73117_1_);
-                     Packet<?> packet = this.func_151260_c();
-                     p_73117_1_.field_71135_a.func_147359_a(packet);
+                     this.trackingPlayers.add(playerMP);
+                     Packet<?> packet = this.createSpawnPacket();
+                     playerMP.connection.sendPacket(packet);
  
-                     if (!this.field_73132_a.func_184212_Q().func_187228_d())
+                     if (!this.trackedEntity.getDataManager().isEmpty())
                      {
--                        p_73117_1_.field_71135_a
--                        .func_147359_a(new SPacketEntityMetadata(this.field_73132_a.func_145782_y(), this.field_73132_a.func_184212_Q(), true));
-+                        p_73117_1_.field_71135_a.func_147359_a(new SPacketEntityMetadata(this.field_73132_a.func_145782_y(), this.field_73132_a.func_184212_Q(), true));
+-                        playerMP.connection
+-                        .sendPacket(new SPacketEntityMetadata(this.trackedEntity.getEntityId(), this.trackedEntity.getDataManager(), true));
++                        playerMP.connection.sendPacket(new SPacketEntityMetadata(this.trackedEntity.getEntityId(), this.trackedEntity.getDataManager(), true));
                      }
  
-                     boolean flag = this.field_73143_t;
+                     boolean flag = this.sendVelocityUpdates;
 @@ -403,6 +454,14 @@
-                         AttributeMap attributemap = (AttributeMap)((EntityLivingBase)this.field_73132_a).func_110140_aT();
-                         Collection<IAttributeInstance> collection = attributemap.func_111160_c();
+                         AttributeMap attributemap = (AttributeMap)((EntityLivingBase)this.trackedEntity).getAttributeMap();
+                         Collection<IAttributeInstance> collection = attributemap.getWatchedAttributes();
  
 +                        // CraftBukkit start - If sending own attributes send scaled health instead of current maximum health
-+                        if (this.field_73132_a.func_145782_y() == p_73117_1_.func_145782_y()) {
++                        if (this.trackedEntity.getEntityId() == playerMP.getEntityId()) {
 +                            // TODO: Maybe we should check for instanceof before casting to EntityPlayerMP?
-+                            ((EntityPlayerMP) this.field_73132_a).getBukkitEntity().injectScaledMaxHealth(collection, false);
++                            ((EntityPlayerMP) this.trackedEntity).getBukkitEntity().injectScaledMaxHealth(collection, false);
 +                        }
 +                        // CraftBukkit end
 +
 +
                          if (!collection.isEmpty())
                          {
-                             p_73117_1_.field_71135_a.func_147359_a(new SPacketEntityProperties(this.field_73132_a.func_145782_y(), collection));
+                             playerMP.connection.sendPacket(new SPacketEntityProperties(this.trackedEntity.getEntityId(), collection));
 @@ -420,15 +479,7 @@
  
                      if (flag && !(packet instanceof SPacketSpawnMob))
                      {
--                        p_73117_1_.field_71135_a
--                        .func_147359_a(
+-                        playerMP.connection
+-                        .sendPacket(
 -                            new SPacketEntityVelocity(
--                                this.field_73132_a.func_145782_y(),
--                                this.field_73132_a.field_70159_w,
--                                this.field_73132_a.field_70181_x,
--                                this.field_73132_a.field_70179_y
+-                                this.trackedEntity.getEntityId(),
+-                                this.trackedEntity.motionX,
+-                                this.trackedEntity.motionY,
+-                                this.trackedEntity.motionZ
 -                            )
 -                        );
-+                        p_73117_1_.field_71135_a.func_147359_a(new SPacketEntityVelocity(this.field_73132_a.func_145782_y(), this.field_73132_a.field_70159_w, this.field_73132_a.field_70181_x, this.field_73132_a.field_70179_y));
++                        playerMP.connection.sendPacket(new SPacketEntityVelocity(this.trackedEntity.getEntityId(), this.trackedEntity.motionX, this.trackedEntity.motionY, this.trackedEntity.motionZ));
                      }
  
-                     if (this.field_73132_a instanceof EntityLivingBase)
+                     if (this.trackedEntity instanceof EntityLivingBase)
 @@ -454,6 +505,11 @@
                          }
                      }
  
 +                    // CraftBukkit start - Fix for nonsensical head yaw
-+                    this.field_73140_i = MathHelper.func_76141_d(this.field_73132_a.func_70079_am() * 256.0F / 360.0F);
-+                    this.func_151259_a(new SPacketEntityHeadLook(this.field_73132_a, (byte) field_73140_i));
++                    this.lastHeadMotion = MathHelper.floor(this.trackedEntity.getRotationYawHead() * 256.0F / 360.0F);
++                    this.sendPacketToTrackedPlayers(new SPacketEntityHeadLook(this.trackedEntity, (byte) lastHeadMotion));
 +                    // CraftBukkit end
 +
-                     if (this.field_73132_a instanceof EntityLivingBase)
+                     if (this.trackedEntity instanceof EntityLivingBase)
                      {
-                         EntityLivingBase entitylivingbase = (EntityLivingBase)this.field_73132_a;
+                         EntityLivingBase entitylivingbase = (EntityLivingBase)this.trackedEntity;
 @@ -476,6 +532,7 @@
  
-                     this.field_73132_a.func_184178_b(p_73117_1_);
-                     p_73117_1_.func_184848_d(this.field_73132_a);
-+                    net.minecraftforge.event.ForgeEventFactory.onStartEntityTracking(field_73132_a, p_73117_1_);
+                     this.trackedEntity.addTrackingPlayer(playerMP);
+                     playerMP.addEntity(this.trackedEntity);
++                    net.minecraftforge.event.ForgeEventFactory.onStartEntityTracking(trackedEntity, playerMP);
                  }
              }
-             else if (this.field_73134_o.contains(p_73117_1_))
+             else if (this.trackingPlayers.contains(playerMP))
 @@ -483,14 +540,15 @@
-                 this.field_73134_o.remove(p_73117_1_);
-                 this.field_73132_a.func_184203_c(p_73117_1_);
-                 p_73117_1_.func_152339_d(this.field_73132_a);
-+                net.minecraftforge.event.ForgeEventFactory.onStopEntityTracking(field_73132_a, p_73117_1_);
+                 this.trackingPlayers.remove(playerMP);
+                 this.trackedEntity.removeTrackingPlayer(playerMP);
+                 playerMP.removeEntity(this.trackedEntity);
++                net.minecraftforge.event.ForgeEventFactory.onStopEntityTracking(trackedEntity, playerMP);
              }
          }
      }
  
-     public boolean func_180233_c(EntityPlayerMP p_180233_1_)
+     public boolean isVisibleTo(EntityPlayerMP playerMP)
      {
--        double d0 = p_180233_1_.field_70165_t - (double)this.field_73128_d / 4096.0;
--        double d1 = p_180233_1_.field_70161_v - (double)this.field_73126_f / 4096.0;
-+        double d0 = p_180233_1_.field_70165_t - (double)this.field_73128_d / 4096.0D;
-+        double d1 = p_180233_1_.field_70161_v - (double)this.field_73126_f / 4096.0D;
-         int i = Math.min(this.field_73130_b, this.field_187262_f);
-         return d0 >= (double)(-i) && d0 <= (double)i && d1 >= (double)(-i) && d1 <= (double)i && this.field_73132_a.func_174827_a(p_180233_1_);
+-        double d0 = playerMP.posX - (double)this.encodedPosX / 4096.0;
+-        double d1 = playerMP.posZ - (double)this.encodedPosZ / 4096.0;
++        double d0 = playerMP.posX - (double)this.encodedPosX / 4096.0D;
++        double d1 = playerMP.posZ - (double)this.encodedPosZ / 4096.0D;
+         int i = Math.min(this.range, this.maxRange);
+         return d0 >= (double)(-i) && d0 <= (double)i && d1 >= (double)(-i) && d1 <= (double)i && this.trackedEntity.isSpectatedByPlayer(playerMP);
      }
 @@ -502,18 +560,24 @@
  
-     public void func_73125_b(List<EntityPlayer> p_73125_1_)
+     public void updatePlayerEntities(List<EntityPlayer> players)
      {
--        for (int i = 0; i < p_73125_1_.size(); i++)
-+        for (int i = 0; i < p_73125_1_.size(); ++i)
+-        for (int i = 0; i < players.size(); i++)
++        for (int i = 0; i < players.size(); ++i)
          {
-             this.func_73117_b((EntityPlayerMP)p_73125_1_.get(i));
+             this.updatePlayerEntity((EntityPlayerMP)players.get(i));
          }
      }
  
 +    @Nullable
-     private Packet<?> func_151260_c()
+     private Packet<?> createSpawnPacket()
      {
-         if (this.field_73132_a.field_70128_L)
+         if (this.trackedEntity.isDead)
          {
--            field_151262_p.warn("Fetching addPacket for removed entity");
+-            LOGGER.warn("Fetching addPacket for removed entity");
 +            // CraftBukkit start - Remove useless error spam, just return
 +            // LOGGER.warn("Fetching addPacket for removed entity");
 +            return null;
          }
 +
-+        Packet pkt = net.minecraftforge.fml.common.network.internal.FMLNetworkHandler.getEntitySpawningPacket(this.field_73132_a);
++        Packet pkt = net.minecraftforge.fml.common.network.internal.FMLNetworkHandler.getEntitySpawningPacket(this.trackedEntity);
 +        if (pkt != null) return pkt;
  
-         if (this.field_73132_a instanceof EntityPlayerMP)
+         if (this.trackedEntity instanceof EntityPlayerMP)
          {
 @@ -616,17 +680,17 @@
-                 spacketspawnobject = new SPacketSpawnObject(this.field_73132_a, i, 0);
+                 spacketspawnobject = new SPacketSpawnObject(this.trackedEntity, i, 0);
              }
  
--            spacketspawnobject.func_149003_d((int)(entityfireball.field_70232_b * 8000.0));
--            spacketspawnobject.func_149000_e((int)(entityfireball.field_70233_c * 8000.0));
--            spacketspawnobject.func_149007_f((int)(entityfireball.field_70230_d * 8000.0));
-+            spacketspawnobject.func_149003_d((int)(entityfireball.field_70232_b * 8000.0D));
-+            spacketspawnobject.func_149000_e((int)(entityfireball.field_70233_c * 8000.0D));
-+            spacketspawnobject.func_149007_f((int)(entityfireball.field_70230_d * 8000.0D));
+-            spacketspawnobject.setSpeedX((int)(entityfireball.accelerationX * 8000.0));
+-            spacketspawnobject.setSpeedY((int)(entityfireball.accelerationY * 8000.0));
+-            spacketspawnobject.setSpeedZ((int)(entityfireball.accelerationZ * 8000.0));
++            spacketspawnobject.setSpeedX((int)(entityfireball.accelerationX * 8000.0D));
++            spacketspawnobject.setSpeedY((int)(entityfireball.accelerationY * 8000.0D));
++            spacketspawnobject.setSpeedZ((int)(entityfireball.accelerationZ * 8000.0D));
              return spacketspawnobject;
          }
-         else if (this.field_73132_a instanceof EntityShulkerBullet)
+         else if (this.trackedEntity instanceof EntityShulkerBullet)
          {
-             SPacketSpawnObject spacketspawnobject1 = new SPacketSpawnObject(this.field_73132_a, 67, 0);
--            spacketspawnobject1.func_149003_d((int)(this.field_73132_a.field_70159_w * 8000.0));
--            spacketspawnobject1.func_149000_e((int)(this.field_73132_a.field_70181_x * 8000.0));
--            spacketspawnobject1.func_149007_f((int)(this.field_73132_a.field_70179_y * 8000.0));
-+            spacketspawnobject1.func_149003_d((int)(this.field_73132_a.field_70159_w * 8000.0D));
-+            spacketspawnobject1.func_149000_e((int)(this.field_73132_a.field_70181_x * 8000.0D));
-+            spacketspawnobject1.func_149007_f((int)(this.field_73132_a.field_70179_y * 8000.0D));
+             SPacketSpawnObject spacketspawnobject1 = new SPacketSpawnObject(this.trackedEntity, 67, 0);
+-            spacketspawnobject1.setSpeedX((int)(this.trackedEntity.motionX * 8000.0));
+-            spacketspawnobject1.setSpeedY((int)(this.trackedEntity.motionY * 8000.0));
+-            spacketspawnobject1.setSpeedZ((int)(this.trackedEntity.motionZ * 8000.0));
++            spacketspawnobject1.setSpeedX((int)(this.trackedEntity.motionX * 8000.0D));
++            spacketspawnobject1.setSpeedY((int)(this.trackedEntity.motionY * 8000.0D));
++            spacketspawnobject1.setSpeedZ((int)(this.trackedEntity.motionZ * 8000.0D));
              return spacketspawnobject1;
          }
-         else if (this.field_73132_a instanceof EntityEgg)
+         else if (this.trackedEntity instanceof EntityEgg)

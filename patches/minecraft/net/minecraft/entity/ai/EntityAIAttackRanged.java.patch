@@ -4,8 +4,8 @@
  
          if (flag)
          {
--            this.field_75318_f++;
-+            ++this.field_75318_f;
+-            this.seeTime++;
++            ++this.seeTime;
          }
          else
          {

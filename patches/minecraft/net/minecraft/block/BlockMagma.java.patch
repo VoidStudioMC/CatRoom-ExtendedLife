@@ -10,11 +10,11 @@
  import net.minecraft.util.DamageSource;
 @@ -41,7 +42,9 @@
      {
-         if (!p_176199_3_.func_70045_F() && p_176199_3_ instanceof EntityLivingBase && !EnchantmentHelper.func_189869_j((EntityLivingBase)p_176199_3_))
+         if (!entityIn.isImmuneToFire() && entityIn instanceof EntityLivingBase && !EnchantmentHelper.hasFrostWalkerEnchantment((EntityLivingBase)entityIn))
          {
-+            org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.blockDamage = p_176199_1_.getWorld().getBlockAt(p_176199_2_.func_177958_n(), p_176199_2_.func_177956_o(), p_176199_2_.func_177952_p());
-             p_176199_3_.func_70097_a(DamageSource.field_190095_e, 1.0F);
++            org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.blockDamage = worldIn.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
+             entityIn.attackEntityFrom(DamageSource.HOT_FLOOR, 1.0F);
 +            org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.blockDamage = null;
          }
  
-         super.func_176199_a(p_176199_1_, p_176199_2_, p_176199_3_);
+         super.onEntityWalk(worldIn, pos, entityIn);

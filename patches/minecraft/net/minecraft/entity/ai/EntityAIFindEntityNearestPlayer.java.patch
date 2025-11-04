@@ -3,28 +3,28 @@
 @@ -124,9 +124,15 @@
              else
              {
-                 double d0 = this.func_179431_f();
--                return this.field_179434_b.func_70068_e(entitylivingbase) > d0 * d0
+                 double d0 = this.maxTargetRange();
+-                return this.entityLiving.getDistanceSq(entitylivingbase) > d0 * d0
 -                       ? false
--                       : !(entitylivingbase instanceof EntityPlayerMP) || !((EntityPlayerMP)entitylivingbase).field_71134_c.func_73083_d();
+-                       : !(entitylivingbase instanceof EntityPlayerMP) || !((EntityPlayerMP)entitylivingbase).interactionManager.isCreative();
 +
-+                if (this.field_179434_b.func_70068_e(entitylivingbase) > d0 * d0)
++                if (this.entityLiving.getDistanceSq(entitylivingbase) > d0 * d0)
 +                {
 +                    return false;
 +                }
 +                else
 +                {
-+                    return !(entitylivingbase instanceof EntityPlayerMP) || !((EntityPlayerMP)entitylivingbase).field_71134_c.func_73083_d();
++                    return !(entitylivingbase instanceof EntityPlayerMP) || !((EntityPlayerMP)entitylivingbase).interactionManager.isCreative();
 +                }
              }
          }
      }
 @@ -134,7 +140,7 @@
      @Override
-     public void func_75249_e()
+     public void startExecuting()
      {
--        this.field_179434_b.func_70624_b(this.field_179433_e);
-+        this.field_179434_b.setGoalTarget(this.field_179433_e, org.bukkit.event.entity.EntityTargetEvent.TargetReason.CLOSEST_PLAYER, true);
-         super.func_75249_e();
+-        this.entityLiving.setAttackTarget(this.entityTarget);
++        this.entityLiving.setGoalTarget(this.entityTarget, org.bukkit.event.entity.EntityTargetEvent.TargetReason.CLOSEST_PLAYER, true);
+         super.startExecuting();
      }
  

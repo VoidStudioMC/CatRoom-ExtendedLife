@@ -4,26 +4,26 @@
  
      protected void encode(ChannelHandlerContext p_encode_1_, Packet<?> p_encode_2_, ByteBuf p_encode_3_) throws IOException, Exception
      {
--        EnumConnectionState enumconnectionstate = p_encode_1_.channel().attr(NetworkManager.field_150739_c).get();
-+        EnumConnectionState enumconnectionstate = (EnumConnectionState)p_encode_1_.channel().attr(NetworkManager.field_150739_c).get();
+-        EnumConnectionState enumconnectionstate = p_encode_1_.channel().attr(NetworkManager.PROTOCOL_ATTRIBUTE_KEY).get();
++        EnumConnectionState enumconnectionstate = (EnumConnectionState)p_encode_1_.channel().attr(NetworkManager.PROTOCOL_ATTRIBUTE_KEY).get();
  
          if (enumconnectionstate == null)
          {
 @@ -34,10 +34,15 @@
  
-             if (field_150798_a.isDebugEnabled())
+             if (LOGGER.isDebugEnabled())
              {
--                field_150798_a.debug(
--                    field_150797_b, "OUT: [{}:{}] {}", p_encode_1_.channel().attr(NetworkManager.field_150739_c).get(), integer, p_encode_2_.getClass().getName()
+-                LOGGER.debug(
+-                    RECEIVED_PACKET_MARKER, "OUT: [{}:{}] {}", p_encode_1_.channel().attr(NetworkManager.PROTOCOL_ATTRIBUTE_KEY).get(), integer, p_encode_2_.getClass().getName()
 -                );
 -            }
-+                field_150798_a.debug(field_150797_b, "OUT: [{}:{}] {}", p_encode_1_.channel().attr(NetworkManager.field_150739_c).get(), integer, p_encode_2_.getClass().getName());
++                LOGGER.debug(RECEIVED_PACKET_MARKER, "OUT: [{}:{}] {}", p_encode_1_.channel().attr(NetworkManager.PROTOCOL_ATTRIBUTE_KEY).get(), integer, p_encode_2_.getClass().getName());
 +            }
 +
 +            // CatServer start - Forge set the state is PLAY, but the LOGIN packet hasn't encoded.
-+            if (integer == null && (integer = EnumConnectionState.LOGIN.func_179246_a(this.field_152500_c, p_encode_2_)) != null)
++            if (integer == null && (integer = EnumConnectionState.LOGIN.getPacketId(this.direction, p_encode_2_)) != null)
 +            {
-+                field_150798_a.debug("Current state is {}, but send packet {}", enumconnectionstate, p_encode_2_.getClass().getSimpleName());
++                LOGGER.debug("Current state is {}, but send packet {}", enumconnectionstate, p_encode_2_.getClass().getSimpleName());
 +            }
 +            // CatServer end
  
@@ -33,8 +33,8 @@
              else
              {
                  PacketBuffer packetbuffer = new PacketBuffer(p_encode_3_);
--                packetbuffer.func_150787_b(integer);
-+                packetbuffer.func_150787_b(integer.intValue());
+-                packetbuffer.writeVarInt(integer);
++                packetbuffer.writeVarInt(integer.intValue());
  
                  try
                  {
@@ -42,7 +42,7 @@
                  }
                  catch (Throwable throwable)
                  {
--                    field_150798_a.error(throwable);
+-                    LOGGER.error(throwable);
 +                    throw throwable; // Forge: throw this instead of logging it, to prevent corrupt packets from being sent to the client where they are much harder to debug.
                  }
              }

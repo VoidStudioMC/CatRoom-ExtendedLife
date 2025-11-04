@@ -8,103 +8,103 @@
 +        return new SyntaxErrorException("commands.tellraw.jsonException", new Object[] {s});
      }
  
-     public static NBTTagCompound func_184887_a(Entity p_184887_0_)
+     public static NBTTagCompound entityToNBT(Entity theEntity)
 @@ -81,22 +81,19 @@
          return 4;
      }
  
 -    @Override
-     public List<String> func_71514_a()
+     public List<String> getAliases()
      {
 -        return Collections.emptyList();
 +        return Collections.<String>emptyList();
      }
  
 -    @Override
-     public boolean func_184882_a(MinecraftServer p_184882_1_, ICommandSender p_184882_2_)
+     public boolean checkPermission(MinecraftServer server, ICommandSender sender)
      {
-         return p_184882_2_.func_70003_b(this.func_82362_a(), this.func_71517_b());
+         return sender.canUseCommand(this.getRequiredPermissionLevel(), this.getName());
      }
  
 -    @Override
-     public List<String> func_184883_a(MinecraftServer p_184883_1_, ICommandSender p_184883_2_, String[] p_184883_3_, @Nullable BlockPos p_184883_4_)
+     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
      {
 -        return Collections.emptyList();
 +        return Collections.<String>emptyList();
      }
  
-     public static int func_175755_a(String p_175755_0_) throws NumberInvalidException
+     public static int parseInt(String input) throws NumberInvalidException
 @@ -105,9 +102,9 @@
          {
-             return Integer.parseInt(p_175755_0_);
+             return Integer.parseInt(input);
          }
 -        catch (NumberFormatException numberformatexception)
 +        catch (NumberFormatException var2)
          {
--            throw new NumberInvalidException("commands.generic.num.invalid", p_175755_0_);
-+            throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {p_175755_0_});
+-            throw new NumberInvalidException("commands.generic.num.invalid", input);
++            throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {input});
          }
      }
  
 @@ -122,11 +119,11 @@
  
-         if (i < p_175764_1_)
+         if (i < min)
          {
--            throw new NumberInvalidException("commands.generic.num.tooSmall", i, p_175764_1_);
-+            throw new NumberInvalidException("commands.generic.num.tooSmall", new Object[] {i, p_175764_1_});
+-            throw new NumberInvalidException("commands.generic.num.tooSmall", i, min);
++            throw new NumberInvalidException("commands.generic.num.tooSmall", new Object[] {i, min});
          }
-         else if (i > p_175764_2_)
+         else if (i > max)
          {
--            throw new NumberInvalidException("commands.generic.num.tooBig", i, p_175764_2_);
-+            throw new NumberInvalidException("commands.generic.num.tooBig", new Object[] {i, p_175764_2_});
+-            throw new NumberInvalidException("commands.generic.num.tooBig", i, max);
++            throw new NumberInvalidException("commands.generic.num.tooBig", new Object[] {i, max});
          }
          else
          {
 @@ -140,9 +137,9 @@
          {
-             return Long.parseLong(p_175766_0_);
+             return Long.parseLong(input);
          }
 -        catch (NumberFormatException numberformatexception)
 +        catch (NumberFormatException var2)
          {
--            throw new NumberInvalidException("commands.generic.num.invalid", p_175766_0_);
-+            throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {p_175766_0_});
+-            throw new NumberInvalidException("commands.generic.num.invalid", input);
++            throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {input});
          }
      }
  
 @@ -152,11 +149,11 @@
  
-         if (i < p_175760_1_)
+         if (i < min)
          {
--            throw new NumberInvalidException("commands.generic.num.tooSmall", i, p_175760_1_);
-+            throw new NumberInvalidException("commands.generic.num.tooSmall", new Object[] {i, p_175760_1_});
+-            throw new NumberInvalidException("commands.generic.num.tooSmall", i, min);
++            throw new NumberInvalidException("commands.generic.num.tooSmall", new Object[] {i, min});
          }
-         else if (i > p_175760_3_)
+         else if (i > max)
          {
--            throw new NumberInvalidException("commands.generic.num.tooBig", i, p_175760_3_);
-+            throw new NumberInvalidException("commands.generic.num.tooBig", new Object[] {i, p_175760_3_});
+-            throw new NumberInvalidException("commands.generic.num.tooBig", i, max);
++            throw new NumberInvalidException("commands.generic.num.tooBig", new Object[] {i, max});
          }
          else
          {
 @@ -167,11 +164,7 @@
-     public static BlockPos func_175757_a(ICommandSender p_175757_0_, String[] p_175757_1_, int p_175757_2_, boolean p_175757_3_) throws NumberInvalidException
+     public static BlockPos parseBlockPos(ICommandSender sender, String[] args, int startIndex, boolean centerBlock) throws NumberInvalidException
      {
-         BlockPos blockpos = p_175757_0_.func_180425_c();
+         BlockPos blockpos = sender.getPosition();
 -        return new BlockPos(
--                   func_175769_b((double)blockpos.func_177958_n(), p_175757_1_[p_175757_2_], -30000000, 30000000, p_175757_3_),
--                   func_175769_b((double)blockpos.func_177956_o(), p_175757_1_[p_175757_2_ + 1], 0, 256, false),
--                   func_175769_b((double)blockpos.func_177952_p(), p_175757_1_[p_175757_2_ + 2], -30000000, 30000000, p_175757_3_)
+-                   parseDouble((double)blockpos.getX(), args[startIndex], -30000000, 30000000, centerBlock),
+-                   parseDouble((double)blockpos.getY(), args[startIndex + 1], 0, 256, false),
+-                   parseDouble((double)blockpos.getZ(), args[startIndex + 2], -30000000, 30000000, centerBlock)
 -               );
-+        return new BlockPos(func_175769_b((double)blockpos.func_177958_n(), p_175757_1_[p_175757_2_], -30000000, 30000000, p_175757_3_), func_175769_b((double)blockpos.func_177956_o(), p_175757_1_[p_175757_2_ + 1], 0, 256, false), func_175769_b((double)blockpos.func_177952_p(), p_175757_1_[p_175757_2_ + 2], -30000000, 30000000, p_175757_3_));
++        return new BlockPos(parseDouble((double)blockpos.getX(), args[startIndex], -30000000, 30000000, centerBlock), parseDouble((double)blockpos.getY(), args[startIndex + 1], 0, 256, false), parseDouble((double)blockpos.getZ(), args[startIndex + 2], -30000000, 30000000, centerBlock));
      }
  
-     public static double func_175765_c(String p_175765_0_) throws NumberInvalidException
+     public static double parseDouble(String input) throws NumberInvalidException
 @@ -182,16 +175,16 @@
  
              if (!Doubles.isFinite(d0))
              {
--                throw new NumberInvalidException("commands.generic.num.invalid", p_175765_0_);
-+                throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {p_175765_0_});
+-                throw new NumberInvalidException("commands.generic.num.invalid", input);
++                throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {input});
              }
              else
              {
@@ -114,35 +114,35 @@
 -        catch (NumberFormatException numberformatexception)
 +        catch (NumberFormatException var3)
          {
--            throw new NumberInvalidException("commands.generic.num.invalid", p_175765_0_);
-+            throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {p_175765_0_});
+-            throw new NumberInvalidException("commands.generic.num.invalid", input);
++            throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {input});
          }
      }
  
 @@ -206,11 +199,11 @@
  
-         if (d0 < p_175756_1_)
+         if (d0 < min)
          {
--            throw new NumberInvalidException("commands.generic.num.tooSmall", String.format("%.2f", d0), String.format("%.2f", p_175756_1_));
-+            throw new NumberInvalidException("commands.generic.num.tooSmall", new Object[] {String.format("%.2f", d0), String.format("%.2f", p_175756_1_)});
+-            throw new NumberInvalidException("commands.generic.num.tooSmall", String.format("%.2f", d0), String.format("%.2f", min));
++            throw new NumberInvalidException("commands.generic.num.tooSmall", new Object[] {String.format("%.2f", d0), String.format("%.2f", min)});
          }
-         else if (d0 > p_175756_3_)
+         else if (d0 > max)
          {
--            throw new NumberInvalidException("commands.generic.num.tooBig", String.format("%.2f", d0), String.format("%.2f", p_175756_3_));
-+            throw new NumberInvalidException("commands.generic.num.tooBig", new Object[] {String.format("%.2f", d0), String.format("%.2f", p_175756_3_)});
+-            throw new NumberInvalidException("commands.generic.num.tooBig", String.format("%.2f", d0), String.format("%.2f", max));
++            throw new NumberInvalidException("commands.generic.num.tooBig", new Object[] {String.format("%.2f", d0), String.format("%.2f", max)});
          }
          else
          {
 @@ -220,18 +213,21 @@
  
-     public static boolean func_180527_d(String p_180527_0_) throws CommandException
+     public static boolean parseBoolean(String input) throws CommandException
      {
--        if ("true".equals(p_180527_0_) || "1".equals(p_180527_0_))
-+        if (!"true".equals(p_180527_0_) && !"1".equals(p_180527_0_))
+-        if ("true".equals(input) || "1".equals(input))
++        if (!"true".equals(input) && !"1".equals(input))
 +        {
-+            if (!"false".equals(p_180527_0_) && !"0".equals(p_180527_0_))
++            if (!"false".equals(input) && !"0".equals(input))
 +            {
-+                throw new CommandException("commands.generic.boolean.invalid", new Object[] {p_180527_0_});
++                throw new CommandException("commands.generic.boolean.invalid", new Object[] {input});
 +            }
 +            else
 +            {
@@ -153,9 +153,9 @@
          {
              return true;
          }
--        else if (!"false".equals(p_180527_0_) && !"0".equals(p_180527_0_))
+-        else if (!"false".equals(input) && !"0".equals(input))
 -        {
--            throw new CommandException("commands.generic.boolean.invalid", p_180527_0_);
+-            throw new CommandException("commands.generic.boolean.invalid", input);
 -        }
 -        else
 -        {
@@ -163,19 +163,19 @@
 -        }
      }
  
-     public static EntityPlayerMP func_71521_c(ICommandSender p_71521_0_) throws PlayerNotFoundException
+     public static EntityPlayerMP getCommandSenderAsPlayer(ICommandSender sender) throws PlayerNotFoundException
 @@ -249,7 +245,7 @@
-     public static List<EntityPlayerMP> func_193513_a(MinecraftServer p_193513_0_, ICommandSender p_193513_1_, String p_193513_2_) throws CommandException
+     public static List<EntityPlayerMP> getPlayers(MinecraftServer p_193513_0_, ICommandSender p_193513_1_, String p_193513_2_) throws CommandException
      {
-         List<EntityPlayerMP> list = EntitySelector.func_193531_b(p_193513_1_, p_193513_2_);
--        return (List<EntityPlayerMP>)(list.isEmpty() ? Lists.newArrayList(func_193512_a(p_193513_0_, null, p_193513_2_)) : list);
-+        return (List<EntityPlayerMP>)(list.isEmpty() ? Lists.newArrayList(func_193512_a(p_193513_0_, (EntityPlayerMP)null, p_193513_2_)) : list);
+         List<EntityPlayerMP> list = EntitySelector.getPlayers(p_193513_1_, p_193513_2_);
+-        return (List<EntityPlayerMP>)(list.isEmpty() ? Lists.newArrayList(getPlayer(p_193513_0_, null, p_193513_2_)) : list);
++        return (List<EntityPlayerMP>)(list.isEmpty() ? Lists.newArrayList(getPlayer(p_193513_0_, (EntityPlayerMP)null, p_193513_2_)) : list);
      }
  
-     public static EntityPlayerMP func_184888_a(MinecraftServer p_184888_0_, ICommandSender p_184888_1_, String p_184888_2_) throws PlayerNotFoundException, CommandException
+     public static EntityPlayerMP getPlayer(MinecraftServer server, ICommandSender sender, String target) throws PlayerNotFoundException, CommandException
 @@ -265,8 +261,9 @@
              {
-                 p_193512_1_ = p_193512_0_.func_184103_al().func_177451_a(UUID.fromString(p_193512_2_));
+                 p_193512_1_ = p_193512_0_.getPlayerList().getPlayerByUUID(UUID.fromString(p_193512_2_));
              }
 -            catch (IllegalArgumentException illegalargumentexception)
 +            catch (IllegalArgumentException var4)
@@ -194,33 +194,33 @@
          else
          {
 @@ -311,11 +308,11 @@
-                     entity = p_184884_0_.func_184103_al().func_177451_a(uuid);
+                     entity = server.getPlayerList().getPlayerByUUID(uuid);
                  }
              }
 -            catch (IllegalArgumentException illegalargumentexception)
 +            catch (IllegalArgumentException var6)
              {
-                 if (p_184884_2_.split("-").length == 5)
+                 if (target.split("-").length == 5)
                  {
--                    throw new EntityNotFoundException("commands.generic.entity.invalidUuid", p_184884_2_);
-+                    throw new EntityNotFoundException("commands.generic.entity.invalidUuid", new Object[] {p_184884_2_});
+-                    throw new EntityNotFoundException("commands.generic.entity.invalidUuid", target);
++                    throw new EntityNotFoundException("commands.generic.entity.invalidUuid", new Object[] {target});
                  }
              }
          }
 @@ -332,9 +329,7 @@
  
-     public static List<Entity> func_184890_c(MinecraftServer p_184890_0_, ICommandSender p_184890_1_, String p_184890_2_) throws EntityNotFoundException, CommandException
+     public static List<Entity> getEntityList(MinecraftServer server, ICommandSender sender, String target) throws EntityNotFoundException, CommandException
      {
--        return (List<Entity>)(EntitySelector.func_82378_b(p_184890_2_)
--                              ? EntitySelector.func_179656_b(p_184890_1_, p_184890_2_, Entity.class)
--                              : Lists.newArrayList(func_184885_b(p_184890_0_, p_184890_1_, p_184890_2_)));
-+        return (List<Entity>)(EntitySelector.func_82378_b(p_184890_2_) ? EntitySelector.func_179656_b(p_184890_1_, p_184890_2_, Entity.class) : Lists.newArrayList(func_184885_b(p_184890_0_, p_184890_1_, p_184890_2_)));
+-        return (List<Entity>)(EntitySelector.isSelector(target)
+-                              ? EntitySelector.matchEntities(sender, target, Entity.class)
+-                              : Lists.newArrayList(getEntity(server, sender, target)));
++        return (List<Entity>)(EntitySelector.isSelector(target) ? EntitySelector.matchEntities(sender, target, Entity.class) : Lists.newArrayList(getEntity(server, sender, target)));
      }
  
-     public static String func_184886_d(MinecraftServer p_184886_0_, ICommandSender p_184886_1_, String p_184886_2_) throws PlayerNotFoundException, CommandException
+     public static String getPlayerName(MinecraftServer server, ICommandSender sender, String target) throws PlayerNotFoundException, CommandException
 @@ -362,7 +357,7 @@
          {
-             return func_184888_a(p_184891_0_, p_184891_1_, p_184891_2_).func_70005_c_();
+             return getPlayer(server, sender, target).getName();
          }
 -        catch (PlayerNotFoundException playernotfoundexception)
 +        catch (PlayerNotFoundException var6)
@@ -231,25 +231,25 @@
      {
          ITextComponent itextcomponent = new TextComponentString("");
  
--        for (int i = p_147176_2_; i < p_147176_1_.length; i++)
-+        for (int i = p_147176_2_; i < p_147176_1_.length; ++i)
+-        for (int i = index; i < args.length; i++)
++        for (int i = index; i < args.length; ++i)
          {
-             if (i > p_147176_2_)
+             if (i > index)
              {
-                 itextcomponent.func_150258_a(" ");
+                 itextcomponent.appendText(" ");
              }
  
--            ITextComponent itextcomponent1 = new TextComponentString(p_147176_1_[i]);
-+            ITextComponent itextcomponent1 = net.minecraftforge.common.ForgeHooks.newChatWithLinks(p_147176_1_[i]); // Forge: links for messages
+-            ITextComponent itextcomponent1 = new TextComponentString(args[i]);
++            ITextComponent itextcomponent1 = net.minecraftforge.common.ForgeHooks.newChatWithLinks(args[i]); // Forge: links for messages
  
              if (p_147176_3_)
              {
 @@ -408,7 +403,7 @@
                  {
-                     if (EntitySelector.func_82378_b(p_147176_1_[i]))
+                     if (EntitySelector.isSelector(args[i]))
                      {
--                        throw new PlayerNotFoundException("commands.generic.selector.notFound", p_147176_1_[i]);
-+                        throw new PlayerNotFoundException("commands.generic.selector.notFound", new Object[] {p_147176_1_[i]});
+-                        throw new PlayerNotFoundException("commands.generic.selector.notFound", args[i]);
++                        throw new PlayerNotFoundException("commands.generic.selector.notFound", new Object[] {args[i]});
                      }
                  }
                  else
@@ -257,69 +257,69 @@
      {
          StringBuilder stringbuilder = new StringBuilder();
  
--        for (int i = p_180529_1_; i < p_180529_0_.length; i++)
-+        for (int i = p_180529_1_; i < p_180529_0_.length; ++i)
+-        for (int i = startPos; i < args.length; i++)
++        for (int i = startPos; i < args.length; ++i)
          {
-             if (i > p_180529_1_)
+             if (i > startPos)
              {
 @@ -452,11 +447,11 @@
  
-         if (flag && Double.isNaN(p_175767_0_))
+         if (flag && Double.isNaN(base))
          {
--            throw new NumberInvalidException("commands.generic.num.invalid", p_175767_0_);
-+            throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {p_175767_0_});
+-            throw new NumberInvalidException("commands.generic.num.invalid", base);
++            throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {base});
          }
          else
          {
 -            double d0 = 0.0;
 +            double d0 = 0.0D;
  
-             if (!flag || p_175767_2_.length() > 1)
+             if (!flag || selectorArg.length() > 1)
              {
 @@ -471,22 +466,22 @@
  
-                 if (!flag1 && !flag && p_175767_5_)
+                 if (!flag1 && !flag && centerBlock)
                  {
 -                    d0 += 0.5;
 +                    d0 += 0.5D;
                  }
              }
  
--            double d1 = d0 + (flag ? p_175767_0_ : 0.0);
-+            double d1 = d0 + (flag ? p_175767_0_ : 0.0D);
+-            double d1 = d0 + (flag ? base : 0.0);
++            double d1 = d0 + (flag ? base : 0.0D);
  
-             if (p_175767_3_ != 0 || p_175767_4_ != 0)
+             if (min != 0 || max != 0)
              {
-                 if (d1 < (double)p_175767_3_)
+                 if (d1 < (double)min)
                  {
--                    throw new NumberInvalidException("commands.generic.num.tooSmall", String.format("%.2f", d1), p_175767_3_);
-+                    throw new NumberInvalidException("commands.generic.num.tooSmall", new Object[] {String.format("%.2f", d1), p_175767_3_});
+-                    throw new NumberInvalidException("commands.generic.num.tooSmall", String.format("%.2f", d1), min);
++                    throw new NumberInvalidException("commands.generic.num.tooSmall", new Object[] {String.format("%.2f", d1), min});
                  }
  
-                 if (d1 > (double)p_175767_4_)
+                 if (d1 > (double)max)
                  {
--                    throw new NumberInvalidException("commands.generic.num.tooBig", String.format("%.2f", d1), p_175767_4_);
-+                    throw new NumberInvalidException("commands.generic.num.tooBig", new Object[] {String.format("%.2f", d1), p_175767_4_});
+-                    throw new NumberInvalidException("commands.generic.num.tooBig", String.format("%.2f", d1), max);
++                    throw new NumberInvalidException("commands.generic.num.tooBig", new Object[] {String.format("%.2f", d1), max});
                  }
              }
  
 @@ -505,11 +500,11 @@
  
-         if (flag && Double.isNaN(p_175769_0_))
+         if (flag && Double.isNaN(base))
          {
--            throw new NumberInvalidException("commands.generic.num.invalid", p_175769_0_);
-+            throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {p_175769_0_});
+-            throw new NumberInvalidException("commands.generic.num.invalid", base);
++            throw new NumberInvalidException("commands.generic.num.invalid", new Object[] {base});
          }
          else
          {
--            double d0 = flag ? p_175769_0_ : 0.0;
-+            double d0 = flag ? p_175769_0_ : 0.0D;
+-            double d0 = flag ? base : 0.0;
++            double d0 = flag ? base : 0.0D;
  
-             if (!flag || p_175769_2_.length() > 1)
+             if (!flag || input.length() > 1)
              {
 @@ -524,7 +519,7 @@
  
-                 if (!flag1 && !flag && p_175769_5_)
+                 if (!flag1 && !flag && centerBlock)
                  {
 -                    d0 += 0.5;
 +                    d0 += 0.5D;
@@ -328,16 +328,16 @@
  
 @@ -532,12 +527,12 @@
              {
-                 if (d0 < (double)p_175769_3_)
+                 if (d0 < (double)min)
                  {
--                    throw new NumberInvalidException("commands.generic.num.tooSmall", String.format("%.2f", d0), p_175769_3_);
-+                    throw new NumberInvalidException("commands.generic.num.tooSmall", new Object[] {String.format("%.2f", d0), p_175769_3_});
+-                    throw new NumberInvalidException("commands.generic.num.tooSmall", String.format("%.2f", d0), min);
++                    throw new NumberInvalidException("commands.generic.num.tooSmall", new Object[] {String.format("%.2f", d0), min});
                  }
  
-                 if (d0 > (double)p_175769_4_)
+                 if (d0 > (double)max)
                  {
--                    throw new NumberInvalidException("commands.generic.num.tooBig", String.format("%.2f", d0), p_175769_4_);
-+                    throw new NumberInvalidException("commands.generic.num.tooBig", new Object[] {String.format("%.2f", d0), p_175769_4_});
+-                    throw new NumberInvalidException("commands.generic.num.tooBig", String.format("%.2f", d0), max);
++                    throw new NumberInvalidException("commands.generic.num.tooBig", new Object[] {String.format("%.2f", d0), max});
                  }
              }
  
@@ -352,7 +352,7 @@
          {
 @@ -566,7 +561,7 @@
  
-         if (!Block.field_149771_c.func_148741_d(resourcelocation))
+         if (!Block.REGISTRY.containsKey(resourcelocation))
          {
 -            throw new NumberInvalidException("commands.give.block.notFound", resourcelocation);
 +            throw new NumberInvalidException("commands.give.block.notFound", new Object[] {resourcelocation});
@@ -373,7 +373,7 @@
              }
              else
              {
-                 return p_190794_0_.func_176203_a(Integer.parseInt(p_190794_1_));
+                 return p_190794_0_.getStateFromMeta(Integer.parseInt(p_190794_1_));
              }
          }
 -        catch (RuntimeException runtimeexception1)
@@ -388,19 +388,19 @@
 -            catch (RuntimeException runtimeexception)
 +            catch (RuntimeException var6)
              {
--                throw new InvalidBlockStateException("commands.generic.blockstate.invalid", p_190794_1_, Block.field_149771_c.func_177774_c(p_190794_0_));
-+                throw new InvalidBlockStateException("commands.generic.blockstate.invalid", new Object[] {p_190794_1_, Block.field_149771_c.func_177774_c(p_190794_0_)});
+-                throw new InvalidBlockStateException("commands.generic.blockstate.invalid", p_190794_1_, Block.REGISTRY.getNameForObject(p_190794_0_));
++                throw new InvalidBlockStateException("commands.generic.blockstate.invalid", new Object[] {p_190794_1_, Block.REGISTRY.getNameForObject(p_190794_0_)});
              }
          }
      }
  
-     private static <T extends Comparable<T>> IBlockState func_190793_a(IBlockState p_190793_0_, IProperty<T> p_190793_1_, Comparable<?> p_190793_2_)
+     private static <T extends Comparable<T>> IBlockState getBlockState(IBlockState p_190793_0_, IProperty<T> p_190793_1_, Comparable<?> p_190793_2_)
      {
--        return p_190793_0_.func_177226_a(p_190793_1_, (T) p_190793_2_);
-+        return p_190793_0_.func_177226_a(p_190793_1_, (T)p_190793_2_);
+-        return p_190793_0_.withProperty(p_190793_1_, (T) p_190793_2_);
++        return p_190793_0_.withProperty(p_190793_1_, (T)p_190793_2_);
      }
  
-     public static Predicate<IBlockState> func_190791_b(final Block p_190791_0_, String p_190791_1_) throws InvalidBlockStateException
+     public static Predicate<IBlockState> convertArgToBlockStatePredicate(final Block p_190791_0_, String p_190791_1_) throws InvalidBlockStateException
 @@ -634,7 +629,7 @@
                      }
                  };
@@ -408,11 +408,11 @@
 -            catch (RuntimeException runtimeexception)
 +            catch (RuntimeException var3)
              {
-                 final Map < IProperty<?>, Comparable<? >> map = func_190795_c(p_190791_0_, p_190791_1_);
+                 final Map < IProperty<?>, Comparable<? >> map = getBlockStatePropertyValueMap(p_190791_0_, p_190791_1_);
                  return new Predicate<IBlockState>()
 @@ -669,7 +664,7 @@
  
-     private static Map < IProperty<?>, Comparable<? >> func_190795_c(Block p_190795_0_, String p_190795_1_) throws InvalidBlockStateException
+     private static Map < IProperty<?>, Comparable<? >> getBlockStatePropertyValueMap(Block p_190795_0_, String p_190795_1_) throws InvalidBlockStateException
      {
 -        Map < IProperty<?>, Comparable<? >> map = Maps.newHashMap();
 +        Map < IProperty<?>, Comparable<? >> map = Maps. < IProperty<?>, Comparable<? >> newHashMap();
@@ -422,9 +422,9 @@
 @@ -678,7 +673,7 @@
          else
          {
-             BlockStateContainer blockstatecontainer = p_190795_0_.func_176194_O();
--            Iterator<String> iterator = field_190796_b.split(p_190795_1_).iterator();
-+            Iterator iterator = field_190796_b.split(p_190795_1_).iterator();
+             BlockStateContainer blockstatecontainer = p_190795_0_.getBlockState();
+-            Iterator<String> iterator = COMMA_SPLITTER.split(p_190795_1_).iterator();
++            Iterator iterator = COMMA_SPLITTER.split(p_190795_1_).iterator();
  
              while (true)
              {
@@ -432,8 +432,8 @@
                      break;
                  }
  
--                Comparable<?> comparable = func_190792_a((IProperty<?>)iproperty, iterator1.next());
-+                Comparable<?> comparable = func_190792_a(iproperty, iterator1.next());
+-                Comparable<?> comparable = getValueHelper((IProperty<?>)iproperty, iterator1.next());
++                Comparable<?> comparable = getValueHelper(iproperty, iterator1.next());
  
                  if (comparable == null)
                  {
@@ -441,73 +441,73 @@
                  map.put(iproperty, comparable);
              }
  
--            throw new InvalidBlockStateException("commands.generic.blockstate.invalid", p_190795_1_, Block.field_149771_c.func_177774_c(p_190795_0_));
-+            throw new InvalidBlockStateException("commands.generic.blockstate.invalid", new Object[] {p_190795_1_, Block.field_149771_c.func_177774_c(p_190795_0_)});
+-            throw new InvalidBlockStateException("commands.generic.blockstate.invalid", p_190795_1_, Block.REGISTRY.getNameForObject(p_190795_0_));
++            throw new InvalidBlockStateException("commands.generic.blockstate.invalid", new Object[] {p_190795_1_, Block.REGISTRY.getNameForObject(p_190795_0_)});
          }
      }
  
      @Nullable
-     private static <T extends Comparable<T>> T func_190792_a(IProperty<T> p_190792_0_, String p_190792_1_)
+     private static <T extends Comparable<T>> T getValueHelper(IProperty<T> p_190792_0_, String p_190792_1_)
      {
--        return p_190792_0_.func_185929_b(p_190792_1_).orNull();
-+        return (T)(p_190792_0_.func_185929_b(p_190792_1_).orNull());
+-        return p_190792_0_.parseValue(p_190792_1_).orNull();
++        return (T)(p_190792_0_.parseValue(p_190792_1_).orNull());
      }
  
-     public static String func_71527_a(Object[] p_71527_0_)
+     public static String joinNiceString(Object[] elements)
      {
          StringBuilder stringbuilder = new StringBuilder();
  
--        for (int i = 0; i < p_71527_0_.length; i++)
-+        for (int i = 0; i < p_71527_0_.length; ++i)
+-        for (int i = 0; i < elements.length; i++)
++        for (int i = 0; i < elements.length; ++i)
          {
-             String s = p_71527_0_[i].toString();
+             String s = elements[i].toString();
  
 @@ -752,7 +747,7 @@
      {
          ITextComponent itextcomponent = new TextComponentString("");
  
--        for (int i = 0; i < p_180530_0_.size(); i++)
-+        for (int i = 0; i < p_180530_0_.size(); ++i)
+-        for (int i = 0; i < components.size(); i++)
++        for (int i = 0; i < components.size(); ++i)
          {
              if (i > 0)
              {
 @@ -800,7 +795,7 @@
              {
-                 if (i != p_175771_1_ + 2)
+                 if (i != index + 2)
                  {
 -                    return Collections.emptyList();
 +                    return Collections.<String>emptyList();
                  }
  
-                 s = Integer.toString(p_175771_2_.func_177952_p());
+                 s = Integer.toString(pos.getZ());
 @@ -829,7 +824,7 @@
              {
-                 if (i != p_181043_1_ + 1)
+                 if (i != index + 1)
                  {
 -                    return Collections.emptyList();
 +                    return Collections.<String>emptyList();
                  }
  
-                 s = Integer.toString(p_181043_2_.func_177952_p());
+                 s = Integer.toString(lookedPos.getZ());
 @@ -852,11 +847,11 @@
-     public static List<String> func_175762_a(String[] p_175762_0_, Collection<?> p_175762_1_)
+     public static List<String> getListOfStringsMatchingLastWord(String[] inputArgs, Collection<?> possibleCompletions)
      {
-         String s = p_175762_0_[p_175762_0_.length - 1];
+         String s = inputArgs[inputArgs.length - 1];
 -        List<String> list = Lists.newArrayList();
 +        List<String> list = Lists.<String>newArrayList();
  
-         if (!p_175762_1_.isEmpty())
+         if (!possibleCompletions.isEmpty())
          {
--            for (String s1 : Iterables.transform((Iterable<Object>)p_175762_1_, Functions.toStringFunction()))
-+            for (String s1 : Iterables.transform(p_175762_1_, Functions.toStringFunction()))
+-            for (String s1 : Iterables.transform((Iterable<Object>)possibleCompletions, Functions.toStringFunction()))
++            for (String s1 : Iterables.transform(possibleCompletions, Functions.toStringFunction()))
              {
-                 if (func_71523_a(s, s1))
+                 if (doesStringStartWith(s, s1))
                  {
 @@ -879,7 +874,6 @@
          return list;
      }
  
 -    @Override
-     public boolean func_82358_a(String[] p_82358_1_, int p_82358_2_)
+     public boolean isUsernameIndex(String[] args, int index)
      {
          return false;

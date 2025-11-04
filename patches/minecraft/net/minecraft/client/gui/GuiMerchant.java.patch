@@ -2,19 +2,19 @@
 +++ after/net/minecraft/client/gui/GuiMerchant.java
 @@ -81,7 +81,7 @@
  
-         if (p_146284_1_ == this.field_147043_x)
+         if (button == this.nextButton)
          {
--            this.field_147041_z++;
-+            ++this.field_147041_z;
-             MerchantRecipeList merchantrecipelist = this.field_147037_w.func_70934_b(this.field_146297_k.field_71439_g);
+-            this.selectedMerchantRecipe++;
++            ++this.selectedMerchantRecipe;
+             MerchantRecipeList merchantrecipelist = this.merchant.getRecipes(this.mc.player);
  
-             if (merchantrecipelist != null && this.field_147041_z >= merchantrecipelist.size())
+             if (merchantrecipelist != null && this.selectedMerchantRecipe >= merchantrecipelist.size())
 @@ -93,7 +93,7 @@
          }
-         else if (p_146284_1_ == this.field_147042_y)
+         else if (button == this.previousButton)
          {
--            this.field_147041_z--;
-+            --this.field_147041_z;
+-            this.selectedMerchantRecipe--;
++            --this.selectedMerchantRecipe;
  
-             if (this.field_147041_z < 0)
+             if (this.selectedMerchantRecipe < 0)
              {

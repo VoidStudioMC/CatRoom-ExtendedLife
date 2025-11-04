@@ -1,8 +1,8 @@
 --- before/net/minecraft/util/DamageSource.java
 +++ after/net/minecraft/util/DamageSource.java
 @@ -45,6 +45,17 @@
-     private boolean field_76378_k;
-     public String field_76373_n;
+     private boolean explosion;
+     public String damageType;
  
 +    private boolean sweep;
 +
@@ -15,6 +15,6 @@
 +        return this;
 +    }
 +
-     public static DamageSource func_76358_a(EntityLivingBase p_76358_0_)
+     public static DamageSource causeMobDamage(EntityLivingBase mob)
      {
-         return new EntityDamageSource("mob", p_76358_0_);
+         return new EntityDamageSource("mob", mob);

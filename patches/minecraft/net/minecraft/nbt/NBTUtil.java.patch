@@ -10,48 +10,48 @@
  import java.util.UUID;
 @@ -61,7 +62,7 @@
                  {
-                     NBTTagList nbttaglist = nbttagcompound.func_150295_c(s2, 10);
+                     NBTTagList nbttaglist = nbttagcompound.getTagList(s2, 10);
  
--                    for (int i = 0; i < nbttaglist.func_74745_c(); i++)
-+                    for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+-                    for (int i = 0; i < nbttaglist.tagCount(); i++)
++                    for (int i = 0; i < nbttaglist.tagCount(); ++i)
                      {
-                         NBTTagCompound nbttagcompound1 = nbttaglist.func_150305_b(i);
-                         String s3 = nbttagcompound1.func_74779_i("Value");
+                         NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+                         String s3 = nbttagcompound1.getString("Value");
 @@ -175,12 +176,12 @@
              }
              else
              {
--                for (int i = 0; i < nbttaglist.func_74745_c(); i++)
-+                for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+-                for (int i = 0; i < nbttaglist.tagCount(); i++)
++                for (int i = 0; i < nbttaglist.tagCount(); ++i)
                  {
-                     NBTBase nbtbase = nbttaglist.func_179238_g(i);
+                     NBTBase nbtbase = nbttaglist.get(i);
                      boolean flag = false;
  
--                    for (int j = 0; j < nbttaglist1.func_74745_c(); j++)
-+                    for (int j = 0; j < nbttaglist1.func_74745_c(); ++j)
+-                    for (int j = 0; j < nbttaglist1.tagCount(); j++)
++                    for (int j = 0; j < nbttaglist1.tagCount(); ++j)
                      {
-                         if (func_181123_a(nbtbase, nbttaglist1.func_179238_g(j), p_181123_2_))
+                         if (areNBTEquals(nbtbase, nbttaglist1.get(j), compareTagList))
                          {
 @@ -288,10 +289,12 @@
-         if (!p_190009_1_.func_177228_b().isEmpty())
+         if (!state.getProperties().isEmpty())
          {
              NBTTagCompound nbttagcompound = new NBTTagCompound();
-+            UnmodifiableIterator unmodifiableiterator = p_190009_1_.func_177228_b().entrySet().iterator();
++            UnmodifiableIterator unmodifiableiterator = state.getProperties().entrySet().iterator();
  
--            for (Entry < IProperty<?>, Comparable<? >> entry : p_190009_1_.func_177228_b().entrySet())
+-            for (Entry < IProperty<?>, Comparable<? >> entry : state.getProperties().entrySet())
 +            while (unmodifiableiterator.hasNext())
              {
 -                IProperty<?> iproperty = entry.getKey();
 +                Entry < IProperty<?>, Comparable<? >> entry = (Entry)unmodifiableiterator.next();
 +                IProperty<?> iproperty = (IProperty)entry.getKey();
-                 nbttagcompound.func_74778_a(iproperty.func_177701_a(), func_190010_a(iproperty, entry.getValue()));
+                 nbttagcompound.setString(iproperty.getName(), getName(iproperty, entry.getValue()));
              }
  
 @@ -300,6 +303,7 @@
  
-         return p_190009_0_;
+         return tag;
      }
 +
      @SuppressWarnings("unchecked")
-     private static <T extends Comparable<T>> String func_190010_a(IProperty<T> p_190010_0_, Comparable<?> p_190010_1_)
+     private static <T extends Comparable<T>> String getName(IProperty<T> p_190010_0_, Comparable<?> p_190010_1_)
      {

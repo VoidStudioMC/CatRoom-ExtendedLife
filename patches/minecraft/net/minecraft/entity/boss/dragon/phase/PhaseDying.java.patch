@@ -2,10 +2,10 @@
 +++ after/net/minecraft/entity/boss/dragon/phase/PhaseDying.java
 @@ -42,7 +42,7 @@
      @Override
-     public void func_188659_c()
+     public void doLocalUpdate()
      {
--        this.field_188673_c++;
-+        ++this.field_188673_c;
+-        this.time++;
++        ++this.time;
  
-         if (this.field_188672_b == null)
+         if (this.targetLocation == null)
          {

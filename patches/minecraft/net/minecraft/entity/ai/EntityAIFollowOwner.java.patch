@@ -11,8 +11,8 @@
  public class EntityAIFollowOwner extends EntityAIBase
  {
 @@ -115,20 +118,23 @@
-                             int j = MathHelper.func_76128_c(this.field_75339_e.field_70161_v) - 2;
-                             int k = MathHelper.func_76128_c(this.field_75339_e.func_174813_aQ().field_72338_b);
+                             int j = MathHelper.floor(this.owner.posZ) - 2;
+                             int k = MathHelper.floor(this.owner.getEntityBoundingBox().minY);
  
 -                            for (int l = 0; l <= 4; l++)
 +                            for (int l = 0; l <= 4; ++l)
@@ -20,27 +20,27 @@
 -                                for (int i1 = 0; i1 <= 4; i1++)
 +                                for (int i1 = 0; i1 <= 4; ++i1)
                                  {
-                                     if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && this.func_192381_a(i, j, k, l, i1))
+                                     if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && this.isTeleportFriendlyBlock(i, j, k, l, i1))
                                      {
--                                        this.field_75338_d
--                                        .func_70012_b(
+-                                        this.tameable
+-                                        .setLocationAndAngles(
 -                                            (double)((float)(i + l) + 0.5F),
 -                                            (double)k,
 -                                            (double)((float)(j + i1) + 0.5F),
--                                            this.field_75338_d.field_70177_z,
--                                            this.field_75338_d.field_70125_A
+-                                            this.tameable.rotationYaw,
+-                                            this.tameable.rotationPitch
 -                                        );
 +                                        // this.tameable.setLocationAndAngles((double)((float)(i + l) + 0.5F), (double)k, (double)((float)(j + i1) + 0.5F), this.tameable.rotationYaw, this.tameable.rotationPitch);
-+                                        CraftEntity entity = this.field_75338_d.getBukkitEntity();
-+                                        Location to = new Location(entity.getWorld(), (double) ((float) (i + l) + 0.5F), (double) k, (double) ((float) (j + i1) + 0.5F), this.field_75338_d.field_70177_z, this.field_75338_d.field_70125_A);
++                                        CraftEntity entity = this.tameable.getBukkitEntity();
++                                        Location to = new Location(entity.getWorld(), (double) ((float) (i + l) + 0.5F), (double) k, (double) ((float) (j + i1) + 0.5F), this.tameable.rotationYaw, this.tameable.rotationPitch);
 +                                        EntityTeleportEvent event = new EntityTeleportEvent(entity, entity.getLocation(), to);
-+                                        this.field_75338_d.field_70170_p.getServer().getPluginManager().callEvent(event);
++                                        this.tameable.world.getServer().getPluginManager().callEvent(event);
 +                                        if (event.isCancelled()) {
 +                                            return;
 +                                        }
 +                                        to = event.getTo();
 +
-+                                        this.field_75338_d.func_70012_b(to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch());
-                                         this.field_75337_g.func_75499_g();
++                                        this.tameable.setLocationAndAngles(to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch());
+                                         this.petPathfinder.clearPath();
                                          return;
                                      }

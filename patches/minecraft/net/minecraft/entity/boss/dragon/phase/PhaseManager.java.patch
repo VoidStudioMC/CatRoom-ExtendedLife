@@ -10,22 +10,22 @@
  public class PhaseManager
  {
 @@ -26,7 +28,18 @@
-                 this.field_188762_d.func_188658_e();
+                 this.phase.removeAreaEffect();
              }
  
--            this.field_188762_d = this.func_188757_b((PhaseList<IPhase>)p_188758_1_);
+-            this.phase = this.getPhase((PhaseList<IPhase>)phaseIn);
 +            EnderDragonChangePhaseEvent event = new EnderDragonChangePhaseEvent(
-+                    (CraftEnderDragon) this.field_188760_b.getBukkitEntity(),
-+                    (this.field_188762_d == null) ? null : CraftEnderDragon.getBukkitPhase(this.field_188762_d.func_188652_i()),
-+                    CraftEnderDragon.getBukkitPhase(p_188758_1_)
++                    (CraftEnderDragon) this.dragon.getBukkitEntity(),
++                    (this.phase == null) ? null : CraftEnderDragon.getBukkitPhase(this.phase.getType()),
++                    CraftEnderDragon.getBukkitPhase(phaseIn)
 +            );
-+            this.field_188760_b.field_70170_p.getServer().getPluginManager().callEvent(event);
++            this.dragon.world.getServer().getPluginManager().callEvent(event);
 +            if (event.isCancelled()) {
 +                return;
 +            }
-+            p_188758_1_ = CraftEnderDragon.getMinecraftPhase(event.getNewPhase());
++            phaseIn = CraftEnderDragon.getMinecraftPhase(event.getNewPhase());
 +
-+            this.field_188762_d = this.func_188757_b(p_188758_1_);
++            this.phase = this.getPhase(phaseIn);
  
-             if (!this.field_188760_b.field_70170_p.field_72995_K)
+             if (!this.dragon.world.isRemote)
              {

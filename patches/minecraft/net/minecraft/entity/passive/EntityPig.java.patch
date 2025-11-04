@@ -10,50 +10,50 @@
  {
 @@ -202,7 +203,7 @@
      @Override
-     public void func_70645_a(DamageSource p_70645_1_)
+     public void onDeath(DamageSource cause)
      {
--        super.func_70645_a(p_70645_1_);
+-        super.onDeath(cause);
 +        // super.onDeath(cause); // CraftBukkit - Moved to end
  
-         if (!this.field_70170_p.field_72995_K)
+         if (!this.world.isRemote)
          {
 @@ -211,6 +212,7 @@
-                 this.func_145779_a(Items.field_151141_av, 1);
+                 this.dropItem(Items.SADDLE, 1);
              }
          }
-+        super.func_70645_a(p_70645_1_);
++        super.onDeath(cause);
      }
  
      @Nullable
 @@ -242,7 +244,11 @@
      {
-         if (!this.field_70170_p.field_72995_K && !this.field_70128_L)
+         if (!this.world.isRemote && !this.isDead)
          {
-+            if (p_70077_1_ == null) p_70077_1_ = new EntityLightningBolt(this.field_70170_p, this.field_70165_t, this.field_70163_u, this.field_70161_v, true); // CatServer - if null, create EntityLightningBolt for Bukkit
-             EntityPigZombie entitypigzombie = new EntityPigZombie(this.field_70170_p);
-+            if (CraftEventFactory.callPigZapEvent(this, p_70077_1_, entitypigzombie).isCancelled()) {
++            if (lightningBolt == null) lightningBolt = new EntityLightningBolt(this.world, this.posX, this.posY, this.posZ, true); // CatServer - if null, create EntityLightningBolt for Bukkit
+             EntityPigZombie entitypigzombie = new EntityPigZombie(this.world);
++            if (CraftEventFactory.callPigZapEvent(this, lightningBolt, entitypigzombie).isCancelled()) {
 +                return;
 +            }
-             entitypigzombie.func_184201_a(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.field_151010_B));
-             entitypigzombie.func_70012_b(this.field_70165_t, this.field_70163_u, this.field_70161_v, this.field_70177_z, this.field_70125_A);
-             entitypigzombie.func_94061_f(this.func_175446_cd());
+             entitypigzombie.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.GOLDEN_SWORD));
+             entitypigzombie.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+             entitypigzombie.setNoAI(this.isAIDisabled());
 @@ -253,7 +259,7 @@
-                 entitypigzombie.func_174805_g(this.func_174833_aM());
+                 entitypigzombie.setAlwaysRenderNameTag(this.getAlwaysRenderNameTag());
              }
  
--            this.field_70170_p.func_72838_d(entitypigzombie);
-+            this.field_70170_p.addEntity(entitypigzombie, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.LIGHTNING);
-             this.func_70106_y();
+-            this.world.spawnEntity(entitypigzombie);
++            this.world.addEntity(entitypigzombie, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.LIGHTNING);
+             this.setDead();
          }
      }
 @@ -308,8 +314,8 @@
                  f1 = 1.0F;
              }
  
--            this.field_70721_aZ = this.field_70721_aZ + (f1 - this.field_70721_aZ) * 0.4F;
--            this.field_184619_aG = this.field_184619_aG + this.field_70721_aZ;
-+            this.field_70721_aZ += (f1 - this.field_70721_aZ) * 0.4F;
-+            this.field_184619_aG += this.field_70721_aZ;
+-            this.limbSwingAmount = this.limbSwingAmount + (f1 - this.limbSwingAmount) * 0.4F;
+-            this.limbSwing = this.limbSwing + this.limbSwingAmount;
++            this.limbSwingAmount += (f1 - this.limbSwingAmount) * 0.4F;
++            this.limbSwing += this.limbSwingAmount;
          }
          else
          {

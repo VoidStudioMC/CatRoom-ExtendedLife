@@ -2,10 +2,10 @@
 +++ after/net/minecraft/client/renderer/tileentity/TileEntitySignRenderer.java
 @@ -89,7 +89,7 @@
  
-         if (p_192841_9_ < 0)
+         if (destroyStage < 0)
          {
--            for (int j = 0; j < p_192841_1_.field_145915_a.length; j++)
-+            for (int j = 0; j < p_192841_1_.field_145915_a.length; ++j)
+-            for (int j = 0; j < te.signText.length; j++)
++            for (int j = 0; j < te.signText.length; ++j)
              {
-                 if (p_192841_1_.field_145915_a[j] != null)
+                 if (te.signText[j] != null)
                  {

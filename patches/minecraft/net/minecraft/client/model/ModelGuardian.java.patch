@@ -1,20 +1,20 @@
 --- before/net/minecraft/client/model/ModelGuardian.java
 +++ after/net/minecraft/client/model/ModelGuardian.java
 @@ -28,7 +28,7 @@
-         this.field_178710_a.func_78784_a(16, 40).func_78789_a(-6.0F, 8.0F, -6.0F, 12, 2, 12);
-         this.field_178710_a.func_78784_a(16, 40).func_78789_a(-6.0F, 22.0F, -6.0F, 12, 2, 12);
+         this.guardianBody.setTextureOffset(16, 40).addBox(-6.0F, 8.0F, -6.0F, 12, 2, 12);
+         this.guardianBody.setTextureOffset(16, 40).addBox(-6.0F, 22.0F, -6.0F, 12, 2, 12);
  
--        for (int i = 0; i < this.field_178709_c.length; i++)
-+        for (int i = 0; i < this.field_178709_c.length; ++i)
+-        for (int i = 0; i < this.guardianSpines.length; i++)
++        for (int i = 0; i < this.guardianSpines.length; ++i)
          {
-             this.field_178709_c[i] = new ModelRenderer(this, 0, 0);
-             this.field_178709_c[i].func_78789_a(-1.0F, -4.5F, -1.0F, 2, 9, 2);
+             this.guardianSpines[i] = new ModelRenderer(this, 0, 0);
+             this.guardianSpines[i].addBox(-1.0F, -4.5F, -1.0F, 2, 9, 2);
 @@ -73,7 +73,7 @@
          float[] afloat5 = new float[] {8.0F, -8.0F, 0.0F, 0.0F, -8.0F, -8.0F, 8.0F, 8.0F, 8.0F, -8.0F, 0.0F, 0.0F};
-         float f1 = (1.0F - entityguardian.func_175469_o(f)) * 0.55F;
+         float f1 = (1.0F - entityguardian.getSpikesAnimation(f)) * 0.55F;
  
 -        for (int i = 0; i < 12; i++)
 +        for (int i = 0; i < 12; ++i)
          {
-             this.field_178709_c[i].field_78795_f = (float) Math.PI * afloat[i];
-             this.field_178709_c[i].field_78796_g = (float) Math.PI * afloat1[i];
+             this.guardianSpines[i].rotateAngleX = (float) Math.PI * afloat[i];
+             this.guardianSpines[i].rotateAngleY = (float) Math.PI * afloat1[i];

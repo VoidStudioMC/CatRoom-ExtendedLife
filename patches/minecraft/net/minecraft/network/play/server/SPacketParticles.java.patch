@@ -1,20 +1,20 @@
 --- before/net/minecraft/network/play/server/SPacketParticles.java
 +++ after/net/minecraft/network/play/server/SPacketParticles.java
 @@ -75,7 +75,7 @@
-         int i = this.field_179751_a.func_179345_d();
-         this.field_179753_k = new int[i];
+         int i = this.particleType.getArgumentCount();
+         this.particleArguments = new int[i];
  
 -        for (int j = 0; j < i; j++)
 +        for (int j = 0; j < i; ++j)
          {
-             this.field_179753_k[j] = p_148837_1_.func_150792_a();
+             this.particleArguments[j] = buf.readVarInt();
          }
 @@ -96,7 +96,7 @@
-         p_148840_1_.writeInt(this.field_149238_i);
-         int i = this.field_179751_a.func_179345_d();
+         buf.writeInt(this.particleCount);
+         int i = this.particleType.getArgumentCount();
  
 -        for (int j = 0; j < i; j++)
 +        for (int j = 0; j < i; ++j)
          {
-             p_148840_1_.func_150787_b(this.field_179753_k[j]);
+             buf.writeVarInt(this.particleArguments[j]);
          }

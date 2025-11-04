@@ -1,14 +1,14 @@
 --- before/net/minecraft/world/gen/structure/WoodlandMansion.java
 +++ after/net/minecraft/world/gen/structure/WoodlandMansion.java
 @@ -148,9 +148,9 @@
-                 super.func_75068_a(p_75068_1_, p_75068_2_, p_75068_3_);
-                 int i = this.field_75074_b.field_78895_b;
+                 super.generateStructure(worldIn, rand, structurebb);
+                 int i = this.boundingBox.minY;
  
--                for (int j = p_75068_3_.field_78897_a; j <= p_75068_3_.field_78893_d; j++)
-+                for (int j = p_75068_3_.field_78897_a; j <= p_75068_3_.field_78893_d; ++j)
+-                for (int j = structurebb.minX; j <= structurebb.maxX; j++)
++                for (int j = structurebb.minX; j <= structurebb.maxX; ++j)
                  {
--                    for (int k = p_75068_3_.field_78896_c; k <= p_75068_3_.field_78892_f; k++)
-+                    for (int k = p_75068_3_.field_78896_c; k <= p_75068_3_.field_78892_f; ++k)
+-                    for (int k = structurebb.minZ; k <= structurebb.maxZ; k++)
++                    for (int k = structurebb.minZ; k <= structurebb.maxZ; ++k)
                      {
                          BlockPos blockpos = new BlockPos(j, i, k);
  

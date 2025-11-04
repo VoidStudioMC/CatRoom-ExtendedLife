@@ -6,6 +6,6 @@
          {
 -            PropertyEnum<?> propertyenum = (PropertyEnum<?>)p_equals_1_;
 +            PropertyEnum<?> propertyenum = (PropertyEnum)p_equals_1_;
-             return this.field_177711_a.equals(propertyenum.field_177711_a) && this.field_177710_b.equals(propertyenum.field_177710_b);
+             return this.allowedValues.equals(propertyenum.allowedValues) && this.nameToValue.equals(propertyenum.nameToValue);
          }
          else

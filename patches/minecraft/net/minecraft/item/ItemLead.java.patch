@@ -11,18 +11,18 @@
 @@ -67,6 +68,17 @@
                  if (entityleashknot == null)
                  {
-                     entityleashknot = EntityLeashKnot.func_174862_a(p_180618_1_, p_180618_2_);
-+                    HangingPlaceEvent event = new HangingPlaceEvent((org.bukkit.entity.Hanging) entityleashknot.getBukkitEntity(), p_180618_0_ != null ? (org.bukkit.entity.Player) p_180618_0_.getBukkitEntity() : null, p_180618_1_.getWorld().getBlockAt(i, j, k), org.bukkit.block.BlockFace.SELF);
-+                    p_180618_1_.getServer().getPluginManager().callEvent(event);
+                     entityleashknot = EntityLeashKnot.createKnot(worldIn, fence);
++                    HangingPlaceEvent event = new HangingPlaceEvent((org.bukkit.entity.Hanging) entityleashknot.getBukkitEntity(), player != null ? (org.bukkit.entity.Player) player.getBukkitEntity() : null, worldIn.getWorld().getBlockAt(i, j, k), org.bukkit.block.BlockFace.SELF);
++                    worldIn.getServer().getPluginManager().callEvent(event);
 +
 +                    if (event.isCancelled()) {
-+                        entityleashknot.func_70106_y();
++                        entityleashknot.setDead();
 +                        return false;
 +                    }
 +                }
 +
-+                if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerLeashEntityEvent(entityliving, entityleashknot, p_180618_0_).isCancelled()) {
++                if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerLeashEntityEvent(entityliving, entityleashknot, player).isCancelled()) {
 +                    continue;
                  }
  
-                 entityliving.func_110162_b(entityleashknot, true);
+                 entityliving.setLeashHolder(entityleashknot, true);

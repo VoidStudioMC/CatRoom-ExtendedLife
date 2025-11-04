@@ -2,10 +2,10 @@
 +++ after/net/minecraft/inventory/SlotMerchantResult.java
 @@ -32,7 +32,7 @@
      {
-         if (this.func_75216_d())
+         if (this.getHasStack())
          {
--            this.field_75231_g = this.field_75231_g + Math.min(p_75209_1_, this.func_75211_c().func_190916_E());
-+            this.field_75231_g += Math.min(p_75209_1_, this.func_75211_c().func_190916_E());
+-            this.removeCount = this.removeCount + Math.min(amount, this.getStack().getCount());
++            this.removeCount += Math.min(amount, this.getStack().getCount());
          }
  
-         return super.func_75209_a(p_75209_1_);
+         return super.decrStackSize(amount);

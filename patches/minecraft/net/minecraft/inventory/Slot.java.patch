@@ -4,20 +4,20 @@
  
  public class Slot
  {
--    private final int field_75225_a;
-+    public final int field_75225_a; // CatServer - private -> public
-     public final IInventory field_75224_c;
-     public int field_75222_d;
-     public int field_75223_e;
+-    private final int slotIndex;
++    public final int slotIndex; // CatServer - private -> public
+     public final IInventory inventory;
+     public int slotNumber;
+     public int xPos;
 @@ -90,7 +90,7 @@
      @SideOnly(Side.CLIENT)
-     public String func_178171_c()
+     public String getSlotTexture()
      {
 -        return null;
 +        return backgroundName;
      }
  
-     public ItemStack func_75209_a(int p_75209_1_)
+     public ItemStack decrStackSize(int amount)
 @@ -113,4 +113,74 @@
      {
          return true;
@@ -34,7 +34,7 @@
 +    @SideOnly(Side.CLIENT)
 +    public net.minecraft.util.ResourceLocation getBackgroundLocation()
 +    {
-+        return (backgroundLocation == null ? net.minecraft.client.renderer.texture.TextureMap.field_110575_b : backgroundLocation);
++        return (backgroundLocation == null ? net.minecraft.client.renderer.texture.TextureMap.LOCATION_BLOCKS_TEXTURE : backgroundLocation);
 +    }
 +
 +    /**
@@ -60,14 +60,14 @@
 +    @SideOnly(Side.CLIENT)
 +    public net.minecraft.client.renderer.texture.TextureAtlasSprite getBackgroundSprite()
 +    {
-+        String name = func_178171_c();
-+        return name == null ? null : getBackgroundMap().func_110572_b(name);
++        String name = getSlotTexture();
++        return name == null ? null : getBackgroundMap().getAtlasSprite(name);
 +    }
 +
 +    @SideOnly(Side.CLIENT)
 +    protected net.minecraft.client.renderer.texture.TextureMap getBackgroundMap()
 +    {
-+        if (backgroundMap == null) backgroundMap = net.minecraft.client.Minecraft.func_71410_x().func_147117_R();
++        if (backgroundMap == null) backgroundMap = net.minecraft.client.Minecraft.getMinecraft().getTextureMapBlocks();
 +        return (net.minecraft.client.renderer.texture.TextureMap)backgroundMap;
 +    }
 +
@@ -79,7 +79,7 @@
 +     */
 +    public int getSlotIndex()
 +    {
-+        return field_75225_a;
++        return slotIndex;
 +    }
 +
 +    /**
@@ -89,7 +89,7 @@
 +     */
 +    public boolean isSameInventory(Slot other)
 +    {
-+        return this.field_75224_c == other.field_75224_c;
++        return this.inventory == other.inventory;
 +    }
 +    /*========================================= FORGE END =====================================*/
  }

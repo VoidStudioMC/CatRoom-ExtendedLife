@@ -4,8 +4,8 @@
      {
          boolean flag = false;
  
--        for (int i = 0; i < p_184881_1_.field_71305_c.length; i++)
-+        for (int i = 0; i < p_184881_1_.field_71305_c.length; ++i)
+-        for (int i = 0; i < server.worlds.length; i++)
++        for (int i = 0; i < server.worlds.length; ++i)
          {
-             if (p_184881_1_.field_71305_c[i] != null)
+             if (server.worlds[i] != null)
              {

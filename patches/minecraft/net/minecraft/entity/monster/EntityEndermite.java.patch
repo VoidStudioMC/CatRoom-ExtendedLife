@@ -2,19 +2,19 @@
 +++ after/net/minecraft/entity/monster/EntityEndermite.java
 @@ -158,7 +158,7 @@
  
-         if (this.field_70170_p.field_72995_K)
+         if (this.world.isRemote)
          {
 -            for (int i = 0; i < 2; i++)
 +            for (int i = 0; i < 2; ++i)
              {
-                 this.field_70170_p
-                 .func_175688_a(
+                 this.world
+                 .spawnParticle(
 @@ -176,7 +176,7 @@
          {
-             if (!this.func_104002_bU())
+             if (!this.isNoDespawnRequired())
              {
--                this.field_175497_b++;
-+                ++this.field_175497_b;
+-                this.lifetime++;
++                ++this.lifetime;
              }
  
-             if (this.field_175497_b >= 2400)
+             if (this.lifetime >= 2400)

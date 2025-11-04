@@ -4,14 +4,14 @@
          {
              return false;
          }
-+        else if (this.field_192370_e != null && this.field_192370_e != p_192365_5_)
++        else if (this.blocked != null && this.blocked != blocked)
 +        {
 +            return false;
 +        }
          else
          {
--            return this.field_192370_e != null && this.field_192370_e != p_192365_5_ ? false : this.field_192371_f.func_193418_a(p_192365_1_, p_192365_2_);
-+            return this.field_192371_f.func_193418_a(p_192365_1_, p_192365_2_);
+-            return this.blocked != null && this.blocked != blocked ? false : this.type.test(player, source);
++            return this.type.test(player, source);
          }
      }
  

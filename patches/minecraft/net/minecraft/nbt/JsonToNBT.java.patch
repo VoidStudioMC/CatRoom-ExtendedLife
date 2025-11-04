@@ -2,74 +2,74 @@
 +++ after/net/minecraft/nbt/JsonToNBT.java
 @@ -30,7 +30,7 @@
  
-         if (this.func_193612_g())
+         if (this.canRead())
          {
--            this.field_193623_i++;
-+            ++this.field_193623_i;
-             throw this.func_193602_b("Trailing data found");
+-            this.cursor++;
++            ++this.cursor;
+             throw this.exception("Trailing data found");
          }
          else
 @@ -197,7 +197,7 @@
  
-         while (this.func_193612_g() && this.func_193599_a(this.func_193598_n()))
+         while (this.canRead() && this.isAllowedInKey(this.peek()))
          {
--            this.field_193623_i++;
-+            ++this.field_193623_i;
+-            this.cursor++;
++            ++this.cursor;
          }
  
-         return this.field_193622_h.substring(i, this.field_193623_i);
+         return this.string.substring(i, this.cursor);
 @@ -341,7 +341,7 @@
  
-     private <T extends Number> List<T> func_193603_a(byte p_193603_1_, byte p_193603_2_) throws NBTException
+     private <T extends Number> List<T> readArray(byte p_193603_1_, byte p_193603_2_) throws NBTException
      {
 -        List<T> list = Lists.newArrayList();
 +        List list = Lists.newArrayList();
  
-         while (this.func_193598_n() != ']')
+         while (this.peek() != ']')
          {
 @@ -355,15 +355,15 @@
  
              if (p_193603_2_ == 1)
              {
--                list.add((T)(Byte)((NBTPrimitive)nbtbase).func_150290_f());
-+                list.add(((NBTPrimitive)nbtbase).func_150290_f());
+-                list.add((T)(Byte)((NBTPrimitive)nbtbase).getByte());
++                list.add(((NBTPrimitive)nbtbase).getByte());
              }
              else if (p_193603_2_ == 4)
              {
--                list.add((T)(Long)((NBTPrimitive)nbtbase).func_150291_c());
-+                list.add(((NBTPrimitive)nbtbase).func_150291_c());
+-                list.add((T)(Long)((NBTPrimitive)nbtbase).getLong());
++                list.add(((NBTPrimitive)nbtbase).getLong());
              }
              else
              {
--                list.add((T)(Integer)((NBTPrimitive)nbtbase).func_150287_d());
-+                list.add(((NBTPrimitive)nbtbase).func_150287_d());
+-                list.add((T)(Integer)((NBTPrimitive)nbtbase).getInt());
++                list.add(((NBTPrimitive)nbtbase).getInt());
              }
  
-             if (!this.func_193613_m())
+             if (!this.hasElementSeparator())
 @@ -385,7 +385,7 @@
      {
-         while (this.func_193612_g() && Character.isWhitespace(this.func_193598_n()))
+         while (this.canRead() && Character.isWhitespace(this.peek()))
          {
--            this.field_193623_i++;
-+            ++this.field_193623_i;
+-            this.cursor++;
++            ++this.cursor;
          }
      }
  
 @@ -395,7 +395,7 @@
  
-         if (this.func_193612_g() && this.func_193598_n() == ',')
+         if (this.canRead() && this.peek() == ',')
          {
--            this.field_193623_i++;
-+            ++this.field_193623_i;
-             this.func_193607_l();
+-            this.cursor++;
++            ++this.cursor;
+             this.skipWhitespace();
              return true;
          }
 @@ -412,7 +412,7 @@
  
-         if (flag && this.func_193598_n() == p_193604_1_)
+         if (flag && this.peek() == expected)
          {
--            this.field_193623_i++;
-+            ++this.field_193623_i;
+-            this.cursor++;
++            ++this.cursor;
          }
          else
          {

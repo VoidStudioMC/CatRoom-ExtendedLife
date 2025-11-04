@@ -1,11 +1,11 @@
 --- before/net/minecraft/network/play/server/SPacketExplosion.java
 +++ after/net/minecraft/network/play/server/SPacketExplosion.java
 @@ -55,7 +55,7 @@
-         int k = (int)this.field_149156_b;
-         int l = (int)this.field_149157_c;
+         int k = (int)this.posY;
+         int l = (int)this.posZ;
  
 -        for (int i1 = 0; i1 < i; i1++)
 +        for (int i1 = 0; i1 < i; ++i1)
          {
-             int j1 = p_148837_1_.readByte() + j;
-             int k1 = p_148837_1_.readByte() + k;
+             int j1 = buf.readByte() + j;
+             int k1 = buf.readByte() + k;

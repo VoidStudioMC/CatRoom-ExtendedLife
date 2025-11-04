@@ -4,137 +4,137 @@
  
  public class ServerScoreboard extends Scoreboard
  {
--    private final MinecraftServer field_96555_a;
+-    private final MinecraftServer server;
 +    private final MinecraftServer scoreboardMCServer;
-     private final Set<ScoreObjective> field_96553_b = Sets.newHashSet();
-     private Runnable[] field_186685_c = new Runnable[0];
+     private final Set<ScoreObjective> addedObjectives = Sets.newHashSet();
+     private Runnable[] dirtyRunnables = new Runnable[0];
  
-     public ServerScoreboard(MinecraftServer p_i1501_1_)
+     public ServerScoreboard(MinecraftServer mcServer)
      {
--        this.field_96555_a = p_i1501_1_;
-+        this.scoreboardMCServer = p_i1501_1_;
+-        this.server = mcServer;
++        this.scoreboardMCServer = mcServer;
      }
  
      @Override
 @@ -31,7 +31,7 @@
  
-         if (this.field_96553_b.contains(p_96536_1_.func_96645_d()))
+         if (this.addedObjectives.contains(scoreIn.getObjective()))
          {
--            this.field_96555_a.func_184103_al().func_148540_a(new SPacketUpdateScore(p_96536_1_));
-+            this.sendAll(new SPacketUpdateScore(p_96536_1_));
+-            this.server.getPlayerList().sendPacketToAllPlayers(new SPacketUpdateScore(scoreIn));
++            this.sendAll(new SPacketUpdateScore(scoreIn));
          }
  
-         this.func_96551_b();
+         this.markSaveDataDirty();
 @@ -41,7 +41,7 @@
-     public void func_96516_a(String p_96516_1_)
+     public void broadcastScoreUpdate(String scoreName)
      {
-         super.func_96516_a(p_96516_1_);
--        this.field_96555_a.func_184103_al().func_148540_a(new SPacketUpdateScore(p_96516_1_));
-+        this.sendAll(new SPacketUpdateScore(p_96516_1_));
-         this.func_96551_b();
+         super.broadcastScoreUpdate(scoreName);
+-        this.server.getPlayerList().sendPacketToAllPlayers(new SPacketUpdateScore(scoreName));
++        this.sendAll(new SPacketUpdateScore(scoreName));
+         this.markSaveDataDirty();
      }
  
 @@ -49,7 +49,7 @@
-     public void func_178820_a(String p_178820_1_, ScoreObjective p_178820_2_)
+     public void broadcastScoreUpdate(String scoreName, ScoreObjective objective)
      {
-         super.func_178820_a(p_178820_1_, p_178820_2_);
--        this.field_96555_a.func_184103_al().func_148540_a(new SPacketUpdateScore(p_178820_1_, p_178820_2_));
-+        this.sendAll(new SPacketUpdateScore(p_178820_1_, p_178820_2_));
-         this.func_96551_b();
+         super.broadcastScoreUpdate(scoreName, objective);
+-        this.server.getPlayerList().sendPacketToAllPlayers(new SPacketUpdateScore(scoreName, objective));
++        this.sendAll(new SPacketUpdateScore(scoreName, objective));
+         this.markSaveDataDirty();
      }
  
 @@ -63,7 +63,7 @@
          {
-             if (this.func_96552_h(scoreobjective) > 0)
+             if (this.getObjectiveDisplaySlotCount(scoreobjective) > 0)
              {
--                this.field_96555_a.func_184103_al().func_148540_a(new SPacketDisplayObjective(p_96530_1_, p_96530_2_));
-+                this.sendAll(new SPacketDisplayObjective(p_96530_1_, p_96530_2_));
+-                this.server.getPlayerList().sendPacketToAllPlayers(new SPacketDisplayObjective(objectiveSlot, objective));
++                this.sendAll(new SPacketDisplayObjective(objectiveSlot, objective));
              }
              else
              {
 @@ -75,7 +75,7 @@
          {
-             if (this.field_96553_b.contains(p_96530_2_))
+             if (this.addedObjectives.contains(objective))
              {
--                this.field_96555_a.func_184103_al().func_148540_a(new SPacketDisplayObjective(p_96530_1_, p_96530_2_));
-+                this.sendAll(new SPacketDisplayObjective(p_96530_1_, p_96530_2_));
+-                this.server.getPlayerList().sendPacketToAllPlayers(new SPacketDisplayObjective(objectiveSlot, objective));
++                this.sendAll(new SPacketDisplayObjective(objectiveSlot, objective));
              }
              else
              {
 @@ -92,7 +92,7 @@
-         if (super.func_151392_a(p_151392_1_, p_151392_2_))
+         if (super.addPlayerToTeam(player, newTeam))
          {
-             ScorePlayerTeam scoreplayerteam = this.func_96508_e(p_151392_2_);
--            this.field_96555_a.func_184103_al().func_148540_a(new SPacketTeams(scoreplayerteam, Arrays.asList(p_151392_1_), 3));
-+            this.sendAll(new SPacketTeams(scoreplayerteam, Arrays.asList(p_151392_1_), 3));
-             this.func_96551_b();
+             ScorePlayerTeam scoreplayerteam = this.getTeam(newTeam);
+-            this.server.getPlayerList().sendPacketToAllPlayers(new SPacketTeams(scoreplayerteam, Arrays.asList(player), 3));
++            this.sendAll(new SPacketTeams(scoreplayerteam, Arrays.asList(player), 3));
+             this.markSaveDataDirty();
              return true;
          }
 @@ -106,7 +106,7 @@
-     public void func_96512_b(String p_96512_1_, ScorePlayerTeam p_96512_2_)
+     public void removePlayerFromTeam(String username, ScorePlayerTeam playerTeam)
      {
-         super.func_96512_b(p_96512_1_, p_96512_2_);
--        this.field_96555_a.func_184103_al().func_148540_a(new SPacketTeams(p_96512_2_, Arrays.asList(p_96512_1_), 4));
-+        this.sendAll(new SPacketTeams(p_96512_2_, Arrays.asList(p_96512_1_), 4));
-         this.func_96551_b();
+         super.removePlayerFromTeam(username, playerTeam);
+-        this.server.getPlayerList().sendPacketToAllPlayers(new SPacketTeams(playerTeam, Arrays.asList(username), 4));
++        this.sendAll(new SPacketTeams(playerTeam, Arrays.asList(username), 4));
+         this.markSaveDataDirty();
      }
  
 @@ -124,7 +124,7 @@
  
-         if (this.field_96553_b.contains(p_96532_1_))
+         if (this.addedObjectives.contains(objective))
          {
--            this.field_96555_a.func_184103_al().func_148540_a(new SPacketScoreboardObjective(p_96532_1_, 2));
-+            this.sendAll(new SPacketScoreboardObjective(p_96532_1_, 2));
+-            this.server.getPlayerList().sendPacketToAllPlayers(new SPacketScoreboardObjective(objective, 2));
++            this.sendAll(new SPacketScoreboardObjective(objective, 2));
          }
  
-         this.func_96551_b();
+         this.markSaveDataDirty();
 @@ -147,7 +147,7 @@
-     public void func_96523_a(ScorePlayerTeam p_96523_1_)
+     public void broadcastTeamCreated(ScorePlayerTeam playerTeam)
      {
-         super.func_96523_a(p_96523_1_);
--        this.field_96555_a.func_184103_al().func_148540_a(new SPacketTeams(p_96523_1_, 0));
-+        this.sendAll(new SPacketTeams(p_96523_1_, 0));
-         this.func_96551_b();
+         super.broadcastTeamCreated(playerTeam);
+-        this.server.getPlayerList().sendPacketToAllPlayers(new SPacketTeams(playerTeam, 0));
++        this.sendAll(new SPacketTeams(playerTeam, 0));
+         this.markSaveDataDirty();
      }
  
 @@ -155,7 +155,7 @@
-     public void func_96538_b(ScorePlayerTeam p_96538_1_)
+     public void broadcastTeamInfoUpdate(ScorePlayerTeam playerTeam)
      {
-         super.func_96538_b(p_96538_1_);
--        this.field_96555_a.func_184103_al().func_148540_a(new SPacketTeams(p_96538_1_, 2));
-+        this.sendAll(new SPacketTeams(p_96538_1_, 2));
-         this.func_96551_b();
+         super.broadcastTeamInfoUpdate(playerTeam);
+-        this.server.getPlayerList().sendPacketToAllPlayers(new SPacketTeams(playerTeam, 2));
++        this.sendAll(new SPacketTeams(playerTeam, 2));
+         this.markSaveDataDirty();
      }
  
 @@ -163,7 +163,7 @@
-     public void func_96513_c(ScorePlayerTeam p_96513_1_)
+     public void broadcastTeamRemove(ScorePlayerTeam playerTeam)
      {
-         super.func_96513_c(p_96513_1_);
--        this.field_96555_a.func_184103_al().func_148540_a(new SPacketTeams(p_96513_1_, 1));
-+        this.sendAll(new SPacketTeams(p_96513_1_, 1));
-         this.func_96551_b();
+         super.broadcastTeamRemove(playerTeam);
+-        this.server.getPlayerList().sendPacketToAllPlayers(new SPacketTeams(playerTeam, 1));
++        this.sendAll(new SPacketTeams(playerTeam, 1));
+         this.markSaveDataDirty();
      }
  
 @@ -186,7 +186,7 @@
          List < Packet<? >> list = Lists.newArrayList();
-         list.add(new SPacketScoreboardObjective(p_96550_1_, 0));
+         list.add(new SPacketScoreboardObjective(objective, 0));
  
 -        for (int i = 0; i < 19; i++)
 +        for (int i = 0; i < 19; ++i)
          {
-             if (this.func_96539_a(i) == p_96550_1_)
+             if (this.getObjectiveInDisplaySlot(i) == objective)
              {
 @@ -206,8 +206,9 @@
      {
-         List < Packet<? >> list = this.func_96550_d(p_96549_1_);
+         List < Packet<? >> list = this.getCreatePackets(objective);
  
--        for (EntityPlayerMP entityplayermp : this.field_96555_a.func_184103_al().func_181057_v())
-+        for (EntityPlayerMP entityplayermp : this.scoreboardMCServer.func_184103_al().func_181057_v())
+-        for (EntityPlayerMP entityplayermp : this.server.getPlayerList().getPlayers())
++        for (EntityPlayerMP entityplayermp : this.scoreboardMCServer.getPlayerList().getPlayers())
          {
 +            if (entityplayermp.getBukkitEntity().getScoreboard().getHandle() != this) continue; // CraftBukkit - Only players on this board
              for (Packet<?> packet : list)
              {
-                 entityplayermp.field_71135_a.func_147359_a(packet);
+                 entityplayermp.connection.sendPacket(packet);
 @@ -222,7 +223,7 @@
          List < Packet<? >> list = Lists.newArrayList();
          list.add(new SPacketScoreboardObjective(p_96548_1_, 1));
@@ -142,19 +142,19 @@
 -        for (int i = 0; i < 19; i++)
 +        for (int i = 0; i < 19; ++i)
          {
-             if (this.func_96539_a(i) == p_96548_1_)
+             if (this.getObjectiveInDisplaySlot(i) == p_96548_1_)
              {
 @@ -237,8 +238,9 @@
      {
-         List < Packet<? >> list = this.func_96548_f(p_96546_1_);
+         List < Packet<? >> list = this.getDestroyPackets(p_96546_1_);
  
--        for (EntityPlayerMP entityplayermp : this.field_96555_a.func_184103_al().func_181057_v())
-+        for (EntityPlayerMP entityplayermp : this.scoreboardMCServer.func_184103_al().func_181057_v())
+-        for (EntityPlayerMP entityplayermp : this.server.getPlayerList().getPlayers())
++        for (EntityPlayerMP entityplayermp : this.scoreboardMCServer.getPlayerList().getPlayers())
          {
 +            if (entityplayermp.getBukkitEntity().getScoreboard().getHandle() != this) continue; // CraftBukkit - Only players on this board
              for (Packet<?> packet : list)
              {
-                 entityplayermp.field_71135_a.func_147359_a(packet);
+                 entityplayermp.connection.sendPacket(packet);
 @@ -252,14 +254,22 @@
      {
          int i = 0;
@@ -162,7 +162,7 @@
 -        for (int j = 0; j < 19; j++)
 +        for (int j = 0; j < 19; ++j)
          {
-             if (this.func_96539_a(j) == p_96552_1_)
+             if (this.getObjectiveInDisplaySlot(j) == p_96552_1_)
              {
 -                i++;
 +                ++i;
@@ -173,9 +173,9 @@
 +    }
 +
 +    private void sendAll(Packet packet) {
-+        for (EntityPlayerMP entityplayer : this.scoreboardMCServer.func_184103_al().func_181057_v()) {
++        for (EntityPlayerMP entityplayer : this.scoreboardMCServer.getPlayerList().getPlayers()) {
 +            if (entityplayer.getBukkitEntity().getScoreboard().getHandle() == this) {
-+                entityplayer.field_71135_a.func_147359_a(packet);
++                entityplayer.connection.sendPacket(packet);
 +            }
 +        }
      }

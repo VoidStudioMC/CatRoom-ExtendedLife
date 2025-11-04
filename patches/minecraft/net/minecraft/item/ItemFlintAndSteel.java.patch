@@ -1,41 +1,41 @@
 --- before/net/minecraft/item/ItemFlintAndSteel.java
 +++ after/net/minecraft/item/ItemFlintAndSteel.java
 @@ -23,17 +23,7 @@
-         this.func_77637_a(CreativeTabs.field_78040_i);
+         this.setCreativeTab(CreativeTabs.TOOLS);
      }
  
 -    @Override
--    public EnumActionResult func_180614_a(
--        EntityPlayer p_180614_1_,
--        World p_180614_2_,
--        BlockPos p_180614_3_,
--        EnumHand p_180614_4_,
--        EnumFacing p_180614_5_,
--        float p_180614_6_,
--        float p_180614_7_,
--        float p_180614_8_
+-    public EnumActionResult onItemUse(
+-        EntityPlayer player,
+-        World worldIn,
+-        BlockPos pos,
+-        EnumHand hand,
+-        EnumFacing facing,
+-        float hitX,
+-        float hitY,
+-        float hitZ
 -    )
-+    public EnumActionResult func_180614_a(EntityPlayer p_180614_1_, World p_180614_2_, BlockPos p_180614_3_, EnumHand p_180614_4_, EnumFacing p_180614_5_, float p_180614_6_, float p_180614_7_, float p_180614_8_)
++    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
      {
-         p_180614_3_ = p_180614_3_.func_177972_a(p_180614_5_);
-         ItemStack itemstack = p_180614_1_.func_184586_b(p_180614_4_);
+         pos = pos.offset(facing);
+         ItemStack itemstack = player.getHeldItem(hand);
 @@ -44,11 +34,15 @@
          }
          else
          {
--            if (p_180614_2_.func_180495_p(p_180614_3_).func_185904_a() == Material.field_151579_a)
-+            if (p_180614_2_.func_175623_d(p_180614_3_))
+-            if (worldIn.getBlockState(pos).getMaterial() == Material.AIR)
++            if (worldIn.isAirBlock(pos))
              {
--                p_180614_2_.func_184133_a(
--                    p_180614_1_, p_180614_3_, SoundEvents.field_187649_bu, SoundCategory.BLOCKS, 1.0F, field_77697_d.nextFloat() * 0.4F + 0.8F
+-                worldIn.playSound(
+-                    player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, itemRand.nextFloat() * 0.4F + 0.8F
 -                );
 +                // CraftBukkit start - Store the clicked block
-+                if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockIgniteEvent(p_180614_2_, p_180614_3_.func_177958_n(), p_180614_3_.func_177956_o(), p_180614_3_.func_177952_p(), org.bukkit.event.block.BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL, p_180614_1_).isCancelled()) {
-+                    itemstack.func_77972_a(1, p_180614_1_);
++                if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockIgniteEvent(worldIn, pos.getX(), pos.getY(), pos.getZ(), org.bukkit.event.block.BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL, player).isCancelled()) {
++                    itemstack.damageItem(1, player);
 +                    return EnumActionResult.PASS;
 +                }
 +                // CraftBukkit end
-+                p_180614_2_.func_184133_a(p_180614_1_, p_180614_3_, SoundEvents.field_187649_bu, SoundCategory.BLOCKS, 1.0F, field_77697_d.nextFloat() * 0.4F + 0.8F);
-                 p_180614_2_.func_180501_a(p_180614_3_, Blocks.field_150480_ab.func_176223_P(), 11);
++                worldIn.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
+                 worldIn.setBlockState(pos, Blocks.FIRE.getDefaultState(), 11);
              }
  

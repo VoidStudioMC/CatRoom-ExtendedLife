@@ -8,9 +8,9 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 @@ -9,6 +10,11 @@
-     public ContainerHorseChest(String p_i47268_1_, int p_i47268_2_)
+     public ContainerHorseChest(String inventoryTitle, int slotCount)
      {
-         super(p_i47268_1_, false, p_i47268_2_);
+         super(inventoryTitle, false, slotCount);
 +    }
 +
 +    public ContainerHorseChest(String inventoryTitle, int slotCount, AbstractHorse owner)

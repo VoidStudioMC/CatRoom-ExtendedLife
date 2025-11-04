@@ -36,14 +36,14 @@
 @@ -21,12 +39,65 @@
  public class TileEntitySkull extends TileEntity implements ITickable
  {
-     private int field_145908_a;
--    private int field_145910_i;
-+    public int field_145910_i;
-     private GameProfile field_152110_j;
-     private int field_184296_h;
-     private boolean field_184297_i;
-     private static PlayerProfileCache field_184298_j;
-     private static MinecraftSessionService field_184299_k;
+     private int skullType;
+-    private int skullRotation;
++    public int skullRotation;
+     private GameProfile playerProfile;
+     private int dragonAnimatedTicks;
+     private boolean dragonAnimated;
+     private static PlayerProfileCache profileCache;
+     private static MinecraftSessionService sessionService;
 +    // Spigot start
 +    public static final ExecutorService executor = Executors.newFixedThreadPool(3,
 +            new ThreadFactoryBuilder()
@@ -73,11 +73,11 @@
 +                    };
 +
 +                    if (! CatServer.getConfig().disableUpdateGameProfile)
-+                        MinecraftServer.getServerInst().func_152359_aw().findProfilesByNames(new String[] { key }, Agent.MINECRAFT, gameProfileLookup);
++                        MinecraftServer.getServerInst().getGameProfileRepository().findProfilesByNames(new String[] { key }, Agent.MINECRAFT, gameProfileLookup);
 +
 +                    GameProfile profile = profiles[ 0 ];
 +                    if (profile == null) {
-+                        UUID uuid = EntityPlayer.func_146094_a(new GameProfile(null, key));
++                        UUID uuid = EntityPlayer.getUUID(new GameProfile(null, key));
 +                        profile = new GameProfile(uuid, key);
 +
 +                        gameProfileLookup.onProfileLookupSucceeded(profile);
@@ -88,7 +88,7 @@
 +
 +                        if ( property == null )
 +                        {
-+                            profile = MinecraftServer.getServerInst().func_147130_as().fillProfileProperties( profile, true );
++                            profile = MinecraftServer.getServerInst().getMinecraftSessionService().fillProfileProperties( profile, true );
 +                        }
 +                    }
 +
@@ -98,35 +98,35 @@
 +            } );
 +    // Spigot end
  
-     public static void func_184293_a(PlayerProfileCache p_184293_0_)
+     public static void setProfileCache(PlayerProfileCache profileCacheIn)
      {
 @@ -89,7 +160,7 @@
-             if (this.field_145850_b.func_175640_z(this.field_174879_c))
+             if (this.world.isBlockPowered(this.pos))
              {
-                 this.field_184297_i = true;
--                this.field_184296_h++;
-+                ++this.field_184296_h;
+                 this.dragonAnimated = true;
+-                this.dragonAnimatedTicks++;
++                ++this.dragonAnimatedTicks;
              }
              else
              {
 @@ -138,47 +209,88 @@
  
-     private void func_152109_d()
+     private void updatePlayerProfile()
      {
--        this.field_152110_j = func_174884_b(this.field_152110_j);
--        this.func_70296_d();
+-        this.playerProfile = updateGameProfile(this.playerProfile);
+-        this.markDirty();
 +        // Spigot start
-+        GameProfile profile = this.field_152110_j;
-+        func_152107_a( 0 ); // Work around client bug
++        GameProfile profile = this.playerProfile;
++        setType( 0 ); // Work around client bug
 +        updateGameprofile(profile, new Predicate<GameProfile>() {
 +
 +            @Override
 +            public boolean apply(GameProfile input) {
-+                func_152107_a(3); // Work around client bug
-+                field_152110_j = input;
-+                func_70296_d();
-+                if (field_145850_b != null) {
-+                    field_145850_b.func_175679_n(field_174879_c); // PAIL: notify
++                setType(3); // Work around client bug
++                playerProfile = input;
++                markDirty();
++                if (world != null) {
++                    world.notifyLightSet(pos); // PAIL: notify
 +                }
 +                return false;
 +            }
@@ -135,22 +135,19 @@
 +
      }
  
--    public static GameProfile func_174884_b(GameProfile p_174884_0_)
+-    public static GameProfile updateGameProfile(GameProfile input)
 +    // Spigot start - Support async lookups
 +    public static Future<GameProfile> updateGameprofile(final GameProfile input, final Predicate<GameProfile> callback, boolean sync)
      {
--        if (p_174884_0_ != null && !StringUtils.func_151246_b(p_174884_0_.getName()))
-+        if (input != null && !StringUtils.func_151246_b(input.getName()))
+         if (input != null && !StringUtils.isNullOrEmpty(input.getName()))
          {
--            if (p_174884_0_.isComplete() && p_174884_0_.getProperties().containsKey("textures"))
--            {
--                return p_174884_0_;
+             if (input.isComplete() && input.getProperties().containsKey("textures"))
+             {
+-                return input;
 -            }
--            else if (field_184298_j != null && field_184299_k != null)
+-            else if (profileCache != null && sessionService != null)
 -            {
--                GameProfile gameprofile = field_184298_j.func_152655_a(p_174884_0_.getName());
-+            if (input.isComplete() && input.getProperties().containsKey("textures"))
-+            {
+-                GameProfile gameprofile = profileCache.getGameProfileForUsername(input.getName());
 +                callback.apply(input);
 +            } else if (MinecraftServer.getServerInst() == null) {
 +                callback.apply(input);
@@ -161,7 +158,7 @@
  
 -                if (gameprofile == null)
 -                {
--                    return p_174884_0_;
+-                    return input;
 +                    return Futures.immediateFuture(profile);
                  }
                  else
@@ -170,7 +167,7 @@
 -
 -                    if (property == null)
 -                    {
--                        gameprofile = field_184299_k.fillProfileProperties(gameprofile, true);
+-                        gameprofile = sessionService.fillProfileProperties(gameprofile, true);
 +                    Callable<GameProfile> callable = new Callable<GameProfile>() {
 +                        @Override
 +                        public GameProfile call() {
@@ -204,12 +201,12 @@
 -            }
 -            else
 -            {
--                return p_174884_0_;
+-                return input;
              }
          }
          else
          {
--            return p_174884_0_;
+-            return input;
 +            callback.apply(input);
          }
 +
@@ -222,4 +219,4 @@
 +        return com.google.common.util.concurrent.Futures.getUnchecked(updateGameprofile(input, com.google.common.base.Predicates.alwaysTrue(), true)); // CatServer
      }
  
-     public int func_145904_a()
+     public int getSkullType()

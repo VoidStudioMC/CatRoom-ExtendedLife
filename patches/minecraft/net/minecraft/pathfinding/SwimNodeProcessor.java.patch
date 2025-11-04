@@ -4,14 +4,14 @@
      {
          BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
  
--        for (int i = p_186327_1_; i < p_186327_1_ + this.field_176168_c; i++)
-+        for (int i = p_186327_1_; i < p_186327_1_ + this.field_176168_c; ++i)
+-        for (int i = p_186327_1_; i < p_186327_1_ + this.entitySizeX; i++)
++        for (int i = p_186327_1_; i < p_186327_1_ + this.entitySizeX; ++i)
          {
--            for (int j = p_186327_2_; j < p_186327_2_ + this.field_176165_d; j++)
-+            for (int j = p_186327_2_; j < p_186327_2_ + this.field_176165_d; ++j)
+-            for (int j = p_186327_2_; j < p_186327_2_ + this.entitySizeY; j++)
++            for (int j = p_186327_2_; j < p_186327_2_ + this.entitySizeY; ++j)
              {
--                for (int k = p_186327_3_; k < p_186327_3_ + this.field_176166_e; k++)
-+                for (int k = p_186327_3_; k < p_186327_3_ + this.field_176166_e; ++k)
+-                for (int k = p_186327_3_; k < p_186327_3_ + this.entitySizeZ; k++)
++                for (int k = p_186327_3_; k < p_186327_3_ + this.entitySizeZ; ++k)
                  {
-                     IBlockState iblockstate = this.field_176169_a.func_180495_p(blockpos$mutableblockpos.func_181079_c(i, j, k));
+                     IBlockState iblockstate = this.blockaccess.getBlockState(blockpos$mutableblockpos.setPos(i, j, k));
  

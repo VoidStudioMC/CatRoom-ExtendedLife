@@ -2,10 +2,10 @@
 +++ after/net/minecraft/client/gui/ServerSelectionList.java
 @@ -65,7 +65,7 @@
      {
-         this.field_148198_l.clear();
+         this.serverListInternet.clear();
  
--        for (int i = 0; i < p_148195_1_.func_78856_c(); i++)
-+        for (int i = 0; i < p_148195_1_.func_78856_c(); ++i)
+-        for (int i = 0; i < p_148195_1_.countServers(); i++)
++        for (int i = 0; i < p_148195_1_.countServers(); ++i)
          {
-             this.field_148198_l.add(new ServerListEntryNormal(this.field_148200_k, p_148195_1_.func_78850_a(i)));
+             this.serverListInternet.add(new ServerListEntryNormal(this.owner, p_148195_1_.getServerData(i)));
          }

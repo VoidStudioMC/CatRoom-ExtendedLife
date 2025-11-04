@@ -2,18 +2,18 @@
 +++ after/net/minecraft/block/BlockTNT.java
 @@ -151,12 +151,10 @@
  
-             if (entityarrow.func_70027_ad())
+             if (entityarrow.isBurning())
              {
--                this.func_180692_a(
--                    p_180634_1_,
--                    p_180634_2_,
--                    p_180634_1_.func_180495_p(p_180634_2_).func_177226_a(field_176246_a, true),
--                    entityarrow.field_70250_c instanceof EntityLivingBase ? (EntityLivingBase)entityarrow.field_70250_c : null
+-                this.explode(
+-                    worldIn,
+-                    pos,
+-                    worldIn.getBlockState(pos).withProperty(EXPLODE, true),
+-                    entityarrow.shootingEntity instanceof EntityLivingBase ? (EntityLivingBase)entityarrow.shootingEntity : null
 -                );
-+                if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callEntityChangeBlockEvent(entityarrow, p_180634_2_, Blocks.field_150350_a, 0).isCancelled()) {
++                if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callEntityChangeBlockEvent(entityarrow, pos, Blocks.AIR, 0).isCancelled()) {
 +                    return;
 +                }
-+                this.func_180692_a(p_180634_1_, p_180634_2_, p_180634_1_.func_180495_p(p_180634_2_).func_177226_a(field_176246_a, Boolean.valueOf(true)), entityarrow.field_70250_c instanceof EntityLivingBase ? (EntityLivingBase)entityarrow.field_70250_c : null);
-                 p_180634_1_.func_175698_g(p_180634_2_);
++                this.explode(worldIn, pos, worldIn.getBlockState(pos).withProperty(EXPLODE, Boolean.valueOf(true)), entityarrow.shootingEntity instanceof EntityLivingBase ? (EntityLivingBase)entityarrow.shootingEntity : null);
+                 worldIn.setBlockToAir(pos);
              }
          }

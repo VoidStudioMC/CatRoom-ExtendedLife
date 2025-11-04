@@ -1,19 +1,19 @@
 --- before/net/minecraft/item/ItemRecord.java
 +++ after/net/minecraft/item/ItemRecord.java
 @@ -26,6 +26,7 @@
-     private static final Map<SoundEvent, ItemRecord> field_150928_b = Maps.newHashMap();
-     private final SoundEvent field_185076_b;
-     private final String field_185077_c;
+     private static final Map<SoundEvent, ItemRecord> RECORDS = Maps.newHashMap();
+     private final SoundEvent sound;
+     private final String displayName;
 +    public boolean playAfter = false;
  
-     protected ItemRecord(String p_i46742_1_, SoundEvent p_i46742_2_)
+     protected ItemRecord(String recordName, SoundEvent soundIn)
      {
 @@ -56,7 +57,7 @@
              {
-                 ItemStack itemstack = p_180614_1_.func_184586_b(p_180614_4_);
-                 ((BlockJukebox)Blocks.field_150421_aI).func_176431_a(p_180614_2_, p_180614_3_, iblockstate, itemstack);
--                p_180614_2_.func_180498_a(null, 1010, p_180614_3_, Item.func_150891_b(this));
+                 ItemStack itemstack = player.getHeldItem(hand);
+                 ((BlockJukebox)Blocks.JUKEBOX).insertRecord(worldIn, pos, iblockstate, itemstack);
+-                worldIn.playEvent(null, 1010, pos, Item.getIdFromItem(this));
 +                playAfter = true; // CatServer - handle in ForgeHook
-                 itemstack.func_190918_g(1);
-                 p_180614_1_.func_71029_a(StatList.field_188092_Z);
+                 itemstack.shrink(1);
+                 player.addStat(StatList.RECORD_PLAYED);
              }

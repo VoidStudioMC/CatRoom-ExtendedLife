@@ -9,7 +9,7 @@
  
  public class InventoryEnderChest extends InventoryBasic
  {
-     private TileEntityEnderChest field_70488_a;
+     private TileEntityEnderChest associatedChest;
  
 +    private final EntityPlayer owner;
 +
@@ -24,34 +24,34 @@
 +        this.owner = owner;
      }
  
-     public void func_146031_a(TileEntityEnderChest p_146031_1_)
+     public void setChestTileEntity(TileEntityEnderChest chestTileEntity)
 @@ -22,12 +32,12 @@
  
-     public void func_70486_a(NBTTagList p_70486_1_)
+     public void loadInventoryFromNBT(NBTTagList p_70486_1_)
      {
--        for (int i = 0; i < this.func_70302_i_(); i++)
-+        for (int i = 0; i < this.func_70302_i_(); ++i)
+-        for (int i = 0; i < this.getSizeInventory(); i++)
++        for (int i = 0; i < this.getSizeInventory(); ++i)
          {
-             this.func_70299_a(i, ItemStack.field_190927_a);
+             this.setInventorySlotContents(i, ItemStack.EMPTY);
          }
  
--        for (int k = 0; k < p_70486_1_.func_74745_c(); k++)
-+        for (int k = 0; k < p_70486_1_.func_74745_c(); ++k)
+-        for (int k = 0; k < p_70486_1_.tagCount(); k++)
++        for (int k = 0; k < p_70486_1_.tagCount(); ++k)
          {
-             NBTTagCompound nbttagcompound = p_70486_1_.func_150305_b(k);
-             int j = nbttagcompound.func_74771_c("Slot") & 255;
+             NBTTagCompound nbttagcompound = p_70486_1_.getCompoundTagAt(k);
+             int j = nbttagcompound.getByte("Slot") & 255;
 @@ -43,7 +53,7 @@
      {
          NBTTagList nbttaglist = new NBTTagList();
  
--        for (int i = 0; i < this.func_70302_i_(); i++)
-+        for (int i = 0; i < this.func_70302_i_(); ++i)
+-        for (int i = 0; i < this.getSizeInventory(); i++)
++        for (int i = 0; i < this.getSizeInventory(); ++i)
          {
-             ItemStack itemstack = this.func_70301_a(i);
+             ItemStack itemstack = this.getStackInSlot(i);
  
 @@ -87,4 +97,14 @@
-         super.func_174886_c(p_174886_1_);
-         this.field_70488_a = null;
+         super.closeInventory(player);
+         this.associatedChest = null;
      }
 +
 +    public InventoryHolder getBukkitOwner() {
@@ -60,7 +60,7 @@
 +
 +    @Override
 +    public Location getLocation() {
-+        return new Location(this.field_70488_a.func_145831_w().getWorld(), this.field_70488_a.func_174877_v().func_177958_n(), this.field_70488_a.func_174877_v().func_177956_o(), this.field_70488_a.func_174877_v().func_177952_p());
++        return new Location(this.associatedChest.getWorld().getWorld(), this.associatedChest.getPos().getX(), this.associatedChest.getPos().getY(), this.associatedChest.getPos().getZ());
 +    }
 +
  }

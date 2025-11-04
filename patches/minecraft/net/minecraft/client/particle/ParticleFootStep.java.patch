@@ -2,10 +2,10 @@
 +++ after/net/minecraft/client/particle/ParticleFootStep.java
 @@ -75,7 +75,7 @@
      @Override
-     public void func_189213_a()
+     public void onUpdate()
      {
--        this.field_70576_a++;
-+        ++this.field_70576_a;
+-        this.footstepAge++;
++        ++this.footstepAge;
  
-         if (this.field_70576_a == this.field_70578_aq)
+         if (this.footstepAge == this.footstepMaxAge)
          {

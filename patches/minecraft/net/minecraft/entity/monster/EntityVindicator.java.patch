@@ -4,14 +4,14 @@
          {
              return true;
          }
-+        else if (p_184191_1_ instanceof EntityLivingBase && ((EntityLivingBase)p_184191_1_).func_70668_bt() == EnumCreatureAttribute.ILLAGER)
++        else if (entityIn instanceof EntityLivingBase && ((EntityLivingBase)entityIn).getCreatureAttribute() == EnumCreatureAttribute.ILLAGER)
 +        {
-+            return this.func_96124_cp() == null && p_184191_1_.func_96124_cp() == null;
++            return this.getTeam() == null && entityIn.getTeam() == null;
 +        }
          else
          {
--            return p_184191_1_ instanceof EntityLivingBase && ((EntityLivingBase)p_184191_1_).func_70668_bt() == EnumCreatureAttribute.ILLAGER
--                   ? this.func_96124_cp() == null && p_184191_1_.func_96124_cp() == null
+-            return entityIn instanceof EntityLivingBase && ((EntityLivingBase)entityIn).getCreatureAttribute() == EnumCreatureAttribute.ILLAGER
+-                   ? this.getTeam() == null && entityIn.getTeam() == null
 -                   : false;
 +            return false;
          }

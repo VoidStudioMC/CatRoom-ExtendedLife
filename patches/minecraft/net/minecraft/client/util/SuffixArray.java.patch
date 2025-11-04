@@ -1,14 +1,14 @@
 --- before/net/minecraft/client/util/SuffixArray.java
 +++ after/net/minecraft/client/util/SuffixArray.java
 @@ -37,7 +37,7 @@
-         this.field_194061_a.add(p_194057_1_);
-         this.field_194066_f.add(this.field_194065_e.size());
+         this.list.add(p_194057_1_);
+         this.wordStarts.add(this.chars.size());
  
 -        for (int j = 0; j < p_194057_2_.length(); j++)
 +        for (int j = 0; j < p_194057_2_.length(); ++j)
          {
-             this.field_194067_g.add(i);
-             this.field_194068_h.add(j);
+             this.suffixToT.add(i);
+             this.offsets.add(j);
 @@ -87,7 +87,7 @@
              }
          };
@@ -16,7 +16,7 @@
 -        for (int j = 0; j < i; j++)
 +        for (int j = 0; j < i; ++j)
          {
-             aint[j] = this.field_194065_e.getInt(j);
+             aint[j] = this.chars.getInt(j);
          }
 @@ -104,7 +104,7 @@
  
@@ -28,40 +28,40 @@
                  if (l1 > 0 && aint1[l1] == aint1[l1 - 1] && aint2[l1] == aint2[l1 - 1])
                  {
 @@ -122,7 +122,7 @@
-         this.field_194067_g = new IntArrayList(intlist1.size());
-         this.field_194068_h = new IntArrayList(intlist.size());
+         this.suffixToT = new IntArrayList(intlist1.size());
+         this.offsets = new IntArrayList(intlist.size());
  
 -        for (int i1 = 0; i1 < i; i1++)
 +        for (int i1 = 0; i1 < i; ++i1)
          {
              int j1 = aint3[i1];
-             this.field_194067_g.add(intlist1.getInt(j1));
+             this.suffixToT.add(intlist1.getInt(j1));
 @@ -137,7 +137,7 @@
  
-     private void func_194060_b()
+     private void printArray()
      {
--        for (int i = 0; i < this.field_194067_g.size(); i++)
-+        for (int i = 0; i < this.field_194067_g.size(); ++i)
+-        for (int i = 0; i < this.suffixToT.size(); i++)
++        for (int i = 0; i < this.suffixToT.size(); ++i)
          {
-             field_194064_d.debug("{} {}", i, this.func_194059_a(i));
+             LOGGER.debug("{} {}", i, this.getString(i));
          }
 @@ -151,7 +151,7 @@
-         int j = this.field_194066_f.getInt(this.field_194067_g.getInt(p_194059_1_));
+         int j = this.wordStarts.getInt(this.suffixToT.getInt(p_194059_1_));
          StringBuilder stringbuilder = new StringBuilder();
  
--        for (int k = 0; j + k < this.field_194065_e.size(); k++)
-+        for (int k = 0; j + k < this.field_194065_e.size(); ++k)
+-        for (int k = 0; j + k < this.chars.size(); k++)
++        for (int k = 0; j + k < this.chars.size(); ++k)
          {
              if (k == i)
              {
 @@ -176,7 +176,7 @@
-         int i = this.field_194066_f.getInt(this.field_194067_g.getInt(p_194056_2_));
-         int j = this.field_194068_h.getInt(p_194056_2_);
+         int i = this.wordStarts.getInt(this.suffixToT.getInt(p_194056_2_));
+         int j = this.offsets.getInt(p_194056_2_);
  
 -        for (int k = 0; k < p_194056_1_.length(); k++)
 +        for (int k = 0; k < p_194056_1_.length(); ++k)
          {
-             int l = this.field_194065_e.getInt(i + j + k);
+             int l = this.chars.getInt(i + j + k);
  
 @@ -256,7 +256,7 @@
              int k2 = j;
@@ -70,5 +70,5 @@
 -            for (int k1 = i2; k1 < k2; k1++)
 +            for (int k1 = i2; k1 < k2; ++k1)
              {
-                 intset.add(this.field_194067_g.getInt(k1));
+                 intset.add(this.suffixToT.getInt(k1));
              }

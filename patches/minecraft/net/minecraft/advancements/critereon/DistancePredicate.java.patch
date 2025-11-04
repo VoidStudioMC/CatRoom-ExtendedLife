@@ -4,14 +4,14 @@
          {
              return false;
          }
-+        else if (!this.field_193427_e.func_192513_a((double)(f * f + f2 * f2)))
++        else if (!this.horizontal.testSquare((double)(f * f + f2 * f2)))
 +        {
 +            return false;
 +        }
          else
          {
--            return !this.field_193427_e.func_192513_a((double)(f * f + f2 * f2)) ? false : this.field_193428_f.func_192513_a((double)(f * f + f1 * f1 + f2 * f2));
-+            return this.field_193428_f.func_192513_a((double)(f * f + f1 * f1 + f2 * f2));
+-            return !this.horizontal.testSquare((double)(f * f + f2 * f2)) ? false : this.absolute.testSquare((double)(f * f + f1 * f1 + f2 * f2));
++            return this.absolute.testSquare((double)(f * f + f1 * f1 + f2 * f2));
          }
      }
  

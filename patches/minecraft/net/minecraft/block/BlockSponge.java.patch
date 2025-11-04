@@ -2,7 +2,7 @@
 +++ after/net/minecraft/block/BlockSponge.java
 @@ -87,7 +87,7 @@
                  {
-                     p_176312_1_.func_180501_a(blockpos1, Blocks.field_150350_a.func_176223_P(), 2);
+                     worldIn.setBlockState(blockpos1, Blocks.AIR.getDefaultState(), 2);
                      list.add(blockpos1);
 -                    i++;
 +                    ++i;

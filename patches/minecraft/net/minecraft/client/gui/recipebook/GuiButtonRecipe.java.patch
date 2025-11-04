@@ -1,11 +1,11 @@
 --- before/net/minecraft/client/gui/recipebook/GuiButtonRecipe.java
 +++ after/net/minecraft/client/gui/recipebook/GuiButtonRecipe.java
 @@ -110,7 +110,7 @@
-             if (this.field_191774_p.func_194211_e() && this.func_193927_f().size() > 1)
+             if (this.list.hasSingleResultItem() && this.getOrderedRecipes().size() > 1)
              {
-                 p_191745_1_.func_175599_af().func_180450_b(itemstack, this.field_146128_h + k + 1, this.field_146129_i + k + 1);
+                 mc.getRenderItem().renderItemAndEffectIntoGUI(itemstack, this.x + k + 1, this.y + k + 1);
 -                k--;
 +                --k;
              }
  
-             p_191745_1_.func_175599_af().func_180450_b(itemstack, this.field_146128_h + k, this.field_146129_i + k);
+             mc.getRenderItem().renderItemAndEffectIntoGUI(itemstack, this.x + k, this.y + k);

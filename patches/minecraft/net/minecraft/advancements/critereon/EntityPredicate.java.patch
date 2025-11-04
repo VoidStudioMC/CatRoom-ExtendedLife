@@ -4,14 +4,14 @@
          {
              return false;
          }
-+        else if (!this.field_193436_e.func_193469_a(p_192482_2_))
++        else if (!this.effects.test(entity))
 +        {
 +            return false;
 +        }
          else
          {
--            return !this.field_193436_e.func_193469_a(p_192482_2_) ? false : this.field_193437_f.func_193475_a(p_192482_2_);
-+            return this.field_193437_f.func_193475_a(p_192482_2_);
+-            return !this.effects.test(entity) ? false : this.nbt.test(entity);
++            return this.nbt.test(entity);
          }
      }
  

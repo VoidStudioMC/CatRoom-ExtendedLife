@@ -2,7 +2,7 @@
 +++ after/net/minecraft/client/renderer/entity/RenderLiving.java
 @@ -117,7 +117,7 @@
              double d16 = 0.025;
-             bufferbuilder.func_181668_a(5, DefaultVertexFormats.field_181706_f);
+             bufferbuilder.begin(5, DefaultVertexFormats.POSITION_COLOR);
  
 -            for (int j = 0; j <= 24; j++)
 +            for (int j = 0; j <= 24; ++j)
@@ -10,8 +10,8 @@
                  float f = 0.5F;
                  float f1 = 0.4F;
 @@ -150,7 +150,7 @@
-             tessellator.func_78381_a();
-             bufferbuilder.func_181668_a(5, DefaultVertexFormats.field_181706_f);
+             tessellator.draw();
+             bufferbuilder.begin(5, DefaultVertexFormats.POSITION_COLOR);
  
 -            for (int k = 0; k <= 24; k++)
 +            for (int k = 0; k <= 24; ++k)

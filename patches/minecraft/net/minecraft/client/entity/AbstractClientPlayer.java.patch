@@ -9,50 +9,50 @@
  import net.minecraft.client.Minecraft;
  import net.minecraft.client.network.NetworkPlayerInfo;
 @@ -33,14 +34,12 @@
-         super(p_i45074_1_, p_i45074_2_);
+         super(worldIn, playerProfile);
      }
  
 -    @Override
-     public boolean func_175149_v()
+     public boolean isSpectator()
      {
-         NetworkPlayerInfo networkplayerinfo = Minecraft.func_71410_x().func_147114_u().func_175102_a(this.func_146103_bH().getId());
-         return networkplayerinfo != null && networkplayerinfo.func_178848_b() == GameType.SPECTATOR;
+         NetworkPlayerInfo networkplayerinfo = Minecraft.getMinecraft().getConnection().getPlayerInfo(this.getGameProfile().getId());
+         return networkplayerinfo != null && networkplayerinfo.getGameType() == GameType.SPECTATOR;
      }
  
 -    @Override
-     public boolean func_184812_l_()
+     public boolean isCreative()
      {
-         NetworkPlayerInfo networkplayerinfo = Minecraft.func_71410_x().func_147114_u().func_175102_a(this.func_146103_bH().getId());
+         NetworkPlayerInfo networkplayerinfo = Minecraft.getMinecraft().getConnection().getPlayerInfo(this.getGameProfile().getId());
 @@ -101,12 +100,7 @@
  
          if (itextureobject == null)
          {
 -            itextureobject = new ThreadDownloadImageData(
 -                null,
--                String.format("http://skins.minecraft.net/MinecraftSkins/%s.png", StringUtils.func_76338_a(p_110304_1_)),
--                DefaultPlayerSkin.func_177334_a(func_175147_b(p_110304_1_)),
+-                String.format("http://skins.minecraft.net/MinecraftSkins/%s.png", StringUtils.stripControlCodes(username)),
+-                DefaultPlayerSkin.getDefaultSkin(getOfflineUUID(username)),
 -                new ImageBufferDownload()
 -            );
-+            itextureobject = new ThreadDownloadImageData((File)null, String.format("http://skins.minecraft.net/MinecraftSkins/%s.png", StringUtils.func_76338_a(p_110304_1_)), DefaultPlayerSkin.func_177334_a(func_175147_b(p_110304_1_)), new ImageBufferDownload());
-             texturemanager.func_110579_a(p_110304_0_, itextureobject);
++            itextureobject = new ThreadDownloadImageData((File)null, String.format("http://skins.minecraft.net/MinecraftSkins/%s.png", StringUtils.stripControlCodes(username)), DefaultPlayerSkin.getDefaultSkin(getOfflineUUID(username)), new ImageBufferDownload());
+             texturemanager.loadTexture(resourceLocationIn, itextureobject);
          }
  
 @@ -134,14 +128,14 @@
          }
  
-         IAttributeInstance iattributeinstance = this.func_110148_a(SharedMonsterAttributes.field_111263_d);
--        f = (float)((double)f * ((iattributeinstance.func_111126_e() / (double)this.field_71075_bZ.func_75094_b() + 1.0) / 2.0));
-+        f = (float)((double)f * ((iattributeinstance.func_111126_e() / (double)this.field_71075_bZ.func_75094_b() + 1.0D) / 2.0D));
+         IAttributeInstance iattributeinstance = this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+-        f = (float)((double)f * ((iattributeinstance.getAttributeValue() / (double)this.capabilities.getWalkSpeed() + 1.0) / 2.0));
++        f = (float)((double)f * ((iattributeinstance.getAttributeValue() / (double)this.capabilities.getWalkSpeed() + 1.0D) / 2.0D));
  
-         if (this.field_71075_bZ.func_75094_b() == 0.0F || Float.isNaN(f) || Float.isInfinite(f))
+         if (this.capabilities.getWalkSpeed() == 0.0F || Float.isNaN(f) || Float.isInfinite(f))
          {
              f = 1.0F;
          }
  
--        if (this.func_184587_cr() && this.func_184607_cu().func_77973_b() == Items.field_151031_f)
-+        if (this.func_184587_cr() && this.func_184607_cu().func_77973_b() instanceof net.minecraft.item.ItemBow)
+-        if (this.isHandActive() && this.getActiveItemStack().getItem() == Items.BOW)
++        if (this.isHandActive() && this.getActiveItemStack().getItem() instanceof net.minecraft.item.ItemBow)
          {
-             int i = this.func_184612_cw();
+             int i = this.getItemInUseMaxCount();
              float f1 = (float)i / 20.0F;
 @@ -152,12 +146,12 @@
              }

@@ -1,23 +1,23 @@
 --- before/net/minecraft/client/model/ModelLlama.java
 +++ after/net/minecraft/client/model/ModelLlama.java
 @@ -48,14 +48,14 @@
-         this.field_78144_f = new ModelRenderer(this, 29, 29);
-         this.field_78144_f.func_78790_a(-2.0F, 0.0F, -2.0F, 4, 14, 4, p_i47226_1_);
-         this.field_78144_f.func_78793_a(2.5F, 10.0F, -4.0F);
--        this.field_78149_c.field_78800_c--;
--        this.field_78146_d.field_78800_c++;
-+        --this.field_78149_c.field_78800_c;
-+        ++this.field_78146_d.field_78800_c;
-         this.field_78149_c.field_78798_e += 0.0F;
-         this.field_78146_d.field_78798_e += 0.0F;
--        this.field_78147_e.field_78800_c--;
--        this.field_78144_f.field_78800_c++;
--        this.field_78147_e.field_78798_e--;
--        this.field_78144_f.field_78798_e--;
-+        --this.field_78147_e.field_78800_c;
-+        ++this.field_78144_f.field_78800_c;
-+        --this.field_78147_e.field_78798_e;
-+        --this.field_78144_f.field_78798_e;
-         this.field_78151_h += 2.0F;
+         this.leg4 = new ModelRenderer(this, 29, 29);
+         this.leg4.addBox(-2.0F, 0.0F, -2.0F, 4, 14, 4, p_i47226_1_);
+         this.leg4.setRotationPoint(2.5F, 10.0F, -4.0F);
+-        this.leg1.rotationPointX--;
+-        this.leg2.rotationPointX++;
++        --this.leg1.rotationPointX;
++        ++this.leg2.rotationPointX;
+         this.leg1.rotationPointZ += 0.0F;
+         this.leg2.rotationPointZ += 0.0F;
+-        this.leg3.rotationPointX--;
+-        this.leg4.rotationPointX++;
+-        this.leg3.rotationPointZ--;
+-        this.leg4.rotationPointZ--;
++        --this.leg3.rotationPointX;
++        ++this.leg4.rotationPointX;
++        --this.leg3.rotationPointZ;
++        --this.leg4.rotationPointZ;
+         this.childZOffset += 2.0F;
      }
  

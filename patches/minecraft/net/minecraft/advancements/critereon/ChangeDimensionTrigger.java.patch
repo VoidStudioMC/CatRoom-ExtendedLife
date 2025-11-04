@@ -2,16 +2,16 @@
 +++ after/net/minecraft/advancements/critereon/ChangeDimensionTrigger.java
 @@ -96,7 +96,14 @@
  
-             public boolean func_193190_a(DimensionType p_193190_1_, DimensionType p_193190_2_)
+             public boolean test(DimensionType from, DimensionType to)
              {
--                return this.field_193191_a != null && this.field_193191_a != p_193190_1_ ? false : this.field_193192_b == null || this.field_193192_b == p_193190_2_;
-+                if (this.field_193191_a != null && this.field_193191_a != p_193190_1_)
+-                return this.from != null && this.from != from ? false : this.to == null || this.to == to;
++                if (this.from != null && this.from != from)
 +                {
 +                    return false;
 +                }
 +                else
 +                {
-+                    return this.field_193192_b == null || this.field_193192_b == p_193190_2_;
++                    return this.to == null || this.to == to;
 +                }
              }
          }

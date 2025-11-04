@@ -2,35 +2,35 @@
 +++ after/net/minecraft/util/JsonUtils.java
 @@ -55,7 +55,14 @@
  
-     public static boolean func_151204_g(JsonObject p_151204_0_, String p_151204_1_)
+     public static boolean hasField(JsonObject json, String memberName)
      {
--        return p_151204_0_ == null ? false : p_151204_0_.get(p_151204_1_) != null;
-+        if (p_151204_0_ == null)
+-        return json == null ? false : json.get(memberName) != null;
++        if (json == null)
 +        {
 +            return false;
 +        }
 +        else
 +        {
-+            return p_151204_0_.get(p_151204_1_) != null;
++            return json.get(memberName) != null;
 +        }
      }
  
-     public static String func_151206_a(JsonElement p_151206_0_, String p_151206_1_)
+     public static String getString(JsonElement json, String memberName)
 @@ -296,7 +303,7 @@
-             JsonObject p_188177_0_, String p_188177_1_, T p_188177_2_, JsonDeserializationContext p_188177_3_, Class <? extends T > p_188177_4_
+             JsonObject json, String memberName, T fallback, JsonDeserializationContext context, Class <? extends T > adapter
          )
      {
--        return p_188177_0_.has(p_188177_1_) ? func_188179_a(p_188177_0_.get(p_188177_1_), p_188177_1_, p_188177_3_, p_188177_4_) : p_188177_2_;
-+        return (T)(p_188177_0_.has(p_188177_1_) ? func_188179_a(p_188177_0_.get(p_188177_1_), p_188177_1_, p_188177_3_, p_188177_4_) : p_188177_2_);
+-        return json.has(memberName) ? deserializeClass(json.get(memberName), memberName, context, adapter) : fallback;
++        return (T)(json.has(memberName) ? deserializeClass(json.get(memberName), memberName, context, adapter) : fallback);
      }
  
-     public static String func_151222_d(JsonElement p_151222_0_)
+     public static String toString(JsonElement json)
 @@ -362,7 +369,7 @@
          {
              JsonReader jsonreader = new JsonReader(p_193838_1_);
              jsonreader.setLenient(p_193838_3_);
--            return (T)p_193838_0_.getAdapter(TypeToken.get(p_193838_2_)).read(jsonreader);
-+            return (T) p_193838_0_.getAdapter(TypeToken.get(p_193838_2_)).read(jsonreader);
+-            return (T)gson.getAdapter(TypeToken.get(p_193838_2_)).read(jsonreader);
++            return (T) gson.getAdapter(TypeToken.get(p_193838_2_)).read(jsonreader);
          }
          catch (IOException ioexception)
          {

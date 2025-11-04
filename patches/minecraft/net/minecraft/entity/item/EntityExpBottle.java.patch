@@ -2,17 +2,17 @@
 +++ after/net/minecraft/entity/item/EntityExpBottle.java
 @@ -42,8 +42,15 @@
      {
-         if (!this.field_70170_p.field_72995_K)
+         if (!this.world.isRemote)
          {
--            this.field_70170_p.func_175718_b(2002, new BlockPos(this), PotionUtils.func_185183_a(PotionTypes.field_185230_b));
+-            this.world.playEvent(2002, new BlockPos(this), PotionUtils.getPotionColor(PotionTypes.WATER));
 +            // CraftBukkit - moved to after event
 +            // this.world.playEvent(2002, new BlockPos(this), PotionUtils.getPotionColor(PotionTypes.WATER));
-             int i = 3 + this.field_70170_p.field_73012_v.nextInt(5) + this.field_70170_p.field_73012_v.nextInt(5);
+             int i = 3 + this.world.rand.nextInt(5) + this.world.rand.nextInt(5);
 +
 +            org.bukkit.event.entity.ExpBottleEvent event = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callExpBottleEvent(this, i);
 +            i = event.getExperience();
 +            if (event.getShowEffect()) {
-+                this.field_70170_p.func_175718_b(2002, new BlockPos(this), PotionUtils.func_185183_a(PotionTypes.field_185230_b));
++                this.world.playEvent(2002, new BlockPos(this), PotionUtils.getPotionColor(PotionTypes.WATER));
 +            }
  
              while (i > 0)

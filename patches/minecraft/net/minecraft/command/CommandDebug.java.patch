@@ -10,17 +10,17 @@
  import org.apache.logging.log4j.Logger;
 @@ -44,6 +45,14 @@
      @Override
-     public void func_184881_a(MinecraftServer p_184881_1_, ICommandSender p_184881_2_, String[] p_184881_3_) throws CommandException
+     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
      {
 +        // CraftBukkit start - only allow use when enabled (so that no blank profile results occur)
-+        if (!p_184881_1_.field_71304_b.ENABLED) {
-+            p_184881_2_.func_145747_a(new TextComponentString("Vanilla debug profiling is disabled."));
-+            p_184881_2_.func_145747_a(new TextComponentString("To enable, restart the server with `-DenableDebugMethodProfiler=true' before `-jar'."));
-+            p_184881_2_.func_145747_a(new TextComponentString("Use `/timings' for plugin timings."));
++        if (!server.profiler.ENABLED) {
++            sender.sendMessage(new TextComponentString("Vanilla debug profiling is disabled."));
++            sender.sendMessage(new TextComponentString("To enable, restart the server with `-DenableDebugMethodProfiler=true' before `-jar'."));
++            sender.sendMessage(new TextComponentString("Use `/timings' for plugin timings."));
 +            return;
 +        }
 +        // CraftBukkit end
-         if (p_184881_3_.length < 1)
+         if (args.length < 1)
          {
              throw new WrongUsageException("commands.debug.usage");
 @@ -137,12 +146,12 @@
@@ -31,10 +31,10 @@
 +            for (int i = 1; i < list.size(); ++i)
              {
                  Profiler.Result profiler$result = list.get(i);
-                 p_184895_3_.append(String.format("[%02d] ", p_184895_1_));
+                 builder.append(String.format("[%02d] ", depth));
  
--                for (int j = 0; j < p_184895_1_; j++)
-+                for (int j = 0; j < p_184895_1_; ++j)
+-                for (int j = 0; j < depth; j++)
++                for (int j = 0; j < depth; ++j)
                  {
-                     p_184895_3_.append("|   ");
+                     builder.append("|   ");
                  }

@@ -2,14 +2,14 @@
 +++ after/net/minecraft/advancements/critereon/InventoryChangeTrigger.java
 @@ -107,21 +107,21 @@
                  int k = 0;
-                 List<ItemPredicate> list = Lists.newArrayList(this.field_192269_d);
+                 List<ItemPredicate> list = Lists.newArrayList(this.items);
  
--                for (int l = 0; l < p_192265_1_.func_70302_i_(); l++)
-+                for (int l = 0; l < p_192265_1_.func_70302_i_(); ++l)
+-                for (int l = 0; l < inventory.getSizeInventory(); l++)
++                for (int l = 0; l < inventory.getSizeInventory(); ++l)
                  {
-                     ItemStack itemstack = p_192265_1_.func_70301_a(l);
+                     ItemStack itemstack = inventory.getStackInSlot(l);
  
-                     if (itemstack.func_190926_b())
+                     if (itemstack.isEmpty())
                      {
 -                        j++;
 +                        ++j;
@@ -19,7 +19,7 @@
 -                        k++;
 +                        ++k;
  
-                         if (itemstack.func_190916_E() >= itemstack.func_77976_d())
+                         if (itemstack.getCount() >= itemstack.getMaxStackSize())
                          {
 -                            i++;
 +                            ++i;
@@ -30,13 +30,13 @@
                  {
                      return false;
                  }
-+                else if (!this.field_192266_a.func_192514_a((float)k))
++                else if (!this.occupied.test((float)k))
 +                {
 +                    return false;
 +                }
                  else
                  {
--                    return !this.field_192266_a.func_192514_a((float)k) ? false : list.isEmpty();
+-                    return !this.occupied.test((float)k) ? false : list.isEmpty();
 +                    return list.isEmpty();
                  }
              }

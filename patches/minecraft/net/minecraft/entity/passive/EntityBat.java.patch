@@ -9,15 +9,15 @@
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.network.datasync.DataParameter;
 @@ -179,9 +180,9 @@
-             double d0 = (double)this.field_82237_a.func_177958_n() + 0.5 - this.field_70165_t;
-             double d1 = (double)this.field_82237_a.func_177956_o() + 0.1 - this.field_70163_u;
-             double d2 = (double)this.field_82237_a.func_177952_p() + 0.5 - this.field_70161_v;
--            this.field_70159_w = this.field_70159_w + (Math.signum(d0) * 0.5 - this.field_70159_w) * 0.1F;
--            this.field_70181_x = this.field_70181_x + (Math.signum(d1) * 0.7F - this.field_70181_x) * 0.1F;
--            this.field_70179_y = this.field_70179_y + (Math.signum(d2) * 0.5 - this.field_70179_y) * 0.1F;
-+            this.field_70159_w += (Math.signum(d0) * 0.5 - this.field_70159_w) * 0.1F;
-+            this.field_70181_x += (Math.signum(d1) * 0.7F - this.field_70181_x) * 0.1F;
-+            this.field_70179_y += (Math.signum(d2) * 0.5 - this.field_70179_y) * 0.1F;
-             float f = (float)(MathHelper.func_181159_b(this.field_70179_y, this.field_70159_w) * 180.0F / (float)Math.PI) - 90.0F;
-             float f1 = MathHelper.func_76142_g(f - this.field_70177_z);
-             this.field_191988_bg = 0.5F;
+             double d0 = (double)this.spawnPosition.getX() + 0.5 - this.posX;
+             double d1 = (double)this.spawnPosition.getY() + 0.1 - this.posY;
+             double d2 = (double)this.spawnPosition.getZ() + 0.5 - this.posZ;
+-            this.motionX = this.motionX + (Math.signum(d0) * 0.5 - this.motionX) * 0.1F;
+-            this.motionY = this.motionY + (Math.signum(d1) * 0.7F - this.motionY) * 0.1F;
+-            this.motionZ = this.motionZ + (Math.signum(d2) * 0.5 - this.motionZ) * 0.1F;
++            this.motionX += (Math.signum(d0) * 0.5 - this.motionX) * 0.1F;
++            this.motionY += (Math.signum(d1) * 0.7F - this.motionY) * 0.1F;
++            this.motionZ += (Math.signum(d2) * 0.5 - this.motionZ) * 0.1F;
+             float f = (float)(MathHelper.atan2(this.motionZ, this.motionX) * 180.0F / (float)Math.PI) - 90.0F;
+             float f1 = MathHelper.wrapDegrees(f - this.rotationYaw);
+             this.moveForward = 0.5F;

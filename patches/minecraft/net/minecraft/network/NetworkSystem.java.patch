@@ -10,63 +10,63 @@
  import org.apache.logging.log4j.LogManager;
 @@ -49,27 +50,36 @@
      {
-         protected NioEventLoopGroup func_179280_b()
+         protected NioEventLoopGroup load()
          {
 -            return new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("Netty Server IO #%d").setDaemon(true).build());
 +            return new NioEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Server IO #%d").setDaemon(true).setThreadFactory(SidedThreadGroups.SERVER).build());
          }
      };
-     public static final LazyLoadBase<EpollEventLoopGroup> field_181141_b = new LazyLoadBase<EpollEventLoopGroup>()
+     public static final LazyLoadBase<EpollEventLoopGroup> SERVER_EPOLL_EVENTLOOP = new LazyLoadBase<EpollEventLoopGroup>()
      {
-         protected EpollEventLoopGroup func_179280_b()
+         protected EpollEventLoopGroup load()
          {
 -            return new EpollEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("Netty Epoll Server IO #%d").setDaemon(true).build());
 +            return new EpollEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Epoll Server IO #%d").setDaemon(true).setThreadFactory(SidedThreadGroups.SERVER).build());
          }
      };
-     public static final LazyLoadBase<LocalEventLoopGroup> field_180232_b = new LazyLoadBase<LocalEventLoopGroup>()
+     public static final LazyLoadBase<LocalEventLoopGroup> SERVER_LOCAL_EVENTLOOP = new LazyLoadBase<LocalEventLoopGroup>()
      {
-         protected LocalEventLoopGroup func_179280_b()
+         protected LocalEventLoopGroup load()
          {
 -            return new LocalEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("Netty Local Server IO #%d").setDaemon(true).build());
 +            return new LocalEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Local Server IO #%d").setDaemon(true).setThreadFactory(SidedThreadGroups.SERVER).build());
          }
      };
-     private final MinecraftServer field_151273_d;
-     public volatile boolean field_151277_a;
-     private final List<ChannelFuture> field_151274_e = Collections.synchronizedList(Lists.newArrayList());
-     private final List<NetworkManager> field_151272_f = Collections.synchronizedList(Lists.newArrayList());
+     private final MinecraftServer server;
+     public volatile boolean isAlive;
+     private final List<ChannelFuture> endpoints = Collections.synchronizedList(Lists.newArrayList());
+     private final List<NetworkManager> networkManagers = Collections.synchronizedList(Lists.newArrayList());
 +    // Paper start - prevent blocking on adding a new network manager while the server is ticking
 +     private final List<NetworkManager> pending = Collections.synchronizedList(Lists.newArrayList());
 +     private void addPending() {
 +         synchronized (pending) {
-+             this.field_151272_f.addAll(pending);
++             this.networkManagers.addAll(pending);
 +             this.pending.clear();
 +         }
 +     }
 +     // Paper end
  
-     public NetworkSystem(MinecraftServer p_i45292_1_)
+     public NetworkSystem(MinecraftServer server)
      {
 @@ -79,6 +89,7 @@
  
-     public void func_151265_a(InetAddress p_151265_1_, int p_151265_2_) throws IOException
+     public void addEndpoint(InetAddress address, int port) throws IOException
      {
-+        if (p_151265_1_ instanceof java.net.Inet6Address) System.setProperty("java.net.preferIPv4Stack", "false");
-         synchronized (this.field_151274_e)
++        if (address instanceof java.net.Inet6Address) System.setProperty("java.net.preferIPv4Stack", "false");
+         synchronized (this.endpoints)
          {
              Class <? extends ServerSocketChannel > oclass;
 @@ -97,43 +108,27 @@
-                 field_151275_b.info("Using default channel type");
+                 LOGGER.info("Using default channel type");
              }
  
--            this.field_151274_e
+-            this.endpoints
 -            .add(
 -                new ServerBootstrap()
 -                .channel(oclass)
 -                .childHandler(
 -                    new ChannelInitializer<Channel>()
-+            this.field_151274_e.add((((new ServerBootstrap()).channel(oclass)).childHandler(new ChannelInitializer<Channel>()
++            this.endpoints.add((((new ServerBootstrap()).channel(oclass)).childHandler(new ChannelInitializer<Channel>()
              {
 -                @Override
                  protected void initChannel(Channel p_initChannel_1_) throws Exception
@@ -91,30 +91,30 @@
 -                    .addLast("encoder", new NettyPacketEncoder(EnumPacketDirection.CLIENTBOUND));
 +                    p_initChannel_1_.pipeline().addLast("timeout", new ReadTimeoutHandler(net.minecraftforge.fml.common.network.internal.FMLNetworkHandler.READ_TIMEOUT)).addLast("legacy_query", new LegacyPingHandler(NetworkSystem.this)).addLast("splitter", new NettyVarint21FrameDecoder()).addLast("decoder", new NettyPacketDecoder(EnumPacketDirection.SERVERBOUND)).addLast("prepender", new NettyVarint21FrameEncoder()).addLast("encoder", new NettyPacketEncoder(EnumPacketDirection.CLIENTBOUND));
                      NetworkManager networkmanager = new NetworkManager(EnumPacketDirection.SERVERBOUND);
--                    NetworkSystem.this.field_151272_f.add(networkmanager);
+-                    NetworkSystem.this.networkManagers.add(networkmanager);
 +//                    NetworkSystem.this.networkManagers.add(networkmanager); CREF: from https://github.com/NovaEngineering-Source/CatRoom/commit/8b0eddcf29f189fbab096554f7b7fcb7d8ed1d28
 +                    NetworkSystem.this.pending.add(networkmanager);
                      p_initChannel_1_.pipeline().addLast("packet_handler", networkmanager);
-                     networkmanager.func_150719_a(new NetHandlerHandshakeTCP(NetworkSystem.this.field_151273_d, networkmanager));
+                     networkmanager.setNetHandler(new NetHandlerHandshakeTCP(NetworkSystem.this.server, networkmanager));
                  }
 -            }
 -                )
--                .group(lazyloadbase.func_179281_c())
--                .localAddress(p_151265_1_, p_151265_2_)
+-                .group(lazyloadbase.getValue())
+-                .localAddress(address, port)
 -                .bind()
 -                .syncUninterruptibly()
 -            );
-+            }).group(lazyloadbase.func_179281_c()).localAddress(p_151265_1_, p_151265_2_)).bind().syncUninterruptibly());
++            }).group(lazyloadbase.getValue()).localAddress(address, port)).bind().syncUninterruptibly());
          }
      }
  
 @@ -154,7 +149,7 @@
-                     NetworkSystem.this.field_151272_f.add(networkmanager);
+                     NetworkSystem.this.networkManagers.add(networkmanager);
                      p_initChannel_1_.pipeline().addLast("packet_handler", networkmanager);
                  }
--            }).group(field_151276_c.func_179281_c()).localAddress(LocalAddress.ANY).bind().syncUninterruptibly();
-+            }).group(field_180232_b.func_179281_c()).localAddress(LocalAddress.ANY).bind().syncUninterruptibly();
-             this.field_151274_e.add(channelfuture);
+-            }).group(SERVER_NIO_EVENTLOOP.getValue()).localAddress(LocalAddress.ANY).bind().syncUninterruptibly();
++            }).group(SERVER_LOCAL_EVENTLOOP.getValue()).localAddress(LocalAddress.ANY).bind().syncUninterruptibly();
+             this.endpoints.add(channelfuture);
          }
  
 @@ -171,7 +166,7 @@
@@ -124,21 +124,21 @@
 -            catch (InterruptedException interruptedexception)
 +            catch (InterruptedException var4)
              {
-                 field_151275_b.error("Interrupted whilst closing channel");
+                 LOGGER.error("Interrupted whilst closing channel");
              }
 @@ -182,6 +177,14 @@
      {
-         synchronized (this.field_151272_f)
+         synchronized (this.networkManagers)
          {
 +            // Spigot Start
 +            this.addPending(); // Paper
 +            // This prevents players from 'gaming' the server, and strategically relogging to increase their position in the tick order
 +            if (org.spigotmc.SpigotConfig.playerShuffle > 0 && MinecraftServer.currentTick % org.spigotmc.SpigotConfig.playerShuffle == 0)
 +            {
-+                Collections.shuffle(this.field_151272_f);
++                Collections.shuffle(this.networkManagers);
 +            }
 +            // Spigot End
-             Iterator<NetworkManager> iterator = this.field_151272_f.iterator();
+             Iterator<NetworkManager> iterator = this.networkManagers.iterator();
  
              while (iterator.hasNext())
 @@ -227,6 +230,9 @@
@@ -149,5 +149,5 @@
 +                        if (networkmanager.preparing) continue;
 +                        // Spigot End
                          iterator.remove();
-                         networkmanager.func_179293_l();
+                         networkmanager.handleDisconnection();
                      }

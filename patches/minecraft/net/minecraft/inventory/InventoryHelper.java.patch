@@ -2,10 +2,10 @@
 +++ after/net/minecraft/inventory/InventoryHelper.java
 @@ -23,7 +23,7 @@
  
-     private static void func_180174_a(World p_180174_0_, double p_180174_1_, double p_180174_3_, double p_180174_5_, IInventory p_180174_7_)
+     private static void dropInventoryItems(World worldIn, double x, double y, double z, IInventory inventory)
      {
--        for (int i = 0; i < p_180174_7_.func_70302_i_(); i++)
-+        for (int i = 0; i < p_180174_7_.func_70302_i_(); ++i)
+-        for (int i = 0; i < inventory.getSizeInventory(); i++)
++        for (int i = 0; i < inventory.getSizeInventory(); ++i)
          {
-             ItemStack itemstack = p_180174_7_.func_70301_a(i);
+             ItemStack itemstack = inventory.getStackInSlot(i);
  

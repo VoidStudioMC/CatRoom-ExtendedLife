@@ -2,10 +2,10 @@
 +++ after/net/minecraft/command/CommandEnchant.java
 @@ -80,7 +80,7 @@
                      {
-                         NBTTagList nbttaglist = itemstack.func_77986_q();
+                         NBTTagList nbttaglist = itemstack.getEnchantmentTagList();
  
--                        for (int j = 0; j < nbttaglist.func_74745_c(); j++)
-+                        for (int j = 0; j < nbttaglist.func_74745_c(); ++j)
+-                        for (int j = 0; j < nbttaglist.tagCount(); j++)
++                        for (int j = 0; j < nbttaglist.tagCount(); ++j)
                          {
-                             int k = nbttaglist.func_150305_b(j).func_74765_d("id");
+                             int k = nbttaglist.getCompoundTagAt(j).getShort("id");
  

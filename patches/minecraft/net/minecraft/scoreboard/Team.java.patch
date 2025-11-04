@@ -2,17 +2,17 @@
 +++ after/net/minecraft/scoreboard/Team.java
 @@ -12,7 +12,14 @@
  {
-     public boolean func_142054_a(@Nullable Team p_142054_1_)
+     public boolean isSameTeam(@Nullable Team other)
      {
--        return p_142054_1_ == null ? false : this == p_142054_1_;
-+        if (p_142054_1_ == null)
+-        return other == null ? false : this == other;
++        if (other == null)
 +        {
 +            return false;
 +        }
 +        else
 +        {
-+            return this == p_142054_1_;
++            return this == other;
 +        }
      }
  
-     public abstract String func_96661_b();
+     public abstract String getName();

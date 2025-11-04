@@ -30,69 +30,69 @@
  {
 @@ -126,7 +134,7 @@
              {
-                 this.func_190545_n();
+                 this.applyWater();
              }
 -            else if (!list.isEmpty())
 +            else if (true || !list.isEmpty()) // CraftBukkit - Call event even if no effects to apply
              {
-                 if (this.func_184544_n())
+                 if (this.isLingering())
                  {
 @@ -163,47 +171,55 @@
          }
      }
  
--    private void func_190543_a(RayTraceResult p_190543_1_, List<PotionEffect> p_190543_2_)
+-    private void applySplash(RayTraceResult p_190543_1_, List<PotionEffect> p_190543_2_)
 -    {
--        AxisAlignedBB axisalignedbb = this.func_174813_aQ().func_72314_b(4.0, 2.0, 4.0);
--        List<EntityLivingBase> list = this.field_70170_p.func_72872_a(EntityLivingBase.class, axisalignedbb);
+-        AxisAlignedBB axisalignedbb = this.getEntityBoundingBox().grow(4.0, 2.0, 4.0);
+-        List<EntityLivingBase> list = this.world.getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
 -
 -        if (!list.isEmpty())
 -        {
 -            for (EntityLivingBase entitylivingbase : list)
 -            {
--                if (entitylivingbase.func_184603_cC())
+-                if (entitylivingbase.canBeHitWithPotion())
 -                {
-+    private void func_190543_a(RayTraceResult p_190543_1_, List<PotionEffect> p_190543_2_) {
-+        AxisAlignedBB axisalignedbb = this.func_174813_aQ().func_72314_b(4.0D, 2.0D, 4.0D);
-+        List<EntityLivingBase> list = this.field_70170_p.<EntityLivingBase>func_72872_a(EntityLivingBase.class, axisalignedbb);
++    private void applySplash(RayTraceResult p_190543_1_, List<PotionEffect> p_190543_2_) {
++        AxisAlignedBB axisalignedbb = this.getEntityBoundingBox().grow(4.0D, 2.0D, 4.0D);
++        List<EntityLivingBase> list = this.world.<EntityLivingBase>getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
 +        Map<LivingEntity, Double> affected = new HashMap<LivingEntity, Double>();
 +        if (!list.isEmpty()) {
 +            for (EntityLivingBase entitylivingbase : list) {
-+                if (entitylivingbase.func_184603_cC()) {
-                     double d0 = this.func_70068_e(entitylivingbase);
++                if (entitylivingbase.canBeHitWithPotion()) {
+                     double d0 = this.getDistanceSq(entitylivingbase);
  
 -                    if (d0 < 16.0)
 -                    {
 -                        double d1 = 1.0 - Math.sqrt(d0) / 4.0;
 -
--                        if (entitylivingbase == p_190543_1_.field_72308_g)
+-                        if (entitylivingbase == p_190543_1_.entityHit)
 -                        {
 -                            d1 = 1.0;
 -                        }
 -
 -                        for (PotionEffect potioneffect : p_190543_2_)
 -                        {
--                            Potion potion = potioneffect.func_188419_a();
+-                            Potion potion = potioneffect.getPotion();
 -
--                            if (potion.func_76403_b())
+-                            if (potion.isInstant())
 -                            {
--                                potion.func_180793_a(this, this.func_85052_h(), entitylivingbase, potioneffect.func_76458_c(), d1);
+-                                potion.affectEntity(this, this.getThrower(), entitylivingbase, potioneffect.getAmplifier(), d1);
 -                            }
 -                            else
 -                            {
--                                int i = (int)(d1 * (double)potioneffect.func_76459_b() + 0.5);
+-                                int i = (int)(d1 * (double)potioneffect.getDuration() + 0.5);
 -
 -                                if (i > 20)
 -                                {
--                                    entitylivingbase.func_70690_d(
--                                        new PotionEffect(potion, i, potioneffect.func_76458_c(), potioneffect.func_82720_e(), potioneffect.func_188418_e())
+-                                    entitylivingbase.addPotionEffect(
+-                                        new PotionEffect(potion, i, potioneffect.getAmplifier(), potioneffect.getIsAmbient(), potioneffect.doesShowParticles())
 -                                    );
 -                                }
 -                            }
 +                    if (d0 < 16.0D) {
 +                        double d1 = 1.0D - Math.sqrt(d0) / 4.0D;
 +
-+                        if (entitylivingbase == p_190543_1_.field_72308_g) {
++                        if (entitylivingbase == p_190543_1_.entityHit) {
 +                            d1 = 1.0D;
 +                        }
 +                        affected.put((LivingEntity) entitylivingbase.getBukkitEntity(), d1);
@@ -111,10 +111,10 @@
 +                // CraftBukkit end
 +
 +                for (PotionEffect mobeffect : p_190543_2_) {
-+                    Potion mobeffectlist = mobeffect.func_188419_a();
++                    Potion mobeffectlist = mobeffect.getPotion();
 +                    // CraftBukkit start - Abide by PVP settings - for players only!
-+                    if (!this.field_70170_p.pvpMode && this.func_85052_h() instanceof EntityPlayer && entityliving instanceof EntityPlayer && entityliving != this.func_85052_h()) {
-+                        int i = Potion.func_188409_a(mobeffectlist);
++                    if (!this.world.pvpMode && this.getThrower() instanceof EntityPlayer && entityliving instanceof EntityPlayer && entityliving != this.getThrower()) {
++                        int i = Potion.getIdFromPotion(mobeffectlist);
 +                        // Block SLOWER_MOVEMENT, SLOWER_DIG, HARM, BLINDNESS, HUNGER, WEAKNESS and POISON potions
 +                        if (i == 2 || i == 4 || i == 7 || i == 15 || i == 17 || i == 18 || i == 19) {
 +                            continue;
@@ -122,32 +122,32 @@
 +                    }
 +                    // CraftBukkit end
 +
-+                    if (mobeffectlist.func_76403_b()) {
-+                        mobeffectlist.func_180793_a(this, this.func_85052_h(), entityliving, mobeffect.func_76458_c(), d1);
++                    if (mobeffectlist.isInstant()) {
++                        mobeffectlist.affectEntity(this, this.getThrower(), entityliving, mobeffect.getAmplifier(), d1);
 +                    } else {
-+                        int i = (int) (d1 * (double) mobeffect.func_76459_b() + 0.5D);
++                        int i = (int) (d1 * (double) mobeffect.getDuration() + 0.5D);
 +
 +                        if (i > 20) {
-+                            entityliving.func_70690_d(new PotionEffect(mobeffectlist, i, mobeffect.func_76458_c(), mobeffect.func_82720_e(), mobeffect.func_188418_e()));
++                            entityliving.addPotionEffect(new PotionEffect(mobeffectlist, i, mobeffect.getAmplifier(), mobeffect.getIsAmbient(), mobeffect.doesShowParticles()));
                          }
                      }
                  }
 @@ -233,10 +249,16 @@
-             entityareaeffectcloud.func_184482_a(nbttagcompound.func_74762_e("CustomPotionColor"));
+             entityareaeffectcloud.setColor(nbttagcompound.getInteger("CustomPotionColor"));
          }
  
--        this.field_70170_p.func_72838_d(entityareaeffectcloud);
+-        this.world.spawnEntity(entityareaeffectcloud);
 +        // this.world.spawnEntity(entityareaeffectcloud);
 +        org.bukkit.event.entity.LingeringPotionSplashEvent event = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callLingeringPotionSplashEvent(this, entityareaeffectcloud);
-+        if (!(event.isCancelled() || entityareaeffectcloud.field_70128_L)) {
-+            this.field_70170_p.func_72838_d(entityareaeffectcloud);
++        if (!(event.isCancelled() || entityareaeffectcloud.isDead)) {
++            this.world.spawnEntity(entityareaeffectcloud);
 +        } else {
-+            entityareaeffectcloud.field_70128_L = true;
++            entityareaeffectcloud.isDead = true;
 +        }
      }
  
--    private boolean func_184544_n()
-+    public boolean func_184544_n()
+-    private boolean isLingering()
++    public boolean isLingering()
      {
-         return this.func_184543_l().func_77973_b() == Items.field_185156_bI;
+         return this.getPotion().getItem() == Items.LINGERING_POTION;
      }

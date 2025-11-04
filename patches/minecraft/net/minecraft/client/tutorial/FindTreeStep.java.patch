@@ -2,10 +2,10 @@
 +++ after/net/minecraft/client/tutorial/FindTreeStep.java
 @@ -37,7 +37,7 @@
      @Override
-     public void func_193245_a()
+     public void update()
      {
--        this.field_193273_f++;
-+        ++this.field_193273_f;
+-        this.timeWaiting++;
++        ++this.timeWaiting;
  
-         if (this.field_193271_d.func_194072_f() != GameType.SURVIVAL)
+         if (this.tutorial.getGameType() != GameType.SURVIVAL)
          {

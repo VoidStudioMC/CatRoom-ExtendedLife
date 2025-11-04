@@ -2,49 +2,49 @@
 +++ after/net/minecraft/scoreboard/ScoreboardSaveData.java
 @@ -60,7 +60,7 @@
  
-     protected void func_96498_a(NBTTagList p_96498_1_)
+     protected void readTeams(NBTTagList tagList)
      {
--        for (int i = 0; i < p_96498_1_.func_74745_c(); i++)
-+        for (int i = 0; i < p_96498_1_.func_74745_c(); ++i)
+-        for (int i = 0; i < tagList.tagCount(); i++)
++        for (int i = 0; i < tagList.tagCount(); ++i)
          {
-             NBTTagCompound nbttagcompound = p_96498_1_.func_150305_b(i);
-             String s = nbttagcompound.func_74779_i("Name");
+             NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
+             String s = nbttagcompound.getString("Name");
 @@ -134,7 +134,7 @@
  
-     protected void func_96502_a(ScorePlayerTeam p_96502_1_, NBTTagList p_96502_2_)
+     protected void loadTeamPlayers(ScorePlayerTeam playerTeam, NBTTagList tagList)
      {
--        for (int i = 0; i < p_96502_2_.func_74745_c(); i++)
-+        for (int i = 0; i < p_96502_2_.func_74745_c(); ++i)
+-        for (int i = 0; i < tagList.tagCount(); i++)
++        for (int i = 0; i < tagList.tagCount(); ++i)
          {
-             this.field_96507_a.func_151392_a(p_96502_2_.func_150307_f(i), p_96502_1_.func_96661_b());
+             this.scoreboard.addPlayerToTeam(tagList.getStringTagAt(i), playerTeam.getName());
          }
 @@ -142,7 +142,7 @@
  
-     protected void func_96504_c(NBTTagCompound p_96504_1_)
+     protected void readDisplayConfig(NBTTagCompound compound)
      {
 -        for (int i = 0; i < 19; i++)
 +        for (int i = 0; i < 19; ++i)
          {
-             if (p_96504_1_.func_150297_b("slot_" + i, 8))
+             if (compound.hasKey("slot_" + i, 8))
              {
 @@ -155,7 +155,7 @@
  
-     protected void func_96501_b(NBTTagList p_96501_1_)
+     protected void readObjectives(NBTTagList nbt)
      {
--        for (int i = 0; i < p_96501_1_.func_74745_c(); i++)
-+        for (int i = 0; i < p_96501_1_.func_74745_c(); ++i)
+-        for (int i = 0; i < nbt.tagCount(); i++)
++        for (int i = 0; i < nbt.tagCount(); ++i)
          {
-             NBTTagCompound nbttagcompound = p_96501_1_.func_150305_b(i);
-             IScoreCriteria iscorecriteria = IScoreCriteria.field_96643_a.get(nbttagcompound.func_74779_i("CriteriaName"));
+             NBTTagCompound nbttagcompound = nbt.getCompoundTagAt(i);
+             IScoreCriteria iscorecriteria = IScoreCriteria.INSTANCES.get(nbttagcompound.getString("CriteriaName"));
 @@ -178,7 +178,7 @@
  
-     protected void func_96500_c(NBTTagList p_96500_1_)
+     protected void readScores(NBTTagList nbt)
      {
--        for (int i = 0; i < p_96500_1_.func_74745_c(); i++)
-+        for (int i = 0; i < p_96500_1_.func_74745_c(); ++i)
+-        for (int i = 0; i < nbt.tagCount(); i++)
++        for (int i = 0; i < nbt.tagCount(); ++i)
          {
-             NBTTagCompound nbttagcompound = p_96500_1_.func_150305_b(i);
-             ScoreObjective scoreobjective = this.field_96507_a.func_96518_b(nbttagcompound.func_74779_i("Objective"));
+             NBTTagCompound nbttagcompound = nbt.getCompoundTagAt(i);
+             ScoreObjective scoreobjective = this.scoreboard.getObjective(nbttagcompound.getString("Objective"));
 @@ -258,7 +258,7 @@
          NBTTagCompound nbttagcompound = new NBTTagCompound();
          boolean flag = false;
@@ -52,5 +52,5 @@
 -        for (int i = 0; i < 19; i++)
 +        for (int i = 0; i < 19; ++i)
          {
-             ScoreObjective scoreobjective = this.field_96507_a.func_96539_a(i);
+             ScoreObjective scoreobjective = this.scoreboard.getObjectiveInDisplaySlot(i);
  

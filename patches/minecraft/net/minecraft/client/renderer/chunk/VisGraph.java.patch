@@ -1,14 +1,14 @@
 --- before/net/minecraft/client/renderer/chunk/VisGraph.java
 +++ after/net/minecraft/client/renderer/chunk/VisGraph.java
 @@ -24,7 +24,7 @@
-     public void func_178606_a(BlockPos p_178606_1_)
+     public void setOpaqueCube(BlockPos pos)
      {
-         this.field_178612_d.set(func_178608_c(p_178606_1_), true);
--        this.field_178611_f--;
-+        --this.field_178611_f;
+         this.bitSet.set(getIndex(pos), true);
+-        this.empty--;
++        --this.empty;
      }
  
-     private static int func_178608_c(BlockPos p_178608_0_)
+     private static int getIndex(BlockPos pos)
 @@ -194,11 +194,11 @@
          int j = 15;
          int k = 0;

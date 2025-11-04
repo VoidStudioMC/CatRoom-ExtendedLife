@@ -2,12 +2,12 @@
 +++ after/net/minecraft/pathfinding/PathNavigateFlying.java
 @@ -43,7 +43,7 @@
      @Override
-     public void func_75501_e()
+     public void onUpdateNavigation()
      {
--        this.field_75510_g++;
-+        ++this.field_75510_g;
+-        this.totalTicks++;
++        ++this.totalTicks;
  
-         if (this.field_188562_p)
+         if (this.tryUpdatePath)
          {
 @@ -108,17 +108,17 @@
  

@@ -1,11 +1,11 @@
 --- before/net/minecraft/client/particle/ParticleLava.java
 +++ after/net/minecraft/client/particle/ParticleLava.java
 @@ -22,7 +22,7 @@
-         this.field_70552_h = 1.0F;
-         this.field_70553_i = 1.0F;
-         this.field_70551_j = 1.0F;
--        this.field_70544_f = this.field_70544_f * (this.field_187136_p.nextFloat() * 2.0F + 0.2F);
-+        this.field_70544_f *= this.field_187136_p.nextFloat() * 2.0F + 0.2F;
-         this.field_70586_a = this.field_70544_f;
-         this.field_70547_e = (int)(16.0 / (Math.random() * 0.8 + 0.2));
-         this.func_70536_a(49);
+         this.particleRed = 1.0F;
+         this.particleGreen = 1.0F;
+         this.particleBlue = 1.0F;
+-        this.particleScale = this.particleScale * (this.rand.nextFloat() * 2.0F + 0.2F);
++        this.particleScale *= this.rand.nextFloat() * 2.0F + 0.2F;
+         this.lavaParticleScale = this.particleScale;
+         this.particleMaxAge = (int)(16.0 / (Math.random() * 0.8 + 0.2));
+         this.setParticleTextureIndex(49);

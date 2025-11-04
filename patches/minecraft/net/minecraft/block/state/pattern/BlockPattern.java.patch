@@ -1,17 +1,17 @@
 --- before/net/minecraft/block/state/pattern/BlockPattern.java
 +++ after/net/minecraft/block/state/pattern/BlockPattern.java
 @@ -63,11 +63,11 @@
-         BlockPos p_177682_1_, EnumFacing p_177682_2_, EnumFacing p_177682_3_, LoadingCache<BlockPos, BlockWorldState> p_177682_4_
+         BlockPos pos, EnumFacing finger, EnumFacing thumb, LoadingCache<BlockPos, BlockWorldState> lcache
      )
      {
--        for (int i = 0; i < this.field_177686_d; i++)
-+        for (int i = 0; i < this.field_177686_d; ++i)
+-        for (int i = 0; i < this.palmLength; i++)
++        for (int i = 0; i < this.palmLength; ++i)
          {
--            for (int j = 0; j < this.field_177688_c; j++)
-+            for (int j = 0; j < this.field_177688_c; ++j)
+-            for (int j = 0; j < this.thumbLength; j++)
++            for (int j = 0; j < this.thumbLength; ++j)
              {
--                for (int k = 0; k < this.field_177687_b; k++)
-+                for (int k = 0; k < this.field_177687_b; ++k)
+-                for (int k = 0; k < this.fingerLength; k++)
++                for (int k = 0; k < this.fingerLength; ++k)
                  {
-                     if (!this.field_177689_a[k][j][i].apply(p_177682_4_.getUnchecked(func_177683_a(p_177682_1_, p_177682_2_, p_177682_3_, i, j, k))))
+                     if (!this.blockMatches[k][j][i].apply(lcache.getUnchecked(translateOffset(pos, finger, thumb, i, j, k))))
                      {

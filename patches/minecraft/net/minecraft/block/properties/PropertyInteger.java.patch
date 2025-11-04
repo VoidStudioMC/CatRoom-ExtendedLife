@@ -4,8 +4,8 @@
          {
              Set<Integer> set = Sets.newHashSet();
  
--            for (int i = p_i45648_2_; i <= p_i45648_3_; i++)
-+            for (int i = p_i45648_2_; i <= p_i45648_3_; ++i)
+-            for (int i = min; i <= max; i++)
++            for (int i = min; i <= max; ++i)
              {
                  set.add(i);
              }

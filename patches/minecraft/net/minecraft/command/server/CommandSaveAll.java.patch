@@ -4,17 +4,17 @@
  
          try
          {
--            for (int i = 0; i < p_184881_1_.field_71305_c.length; i++)
-+            for (int i = 0; i < p_184881_1_.field_71305_c.length; ++i)
+-            for (int i = 0; i < server.worlds.length; i++)
++            for (int i = 0; i < server.worlds.length; ++i)
              {
-                 if (p_184881_1_.field_71305_c[i] != null)
+                 if (server.worlds[i] != null)
                  {
 @@ -54,7 +54,7 @@
              {
-                 p_184881_2_.func_145747_a(new TextComponentTranslation("commands.save.flushStart"));
+                 sender.sendMessage(new TextComponentTranslation("commands.save.flushStart"));
  
--                for (int j = 0; j < p_184881_1_.field_71305_c.length; j++)
-+                for (int j = 0; j < p_184881_1_.field_71305_c.length; ++j)
+-                for (int j = 0; j < server.worlds.length; j++)
++                for (int j = 0; j < server.worlds.length; ++j)
                  {
-                     if (p_184881_1_.field_71305_c[j] != null)
+                     if (server.worlds[j] != null)
                      {

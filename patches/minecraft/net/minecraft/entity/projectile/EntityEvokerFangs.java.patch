@@ -2,24 +2,24 @@
 +++ after/net/minecraft/entity/projectile/EntityEvokerFangs.java
 @@ -93,11 +93,11 @@
          {
-             if (this.field_190556_d)
+             if (this.clientSideAttackStarted)
              {
--                this.field_190555_c--;
-+                --this.field_190555_c;
+-                this.lifeTicks--;
++                --this.lifeTicks;
  
-                 if (this.field_190555_c == 14)
+                 if (this.lifeTicks == 14)
                  {
 -                    for (int i = 0; i < 12; i++)
 +                    for (int i = 0; i < 12; ++i)
                      {
-                         double d0 = this.field_70165_t + (this.field_70146_Z.nextDouble() * 2.0 - 1.0) * (double)this.field_70130_N * 0.5;
-                         double d1 = this.field_70163_u + 0.05 + this.field_70146_Z.nextDouble() * 1.0;
+                         double d0 = this.posX + (this.rand.nextDouble() * 2.0 - 1.0) * (double)this.width * 0.5;
+                         double d1 = this.posY + 0.05 + this.rand.nextDouble() * 1.0;
 @@ -141,7 +141,9 @@
          {
              if (entitylivingbase == null)
              {
 +                org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.entityDamage = this;
-                 p_190551_1_.func_70097_a(DamageSource.field_76376_m, 6.0F);
+                 p_190551_1_.attackEntityFrom(DamageSource.MAGIC, 6.0F);
 +                org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.entityDamage = null;
              }
              else

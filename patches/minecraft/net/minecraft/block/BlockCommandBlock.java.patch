@@ -10,41 +10,41 @@
  {
 @@ -59,6 +60,13 @@
                  TileEntityCommandBlock tileentitycommandblock = (TileEntityCommandBlock)tileentity;
-                 boolean flag = p_189540_2_.func_175640_z(p_189540_3_);
-                 boolean flag1 = tileentitycommandblock.func_184255_d();
-+                org.bukkit.block.Block bukkitBlock = p_189540_2_.getWorld().getBlockAt(p_189540_3_.func_177958_n(), p_189540_3_.func_177956_o(), p_189540_3_.func_177952_p());
+                 boolean flag = worldIn.isBlockPowered(pos);
+                 boolean flag1 = tileentitycommandblock.isPowered();
++                org.bukkit.block.Block bukkitBlock = worldIn.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
 +                int old = flag1 ? 15 : 0;
 +                int current = flag ? 15 : 0;
 +
 +                BlockRedstoneEvent eventRedstone = new BlockRedstoneEvent(bukkitBlock, old, current);
-+                p_189540_2_.getServer().getPluginManager().callEvent(eventRedstone);
++                worldIn.getServer().getPluginManager().callEvent(eventRedstone);
 +                flag = eventRedstone.getNewCurrent() > 0;
-                 tileentitycommandblock.func_184250_a(flag);
+                 tileentitycommandblock.setPowered(flag);
  
-                 if (!flag1 && !tileentitycommandblock.func_184254_e() && tileentitycommandblock.func_184251_i() != TileEntityCommandBlock.Mode.SEQUENCE)
+                 if (!flag1 && !tileentitycommandblock.isAuto() && tileentitycommandblock.getMode() != TileEntityCommandBlock.Mode.SEQUENCE)
 @@ -277,12 +285,13 @@
      {
          BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(p_193386_1_);
-         GameRules gamerules = p_193386_0_.func_82736_K();
--        int i = gamerules.func_180263_c("maxCommandChainLength");
+         GameRules gamerules = p_193386_0_.getGameRules();
+-        int i = gamerules.getInt("maxCommandChainLength");
 +        int i;
 +        IBlockState iblockstate;
  
 -        while (i-- > 0)
-+        for (i = gamerules.func_180263_c("maxCommandChainLength"); i-- > 0; p_193386_2_ = iblockstate.func_177229_b(field_185564_a))
++        for (i = gamerules.getInt("maxCommandChainLength"); i-- > 0; p_193386_2_ = iblockstate.getValue(FACING))
          {
-             blockpos$mutableblockpos.func_189536_c(p_193386_2_);
--            IBlockState iblockstate = p_193386_0_.func_180495_p(blockpos$mutableblockpos);
-+            iblockstate = p_193386_0_.func_180495_p(blockpos$mutableblockpos);
-             Block block = iblockstate.func_177230_c();
+             blockpos$mutableblockpos.move(p_193386_2_);
+-            IBlockState iblockstate = p_193386_0_.getBlockState(blockpos$mutableblockpos);
++            iblockstate = p_193386_0_.getBlockState(blockpos$mutableblockpos);
+             Block block = iblockstate.getBlock();
  
-             if (block != Blocks.field_185777_dd)
+             if (block != Blocks.CHAIN_COMMAND_BLOCK)
 @@ -322,8 +331,6 @@
-                     commandblockbaselogic.func_184167_a(0);
+                     commandblockbaselogic.setSuccessCount(0);
                  }
              }
 -
--            p_193386_2_ = iblockstate.func_177229_b(field_185564_a);
+-            p_193386_2_ = iblockstate.getValue(FACING);
          }
  
          if (i <= 0)

@@ -2,10 +2,10 @@
 +++ after/net/minecraft/entity/ai/EntityAIOpenDoor.java
 @@ -39,7 +39,7 @@
      @Override
-     public void func_75246_d()
+     public void updateTask()
      {
--        this.field_75360_j--;
-+        --this.field_75360_j;
-         super.func_75246_d();
+-        this.closeDoorTemporisation--;
++        --this.closeDoorTemporisation;
+         super.updateTask();
      }
  }

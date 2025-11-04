@@ -1,22 +1,22 @@
 --- before/net/minecraft/world/gen/feature/WorldGenClay.java
 +++ after/net/minecraft/world/gen/feature/WorldGenClay.java
 @@ -29,16 +29,16 @@
-             int i = p_180709_2_.nextInt(this.field_76517_b - 2) + 2;
+             int i = rand.nextInt(this.numberOfBlocks - 2) + 2;
              int j = 1;
  
--            for (int k = p_180709_3_.func_177958_n() - i; k <= p_180709_3_.func_177958_n() + i; k++)
-+            for (int k = p_180709_3_.func_177958_n() - i; k <= p_180709_3_.func_177958_n() + i; ++k)
+-            for (int k = position.getX() - i; k <= position.getX() + i; k++)
++            for (int k = position.getX() - i; k <= position.getX() + i; ++k)
              {
--                for (int l = p_180709_3_.func_177952_p() - i; l <= p_180709_3_.func_177952_p() + i; l++)
-+                for (int l = p_180709_3_.func_177952_p() - i; l <= p_180709_3_.func_177952_p() + i; ++l)
+-                for (int l = position.getZ() - i; l <= position.getZ() + i; l++)
++                for (int l = position.getZ() - i; l <= position.getZ() + i; ++l)
                  {
-                     int i1 = k - p_180709_3_.func_177958_n();
-                     int j1 = l - p_180709_3_.func_177952_p();
+                     int i1 = k - position.getX();
+                     int j1 = l - position.getZ();
  
                      if (i1 * i1 + j1 * j1 <= i * i)
                      {
--                        for (int k1 = p_180709_3_.func_177956_o() - 1; k1 <= p_180709_3_.func_177956_o() + 1; k1++)
-+                        for (int k1 = p_180709_3_.func_177956_o() - 1; k1 <= p_180709_3_.func_177956_o() + 1; ++k1)
+-                        for (int k1 = position.getY() - 1; k1 <= position.getY() + 1; k1++)
++                        for (int k1 = position.getY() - 1; k1 <= position.getY() + 1; ++k1)
                          {
                              BlockPos blockpos = new BlockPos(k, k1, l);
-                             Block block = p_180709_1_.func_180495_p(blockpos).func_177230_c();
+                             Block block = worldIn.getBlockState(blockpos).getBlock();

@@ -2,10 +2,10 @@
 +++ after/net/minecraft/client/gui/inventory/GuiEditSign.java
 @@ -56,7 +56,7 @@
      @Override
-     public void func_73876_c()
+     public void updateScreen()
      {
--        this.field_146849_g++;
-+        ++this.field_146849_g;
+-        this.updateCounter++;
++        ++this.updateCounter;
      }
  
      @Override

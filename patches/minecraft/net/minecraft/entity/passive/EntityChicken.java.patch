@@ -2,36 +2,36 @@
 +++ after/net/minecraft/entity/passive/EntityChicken.java
 @@ -82,6 +82,9 @@
      @Override
-     public void func_70636_d()
+     public void onLivingUpdate()
      {
-+        if (this.func_152116_bZ()) {
-+            this.field_82179_bU = !this.func_70692_ba();
++        if (this.isChickenJockey()) {
++            this.persistenceRequired = !this.canDespawn();
 +        }
-         super.func_70636_d();
-         this.field_70888_h = this.field_70886_e;
-         this.field_70884_g = this.field_70883_f;
+         super.onLivingUpdate();
+         this.oFlap = this.wingRotation;
+         this.oFlapSpeed = this.destPos;
 @@ -100,12 +103,14 @@
-             this.field_70181_x *= 0.6;
+             this.motionY *= 0.6;
          }
  
--        this.field_70886_e = this.field_70886_e + this.field_70889_i * 2.0F;
-+        this.field_70886_e += this.field_70889_i * 2.0F;
+-        this.wingRotation = this.wingRotation + this.wingRotDelta * 2.0F;
++        this.wingRotation += this.wingRotDelta * 2.0F;
  
-         if (!this.field_70170_p.field_72995_K && !this.func_70631_g_() && !this.func_152116_bZ() && --this.field_70887_j <= 0)
+         if (!this.world.isRemote && !this.isChild() && !this.isChickenJockey() && --this.timeUntilNextEgg <= 0)
          {
-             this.func_184185_a(SoundEvents.field_187665_Y, 1.0F, (this.field_70146_Z.nextFloat() - this.field_70146_Z.nextFloat()) * 0.2F + 1.0F);
+             this.playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
 +            this.forceDrops = true;
-             this.func_145779_a(Items.field_151110_aK, 1);
+             this.dropItem(Items.EGG, 1);
 +            this.forceDrops = false;
-             this.field_70887_j = this.field_70146_Z.nextInt(6000) + 6000;
+             this.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
          }
      }
 @@ -189,7 +194,7 @@
      }
  
      @Override
--    protected boolean func_70692_ba()
-+    public boolean func_70692_ba()
+-    protected boolean canDespawn()
++    public boolean canDespawn()
      {
-         return this.func_152116_bZ() && !this.func_184207_aI();
+         return this.isChickenJockey() && !this.isBeingRidden();
      }

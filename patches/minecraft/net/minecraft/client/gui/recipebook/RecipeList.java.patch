@@ -2,19 +2,19 @@
 +++ after/net/minecraft/client/gui/recipebook/RecipeList.java
 @@ -26,7 +26,7 @@
  
-     public void func_194214_a(RecipeBook p_194214_1_)
+     public void updateKnownRecipes(RecipeBook book)
      {
--        for (int i = 0; i < this.field_192713_b.size(); i++)
-+        for (int i = 0; i < this.field_192713_b.size(); ++i)
+-        for (int i = 0; i < this.recipes.size(); i++)
++        for (int i = 0; i < this.recipes.size(); ++i)
          {
-             this.field_194217_d.set(i, p_194214_1_.func_193830_f(this.field_192713_b.get(i)));
+             this.inBook.set(i, book.isUnlocked(this.recipes.get(i)));
          }
 @@ -34,7 +34,7 @@
  
-     public void func_194210_a(RecipeItemHelper p_194210_1_, int p_194210_2_, int p_194210_3_, RecipeBook p_194210_4_)
+     public void canCraft(RecipeItemHelper handler, int width, int height, RecipeBook book)
      {
--        for (int i = 0; i < this.field_192713_b.size(); i++)
-+        for (int i = 0; i < this.field_192713_b.size(); ++i)
+-        for (int i = 0; i < this.recipes.size(); i++)
++        for (int i = 0; i < this.recipes.size(); ++i)
          {
-             IRecipe irecipe = this.field_192713_b.get(i);
-             boolean flag = irecipe.func_194133_a(p_194210_2_, p_194210_3_) && p_194210_4_.func_193830_f(irecipe);
+             IRecipe irecipe = this.recipes.get(i);
+             boolean flag = irecipe.canFit(width, height) && book.isUnlocked(irecipe);

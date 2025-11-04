@@ -2,10 +2,10 @@
 +++ after/net/minecraft/entity/passive/EntityShoulderRiding.java
 @@ -33,7 +33,7 @@
      @Override
-     public void func_70071_h_()
+     public void onUpdate()
      {
--        this.field_191996_bB++;
-+        ++this.field_191996_bB;
-         super.func_70071_h_();
+-        this.rideCooldownCounter++;
++        ++this.rideCooldownCounter;
+         super.onUpdate();
      }
  

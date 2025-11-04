@@ -4,16 +4,16 @@
                  {
                      return false;
                  }
-+                else if (this.field_193467_c != null && this.field_193467_c != p_193463_1_.func_82720_e())
++                else if (this.ambient != null && this.ambient != effect.getIsAmbient())
 +                {
 +                    return false;
 +                }
                  else
                  {
--                    return this.field_193467_c != null && this.field_193467_c != p_193463_1_.func_82720_e()
+-                    return this.ambient != null && this.ambient != effect.getIsAmbient()
 -                           ? false
--                           : this.field_193468_d == null || this.field_193468_d == p_193463_1_.func_188418_e();
-+                    return this.field_193468_d == null || this.field_193468_d == p_193463_1_.func_188418_e();
+-                           : this.visible == null || this.visible == effect.doesShowParticles();
++                    return this.visible == null || this.visible == effect.doesShowParticles();
                  }
              }
  

@@ -10,13 +10,13 @@
  
  public class InventoryCraftResult implements IInventory
  {
-     private final NonNullList<ItemStack> field_70467_a = NonNullList.func_191197_a(1, ItemStack.field_190927_a);
-     private IRecipe field_193057_b;
+     private final NonNullList<ItemStack> stackResult = NonNullList.withSize(1, ItemStack.EMPTY);
+     private IRecipe recipeUsed;
  
 +    private int maxStack = MAX_STACK;
 +
 +    public java.util.List<ItemStack> getContents() {
-+        return this.field_70467_a;
++        return this.stackResult;
 +    }
 +
 +    public org.bukkit.inventory.InventoryHolder getOwner() {
@@ -39,12 +39,12 @@
 +        return null;
 +    }
 +
-     public int func_70302_i_()
+     public int getSizeInventory()
      {
          return 1;
 @@ -79,7 +107,7 @@
      @Override
-     public int func_70297_j_()
+     public int getInventoryStackLimit()
      {
 -        return 64;
 +        return maxStack;

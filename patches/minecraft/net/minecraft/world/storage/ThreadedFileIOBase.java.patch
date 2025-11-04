@@ -2,41 +2,39 @@
 +++ after/net/minecraft/world/storage/ThreadedFileIOBase.java
 @@ -35,7 +35,7 @@
  
-     private void func_75736_b()
+     private void processQueue()
      {
--        for (int i = 0; i < this.field_75739_b.size(); i++)
-+        for (int i = 0; i < this.field_75739_b.size(); ++i)
+-        for (int i = 0; i < this.threadedIOQueue.size(); i++)
++        for (int i = 0; i < this.threadedIOQueue.size(); ++i)
          {
-             IThreadedFileIO ithreadedfileio = this.field_75739_b.get(i);
-             boolean flag = ithreadedfileio.func_75814_c();
-@@ -43,17 +43,19 @@
+             IThreadedFileIO ithreadedfileio = this.threadedIOQueue.get(i);
+             boolean flag = ithreadedfileio.writeNextIO();
+@@ -43,9 +43,10 @@
              if (!flag)
              {
-                 this.field_75739_b.remove(i--);
--                this.field_75737_d++;
-+                ++this.field_75737_d;
+                 this.threadedIOQueue.remove(i--);
+-                this.savedIOCounter++;
++                ++this.savedIOCounter;
              }
  
 +            /*
              try
              {
--                Thread.sleep(this.field_75738_e ? 0L : 10L);
-+                Thread.sleep(this.isThreadWaiting ? 0L : 10L);
-             }
-             catch (InterruptedException interruptedexception1)
+                 Thread.sleep(this.isThreadWaiting ? 0L : 10L);
+@@ -54,6 +55,7 @@
              {
                  interruptedexception1.printStackTrace();
              }
 +            */
          }
  
-         if (this.field_75739_b.isEmpty())
+         if (this.threadedIOQueue.isEmpty())
 @@ -73,7 +75,7 @@
      {
-         if (!this.field_75739_b.contains(p_75735_1_))
+         if (!this.threadedIOQueue.contains(fileIo))
          {
--            this.field_75740_c++;
-+            ++this.field_75740_c;
-             this.field_75739_b.add(p_75735_1_);
+-            this.writeQueuedCounter++;
++            ++this.writeQueuedCounter;
+             this.threadedIOQueue.add(fileIo);
          }
      }

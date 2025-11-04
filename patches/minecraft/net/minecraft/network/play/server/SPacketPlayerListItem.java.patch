@@ -1,8 +1,8 @@
 --- before/net/minecraft/network/play/server/SPacketPlayerListItem.java
 +++ after/net/minecraft/network/play/server/SPacketPlayerListItem.java
 @@ -61,7 +61,7 @@
-         this.field_179770_a = p_148837_1_.func_179257_a(SPacketPlayerListItem.Action.class);
-         int i = p_148837_1_.func_150792_a();
+         this.action = buf.readEnumValue(SPacketPlayerListItem.Action.class);
+         int i = buf.readVarInt();
  
 -        for (int j = 0; j < i; j++)
 +        for (int j = 0; j < i; ++j)
@@ -10,11 +10,11 @@
              GameProfile gameprofile = null;
              int k = 0;
 @@ -75,7 +75,7 @@
-                     int l = p_148837_1_.func_150792_a();
+                     int l = buf.readVarInt();
                      int i1 = 0;
  
 -                    for (; i1 < l; i1++)
 +                    for (; i1 < l; ++i1)
                      {
-                         String s = p_148837_1_.func_150789_c(32767);
-                         String s1 = p_148837_1_.func_150789_c(32767);
+                         String s = buf.readString(32767);
+                         String s1 = buf.readString(32767);

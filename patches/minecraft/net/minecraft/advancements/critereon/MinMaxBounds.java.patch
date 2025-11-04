@@ -2,32 +2,32 @@
 +++ after/net/minecraft/advancements/critereon/MinMaxBounds.java
 @@ -19,14 +19,26 @@
  
-     public boolean func_192514_a(float p_192514_1_)
+     public boolean test(float value)
      {
--        return this.field_192517_b != null && this.field_192517_b > p_192514_1_ ? false : this.field_192518_c == null || !(this.field_192518_c < p_192514_1_);
-+        if (this.field_192517_b != null && this.field_192517_b > p_192514_1_)
+-        return this.min != null && this.min > value ? false : this.max == null || !(this.max < value);
++        if (this.min != null && this.min > value)
 +        {
 +            return false;
 +        }
 +        else
 +        {
-+            return this.field_192518_c == null || !(this.field_192518_c < p_192514_1_);
++            return this.max == null || !(this.max < value);
 +        }
      }
  
-     public boolean func_192513_a(double p_192513_1_)
+     public boolean testSquare(double value)
      {
--        return this.field_192517_b != null && (double)(this.field_192517_b * this.field_192517_b) > p_192513_1_
+-        return this.min != null && (double)(this.min * this.min) > value
 -               ? false
--               : this.field_192518_c == null || !((double)(this.field_192518_c * this.field_192518_c) < p_192513_1_);
-+        if (this.field_192517_b != null && (double)(this.field_192517_b * this.field_192517_b) > p_192513_1_)
+-               : this.max == null || !((double)(this.max * this.max) < value);
++        if (this.min != null && (double)(this.min * this.min) > value)
 +        {
 +            return false;
 +        }
 +        else
 +        {
-+            return this.field_192518_c == null || !((double)(this.field_192518_c * this.field_192518_c) < p_192513_1_);
++            return this.max == null || !((double)(this.max * this.max) < value);
 +        }
      }
  
-     public static MinMaxBounds func_192515_a(@Nullable JsonElement p_192515_0_)
+     public static MinMaxBounds deserialize(@Nullable JsonElement element)

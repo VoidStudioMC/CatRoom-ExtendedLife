@@ -2,40 +2,40 @@
 +++ after/net/minecraft/network/play/server/SPacketChat.java
 @@ -13,6 +13,7 @@
  {
-     private ITextComponent field_148919_a;
-     private ChatType field_179842_b;
+     private ITextComponent chatComponent;
+     private ChatType type;
 +    public net.md_5.bungee.api.chat.BaseComponent[] components; // Spigot
  
      public SPacketChat()
      {
 @@ -29,7 +30,14 @@
-         this.field_179842_b = p_i47428_2_;
+         this.type = type;
      }
  
 -    @Override
 +    // CatServer start
 +    public SPacketChat(ITextComponent message, byte type)
 +    {
-+        this.field_148919_a = message;
-+        this.field_179842_b = ChatType.func_192582_a(type);
++        this.chatComponent = message;
++        this.type = ChatType.byId(type);
 +    }
 +    // CatServer end
 +
-     public void func_148837_a(PacketBuffer p_148837_1_) throws IOException
+     public void readPacketData(PacketBuffer buf) throws IOException
      {
-         this.field_148919_a = p_148837_1_.func_179258_d();
+         this.chatComponent = buf.readTextComponent();
 @@ -39,7 +47,13 @@
      @Override
-     public void func_148840_b(PacketBuffer p_148840_1_) throws IOException
+     public void writePacketData(PacketBuffer buf) throws IOException
      {
--        p_148840_1_.func_179256_a(this.field_148919_a);
+-        buf.writeTextComponent(this.chatComponent);
 +        // Spigot start
 +        if (components != null) {
-+            p_148840_1_.func_180714_a(net.md_5.bungee.chat.ComponentSerializer.toString(components));
++            buf.writeString(net.md_5.bungee.chat.ComponentSerializer.toString(components));
 +        } else {
-+            p_148840_1_.func_179256_a(this.field_148919_a);
++            buf.writeTextComponent(this.chatComponent);
 +        }
 +        // Spigot end
-         p_148840_1_.writeByte(this.field_179842_b.func_192583_a());
+         buf.writeByte(this.type.getId());
      }
  

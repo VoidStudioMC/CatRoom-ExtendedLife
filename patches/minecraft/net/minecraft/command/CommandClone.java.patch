@@ -1,23 +1,23 @@
 --- before/net/minecraft/command/CommandClone.java
 +++ after/net/minecraft/command/CommandClone.java
 @@ -120,11 +120,11 @@
-                                 structureboundingbox1.field_78896_c - structureboundingbox.field_78896_c
+                                 structureboundingbox1.minZ - structureboundingbox.minZ
                              );
  
--                            for (int j = structureboundingbox.field_78896_c; j <= structureboundingbox.field_78892_f; j++)
-+                            for (int j = structureboundingbox.field_78896_c; j <= structureboundingbox.field_78892_f; ++j)
+-                            for (int j = structureboundingbox.minZ; j <= structureboundingbox.maxZ; j++)
++                            for (int j = structureboundingbox.minZ; j <= structureboundingbox.maxZ; ++j)
                              {
--                                for (int k = structureboundingbox.field_78895_b; k <= structureboundingbox.field_78894_e; k++)
-+                                for (int k = structureboundingbox.field_78895_b; k <= structureboundingbox.field_78894_e; ++k)
+-                                for (int k = structureboundingbox.minY; k <= structureboundingbox.maxY; k++)
++                                for (int k = structureboundingbox.minY; k <= structureboundingbox.maxY; ++k)
                                  {
--                                    for (int l = structureboundingbox.field_78897_a; l <= structureboundingbox.field_78893_d; l++)
-+                                    for (int l = structureboundingbox.field_78897_a; l <= structureboundingbox.field_78893_d; ++l)
+-                                    for (int l = structureboundingbox.minX; l <= structureboundingbox.maxX; l++)
++                                    for (int l = structureboundingbox.minX; l <= structureboundingbox.maxX; ++l)
                                      {
                                          BlockPos blockpos4 = new BlockPos(l, k, j);
-                                         BlockPos blockpos5 = blockpos4.func_177971_a(blockpos3);
+                                         BlockPos blockpos5 = blockpos4.add(blockpos3);
 @@ -200,7 +200,7 @@
                              {
-                                 if (world.func_180501_a(commandclone$staticclonedata1.field_179537_a, commandclone$staticclonedata1.field_179535_b, 2))
+                                 if (world.setBlockState(commandclone$staticclonedata1.pos, commandclone$staticclonedata1.blockState, 2))
                                  {
 -                                    i++;
 +                                    ++i;

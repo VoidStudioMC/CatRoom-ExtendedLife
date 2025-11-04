@@ -2,10 +2,10 @@
 +++ after/net/minecraft/client/model/ModelWither.java
 @@ -78,7 +78,7 @@
      {
-         EntityWither entitywither = (EntityWither)p_78086_1_;
+         EntityWither entitywither = (EntityWither)entitylivingbaseIn;
  
 -        for (int i = 1; i < 3; i++)
 +        for (int i = 1; i < 3; ++i)
          {
-             this.field_82904_b[i].field_78796_g = (entitywither.func_82207_a(i - 1) - p_78086_1_.field_70761_aq) * (float)(Math.PI / 180.0);
-             this.field_82904_b[i].field_78795_f = entitywither.func_82210_r(i - 1) * (float)(Math.PI / 180.0);
+             this.heads[i].rotateAngleY = (entitywither.getHeadYRotation(i - 1) - entitylivingbaseIn.renderYawOffset) * (float)(Math.PI / 180.0);
+             this.heads[i].rotateAngleX = entitywither.getHeadXRotation(i - 1) * (float)(Math.PI / 180.0);

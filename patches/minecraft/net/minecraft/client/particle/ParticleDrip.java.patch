@@ -1,11 +1,11 @@
 --- before/net/minecraft/client/particle/ParticleDrip.java
 +++ after/net/minecraft/client/particle/ParticleDrip.java
 @@ -73,7 +73,7 @@
-             this.field_70551_j = 4.0F / (float)(40 - this.field_70564_aq + 8);
+             this.particleBlue = 4.0F / (float)(40 - this.bobTimer + 8);
          }
  
--        this.field_187130_j = this.field_187130_j - (double)this.field_70545_g;
-+        this.field_187130_j -= (double)this.field_70545_g;
+-        this.motionY = this.motionY - (double)this.particleGravity;
++        this.motionY -= (double)this.particleGravity;
  
-         if (this.field_70564_aq-- > 0)
+         if (this.bobTimer-- > 0)
          {

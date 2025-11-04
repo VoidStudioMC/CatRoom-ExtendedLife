@@ -2,10 +2,10 @@
 +++ after/net/minecraft/client/renderer/culling/ClippingHelper.java
 @@ -18,7 +18,7 @@
  
-     public boolean func_78553_b(double p_78553_1_, double p_78553_3_, double p_78553_5_, double p_78553_7_, double p_78553_9_, double p_78553_11_)
+     public boolean isBoxInFrustum(double p_78553_1_, double p_78553_3_, double p_78553_5_, double p_78553_7_, double p_78553_9_, double p_78553_11_)
      {
 -        for (int i = 0; i < 6; i++)
 +        for (int i = 0; i < 6; ++i)
          {
-             float[] afloat = this.field_78557_a[i];
+             float[] afloat = this.frustum[i];
  

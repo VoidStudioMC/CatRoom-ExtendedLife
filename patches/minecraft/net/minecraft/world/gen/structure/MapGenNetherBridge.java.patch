@@ -4,20 +4,20 @@
          {
              return false;
          }
-+        else if (p_75047_1_ != (i << 4) + 4 + this.field_75038_b.nextInt(8))
++        else if (chunkX != (i << 4) + 4 + this.rand.nextInt(8))
 +        {
 +            return false;
 +        }
          else
          {
--            return p_75047_1_ != (i << 4) + 4 + this.field_75038_b.nextInt(8) ? false : p_75047_2_ == (j << 4) + 4 + this.field_75038_b.nextInt(8);
-+            return p_75047_2_ == (j << 4) + 4 + this.field_75038_b.nextInt(8);
+-            return chunkX != (i << 4) + 4 + this.rand.nextInt(8) ? false : chunkZ == (j << 4) + 4 + this.rand.nextInt(8);
++            return chunkZ == (j << 4) + 4 + this.rand.nextInt(8);
          }
      }
  
 @@ -67,13 +71,13 @@
-         int j = p_180706_2_.func_177958_n() >> 4;
-         int k = p_180706_2_.func_177952_p() >> 4;
+         int j = pos.getX() >> 4;
+         int k = pos.getZ() >> 4;
  
 -        for (int l = 0; l <= 1000; l++)
 +        for (int l = 0; l <= 1000; ++l)

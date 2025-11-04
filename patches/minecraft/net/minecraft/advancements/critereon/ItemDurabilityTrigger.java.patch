@@ -4,16 +4,16 @@
                  {
                      return false;
                  }
-+                else if (!this.field_193199_b.func_192514_a((float)(p_193197_1_.func_77958_k() - p_193197_2_)))
++                else if (!this.durability.test((float)(item.getMaxDamage() - p_193197_2_)))
 +                {
 +                    return false;
 +                }
                  else
                  {
--                    return !this.field_193199_b.func_192514_a((float)(p_193197_1_.func_77958_k() - p_193197_2_))
+-                    return !this.durability.test((float)(item.getMaxDamage() - p_193197_2_))
 -                           ? false
--                           : this.field_193200_c.func_192514_a((float)(p_193197_1_.func_77952_i() - p_193197_2_));
-+                    return this.field_193200_c.func_192514_a((float)(p_193197_1_.func_77952_i() - p_193197_2_));
+-                           : this.delta.test((float)(item.getItemDamage() - p_193197_2_));
++                    return this.delta.test((float)(item.getItemDamage() - p_193197_2_));
                  }
              }
          }

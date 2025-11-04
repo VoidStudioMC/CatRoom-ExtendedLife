@@ -3,34 +3,34 @@
 @@ -40,7 +40,15 @@
              else
              {
-                 this.field_75274_b = village.func_179865_b(blockpos);
--                return this.field_75274_b == null ? false : (double)this.field_75274_b.func_179846_b(blockpos) < 2.25;
+                 this.frontDoor = village.getNearestDoor(blockpos);
+-                return this.frontDoor == null ? false : (double)this.frontDoor.getDistanceToInsideBlockSq(blockpos) < 2.25;
 +
-+                if (this.field_75274_b == null)
++                if (this.frontDoor == null)
 +                {
 +                    return false;
 +                }
 +                else
 +                {
-+                    return (double)this.field_75274_b.func_179846_b(blockpos) < 2.25;
++                    return (double)this.frontDoor.getDistanceToInsideBlockSq(blockpos) < 2.25;
 +                }
              }
          }
      }
 @@ -48,9 +56,14 @@
      @Override
-     public boolean func_75253_b()
+     public boolean shouldContinueExecuting()
      {
--        return this.field_75275_a.field_70170_p.func_72935_r()
+-        return this.entity.world.isDaytime()
 -               ? false
--               : !this.field_75274_b.func_179851_i() && this.field_75274_b.func_179850_c(new BlockPos(this.field_75275_a));
-+        if (this.field_75275_a.field_70170_p.func_72935_r())
+-               : !this.frontDoor.getIsDetachedFromVillageFlag() && this.frontDoor.isInsideSide(new BlockPos(this.entity));
++        if (this.entity.world.isDaytime())
 +        {
 +            return false;
 +        }
 +        else
 +        {
-+            return !this.field_75274_b.func_179851_i() && this.field_75274_b.func_179850_c(new BlockPos(this.field_75275_a));
++            return !this.frontDoor.getIsDetachedFromVillageFlag() && this.frontDoor.isInsideSide(new BlockPos(this.entity));
 +        }
      }
  

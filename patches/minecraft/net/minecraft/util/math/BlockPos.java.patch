@@ -1,89 +1,89 @@
 --- before/net/minecraft/util/math/BlockPos.java
 +++ after/net/minecraft/util/math/BlockPos.java
 @@ -21,7 +21,7 @@
-     private static final int field_177990_b = 1 + MathHelper.func_151239_c(MathHelper.func_151236_b(30000000));
-     private static final int field_177991_c = field_177990_b;
-     private static final int field_177989_d = 64 - field_177990_b - field_177991_c;
--    private static final int field_177987_f = 0 + field_177991_c;
-+    private static final int field_177987_f = field_177991_c;
-     private static final int field_177988_g = field_177987_f + field_177989_d;
-     private static final long field_177994_h = (1L << field_177990_b) - 1L;
-     private static final long field_177995_i = (1L << field_177989_d) - 1L;
+     private static final int NUM_X_BITS = 1 + MathHelper.log2(MathHelper.smallestEncompassingPowerOfTwo(30000000));
+     private static final int NUM_Z_BITS = NUM_X_BITS;
+     private static final int NUM_Y_BITS = 64 - NUM_X_BITS - NUM_Z_BITS;
+-    private static final int Y_SHIFT = 0 + NUM_Z_BITS;
++    private static final int Y_SHIFT = NUM_Z_BITS;
+     private static final int X_SHIFT = Y_SHIFT + NUM_Y_BITS;
+     private static final long X_MASK = (1L << NUM_X_BITS) - 1L;
+     private static final long Y_MASK = (1L << NUM_Y_BITS) - 1L;
 @@ -154,18 +154,12 @@
  
-     public BlockPos func_190942_a(Rotation p_190942_1_)
+     public BlockPos rotate(Rotation rotationIn)
      {
--        switch (p_190942_1_)
+-        switch (rotationIn)
 -        {
 -            case NONE:
 -            default:
 -                return this;
 -            case CLOCKWISE_90:
--                return new BlockPos(-this.func_177952_p(), this.func_177956_o(), this.func_177958_n());
+-                return new BlockPos(-this.getZ(), this.getY(), this.getX());
 -            case CLOCKWISE_180:
--                return new BlockPos(-this.func_177958_n(), this.func_177956_o(), -this.func_177952_p());
+-                return new BlockPos(-this.getX(), this.getY(), -this.getZ());
 -            case COUNTERCLOCKWISE_90:
--                return new BlockPos(this.func_177952_p(), this.func_177956_o(), -this.func_177958_n());
+-                return new BlockPos(this.getZ(), this.getY(), -this.getX());
 -        }
-+        return switch (p_190942_1_) {
-+            case CLOCKWISE_90 -> new BlockPos(-this.func_177952_p(), this.func_177956_o(), this.func_177958_n());
-+            case CLOCKWISE_180 -> new BlockPos(-this.func_177958_n(), this.func_177956_o(), -this.func_177952_p());
-+            case COUNTERCLOCKWISE_90 -> new BlockPos(this.func_177952_p(), this.func_177956_o(), -this.func_177958_n());
++        return switch (rotationIn) {
++            case CLOCKWISE_90 -> new BlockPos(-this.getZ(), this.getY(), this.getX());
++            case CLOCKWISE_180 -> new BlockPos(-this.getX(), this.getY(), -this.getZ());
++            case COUNTERCLOCKWISE_90 -> new BlockPos(this.getZ(), this.getY(), -this.getX());
 +            default -> this;
 +        };
      }
  
-     public BlockPos func_177955_d(Vec3i p_177955_1_)
+     public BlockPos crossProduct(Vec3i vec)
 @@ -181,7 +175,7 @@
      {
-         return ((long)this.func_177958_n() & field_177994_h) << field_177988_g
-                | ((long)this.func_177956_o() & field_177995_i) << field_177987_f
--               | ((long)this.func_177952_p() & field_177993_j) << 0;
-+               | ((long) this.func_177952_p() & field_177993_j);
+         return ((long)this.getX() & X_MASK) << X_SHIFT
+                | ((long)this.getY() & Y_MASK) << Y_SHIFT
+-               | ((long)this.getZ() & Z_MASK) << 0;
++               | ((long) this.getZ() & Z_MASK);
      }
  
-     public static BlockPos func_177969_a(long p_177969_0_)
+     public static BlockPos fromLong(long serialized)
 @@ -237,18 +231,18 @@
                          {
-                             if (this.field_191535_c < p_191532_3_)
+                             if (this.lastPosX < x2)
                              {
--                                this.field_191535_c++;
-+                                ++this.field_191535_c;
+-                                this.lastPosX++;
++                                ++this.lastPosX;
                              }
-                             else if (this.field_191536_d < p_191532_4_)
+                             else if (this.lastPosY < y2)
                              {
-                                 this.field_191535_c = p_191532_0_;
--                                this.field_191536_d++;
-+                                ++this.field_191536_d;
+                                 this.lastPosX = x1;
+-                                this.lastPosY++;
++                                ++this.lastPosY;
                              }
-                             else if (this.field_191537_e < p_191532_5_)
+                             else if (this.lastPosZ < z2)
                              {
-                                 this.field_191535_c = p_191532_0_;
-                                 this.field_191536_d = p_191532_1_;
--                                this.field_191537_e++;
-+                                ++this.field_191537_e;
+                                 this.lastPosX = x1;
+                                 this.lastPosY = y1;
+-                                this.lastPosZ++;
++                                ++this.lastPosZ;
                              }
  
-                             return new BlockPos(this.field_191535_c, this.field_191536_d, this.field_191537_e);
+                             return new BlockPos(this.lastPosX, this.lastPosY, this.lastPosZ);
 @@ -305,18 +299,18 @@
                          {
-                             if (this.field_179314_b.field_177997_b < p_191531_3_)
+                             if (this.pos.x < x2)
                              {
--                                this.field_179314_b.field_177997_b++;
-+                                ++this.field_179314_b.field_177997_b;
+-                                this.pos.x++;
++                                ++this.pos.x;
                              }
-                             else if (this.field_179314_b.field_177998_c < p_191531_4_)
+                             else if (this.pos.y < y2)
                              {
-                                 this.field_179314_b.field_177997_b = p_191531_0_;
--                                this.field_179314_b.field_177998_c++;
-+                                ++this.field_179314_b.field_177998_c;
+                                 this.pos.x = x1;
+-                                this.pos.y++;
++                                ++this.pos.y;
                              }
-                             else if (this.field_179314_b.field_177996_d < p_191531_5_)
+                             else if (this.pos.z < z2)
                              {
-                                 this.field_179314_b.field_177997_b = p_191531_0_;
-                                 this.field_179314_b.field_177998_c = p_191531_1_;
--                                this.field_179314_b.field_177996_d++;
-+                                ++this.field_179314_b.field_177996_d;
+                                 this.pos.x = x1;
+                                 this.pos.y = y1;
+-                                this.pos.z++;
++                                ++this.pos.z;
                              }
  
-                             return this.field_179314_b;
+                             return this.pos;

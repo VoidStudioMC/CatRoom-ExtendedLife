@@ -4,8 +4,8 @@
  
  public class SPacketSpawnPosition implements Packet<INetHandlerPlayClient>
  {
--    private BlockPos field_179801_a;
-+    public BlockPos field_179801_a;
+-    private BlockPos spawnBlockPos;
++    public BlockPos spawnBlockPos;
  
      public SPacketSpawnPosition()
      {

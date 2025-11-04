@@ -18,29 +18,29 @@
  
 @@ -117,10 +119,28 @@
                  {
-                     NBTTagList nbttaglist = nbttagcompound.func_150295_c("pages", 8);
+                     NBTTagList nbttaglist = nbttagcompound.getTagList("pages", 8);
  
--                    for (int i = 0; i < nbttaglist.func_74745_c(); i++)
-+                    for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+-                    for (int i = 0; i < nbttaglist.tagCount(); i++)
++                    for (int i = 0; i < nbttaglist.tagCount(); ++i)
                      {
-                         String s = nbttaglist.func_150307_f(i);
+                         String s = nbttaglist.getStringTagAt(i);
                          ITextComponent itextcomponent;
 +
 +                        // CraftBukkit start
 +                        // Some commands use the worldserver variable but we leave it full of null values,
 +                        // so we must temporarily populate it with the world of the commandsender
-+                        WorldServer[] prev = MinecraftServer.getServerInst().field_71305_c;
++                        WorldServer[] prev = MinecraftServer.getServerInst().worlds;
 +                        MinecraftServer server = MinecraftServer.getServerInst();
-+                        server.field_71305_c = new WorldServer[server.worldServerList.size()];
-+                        server.field_71305_c[0] = (WorldServer) p_179229_2_.func_130014_f_();
++                        server.worlds = new WorldServer[server.worldServerList.size()];
++                        server.worlds[0] = (WorldServer) player.getEntityWorld();
 +                        int bpos = 0;
-+                        for (int pos = 1; pos < server.field_71305_c.length; pos++) {
++                        for (int pos = 1; pos < server.worlds.length; pos++) {
 +                            WorldServer world = server.worldServerList.get(bpos++);
-+                            if (server.field_71305_c[0] == world) {
++                            if (server.worlds[0] == world) {
 +                                pos--;
 +                                continue;
 +                            }
-+                            server.field_71305_c[pos] = world;
++                            server.worlds[pos] = world;
 +                        }
 +                        // CraftBukkit end
  

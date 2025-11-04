@@ -2,7 +2,7 @@
 +++ after/net/minecraft/network/rcon/RConThreadBase.java
 @@ -154,7 +154,7 @@
          {
-             if (this.func_72604_a(datagramsocket, false))
+             if (this.closeSocket(datagramsocket, false))
              {
 -                i++;
 +                ++i;
@@ -11,7 +11,7 @@
  
 @@ -164,7 +164,7 @@
          {
-             if (this.func_72605_a(serversocket, false))
+             if (this.closeServerSocket_do(serversocket, false))
              {
 -                i++;
 +                ++i;

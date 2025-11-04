@@ -2,16 +2,16 @@
 +++ after/net/minecraft/client/gui/ScaledResolution.java
 @@ -29,12 +29,12 @@
  
-         while (this.field_78330_e < i && this.field_78333_a / (this.field_78330_e + 1) >= 320 && this.field_78331_b / (this.field_78330_e + 1) >= 240)
+         while (this.scaleFactor < i && this.scaledWidth / (this.scaleFactor + 1) >= 320 && this.scaledHeight / (this.scaleFactor + 1) >= 240)
          {
--            this.field_78330_e++;
-+            ++this.field_78330_e;
+-            this.scaleFactor++;
++            ++this.scaleFactor;
          }
  
-         if (flag && this.field_78330_e % 2 != 0 && this.field_78330_e != 1)
+         if (flag && this.scaleFactor % 2 != 0 && this.scaleFactor != 1)
          {
--            this.field_78330_e--;
-+            --this.field_78330_e;
+-            this.scaleFactor--;
++            --this.scaleFactor;
          }
  
-         this.field_78332_c = (double)this.field_78333_a / (double)this.field_78330_e;
+         this.scaledWidthD = (double)this.scaledWidth / (double)this.scaleFactor;

@@ -1,36 +1,36 @@
 --- before/net/minecraft/block/state/BlockPistonStructureHelper.java
 +++ after/net/minecraft/block/state/BlockPistonStructureHelper.java
 @@ -17,8 +17,8 @@
-     private final BlockPos field_177259_b;
-     private final BlockPos field_177260_c;
-     private final EnumFacing field_177257_d;
--    private final List<BlockPos> field_177258_e = Lists.newArrayList();
--    private final List<BlockPos> field_177256_f = Lists.newArrayList();
-+    private final List<BlockPos> field_177258_e = Lists.<BlockPos>newArrayList();
-+    private final List<BlockPos> field_177256_f = Lists.<BlockPos>newArrayList();
+     private final BlockPos pistonPos;
+     private final BlockPos blockToMove;
+     private final EnumFacing moveDirection;
+-    private final List<BlockPos> toMove = Lists.newArrayList();
+-    private final List<BlockPos> toDestroy = Lists.newArrayList();
++    private final List<BlockPos> toMove = Lists.<BlockPos>newArrayList();
++    private final List<BlockPos> toDestroy = Lists.<BlockPos>newArrayList();
  
-     public BlockPistonStructureHelper(World p_i45664_1_, BlockPos p_i45664_2_, EnumFacing p_i45664_3_, boolean p_i45664_4_)
+     public BlockPistonStructureHelper(World worldIn, BlockPos posIn, EnumFacing pistonFacing, boolean extending)
      {
 @@ -61,11 +61,11 @@
          }
          else
          {
--            for (int i = 0; i < this.field_177258_e.size(); i++)
-+            for (int i = 0; i < this.field_177258_e.size(); ++i)
+-            for (int i = 0; i < this.toMove.size(); i++)
++            for (int i = 0; i < this.toMove.size(); ++i)
              {
-                 BlockPos blockpos = this.field_177258_e.get(i);
+                 BlockPos blockpos = this.toMove.get(i);
  
--                if (this.field_177261_a.func_180495_p(blockpos).func_177230_c() == Blocks.field_180399_cE && !this.func_177250_b(blockpos))
-+                if (this.field_177261_a.func_180495_p(blockpos).func_177230_c().isStickyBlock(this.field_177261_a.func_180495_p(blockpos)) && !this.func_177250_b(blockpos))
+-                if (this.world.getBlockState(blockpos).getBlock() == Blocks.SLIME_BLOCK && !this.addBranchingBlocks(blockpos))
++                if (this.world.getBlockState(blockpos).getBlock().isStickyBlock(this.world.getBlockState(blockpos)) && !this.addBranchingBlocks(blockpos))
                  {
                      return false;
                  }
 @@ -80,7 +80,7 @@
-         IBlockState iblockstate = this.field_177261_a.func_180495_p(p_177251_1_);
-         Block block = iblockstate.func_177230_c();
+         IBlockState iblockstate = this.world.getBlockState(origin);
+         Block block = iblockstate.getBlock();
  
--        if (iblockstate.func_185904_a() == Material.field_151579_a)
-+        if (iblockstate.func_177230_c().isAir(iblockstate, this.field_177261_a, p_177251_1_))
+-        if (iblockstate.getMaterial() == Material.AIR)
++        if (iblockstate.getBlock().isAir(iblockstate, this.world, origin))
          {
              return true;
          }
@@ -38,25 +38,25 @@
              }
              else
              {
--                while (block == Blocks.field_180399_cE)
+-                while (block == Blocks.SLIME_BLOCK)
 +                while (block.isStickyBlock(iblockstate))
                  {
-                     BlockPos blockpos = p_177251_1_.func_177967_a(this.field_177257_d.func_176734_d(), i);
-                     iblockstate = this.field_177261_a.func_180495_p(blockpos);
-                     block = iblockstate.func_177230_c();
+                     BlockPos blockpos = origin.offset(this.moveDirection.getOpposite(), i);
+                     iblockstate = this.world.getBlockState(blockpos);
+                     block = iblockstate.getBlock();
  
--                    if (iblockstate.func_185904_a() == Material.field_151579_a
--                            || !BlockPistonBase.func_185646_a(iblockstate, this.field_177261_a, blockpos, this.field_177257_d, false, this.field_177257_d.func_176734_d())
--                            || blockpos.equals(this.field_177259_b))
-+                    if (iblockstate.func_177230_c().isAir(iblockstate, this.field_177261_a, blockpos) || !BlockPistonBase.func_185646_a(iblockstate, this.field_177261_a, blockpos, this.field_177257_d, false, this.field_177257_d.func_176734_d()) || blockpos.equals(this.field_177259_b))
+-                    if (iblockstate.getMaterial() == Material.AIR
+-                            || !BlockPistonBase.canPush(iblockstate, this.world, blockpos, this.moveDirection, false, this.moveDirection.getOpposite())
+-                            || blockpos.equals(this.pistonPos))
++                    if (iblockstate.getBlock().isAir(iblockstate, this.world, blockpos) || !BlockPistonBase.canPush(iblockstate, this.world, blockpos, this.moveDirection, false, this.moveDirection.getOpposite()) || blockpos.equals(this.pistonPos))
                      {
                          break;
                      }
  
--                    if (++i + this.field_177258_e.size() > 12)
+-                    if (++i + this.toMove.size() > 12)
 +                    ++i;
 +
-+                    if (i + this.field_177258_e.size() > 12)
++                    if (i + this.toMove.size() > 12)
                      {
                          return false;
                      }
@@ -67,7 +67,7 @@
 -                for (int j = i - 1; j >= 0; j--)
 +                for (int j = i - 1; j >= 0; --j)
                  {
-                     this.field_177258_e.add(p_177251_1_.func_177967_a(this.field_177257_d.func_176734_d(), j));
+                     this.toMove.add(origin.offset(this.moveDirection.getOpposite(), j));
 -                    i1++;
 +                    ++i1;
                  }
@@ -75,38 +75,38 @@
                  int j1 = 1;
 @@ -144,11 +144,11 @@
                      {
-                         this.func_177255_a(i1, k);
+                         this.reorderListAtCollision(i1, k);
  
 -                        for (int l = 0; l <= k + i1; l++)
 +                        for (int l = 0; l <= k + i1; ++l)
                          {
-                             BlockPos blockpos2 = this.field_177258_e.get(l);
+                             BlockPos blockpos2 = this.toMove.get(l);
  
--                            if (this.field_177261_a.func_180495_p(blockpos2).func_177230_c() == Blocks.field_180399_cE && !this.func_177250_b(blockpos2))
-+                            if (this.field_177261_a.func_180495_p(blockpos2).func_177230_c().isStickyBlock(this.field_177261_a.func_180495_p(blockpos2)) && !this.func_177250_b(blockpos2))
+-                            if (this.world.getBlockState(blockpos2).getBlock() == Blocks.SLIME_BLOCK && !this.addBranchingBlocks(blockpos2))
++                            if (this.world.getBlockState(blockpos2).getBlock().isStickyBlock(this.world.getBlockState(blockpos2)) && !this.addBranchingBlocks(blockpos2))
                              {
                                  return false;
                              }
 @@ -159,13 +159,12 @@
  
-                     iblockstate = this.field_177261_a.func_180495_p(blockpos1);
+                     iblockstate = this.world.getBlockState(blockpos1);
  
--                    if (iblockstate.func_185904_a() == Material.field_151579_a)
-+                    if (iblockstate.func_177230_c().isAir(iblockstate, this.field_177261_a, blockpos1))
+-                    if (iblockstate.getMaterial() == Material.AIR)
++                    if (iblockstate.getBlock().isAir(iblockstate, this.world, blockpos1))
                      {
                          return true;
                      }
  
--                    if (!BlockPistonBase.func_185646_a(iblockstate, this.field_177261_a, blockpos1, this.field_177257_d, true, this.field_177257_d)
--                            || blockpos1.equals(this.field_177259_b))
-+                    if (!BlockPistonBase.func_185646_a(iblockstate, this.field_177261_a, blockpos1, this.field_177257_d, true, this.field_177257_d) || blockpos1.equals(this.field_177259_b))
+-                    if (!BlockPistonBase.canPush(iblockstate, this.world, blockpos1, this.moveDirection, true, this.moveDirection)
+-                            || blockpos1.equals(this.pistonPos))
++                    if (!BlockPistonBase.canPush(iblockstate, this.world, blockpos1, this.moveDirection, true, this.moveDirection) || blockpos1.equals(this.pistonPos))
                      {
                          return false;
                      }
 @@ -182,8 +181,8 @@
                      }
  
-                     this.field_177258_e.add(blockpos1);
+                     this.toMove.add(blockpos1);
 -                    i1++;
 -                    j1++;
 +                    ++i1;
@@ -116,7 +116,7 @@
          }
 @@ -191,9 +190,9 @@
  
-     private void func_177255_a(int p_177255_1_, int p_177255_2_)
+     private void reorderListAtCollision(int p_177255_1_, int p_177255_2_)
      {
 -        List<BlockPos> list = Lists.newArrayList();
 -        List<BlockPos> list1 = Lists.newArrayList();
@@ -124,6 +124,6 @@
 +        List<BlockPos> list = Lists.<BlockPos>newArrayList();
 +        List<BlockPos> list1 = Lists.<BlockPos>newArrayList();
 +        List<BlockPos> list2 = Lists.<BlockPos>newArrayList();
-         list.addAll(this.field_177258_e.subList(0, p_177255_2_));
-         list1.addAll(this.field_177258_e.subList(this.field_177258_e.size() - p_177255_1_, this.field_177258_e.size()));
-         list2.addAll(this.field_177258_e.subList(p_177255_2_, this.field_177258_e.size() - p_177255_1_));
+         list.addAll(this.toMove.subList(0, p_177255_2_));
+         list1.addAll(this.toMove.subList(this.toMove.size() - p_177255_1_, this.toMove.size()));
+         list2.addAll(this.toMove.subList(p_177255_2_, this.toMove.size() - p_177255_1_));

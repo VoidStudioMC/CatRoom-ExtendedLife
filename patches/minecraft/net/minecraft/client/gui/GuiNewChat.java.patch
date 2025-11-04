@@ -1,13 +1,13 @@
 --- before/net/minecraft/client/gui/GuiNewChat.java
 +++ after/net/minecraft/client/gui/GuiNewChat.java
 @@ -55,7 +55,7 @@
-                 GlStateManager.func_179152_a(f1, f1, 1.0F);
+                 GlStateManager.scale(f1, f1, 1.0F);
                  int l = 0;
  
--                for (int i1 = 0; i1 + this.field_146250_j < this.field_146253_i.size() && i1 < i; i1++)
-+                for (int i1 = 0; i1 + this.field_146250_j < this.field_146253_i.size() && i1 < i; ++i1)
+-                for (int i1 = 0; i1 + this.scrollPos < this.drawnChatLines.size() && i1 < i; i1++)
++                for (int i1 = 0; i1 + this.scrollPos < this.drawnChatLines.size() && i1 < i; ++i1)
                  {
-                     ChatLine chatline = this.field_146253_i.get(i1 + this.field_146250_j);
+                     ChatLine chatline = this.drawnChatLines.get(i1 + this.scrollPos);
  
 @@ -78,7 +78,7 @@
                              }
@@ -19,11 +19,11 @@
                              if (l1 > 3)
                              {
 @@ -183,7 +183,7 @@
-         this.field_146253_i.clear();
-         this.func_146240_d();
+         this.drawnChatLines.clear();
+         this.resetScroll();
  
--        for (int i = this.field_146252_h.size() - 1; i >= 0; i--)
-+        for (int i = this.field_146252_h.size() - 1; i >= 0; --i)
+-        for (int i = this.chatLines.size() - 1; i >= 0; i--)
++        for (int i = this.chatLines.size() - 1; i >= 0; --i)
          {
-             ChatLine chatline = this.field_146252_h.get(i);
-             this.func_146237_a(chatline.func_151461_a(), chatline.func_74539_c(), chatline.func_74540_b(), true);
+             ChatLine chatline = this.chatLines.get(i);
+             this.setChatLine(chatline.getChatComponent(), chatline.getChatLineID(), chatline.getUpdatedCounter(), true);

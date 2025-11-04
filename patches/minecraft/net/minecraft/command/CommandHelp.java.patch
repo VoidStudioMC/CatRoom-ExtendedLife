@@ -1,11 +1,11 @@
 --- before/net/minecraft/command/CommandHelp.java
 +++ after/net/minecraft/command/CommandHelp.java
 @@ -101,7 +101,7 @@
-             textcomponenttranslation1.func_150256_b().func_150238_a(TextFormatting.DARK_GREEN);
-             p_184881_2_.func_145747_a(textcomponenttranslation1);
+             textcomponenttranslation1.getStyle().setColor(TextFormatting.DARK_GREEN);
+             sender.sendMessage(textcomponenttranslation1);
  
 -            for (int i1 = k * 7; i1 < l; i1++)
 +            for (int i1 = k * 7; i1 < l; ++i1)
              {
                  ICommand icommand1 = list.get(i1);
-                 TextComponentTranslation textcomponenttranslation = new TextComponentTranslation(icommand1.func_71518_a(p_184881_2_));
+                 TextComponentTranslation textcomponenttranslation = new TextComponentTranslation(icommand1.getUsage(sender));

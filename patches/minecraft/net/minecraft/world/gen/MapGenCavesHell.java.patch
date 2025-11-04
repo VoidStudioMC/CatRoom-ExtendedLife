@@ -7,7 +7,7 @@
 -        for (boolean flag = random.nextInt(6) == 0; p_180704_15_ < p_180704_16_; p_180704_15_++)
 +        for (boolean flag = random.nextInt(6) == 0; p_180704_15_ < p_180704_16_; ++p_180704_15_)
          {
-             double d2 = 1.5 + (double)(MathHelper.func_76126_a((float)p_180704_15_ * (float) Math.PI / (float)p_180704_16_) * p_180704_12_);
+             double d2 = 1.5 + (double)(MathHelper.sin((float)p_180704_15_ * (float) Math.PI / (float)p_180704_16_) * p_180704_12_);
              double d3 = d2 * p_180704_17_;
 @@ -187,11 +187,11 @@
  
@@ -50,14 +50,14 @@
 -        for (int j = 0; j < i; j++)
 +        for (int j = 0; j < i; ++j)
          {
-             double d0 = (double)(p_180701_2_ * 16 + this.field_75038_b.nextInt(16));
-             double d1 = (double)this.field_75038_b.nextInt(128);
+             double d0 = (double)(chunkX * 16 + this.rand.nextInt(16));
+             double d1 = (double)this.rand.nextInt(128);
 @@ -273,7 +273,7 @@
-                 k += this.field_75038_b.nextInt(4);
+                 k += this.rand.nextInt(4);
              }
  
 -            for (int l = 0; l < k; l++)
 +            for (int l = 0; l < k; ++l)
              {
-                 float f = this.field_75038_b.nextFloat() * (float)(Math.PI * 2);
-                 float f1 = (this.field_75038_b.nextFloat() - 0.5F) * 2.0F / 8.0F;
+                 float f = this.rand.nextFloat() * (float)(Math.PI * 2);
+                 float f1 = (this.rand.nextFloat() - 0.5F) * 2.0F / 8.0F;

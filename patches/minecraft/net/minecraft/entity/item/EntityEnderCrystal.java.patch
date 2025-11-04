@@ -10,48 +10,48 @@
  public class EntityEnderCrystal extends Entity
  {
 @@ -59,7 +61,7 @@
-         this.field_70169_q = this.field_70165_t;
-         this.field_70167_r = this.field_70163_u;
-         this.field_70166_s = this.field_70161_v;
--        this.field_70261_a++;
-+        ++this.field_70261_a;
+         this.prevPosX = this.posX;
+         this.prevPosY = this.posY;
+         this.prevPosZ = this.posZ;
+-        this.innerRotation++;
++        ++this.innerRotation;
  
-         if (!this.field_70170_p.field_72995_K)
+         if (!this.world.isRemote)
          {
 @@ -68,7 +70,10 @@
-             if (this.field_70170_p.field_73011_w instanceof WorldProviderEnd
-                     && this.field_70170_p.func_180495_p(blockpos).func_177230_c() != Blocks.field_150480_ab)
+             if (this.world.provider instanceof WorldProviderEnd
+                     && this.world.getBlockState(blockpos).getBlock() != Blocks.FIRE)
              {
--                this.field_70170_p.func_175656_a(blockpos, Blocks.field_150480_ab.func_176223_P());
+-                this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 +//                this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
-+                if (!CraftEventFactory.callBlockIgniteEvent(this.field_70170_p, blockpos.func_177958_n(), blockpos.func_177956_o(), blockpos.func_177952_p(), this).isCancelled()) {
-+                    this.field_70170_p.func_175656_a(blockpos, Blocks.field_150480_ab.func_176223_P());
++                if (!CraftEventFactory.callBlockIgniteEvent(this.world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), this).isCancelled()) {
++                    this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 +                }
              }
          }
      }
 @@ -119,13 +124,23 @@
          {
-             if (!this.field_70128_L && !this.field_70170_p.field_72995_K)
+             if (!this.isDead && !this.world.isRemote)
              {
-+                if (CraftEventFactory.handleNonLivingEntityDamageEvent(this, p_70097_1_, p_70097_2_)) {
++                if (CraftEventFactory.handleNonLivingEntityDamageEvent(this, source, amount)) {
 +                    return false;
 +                }
-                 this.func_70106_y();
+                 this.setDead();
  
-                 if (!this.field_70170_p.field_72995_K)
+                 if (!this.world.isRemote)
                  {
-                     if (!p_70097_1_.func_94541_c())
+                     if (!source.isExplosion())
                      {
--                        this.field_70170_p.func_72876_a(null, this.field_70165_t, this.field_70163_u, this.field_70161_v, 6.0F, true);
+-                        this.world.createExplosion(null, this.posX, this.posY, this.posZ, 6.0F, true);
 +//                        this.world.createExplosion((Entity)null, this.posX, this.posY, this.posZ, 6.0F, true);
 +                        ExplosionPrimeEvent event = new ExplosionPrimeEvent(this.getBukkitEntity(), 6.0F, true);
-+                        this.field_70170_p.getServer().getPluginManager().callEvent(event);
++                        this.world.getServer().getPluginManager().callEvent(event);
 +                        if (event.isCancelled()) {
-+                            this.field_70128_L = false;
++                            this.isDead = false;
 +                            return false;
 +                        }
-+                        this.field_70170_p.func_72876_a(this, this.field_70165_t, this.field_70163_u, this.field_70161_v, event.getRadius(), event.getFire());
++                        this.world.createExplosion(this, this.posX, this.posY, this.posZ, event.getRadius(), event.getFire());
                      }
  
-                     this.func_184519_a(p_70097_1_);
+                     this.onCrystalDestroyed(source);

@@ -4,8 +4,8 @@
          float f = 0.0F;
          float f1 = 0.0F;
  
--        for (int i = 0; i < this.field_94556_a.size(); i++)
-+        for (int i = 0; i < this.field_94556_a.size(); ++i)
+-        for (int i = 0; i < this.combatEntries.size(); i++)
++        for (int i = 0; i < this.combatEntries.size(); ++i)
          {
-             CombatEntry combatentry2 = this.field_94556_a.get(i);
-             CombatEntry combatentry3 = i > 0 ? this.field_94556_a.get(i - 1) : null;
+             CombatEntry combatentry2 = this.combatEntries.get(i);
+             CombatEntry combatentry3 = i > 0 ? this.combatEntries.get(i - 1) : null;

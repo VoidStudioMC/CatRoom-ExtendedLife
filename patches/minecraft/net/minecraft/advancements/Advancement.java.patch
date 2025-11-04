@@ -1,39 +1,39 @@
 --- before/net/minecraft/advancements/Advancement.java
 +++ after/net/minecraft/advancements/Advancement.java
 @@ -32,6 +32,7 @@
-     private final String[][] field_192081_f;
-     private final Set<Advancement> field_192082_g = Sets.newLinkedHashSet();
-     private final ITextComponent field_193125_h;
+     private final String[][] requirements;
+     private final Set<Advancement> children = Sets.newLinkedHashSet();
+     private final ITextComponent displayText;
 +    public final org.bukkit.advancement.Advancement bukkit = new org.bukkit.craftbukkit.v1_12_R1.advancement.CraftAdvancement(this);
  
      public Advancement(
-         ResourceLocation p_i47472_1_,
+         ResourceLocation id,
 @@ -293,12 +294,12 @@
-                     JsonArray jsonarray = JsonUtils.func_151213_a(p_192059_0_, "requirements", new JsonArray());
+                     JsonArray jsonarray = JsonUtils.getJsonArray(json, "requirements", new JsonArray());
                      String[][] astring = new String[jsonarray.size()][];
  
 -                    for (int i = 0; i < jsonarray.size(); i++)
 +                    for (int i = 0; i < jsonarray.size(); ++i)
                      {
-                         JsonArray jsonarray1 = JsonUtils.func_151207_m(jsonarray.get(i), "requirements[" + i + "]");
+                         JsonArray jsonarray1 = JsonUtils.getJsonArray(jsonarray.get(i), "requirements[" + i + "]");
                          astring[i] = new String[jsonarray1.size()];
  
 -                        for (int j = 0; j < jsonarray1.size(); j++)
 +                        for (int j = 0; j < jsonarray1.size(); ++j)
                          {
-                             astring[i][j] = JsonUtils.func_151206_a(jsonarray1.get(j), "requirements[" + i + "][" + j + "]");
+                             astring[i][j] = JsonUtils.getString(jsonarray1.get(j), "requirements[" + i + "][" + j + "]");
                          }
 @@ -363,11 +364,11 @@
-                 Map<String, Criterion> map = Criterion.func_192142_c(p_192060_0_);
-                 String[][] astring = new String[p_192060_0_.func_150792_a()][];
+                 Map<String, Criterion> map = Criterion.criteriaFromNetwork(buf);
+                 String[][] astring = new String[buf.readVarInt()][];
  
 -                for (int i = 0; i < astring.length; i++)
 +                for (int i = 0; i < astring.length; ++i)
                  {
-                     astring[i] = new String[p_192060_0_.func_150792_a()];
+                     astring[i] = new String[buf.readVarInt()];
  
 -                    for (int j = 0; j < astring[i].length; j++)
 +                    for (int j = 0; j < astring[i].length; ++j)
                      {
-                         astring[i][j] = p_192060_0_.func_150789_c(32767);
+                         astring[i][j] = buf.readString(32767);
                      }

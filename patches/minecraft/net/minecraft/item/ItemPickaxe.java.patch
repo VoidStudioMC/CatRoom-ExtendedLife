@@ -4,14 +4,14 @@
              {
                  return true;
              }
-+            else if (material == Material.field_151573_f)
++            else if (material == Material.IRON)
 +            {
 +                return true;
 +            }
              else
              {
--                return material == Material.field_151573_f ? true : material == Material.field_151574_g;
-+                return material == Material.field_151574_g;
+-                return material == Material.IRON ? true : material == Material.ANVIL;
++                return material == Material.ANVIL;
              }
          }
          else

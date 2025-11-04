@@ -2,19 +2,19 @@
 +++ after/net/minecraft/entity/boss/dragon/phase/PhaseSittingScanning.java
 @@ -17,7 +17,7 @@
      @Override
-     public void func_188659_c()
+     public void doLocalUpdate()
      {
--        this.field_188667_b++;
-+        ++this.field_188667_b;
-         EntityLivingBase entitylivingbase = this.field_188661_a.field_70170_p.func_184142_a(this.field_188661_a, 20.0, 10.0);
+-        this.scanningTime++;
++        ++this.scanningTime;
+         EntityLivingBase entitylivingbase = this.dragon.world.getNearestAttackablePlayer(this.dragon, 20.0, 10.0);
  
          if (entitylivingbase != null)
 @@ -60,7 +60,7 @@
                      }
  
-                     this.field_188661_a.field_70704_bt = (float)((double)this.field_188661_a.field_70704_bt + d2 * (double)(0.7F / f2 / f3));
--                    this.field_188661_a.field_70177_z = this.field_188661_a.field_70177_z + this.field_188661_a.field_70704_bt;
-+                    this.field_188661_a.field_70177_z += this.field_188661_a.field_70704_bt;
+                     this.dragon.randomYawVelocity = (float)((double)this.dragon.randomYawVelocity + d2 * (double)(0.7F / f2 / f3));
+-                    this.dragon.rotationYaw = this.dragon.rotationYaw + this.dragon.randomYawVelocity;
++                    this.dragon.rotationYaw += this.dragon.randomYawVelocity;
                  }
              }
          }

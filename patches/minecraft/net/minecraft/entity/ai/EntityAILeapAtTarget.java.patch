@@ -4,14 +4,14 @@
              {
                  return false;
              }
-+            else if (!this.field_75328_a.field_70122_E)
++            else if (!this.leaper.onGround)
 +            {
 +                return false;
 +            }
              else
              {
--                return !this.field_75328_a.field_70122_E ? false : this.field_75328_a.func_70681_au().nextInt(5) == 0;
-+                return this.field_75328_a.func_70681_au().nextInt(5) == 0;
+-                return !this.leaper.onGround ? false : this.leaper.getRNG().nextInt(5) == 0;
++                return this.leaper.getRNG().nextInt(5) == 0;
              }
          }
      }
@@ -19,10 +19,10 @@
  
          if ((double)f >= 1.0E-4)
          {
--            this.field_75328_a.field_70159_w = this.field_75328_a.field_70159_w + d0 / (double)f * 0.5 * 0.8F + this.field_75328_a.field_70159_w * 0.2F;
--            this.field_75328_a.field_70179_y = this.field_75328_a.field_70179_y + d1 / (double)f * 0.5 * 0.8F + this.field_75328_a.field_70179_y * 0.2F;
-+            this.field_75328_a.field_70159_w += d0 / (double)f * 0.5 * 0.8F + this.field_75328_a.field_70159_w * 0.2F;
-+            this.field_75328_a.field_70179_y += d1 / (double)f * 0.5 * 0.8F + this.field_75328_a.field_70179_y * 0.2F;
+-            this.leaper.motionX = this.leaper.motionX + d0 / (double)f * 0.5 * 0.8F + this.leaper.motionX * 0.2F;
+-            this.leaper.motionZ = this.leaper.motionZ + d1 / (double)f * 0.5 * 0.8F + this.leaper.motionZ * 0.2F;
++            this.leaper.motionX += d0 / (double)f * 0.5 * 0.8F + this.leaper.motionX * 0.2F;
++            this.leaper.motionZ += d1 / (double)f * 0.5 * 0.8F + this.leaper.motionZ * 0.2F;
          }
  
-         this.field_75328_a.field_70181_x = (double)this.field_75327_c;
+         this.leaper.motionY = (double)this.leapMotionY;

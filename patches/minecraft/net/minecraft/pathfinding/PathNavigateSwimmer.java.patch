@@ -1,11 +1,11 @@
 --- before/net/minecraft/pathfinding/PathNavigateSwimmer.java
 +++ after/net/minecraft/pathfinding/PathNavigateSwimmer.java
 @@ -45,7 +45,7 @@
-             this.field_75514_c.func_75875_a();
+             this.currentPath.incrementPathIndex();
          }
  
--        for (int j = Math.min(this.field_75514_c.func_75873_e() + 6, this.field_75514_c.func_75874_d() - 1); j > this.field_75514_c.func_75873_e(); j--)
-+        for (int j = Math.min(this.field_75514_c.func_75873_e() + 6, this.field_75514_c.func_75874_d() - 1); j > this.field_75514_c.func_75873_e(); --j)
+-        for (int j = Math.min(this.currentPath.getCurrentPathIndex() + 6, this.currentPath.getCurrentPathLength() - 1); j > this.currentPath.getCurrentPathIndex(); j--)
++        for (int j = Math.min(this.currentPath.getCurrentPathIndex() + 6, this.currentPath.getCurrentPathLength() - 1); j > this.currentPath.getCurrentPathIndex(); --j)
          {
-             Vec3d vec3d1 = this.field_75514_c.func_75881_a(this.field_75515_a, j);
+             Vec3d vec3d1 = this.currentPath.getVectorFromIndex(this.entity, j);
  

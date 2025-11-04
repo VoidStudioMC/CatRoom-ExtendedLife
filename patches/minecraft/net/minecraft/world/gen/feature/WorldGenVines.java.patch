@@ -2,19 +2,19 @@
 +++ after/net/minecraft/world/gen/feature/WorldGenVines.java
 @@ -13,7 +13,7 @@
      @Override
-     public boolean func_180709_b(World p_180709_1_, Random p_180709_2_, BlockPos p_180709_3_)
+     public boolean generate(World worldIn, Random rand, BlockPos position)
      {
--        while (p_180709_3_.func_177956_o() < 128)
-+        for (; p_180709_3_.func_177956_o() < 128; p_180709_3_ = p_180709_3_.func_177984_a())
+-        while (position.getY() < 128)
++        for (; position.getY() < 128; position = position.up())
          {
-             if (p_180709_1_.func_175623_d(p_180709_3_))
+             if (worldIn.isAirBlock(position))
              {
 @@ -36,8 +36,6 @@
              {
-                 p_180709_3_ = p_180709_3_.func_177982_a(p_180709_2_.nextInt(4) - p_180709_2_.nextInt(4), 0, p_180709_2_.nextInt(4) - p_180709_2_.nextInt(4));
+                 position = position.add(rand.nextInt(4) - rand.nextInt(4), 0, rand.nextInt(4) - rand.nextInt(4));
              }
 -
--            p_180709_3_ = p_180709_3_.func_177984_a();
+-            position = position.up();
          }
  
          return true;

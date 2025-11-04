@@ -2,9 +2,9 @@
 +++ after/net/minecraft/server/management/UserListOps.java
 @@ -45,6 +45,7 @@
  
-     protected String func_152681_a(GameProfile p_152681_1_)
+     protected String getObjectKey(GameProfile obj)
      {
-+        if (p_152681_1_ == null || p_152681_1_.getId() == null) return "invalid"; // CatServer - handle GameProfiles with no ID
-         return p_152681_1_.getId().toString();
++        if (obj == null || obj.getId() == null) return "invalid"; // CatServer - handle GameProfiles with no ID
+         return obj.getId().toString();
      }
  

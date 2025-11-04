@@ -2,10 +2,10 @@
 +++ after/net/minecraft/entity/ai/EntityAIFollowParent.java
 @@ -27,7 +27,7 @@
          {
-             List<EntityAnimal> list = this.field_75348_a
-                                       .field_70170_p
--                                      .func_72872_a((Class <? extends EntityAnimal >)this.field_75348_a.getClass(), this.field_75348_a.func_174813_aQ().func_72314_b(8.0, 4.0, 8.0));
-+                                      .func_72872_a(this.field_75348_a.getClass(), this.field_75348_a.func_174813_aQ().func_72314_b(8.0, 4.0, 8.0));
+             List<EntityAnimal> list = this.childAnimal
+                                       .world
+-                                      .getEntitiesWithinAABB((Class <? extends EntityAnimal >)this.childAnimal.getClass(), this.childAnimal.getEntityBoundingBox().grow(8.0, 4.0, 8.0));
++                                      .getEntitiesWithinAABB(this.childAnimal.getClass(), this.childAnimal.getEntityBoundingBox().grow(8.0, 4.0, 8.0));
              EntityAnimal entityanimal = null;
              double d0 = Double.MAX_VALUE;
  

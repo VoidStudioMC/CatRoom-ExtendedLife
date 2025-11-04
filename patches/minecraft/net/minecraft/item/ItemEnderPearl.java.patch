@@ -10,40 +10,36 @@
  import net.minecraft.util.ActionResult;
 @@ -24,6 +25,19 @@
      {
-         ItemStack itemstack = p_77659_2_.func_184586_b(p_77659_3_);
+         ItemStack itemstack = playerIn.getHeldItem(handIn);
  
 +        // CraftBukkit start - change order
-+        if (!p_77659_1_.field_72995_K) {
-+            EntityEnderPearl entityenderpearl = new EntityEnderPearl(p_77659_1_, p_77659_2_);
++        if (!worldIn.isRemote) {
++            EntityEnderPearl entityenderpearl = new EntityEnderPearl(worldIn, playerIn);
 +
-+            entityenderpearl.func_184538_a(p_77659_2_, p_77659_2_.field_70125_A, p_77659_2_.field_70177_z, 0.0F, 1.5F, 1.0F);
-+            if (!p_77659_1_.func_72838_d(entityenderpearl)) {
-+                if (p_77659_2_ instanceof EntityPlayerMP) {
-+                    ((EntityPlayerMP) p_77659_2_).getBukkitEntity().updateInventory();
++            entityenderpearl.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
++            if (!worldIn.spawnEntity(entityenderpearl)) {
++                if (playerIn instanceof EntityPlayerMP) {
++                    ((EntityPlayerMP) playerIn).getBukkitEntity().updateInventory();
 +                }
 +                return new ActionResult<>(EnumActionResult.FAIL, itemstack);
 +            }
 +        }
 +
-         if (!p_77659_2_.field_71075_bZ.field_75098_d)
+         if (!playerIn.capabilities.isCreativeMode)
          {
-             itemstack.func_190918_g(1);
+             itemstack.shrink(1);
 @@ -41,12 +55,14 @@
          );
-         p_77659_2_.func_184811_cZ().func_185145_a(this, 20);
+         playerIn.getCooldownTracker().setCooldown(this, 20);
  
--        if (!p_77659_1_.field_72995_K)
 +        /*
-+        if (!worldIn.isRemote)
+         if (!worldIn.isRemote)
          {
--            EntityEnderPearl entityenderpearl = new EntityEnderPearl(p_77659_1_, p_77659_2_);
--            entityenderpearl.func_184538_a(p_77659_2_, p_77659_2_.field_70125_A, p_77659_2_.field_70177_z, 0.0F, 1.5F, 1.0F);
--            p_77659_1_.func_72838_d(entityenderpearl);
-+            EntityEnderPearl entityenderpearl = new EntityEnderPearl(worldIn, playerIn);
-+            entityenderpearl.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-+            worldIn.spawnEntity(entityenderpearl);
+             EntityEnderPearl entityenderpearl = new EntityEnderPearl(worldIn, playerIn);
+             entityenderpearl.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
+             worldIn.spawnEntity(entityenderpearl);
          }
 +        */
  
-         p_77659_2_.func_71029_a(StatList.func_188057_b(this));
+         playerIn.addStat(StatList.getObjectUseStats(this));
          return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);

@@ -1,43 +1,41 @@
 --- before/net/minecraft/advancements/FunctionManager.java
 +++ after/net/minecraft/advancements/FunctionManager.java
 @@ -29,24 +29,23 @@
-     private FunctionObject field_193072_f;
-     private final ArrayDeque<FunctionManager.QueuedCommand> field_194020_g = new ArrayDeque<>();
-     private boolean field_194021_h = false;
--    private final ICommandSender field_193073_g = new ICommandSender()
+     private FunctionObject gameLoopFunction;
+     private final ArrayDeque<FunctionManager.QueuedCommand> commandQueue = new ArrayDeque<>();
+     private boolean isExecuting = false;
+-    private final ICommandSender gameLoopFunctionSender = new ICommandSender()
 -    {
 -        @Override
-+    private final ICommandSender field_193073_g = new CustomFunctionListener();
++    private final ICommandSender gameLoopFunctionSender = new CustomFunctionListener();
 +
 +    public class CustomFunctionListener implements ICommandSender {
 +
 +        public org.bukkit.command.CommandSender sender = new org.bukkit.craftbukkit.v1_12_R1.command.CraftFunctionCommandSender(this);
-         public String func_70005_c_()
+         public String getName()
          {
-             return FunctionManager.this.field_193071_e;
+             return FunctionManager.this.currentGameLoopFunctionId;
          }
 -        @Override
--        public boolean func_70003_b(int p_70003_1_, String p_70003_2_)
-+        public boolean func_70003_b(int permLevel, String commandName)
+         public boolean canUseCommand(int permLevel, String commandName)
          {
--            return p_70003_1_ <= 2;
-+            return permLevel <= 2;
+             return permLevel <= 2;
          }
 -        @Override
-         public World func_130014_f_()
+         public World getEntityWorld()
          {
-             return FunctionManager.this.field_193069_c.field_71305_c[0];
+             return FunctionManager.this.server.worlds[0];
          }
 -        @Override
-         public MinecraftServer func_184102_h()
+         public MinecraftServer getServer()
          {
-             return FunctionManager.this.field_193069_c;
+             return FunctionManager.this.server;
 @@ -121,7 +120,7 @@
                  int j = 0;
-                 FunctionObject.Entry[] afunctionobject$entry = p_194019_1_.func_193528_a();
+                 FunctionObject.Entry[] afunctionobject$entry = function.getEntries();
  
 -                for (int k = afunctionobject$entry.length - 1; k >= 0; k--)
 +                for (int k = afunctionobject$entry.length - 1; k >= 0; --k)
                  {
-                     this.field_194020_g.push(new FunctionManager.QueuedCommand(this, p_194019_2_, afunctionobject$entry[k]));
+                     this.commandQueue.push(new FunctionManager.QueuedCommand(this, sender, afunctionobject$entry[k]));
                  }

@@ -1,48 +1,48 @@
 --- before/net/minecraft/entity/monster/EntityGhast.java
 +++ after/net/minecraft/entity/monster/EntityGhast.java
 @@ -229,7 +229,7 @@
-                 if (entitylivingbase.func_70068_e(this.field_179470_b) < 4096.0 && this.field_179470_b.func_70685_l(entitylivingbase))
+                 if (entitylivingbase.getDistanceSq(this.parentEntity) < 4096.0 && this.parentEntity.canEntityBeSeen(entitylivingbase))
                  {
-                     World world = this.field_179470_b.field_70170_p;
--                    this.field_179471_a++;
-+                    ++this.field_179471_a;
+                     World world = this.parentEntity.world;
+-                    this.attackTimer++;
++                    ++this.attackTimer;
  
-                     if (this.field_179471_a == 10)
+                     if (this.attackTimer == 10)
                      {
 @@ -247,7 +247,8 @@
-                         double d4 = entitylivingbase.field_70161_v - (this.field_179470_b.field_70161_v + vec3d.field_72449_c * 4.0);
-                         world.func_180498_a(null, 1016, new BlockPos(this.field_179470_b), 0);
-                         EntityLargeFireball entitylargefireball = new EntityLargeFireball(world, this.field_179470_b, d2, d3, d4);
--                        entitylargefireball.field_92057_e = this.field_179470_b.func_175453_cd();
+                         double d4 = entitylivingbase.posZ - (this.parentEntity.posZ + vec3d.z * 4.0);
+                         world.playEvent(null, 1016, new BlockPos(this.parentEntity), 0);
+                         EntityLargeFireball entitylargefireball = new EntityLargeFireball(world, this.parentEntity, d2, d3, d4);
+-                        entitylargefireball.explosionPower = this.parentEntity.getFireballStrength();
 +                        // CraftBukkit - set bukkitYield when setting explosionpower
-+                        entitylargefireball.bukkitYield = entitylargefireball.field_92057_e = this.field_179470_b.func_175453_cd();
-                         entitylargefireball.field_70165_t = this.field_179470_b.field_70165_t + vec3d.field_72450_a * 4.0;
-                         entitylargefireball.field_70163_u = this.field_179470_b.field_70163_u + (double)(this.field_179470_b.field_70131_O / 2.0F) + 0.5;
-                         entitylargefireball.field_70161_v = this.field_179470_b.field_70161_v + vec3d.field_72449_c * 4.0;
++                        entitylargefireball.bukkitYield = entitylargefireball.explosionPower = this.parentEntity.getFireballStrength();
+                         entitylargefireball.posX = this.parentEntity.posX + vec3d.x * 4.0;
+                         entitylargefireball.posY = this.parentEntity.posY + (double)(this.parentEntity.height / 2.0F) + 0.5;
+                         entitylargefireball.posZ = this.parentEntity.posZ + vec3d.z * 4.0;
 @@ -257,7 +258,7 @@
                  }
-                 else if (this.field_179471_a > 0)
+                 else if (this.attackTimer > 0)
                  {
--                    this.field_179471_a--;
-+                    --this.field_179471_a;
+-                    this.attackTimer--;
++                    --this.attackTimer;
                  }
  
-                 this.field_179470_b.func_175454_a(this.field_179471_a > 10);
+                 this.parentEntity.setAttacking(this.attackTimer > 10);
 @@ -374,7 +375,7 @@
  
-                     if (this.field_179928_h-- <= 0)
+                     if (this.courseChangeCooldown-- <= 0)
                      {
--                        this.field_179928_h = this.field_179928_h + this.field_179927_g.func_70681_au().nextInt(5) + 2;
-+                        this.field_179928_h += this.field_179927_g.func_70681_au().nextInt(5) + 2;
-                         d3 = (double)MathHelper.func_76133_a(d3);
+-                        this.courseChangeCooldown = this.courseChangeCooldown + this.parentEntity.getRNG().nextInt(5) + 2;
++                        this.courseChangeCooldown += this.parentEntity.getRNG().nextInt(5) + 2;
+                         d3 = (double)MathHelper.sqrt(d3);
  
-                         if (this.func_179926_b(this.field_75646_b, this.field_75647_c, this.field_75644_d, d3))
+                         if (this.isNotColliding(this.posX, this.posY, this.posZ, d3))
 @@ -398,7 +399,7 @@
-                 double d2 = (p_179926_5_ - this.field_179927_g.field_70161_v) / p_179926_7_;
-                 AxisAlignedBB axisalignedbb = this.field_179927_g.func_174813_aQ();
+                 double d2 = (z - this.parentEntity.posZ) / p_179926_7_;
+                 AxisAlignedBB axisalignedbb = this.parentEntity.getEntityBoundingBox();
  
 -                for (int i = 1; (double)i < p_179926_7_; i++)
 +                for (int i = 1; (double)i < p_179926_7_; ++i)
                  {
-                     axisalignedbb = axisalignedbb.func_72317_d(d0, d1, d2);
+                     axisalignedbb = axisalignedbb.offset(d0, d1, d2);
  

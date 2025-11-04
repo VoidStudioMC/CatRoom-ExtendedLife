@@ -2,10 +2,10 @@
 +++ after/net/minecraft/world/biome/BiomeCache.java
 @@ -51,7 +51,7 @@
          {
-             this.field_76842_b = i;
+             this.lastCleanupTime = i;
  
--            for (int k = 0; k < this.field_76841_d.size(); k++)
-+            for (int k = 0; k < this.field_76841_d.size(); ++k)
+-            for (int k = 0; k < this.cache.size(); k++)
++            for (int k = 0; k < this.cache.size(); ++k)
              {
-                 BiomeCache.Block biomecache$block = this.field_76841_d.get(k);
-                 long l = i - biomecache$block.field_76886_f;
+                 BiomeCache.Block biomecache$block = this.cache.get(k);
+                 long l = i - biomecache$block.lastAccessTime;

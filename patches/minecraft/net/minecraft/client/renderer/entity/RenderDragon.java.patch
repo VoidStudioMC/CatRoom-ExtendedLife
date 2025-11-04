@@ -1,11 +1,11 @@
 --- before/net/minecraft/client/renderer/entity/RenderDragon.java
 +++ after/net/minecraft/client/renderer/entity/RenderDragon.java
 @@ -141,7 +141,7 @@
-         bufferbuilder.func_181668_a(5, DefaultVertexFormats.field_181709_i);
+         bufferbuilder.begin(5, DefaultVertexFormats.POSITION_TEX_COLOR);
          int i = 8;
  
 -        for (int j = 0; j <= 8; j++)
 +        for (int j = 0; j <= 8; ++j)
          {
-             float f7 = MathHelper.func_76126_a((float)(j % 8) * (float)(Math.PI * 2) / 8.0F) * 0.75F;
-             float f8 = MathHelper.func_76134_b((float)(j % 8) * (float)(Math.PI * 2) / 8.0F) * 0.75F;
+             float f7 = MathHelper.sin((float)(j % 8) * (float)(Math.PI * 2) / 8.0F) * 0.75F;
+             float f8 = MathHelper.cos((float)(j % 8) * (float)(Math.PI * 2) / 8.0F) * 0.75F;

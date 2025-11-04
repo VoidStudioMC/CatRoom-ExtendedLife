@@ -18,11 +18,11 @@
  
  public class InventoryCrafting implements IInventory
  {
-     private final NonNullList<ItemStack> field_70466_a;
-     private final int field_70464_b;
-     private final int field_174924_c;
--    private final Container field_70465_c;
-+    public final Container field_70465_c;
+     private final NonNullList<ItemStack> stackList;
+     private final int inventoryWidth;
+     private final int inventoryHeight;
+-    private final Container eventHandler;
++    public final Container eventHandler;
 +
 +    // CraftBukkit start - add fields
 +    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
@@ -32,7 +32,7 @@
 +    private int maxStack = MAX_STACK;
 +
 +    public List<ItemStack> getContents() {
-+        return this.field_70466_a;
++        return this.stackList;
 +    }
 +
 +    @Override
@@ -41,7 +41,7 @@
 +    }
 +    
 +    public InventoryType getInvType() {
-+        return field_70466_a.size() == 4 ? InventoryType.CRAFTING : InventoryType.WORKBENCH;
++        return stackList.size() == 4 ? InventoryType.CRAFTING : InventoryType.WORKBENCH;
 +    }
 +    
 +    @Override
@@ -82,5 +82,5 @@
 +    }
 +    // CatServer end
  
-     public InventoryCrafting(Container p_i1807_1_, int p_i1807_2_, int p_i1807_3_)
+     public InventoryCrafting(Container eventHandlerIn, int width, int height)
      {

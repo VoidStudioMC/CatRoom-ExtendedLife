@@ -1,11 +1,11 @@
 --- before/net/minecraft/entity/ai/EntityAIZombieAttack.java
 +++ after/net/minecraft/entity/ai/EntityAIZombieAttack.java
 @@ -31,7 +31,7 @@
-     public void func_75246_d()
+     public void updateTask()
      {
-         super.func_75246_d();
--        this.field_188495_i++;
-+        ++this.field_188495_i;
+         super.updateTask();
+-        this.raiseArmTicks++;
++        ++this.raiseArmTicks;
  
-         if (this.field_188495_i >= 5 && this.field_75439_d < 10)
+         if (this.raiseArmTicks >= 5 && this.attackTick < 10)
          {

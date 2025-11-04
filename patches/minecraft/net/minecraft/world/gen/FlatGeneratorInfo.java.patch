@@ -4,8 +4,8 @@
          stringbuilder.append(3);
          stringbuilder.append(";");
  
--        for (int i = 0; i < this.field_82655_a.size(); i++)
-+        for (int i = 0; i < this.field_82655_a.size(); ++i)
+-        for (int i = 0; i < this.flatLayers.size(); i++)
++        for (int i = 0; i < this.flatLayers.size(); ++i)
          {
              if (i > 0)
              {

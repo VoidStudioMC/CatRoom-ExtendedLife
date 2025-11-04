@@ -43,15 +43,15 @@
                          if (d1 < p_110668_2_)
                          {
 -                            k++;
--                            commandspreadplayers$position1.field_111101_a = commandspreadplayers$position1.field_111101_a
--                                    + (commandspreadplayers$position2.field_111101_a - commandspreadplayers$position.field_111101_a);
--                            commandspreadplayers$position1.field_111100_b = commandspreadplayers$position1.field_111100_b
--                                    + (commandspreadplayers$position2.field_111100_b - commandspreadplayers$position.field_111100_b);
+-                            commandspreadplayers$position1.x = commandspreadplayers$position1.x
+-                                    + (commandspreadplayers$position2.x - commandspreadplayers$position.x);
+-                            commandspreadplayers$position1.z = commandspreadplayers$position1.z
+-                                    + (commandspreadplayers$position2.z - commandspreadplayers$position.z);
 +                            ++k;
-+                            commandspreadplayers$position1.field_111101_a += commandspreadplayers$position2.field_111101_a
-+                                    - commandspreadplayers$position.field_111101_a;
-+                            commandspreadplayers$position1.field_111100_b += commandspreadplayers$position2.field_111100_b
-+                                    - commandspreadplayers$position.field_111100_b;
++                            commandspreadplayers$position1.x += commandspreadplayers$position2.x
++                                    - commandspreadplayers$position.x;
++                            commandspreadplayers$position1.z += commandspreadplayers$position2.z
++                                    - commandspreadplayers$position.z;
                          }
                      }
                  }
@@ -72,45 +72,45 @@
 +        for (int i = 0; i < acommandspreadplayers$position.length; ++i)
          {
              CommandSpreadPlayers.Position commandspreadplayers$position = new CommandSpreadPlayers.Position();
-             commandspreadplayers$position.func_111097_a(p_110670_1_, p_110670_3_, p_110670_5_, p_110670_7_, p_110670_9_);
+             commandspreadplayers$position.randomize(p_110670_1_, p_110670_3_, p_110670_5_, p_110670_7_, p_110670_9_);
 @@ -363,8 +365,8 @@
  
-             public void func_111094_b(CommandSpreadPlayers.Position p_111094_1_)
+             public void moveAway(CommandSpreadPlayers.Position pos)
              {
--                this.field_111101_a = this.field_111101_a - p_111094_1_.field_111101_a;
--                this.field_111100_b = this.field_111100_b - p_111094_1_.field_111100_b;
-+                this.field_111101_a -= p_111094_1_.field_111101_a;
-+                this.field_111100_b -= p_111094_1_.field_111100_b;
+-                this.x = this.x - pos.x;
+-                this.z = this.z - pos.z;
++                this.x -= pos.x;
++                this.z -= pos.z;
              }
  
-             public boolean func_111093_a(double p_111093_1_, double p_111093_3_, double p_111093_5_, double p_111093_7_)
+             public boolean clamp(double p_111093_1_, double p_111093_3_, double p_111093_5_, double p_111093_7_)
 @@ -404,7 +406,7 @@
                  {
-                     blockpos = blockpos.func_177977_b();
+                     blockpos = blockpos.down();
  
--                    if (p_111092_1_.func_180495_p(blockpos).func_185904_a() != Material.field_151579_a)
-+                    if (getBlockState(p_111092_1_, blockpos).func_185904_a() != Material.field_151579_a)
+-                    if (worldIn.getBlockState(blockpos).getMaterial() != Material.AIR)
++                    if (getBlockState(worldIn, blockpos).getMaterial() != Material.AIR)
                      {
-                         return blockpos.func_177956_o() + 1;
+                         return blockpos.getY() + 1;
                      }
 @@ -420,7 +422,7 @@
-                 while (blockpos.func_177956_o() > 0)
+                 while (blockpos.getY() > 0)
                  {
-                     blockpos = blockpos.func_177977_b();
--                    Material material = p_111098_1_.func_180495_p(blockpos).func_185904_a();
-+                    Material material = getBlockState(p_111098_1_, blockpos).func_185904_a();
+                     blockpos = blockpos.down();
+-                    Material material = worldIn.getBlockState(blockpos).getMaterial();
++                    Material material = getBlockState(worldIn, blockpos).getMaterial();
  
-                     if (material != Material.field_151579_a)
+                     if (material != Material.AIR)
                      {
 @@ -436,5 +438,12 @@
-                 this.field_111101_a = MathHelper.func_82716_a(p_111097_1_, p_111097_2_, p_111097_6_);
-                 this.field_111100_b = MathHelper.func_82716_a(p_111097_1_, p_111097_4_, p_111097_8_);
+                 this.x = MathHelper.nextDouble(rand, p_111097_2_, p_111097_6_);
+                 this.z = MathHelper.nextDouble(rand, p_111097_4_, p_111097_8_);
              }
 +
 +            // CraftBukkit start - add a version of getBlockState which force loads chunks
 +            private static IBlockState getBlockState(World world, BlockPos position) {
-+                ((ChunkProviderServer) world.func_72863_F()).func_186028_c(position.func_177958_n() >> 4, position.func_177952_p() >> 4);
-+                return world.func_180495_p(position);
++                ((ChunkProviderServer) world.getChunkProvider()).loadChunk(position.getX() >> 4, position.getZ() >> 4);
++                return world.getBlockState(position);
 +            }
 +            // CraftBukkit end
          }

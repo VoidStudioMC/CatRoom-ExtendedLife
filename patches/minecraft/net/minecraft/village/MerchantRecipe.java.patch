@@ -8,18 +8,18 @@
  
  public class MerchantRecipe
  {
--    private ItemStack field_77403_a = ItemStack.field_190927_a;
--    private ItemStack field_77401_b = ItemStack.field_190927_a;
--    private ItemStack field_77402_c = ItemStack.field_190927_a;
--    private int field_77400_d;
--    private int field_82786_e;
--    private boolean field_180323_f;
-+    public ItemStack field_77403_a;
-+    public ItemStack field_77401_b;
-+    public ItemStack field_77402_c;
-+    public int field_77400_d;
-+    public int field_82786_e;
-+    public boolean field_180323_f;
+-    private ItemStack itemToBuy = ItemStack.EMPTY;
+-    private ItemStack secondItemToBuy = ItemStack.EMPTY;
+-    private ItemStack itemToSell = ItemStack.EMPTY;
+-    private int toolUses;
+-    private int maxTradeUses;
+-    private boolean rewardsExp;
++    public ItemStack itemToBuy;
++    public ItemStack secondItemToBuy;
++    public ItemStack itemToSell;
++    public int toolUses;
++    public int maxTradeUses;
++    public boolean rewardsExp;
 +
 +    private CraftMerchantRecipe bukkitHandle;
 +
@@ -32,30 +32,30 @@
 +        this.bukkitHandle = bukkit;
 +    }
  
-     public MerchantRecipe(NBTTagCompound p_i1940_1_)
+     public MerchantRecipe(NBTTagCompound tagCompound)
      {
-+        this.field_77403_a = ItemStack.field_190927_a;
-+        this.field_77401_b = ItemStack.field_190927_a;
-+        this.field_77402_c = ItemStack.field_190927_a;
-         this.func_77390_a(p_i1940_1_);
++        this.itemToBuy = ItemStack.EMPTY;
++        this.secondItemToBuy = ItemStack.EMPTY;
++        this.itemToSell = ItemStack.EMPTY;
+         this.readFromTags(tagCompound);
      }
  
 @@ -27,6 +42,9 @@
  
-     public MerchantRecipe(ItemStack p_i45760_1_, ItemStack p_i45760_2_, ItemStack p_i45760_3_, int p_i45760_4_, int p_i45760_5_)
+     public MerchantRecipe(ItemStack buy1, ItemStack buy2, ItemStack sell, int toolUsesIn, int maxTradeUsesIn)
      {
-+        this.field_77403_a = ItemStack.field_190927_a;
-+        this.field_77401_b = ItemStack.field_190927_a;
-+        this.field_77402_c = ItemStack.field_190927_a;
-         this.field_77403_a = p_i45760_1_;
-         this.field_77401_b = p_i45760_2_;
-         this.field_77402_c = p_i45760_3_;
++        this.itemToBuy = ItemStack.EMPTY;
++        this.secondItemToBuy = ItemStack.EMPTY;
++        this.itemToSell = ItemStack.EMPTY;
+         this.itemToBuy = buy1;
+         this.secondItemToBuy = buy2;
+         this.itemToSell = sell;
 @@ -77,7 +95,7 @@
  
-     public void func_77399_f()
+     public void incrementToolUses()
      {
--        this.field_77400_d++;
-+        ++this.field_77400_d;
+-        this.toolUses++;
++        ++this.toolUses;
      }
  
-     public void func_82783_a(int p_82783_1_)
+     public void increaseMaxTradeUses(int increment)

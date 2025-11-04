@@ -4,19 +4,19 @@
          Map<String, String> map = Maps.newHashMap();
          List<BlockPart> list = Lists.newArrayList();
  
--        for (int i = 0; i < field_178398_a.size(); i++)
-+        for (int i = 0; i < field_178398_a.size(); ++i)
+-        for (int i = 0; i < LAYERS.size(); i++)
++        for (int i = 0; i < LAYERS.size(); ++i)
          {
-             String s = field_178398_a.get(i);
+             String s = LAYERS.get(i);
  
 @@ -173,13 +173,13 @@
-         int j = p_178393_1_.func_94216_b();
+         int j = p_178393_1_.getIconHeight();
          List<ItemModelGenerator.Span> list = Lists.newArrayList();
  
--        for (int k = 0; k < p_178393_1_.func_110970_k(); k++)
-+        for (int k = 0; k < p_178393_1_.func_110970_k(); ++k)
+-        for (int k = 0; k < p_178393_1_.getFrameCount(); k++)
++        for (int k = 0; k < p_178393_1_.getFrameCount(); ++k)
          {
-             int[] aint = p_178393_1_.func_147965_a(k)[0];
+             int[] aint = p_178393_1_.getFrameTextureData(k)[0];
  
 -            for (int l = 0; l < j; l++)
 +            for (int l = 0; l < j; ++l)
@@ -24,11 +24,11 @@
 -                for (int i1 = 0; i1 < i; i1++)
 +                for (int i1 = 0; i1 < i; ++i1)
                  {
-                     boolean flag = !this.func_178391_a(aint, i1, l, i, j);
-                     this.func_178396_a(ItemModelGenerator.SpanFacing.UP, list, aint, i1, l, i, j, flag);
+                     boolean flag = !this.isTransparent(aint, i1, l, i, j);
+                     this.checkTransition(ItemModelGenerator.SpanFacing.UP, list, aint, i1, l, i, j, flag);
 @@ -248,9 +248,14 @@
  
-     private boolean func_178391_a(int[] p_178391_1_, int p_178391_2_, int p_178391_3_, int p_178391_4_, int p_178391_5_)
+     private boolean isTransparent(int[] p_178391_1_, int p_178391_2_, int p_178391_3_, int p_178391_4_, int p_178391_5_)
      {
 -        return p_178391_2_ >= 0 && p_178391_3_ >= 0 && p_178391_2_ < p_178391_4_ && p_178391_3_ < p_178391_5_
 -               ? (p_178391_1_[p_178391_3_ * p_178391_4_ + p_178391_2_] >> 24 & 0xFF) == 0

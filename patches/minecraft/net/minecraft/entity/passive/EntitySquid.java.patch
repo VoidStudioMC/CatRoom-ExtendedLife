@@ -1,46 +1,46 @@
 --- before/net/minecraft/entity/passive/EntitySquid.java
 +++ after/net/minecraft/entity/passive/EntitySquid.java
 @@ -111,7 +111,7 @@
-         this.field_70860_g = this.field_70859_f;
-         this.field_70868_i = this.field_70867_h;
-         this.field_70865_by = this.field_70866_j;
--        this.field_70867_h = this.field_70867_h + this.field_70864_bA;
-+        this.field_70867_h += this.field_70864_bA;
+         this.prevSquidYaw = this.squidYaw;
+         this.prevSquidRotation = this.squidRotation;
+         this.lastTentacleAngle = this.tentacleAngle;
+-        this.squidRotation = this.squidRotation + this.rotationVelocity;
++        this.squidRotation += this.rotationVelocity;
  
-         if ((double)this.field_70867_h > Math.PI * 2)
+         if ((double)this.squidRotation > Math.PI * 2)
          {
 @@ -164,12 +164,11 @@
              }
  
-             float f1 = MathHelper.func_76133_a(this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y);
--            this.field_70761_aq = this.field_70761_aq
--                                  + (-((float)MathHelper.func_181159_b(this.field_70159_w, this.field_70179_y)) * (180.0F / (float)Math.PI) - this.field_70761_aq) * 0.1F;
-+            this.field_70761_aq += (-((float)MathHelper.func_181159_b(this.field_70159_w, this.field_70179_y)) * (180.0F / (float)Math.PI) - this.field_70761_aq)
+             float f1 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+-            this.renderYawOffset = this.renderYawOffset
+-                                  + (-((float)MathHelper.atan2(this.motionX, this.motionZ)) * (180.0F / (float)Math.PI) - this.renderYawOffset) * 0.1F;
++            this.renderYawOffset += (-((float)MathHelper.atan2(this.motionX, this.motionZ)) * (180.0F / (float)Math.PI) - this.renderYawOffset)
 +                                   * 0.1F;
-             this.field_70177_z = this.field_70761_aq;
-             this.field_70859_f = (float)((double)this.field_70859_f + Math.PI * (double)this.field_70871_bB * 1.5);
--            this.field_70861_d = this.field_70861_d
--                                 + (-((float)MathHelper.func_181159_b((double)f1, this.field_70181_x)) * (180.0F / (float)Math.PI) - this.field_70861_d) * 0.1F;
-+            this.field_70861_d += (-((float)MathHelper.func_181159_b((double)f1, this.field_70181_x)) * (180.0F / (float)Math.PI) - this.field_70861_d) * 0.1F;
+             this.rotationYaw = this.renderYawOffset;
+             this.squidYaw = (float)((double)this.squidYaw + Math.PI * (double)this.rotateSpeed * 1.5);
+-            this.squidPitch = this.squidPitch
+-                                 + (-((float)MathHelper.atan2((double)f1, this.motionY)) * (180.0F / (float)Math.PI) - this.squidPitch) * 0.1F;
++            this.squidPitch += (-((float)MathHelper.atan2((double)f1, this.motionY)) * (180.0F / (float)Math.PI) - this.squidPitch) * 0.1F;
          }
          else
          {
 @@ -182,8 +181,7 @@
  
-                 if (this.func_70644_a(MobEffects.field_188424_y))
+                 if (this.isPotionActive(MobEffects.LEVITATION))
                  {
--                    this.field_70181_x = this.field_70181_x
--                                         + (0.05 * (double)(this.func_70660_b(MobEffects.field_188424_y).func_76458_c() + 1) - this.field_70181_x);
-+                    this.field_70181_x += 0.05 * (double)(this.func_70660_b(MobEffects.field_188424_y).func_76458_c() + 1) - this.field_70181_x;
+-                    this.motionY = this.motionY
+-                                         + (0.05 * (double)(this.getActivePotionEffect(MobEffects.LEVITATION).getAmplifier() + 1) - this.motionY);
++                    this.motionY += 0.05 * (double)(this.getActivePotionEffect(MobEffects.LEVITATION).getAmplifier() + 1) - this.motionY;
                  }
-                 else if (!this.func_189652_ae())
+                 else if (!this.hasNoGravity())
                  {
 @@ -206,7 +204,7 @@
      @Override
-     public boolean func_70601_bi()
+     public boolean getCanSpawnHere()
      {
--        return this.field_70163_u > 45.0 && this.field_70163_u < (double)this.field_70170_p.func_181545_F() && super.func_70601_bi();
-+        return this.field_70163_u > this.field_70170_p.spigotConfig.squidSpawnRangeMin && this.field_70163_u < (double)this.field_70170_p.func_181545_F() && super.func_70601_bi();
+-        return this.posY > 45.0 && this.posY < (double)this.world.getSeaLevel() && super.getCanSpawnHere();
++        return this.posY > this.world.spigotConfig.squidSpawnRangeMin && this.posY < (double)this.world.getSeaLevel() && super.getCanSpawnHere();
      }
  
      @SideOnly(Side.CLIENT)

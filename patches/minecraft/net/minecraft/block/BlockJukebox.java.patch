@@ -4,19 +4,19 @@
          }
      }
  
--    private void func_180678_e(World p_180678_1_, BlockPos p_180678_2_, IBlockState p_180678_3_)
-+    public void func_180678_e(World p_180678_1_, BlockPos p_180678_2_, IBlockState p_180678_3_)
+-    private void dropRecord(World worldIn, BlockPos pos, IBlockState state)
++    public void dropRecord(World worldIn, BlockPos pos, IBlockState state)
      {
-         if (!p_180678_1_.field_72995_K)
+         if (!worldIn.isRemote)
          {
 @@ -219,6 +219,10 @@
  
-             public void func_145857_a(ItemStack p_145857_1_)
+             public void setRecord(ItemStack recordStack)
              {
 +                // CraftBukkit start - There can only be one
-+                if (!p_145857_1_.func_190926_b()) {
-+                    p_145857_1_.func_190920_e(1);
++                if (!recordStack.isEmpty()) {
++                    recordStack.setCount(1);
 +                }
-                 this.field_145858_a = p_145857_1_;
-                 this.func_70296_d();
+                 this.record = recordStack;
+                 this.markDirty();
              }

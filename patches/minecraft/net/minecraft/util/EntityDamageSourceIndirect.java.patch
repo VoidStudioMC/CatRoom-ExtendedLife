@@ -1,17 +1,17 @@
 --- before/net/minecraft/util/EntityDamageSourceIndirect.java
 +++ after/net/minecraft/util/EntityDamageSourceIndirect.java
 @@ -39,8 +39,11 @@
-         ItemStack itemstack = this.field_76387_p instanceof EntityLivingBase ? ((EntityLivingBase)this.field_76387_p).func_184614_ca() : ItemStack.field_190927_a;
-         String s = "death.attack." + this.field_76373_n;
+         ItemStack itemstack = this.indirectEntity instanceof EntityLivingBase ? ((EntityLivingBase)this.indirectEntity).getHeldItemMainhand() : ItemStack.EMPTY;
+         String s = "death.attack." + this.damageType;
          String s1 = s + ".item";
--        return !itemstack.func_190926_b() && itemstack.func_82837_s() && I18n.func_94522_b(s1)
--               ? new TextComponentTranslation(s1, p_151519_1_.func_145748_c_(), itextcomponent, itemstack.func_151000_E())
--               : new TextComponentTranslation(s, p_151519_1_.func_145748_c_(), itextcomponent);
-+        return !itemstack.func_190926_b() && itemstack.func_82837_s() && I18n.func_94522_b(s1) ? new TextComponentTranslation(s1, new Object[] {p_151519_1_.func_145748_c_(), itextcomponent, itemstack.func_151000_E()}) : new TextComponentTranslation(s, new Object[] {p_151519_1_.func_145748_c_(), itextcomponent});
+-        return !itemstack.isEmpty() && itemstack.hasDisplayName() && I18n.canTranslate(s1)
+-               ? new TextComponentTranslation(s1, entityLivingBaseIn.getDisplayName(), itextcomponent, itemstack.getTextComponent())
+-               : new TextComponentTranslation(s, entityLivingBaseIn.getDisplayName(), itextcomponent);
++        return !itemstack.isEmpty() && itemstack.hasDisplayName() && I18n.canTranslate(s1) ? new TextComponentTranslation(s1, new Object[] {entityLivingBaseIn.getDisplayName(), itextcomponent, itemstack.getTextComponent()}) : new TextComponentTranslation(s, new Object[] {entityLivingBaseIn.getDisplayName(), itextcomponent});
 +    }
 +
 +    @Nullable
 +    public Entity getProximateDamageSource() {
-+        return super.func_76346_g();
++        return super.getTrueSource();
      }
  }

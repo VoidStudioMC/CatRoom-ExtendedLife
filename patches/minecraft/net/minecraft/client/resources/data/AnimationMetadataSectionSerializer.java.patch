@@ -2,19 +2,19 @@
 +++ after/net/minecraft/client/resources/data/AnimationMetadataSectionSerializer.java
 @@ -38,7 +38,7 @@
              {
-                 JsonArray jsonarray = JsonUtils.func_151214_t(jsonobject, "frames");
+                 JsonArray jsonarray = JsonUtils.getJsonArray(jsonobject, "frames");
  
 -                for (int j = 0; j < jsonarray.size(); j++)
 +                for (int j = 0; j < jsonarray.size(); ++j)
                  {
                      JsonElement jsonelement = jsonarray.get(j);
-                     AnimationFrame animationframe = this.func_110492_a(j, jsonelement);
+                     AnimationFrame animationframe = this.parseAnimationFrame(j, jsonelement);
 @@ -117,7 +117,7 @@
          {
              JsonArray jsonarray = new JsonArray();
  
--            for (int i = 0; i < p_serialize_1_.func_110473_c(); i++)
-+            for (int i = 0; i < p_serialize_1_.func_110473_c(); ++i)
+-            for (int i = 0; i < p_serialize_1_.getFrameCount(); i++)
++            for (int i = 0; i < p_serialize_1_.getFrameCount(); ++i)
              {
-                 if (p_serialize_1_.func_110470_b(i))
+                 if (p_serialize_1_.frameHasTime(i))
                  {

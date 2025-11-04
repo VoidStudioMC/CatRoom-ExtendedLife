@@ -14,29 +14,29 @@
  
  public class ContainerHorseInventory extends Container
  {
-     private final IInventory field_111243_a;
-     private final AbstractHorse field_111242_f;
+     private final IInventory horseInventory;
+     private final AbstractHorse horse;
  
 +    org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView bukkitEntity;
 +    InventoryPlayer player;
 +
-     public ContainerHorseInventory(IInventory p_i45791_1_, IInventory p_i45791_2_, final AbstractHorse p_i45791_3_, EntityPlayer p_i45791_4_)
+     public ContainerHorseInventory(IInventory playerInventory, IInventory horseInventoryIn, final AbstractHorse horse, EntityPlayer player)
      {
-+        this.player = (InventoryPlayer) p_i45791_1_;
-         this.field_111243_a = p_i45791_2_;
-         this.field_111242_f = p_i45791_3_;
++        this.player = (InventoryPlayer) playerInventory;
+         this.horseInventory = horseInventoryIn;
+         this.horse = horse;
          int i = 3;
 @@ -56,24 +63,24 @@
  
-         if (p_i45791_3_ instanceof AbstractChestHorse && ((AbstractChestHorse)p_i45791_3_).func_190695_dh())
+         if (horse instanceof AbstractChestHorse && ((AbstractChestHorse)horse).hasChest())
          {
 -            for (int k = 0; k < 3; k++)
 +            for (int k = 0; k < 3; ++k)
              {
--                for (int l = 0; l < ((AbstractChestHorse)p_i45791_3_).func_190696_dl(); l++)
-+                for (int l = 0; l < ((AbstractChestHorse)p_i45791_3_).func_190696_dl(); ++l)
+-                for (int l = 0; l < ((AbstractChestHorse)horse).getInventoryColumns(); l++)
++                for (int l = 0; l < ((AbstractChestHorse)horse).getInventoryColumns(); ++l)
                  {
-                     this.func_75146_a(new Slot(p_i45791_2_, 2 + l + k * ((AbstractChestHorse)p_i45791_3_).func_190696_dl(), 80 + l * 18, 18 + k * 18));
+                     this.addSlotToContainer(new Slot(horseInventoryIn, 2 + l + k * ((AbstractChestHorse)horse).getInventoryColumns(), 80 + l * 18, 18 + k * 18));
                  }
              }
          }
@@ -47,18 +47,18 @@
 -            for (int k1 = 0; k1 < 9; k1++)
 +            for (int k1 = 0; k1 < 9; ++k1)
              {
-                 this.func_75146_a(new Slot(p_i45791_1_, k1 + i1 * 9 + 9, 8 + k1 * 18, 102 + i1 * 18 + -18));
+                 this.addSlotToContainer(new Slot(playerInventory, k1 + i1 * 9 + 9, 8 + k1 * 18, 102 + i1 * 18 + -18));
              }
          }
  
 -        for (int j1 = 0; j1 < 9; j1++)
 +        for (int j1 = 0; j1 < 9; ++j1)
          {
-             this.func_75146_a(new Slot(p_i45791_1_, j1, 8 + j1 * 18, 142));
+             this.addSlotToContainer(new Slot(playerInventory, j1, 8 + j1 * 18, 142));
          }
 @@ -141,4 +148,14 @@
-         super.func_75134_a(p_75134_1_);
-         this.field_111243_a.func_174886_c(p_75134_1_);
+         super.onContainerClosed(playerIn);
+         this.horseInventory.closeInventory(playerIn);
      }
 +
 +    @Override
@@ -67,7 +67,7 @@
 +            return bukkitEntity;
 +        }
 +
-+        return bukkitEntity = (field_111243_a.getOwner() != null ? new CraftInventoryView(player.field_70458_d.getBukkitEntity(), field_111243_a.getOwner().getInventory(), this) : null); // CatServer
++        return bukkitEntity = (horseInventory.getOwner() != null ? new CraftInventoryView(player.player.getBukkitEntity(), horseInventory.getOwner().getInventory(), this) : null); // CatServer
 +    }
 +
  }

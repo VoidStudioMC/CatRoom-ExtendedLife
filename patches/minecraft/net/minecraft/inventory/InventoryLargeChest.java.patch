@@ -13,31 +13,31 @@
  
  public class InventoryLargeChest implements ILockableContainer
  {
-     private final String field_70479_a;
--    private final ILockableContainer field_70477_b;
--    private final ILockableContainer field_70478_c;
-+    public final ILockableContainer field_70477_b;
-+    public final ILockableContainer field_70478_c;
+     private final String name;
+-    private final ILockableContainer upperChest;
+-    private final ILockableContainer lowerChest;
++    public final ILockableContainer upperChest;
++    public final ILockableContainer lowerChest;
 +
 +    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
 +
 +    public List<ItemStack> getContents() {
-+        List<ItemStack> result = new ArrayList<ItemStack>(this.func_70302_i_());
-+        for (int i = 0; i < this.func_70302_i_(); i++) {
-+            result.add(this.func_70301_a(i));
++        List<ItemStack> result = new ArrayList<ItemStack>(this.getSizeInventory());
++        for (int i = 0; i < this.getSizeInventory(); i++) {
++            result.add(this.getStackInSlot(i));
 +        }
 +        return result;
 +    }
 +
 +    public void onOpen(CraftHumanEntity who) {
-+        this.field_70477_b.onOpen(who);
-+        this.field_70478_c.onOpen(who);
++        this.upperChest.onOpen(who);
++        this.lowerChest.onOpen(who);
 +        transaction.add(who);
 +    }
 +
 +    public void onClose(CraftHumanEntity who) {
-+        this.field_70477_b.onClose(who);
-+        this.field_70478_c.onClose(who);
++        this.upperChest.onClose(who);
++        this.lowerChest.onClose(who);
 +        transaction.remove(who);
 +    }
 +
@@ -50,24 +50,24 @@
 +    }
 +
 +    public void setMaxStackSize(int size) {
-+        this.field_70477_b.setMaxStackSize(size);
-+        this.field_70478_c.setMaxStackSize(size);
++        this.upperChest.setMaxStackSize(size);
++        this.lowerChest.setMaxStackSize(size);
 +    }
 +
 +    @Override
 +    public Location getLocation() {
-+        return field_70477_b.getLocation(); // TODO: right?
++        return upperChest.getLocation(); // TODO: right?
 +    }
  
-     public InventoryLargeChest(String p_i45905_1_, ILockableContainer p_i45905_2_, ILockableContainer p_i45905_3_)
+     public InventoryLargeChest(String nameIn, ILockableContainer upperChestIn, ILockableContainer lowerChestIn)
      {
 @@ -124,7 +170,8 @@
      @Override
-     public int func_70297_j_()
+     public int getInventoryStackLimit()
      {
--        return this.field_70477_b.func_70297_j_();
+-        return this.upperChest.getInventoryStackLimit();
 +        // return this.upperChest.getInventoryStackLimit();
-+        return Math.min(this.field_70477_b.func_70297_j_(), this.field_70478_c.func_70297_j_()); // CraftBukkit - check both sides
++        return Math.min(this.upperChest.getInventoryStackLimit(), this.lowerChest.getInventoryStackLimit()); // CraftBukkit - check both sides
      }
  
      @Override

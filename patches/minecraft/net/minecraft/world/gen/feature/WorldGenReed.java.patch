@@ -2,19 +2,19 @@
 +++ after/net/minecraft/world/gen/feature/WorldGenReed.java
 @@ -11,7 +11,7 @@
      @Override
-     public boolean func_180709_b(World p_180709_1_, Random p_180709_2_, BlockPos p_180709_3_)
+     public boolean generate(World worldIn, Random rand, BlockPos position)
      {
 -        for (int i = 0; i < 20; i++)
 +        for (int i = 0; i < 20; ++i)
          {
-             BlockPos blockpos = p_180709_3_.func_177982_a(p_180709_2_.nextInt(4) - p_180709_2_.nextInt(4), 0, p_180709_2_.nextInt(4) - p_180709_2_.nextInt(4));
+             BlockPos blockpos = position.add(rand.nextInt(4) - rand.nextInt(4), 0, rand.nextInt(4) - rand.nextInt(4));
  
 @@ -26,7 +26,7 @@
                  {
-                     int j = 2 + p_180709_2_.nextInt(p_180709_2_.nextInt(3) + 1);
+                     int j = 2 + rand.nextInt(rand.nextInt(3) + 1);
  
 -                    for (int k = 0; k < j; k++)
 +                    for (int k = 0; k < j; ++k)
                      {
-                         if (Blocks.field_150436_aH.func_176354_d(p_180709_1_, blockpos))
+                         if (Blocks.REEDS.canBlockStay(worldIn, blockpos))
                          {

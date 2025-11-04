@@ -2,18 +2,18 @@
 +++ after/net/minecraft/entity/ai/EntityAIHurtByTarget.java
 @@ -30,7 +30,7 @@
      @Override
-     public void func_75249_e()
+     public void startExecuting()
      {
--        this.field_75299_d.func_70624_b(this.field_75299_d.func_70643_av());
-+        this.field_75299_d.setGoalTarget(this.field_75299_d.func_70643_av(), org.bukkit.event.entity.EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY, true);
-         this.field_188509_g = this.field_75299_d.func_70638_az();
-         this.field_142052_b = this.field_75299_d.func_142015_aE();
-         this.field_188510_h = 300;
+-        this.taskOwner.setAttackTarget(this.taskOwner.getRevengeTarget());
++        this.taskOwner.setGoalTarget(this.taskOwner.getRevengeTarget(), org.bukkit.event.entity.EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY, true);
+         this.target = this.taskOwner.getAttackTarget();
+         this.revengeTimerOld = this.taskOwner.getRevengeTimer();
+         this.unseenMemoryTicks = 300;
 @@ -91,6 +91,6 @@
  
-     protected void func_179446_a(EntityCreature p_179446_1_, EntityLivingBase p_179446_2_)
+     protected void setEntityAttackTarget(EntityCreature creatureIn, EntityLivingBase entityLivingBaseIn)
      {
--        p_179446_1_.func_70624_b(p_179446_2_);
-+        p_179446_1_.setGoalTarget(p_179446_2_, org.bukkit.event.entity.EntityTargetEvent.TargetReason.TARGET_ATTACKED_NEARBY_ENTITY, true);
+-        creatureIn.setAttackTarget(entityLivingBaseIn);
++        creatureIn.setGoalTarget(entityLivingBaseIn, org.bukkit.event.entity.EntityTargetEvent.TargetReason.TARGET_ATTACKED_NEARBY_ENTITY, true);
      }
  }

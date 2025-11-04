@@ -1,13 +1,13 @@
 --- before/net/minecraft/world/chunk/storage/IChunkLoader.java
 +++ after/net/minecraft/world/chunk/storage/IChunkLoader.java
 @@ -20,4 +20,10 @@
-     void func_75818_b();
+     void flush();
  
-     boolean func_191063_a(int p_191063_1_, int p_191063_2_);
+     boolean isChunkGeneratedAt(int x, int z);
 +
 +    // CatServer start - Add spigot method
 +    default void saveChunk(World world, Chunk chunk, boolean unloaded) throws MinecraftException, IOException {
-+        func_75816_a(world, chunk);
++        saveChunk(world, chunk);
 +    }
 +    // CatServer end
  }

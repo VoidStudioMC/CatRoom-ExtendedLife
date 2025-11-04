@@ -2,22 +2,22 @@
 +++ after/net/minecraft/client/model/ModelOcelot.java
 @@ -156,9 +156,9 @@
  
-         if (entityocelot.func_70093_af())
+         if (entityocelot.isSneaking())
          {
--            this.field_78162_h.field_78797_d++;
-+            ++this.field_78162_h.field_78797_d;
-             this.field_78156_g.field_78797_d += 2.0F;
--            this.field_78158_e.field_78797_d++;
-+            ++this.field_78158_e.field_78797_d;
-             this.field_78155_f.field_78797_d += -4.0F;
-             this.field_78155_f.field_78798_e += 2.0F;
-             this.field_78158_e.field_78795_f = (float)(Math.PI / 2);
+-            this.ocelotBody.rotationPointY++;
++            ++this.ocelotBody.rotationPointY;
+             this.ocelotHead.rotationPointY += 2.0F;
+-            this.ocelotTail.rotationPointY++;
++            ++this.ocelotTail.rotationPointY;
+             this.ocelotTail2.rotationPointY += -4.0F;
+             this.ocelotTail2.rotationPointZ += 2.0F;
+             this.ocelotTail.rotateAngleX = (float)(Math.PI / 2);
 @@ -179,7 +179,7 @@
-             this.field_78162_h.field_78797_d += -4.0F;
-             this.field_78162_h.field_78798_e += 5.0F;
-             this.field_78156_g.field_78797_d += -3.3F;
--            this.field_78156_g.field_78798_e++;
-+            ++this.field_78156_g.field_78798_e;
-             this.field_78158_e.field_78797_d += 8.0F;
-             this.field_78158_e.field_78798_e += -2.0F;
-             this.field_78155_f.field_78797_d += 2.0F;
+             this.ocelotBody.rotationPointY += -4.0F;
+             this.ocelotBody.rotationPointZ += 5.0F;
+             this.ocelotHead.rotationPointY += -3.3F;
+-            this.ocelotHead.rotationPointZ++;
++            ++this.ocelotHead.rotationPointZ;
+             this.ocelotTail.rotationPointY += 8.0F;
+             this.ocelotTail.rotationPointZ += -2.0F;
+             this.ocelotTail2.rotationPointY += 2.0F;

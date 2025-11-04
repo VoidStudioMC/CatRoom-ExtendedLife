@@ -4,14 +4,14 @@
              {
                  return false;
              }
-+            else if (this.field_148117_c != jsonblendingmode.field_148117_c)
++            else if (this.srcAlphaFactor != jsonblendingmode.srcAlphaFactor)
 +            {
 +                return false;
 +            }
              else
              {
--                return this.field_148117_c != jsonblendingmode.field_148117_c ? false : this.field_148116_b == jsonblendingmode.field_148116_b;
-+                return this.field_148116_b == jsonblendingmode.field_148116_b;
+-                return this.srcAlphaFactor != jsonblendingmode.srcAlphaFactor ? false : this.srcColorFactor == jsonblendingmode.srcColorFactor;
++                return this.srcColorFactor == jsonblendingmode.srcColorFactor;
              }
          }
      }

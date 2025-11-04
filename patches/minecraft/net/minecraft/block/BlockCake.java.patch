@@ -11,29 +11,29 @@
 @@ -93,8 +94,26 @@
          else
          {
-             p_180682_4_.func_71029_a(StatList.field_188076_J);
--            p_180682_4_.func_71024_bL().func_75122_a(2, 0.1F);
--            int i = p_180682_3_.func_177229_b(field_176589_a);
+             player.addStat(StatList.CAKE_SLICES_EATEN);
+-            player.getFoodStats().addStats(2, 0.1F);
+-            int i = state.getValue(BITES);
 +            // player.getFoodStats().addStats(2, 0.1F);
-+            int oldFoodLevel = p_180682_4_.func_71024_bL().field_75127_a;
++            int oldFoodLevel = player.getFoodStats().foodLevel;
 +
-+            org.bukkit.event.entity.FoodLevelChangeEvent event = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callFoodLevelChangeEvent(p_180682_4_, 2 + oldFoodLevel);
++            org.bukkit.event.entity.FoodLevelChangeEvent event = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callFoodLevelChangeEvent(player, 2 + oldFoodLevel);
 +
 +            if (!event.isCancelled()) {
 +                // CatServer - AppleCore Comp
 +                int newFoodLevel = event.getFoodLevel() - oldFoodLevel;
 +                if (newFoodLevel >= 2) {
-+                    p_180682_4_.func_71024_bL().func_75122_a(2, 0.1F);
++                    player.getFoodStats().addStats(2, 0.1F);
 +                    if (newFoodLevel > 2) {
-+                        p_180682_4_.func_71024_bL().func_75122_a(event.getFoodLevel() - oldFoodLevel - 2, 0.1F);
++                        player.getFoodStats().addStats(event.getFoodLevel() - oldFoodLevel - 2, 0.1F);
 +                    }
 +                } else {
-+                    p_180682_4_.func_71024_bL().func_75122_a(event.getFoodLevel() - oldFoodLevel, 0.1F);
++                    player.getFoodStats().addStats(event.getFoodLevel() - oldFoodLevel, 0.1F);
 +                }
 +            }
 +
-+            ((EntityPlayerMP) p_180682_4_).getBukkitEntity().sendHealthUpdate();
-+            int i = ((Integer)p_180682_3_.func_177229_b(field_176589_a)).intValue();
++            ((EntityPlayerMP) player).getBukkitEntity().sendHealthUpdate();
++            int i = ((Integer)state.getValue(BITES)).intValue();
  
              if (i < 6)
              {

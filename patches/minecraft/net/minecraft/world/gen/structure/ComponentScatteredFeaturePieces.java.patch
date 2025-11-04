@@ -7,67 +7,67 @@
 -                for (int i = 1; i <= 9; i++)
 +                for (int i = 1; i <= 9; ++i)
                  {
-                     this.func_175804_a(
-                         p_74875_1_,
+                     this.fillWithBlocks(
+                         worldIn,
 @@ -123,9 +123,9 @@
                      );
                  }
  
--                for (int i2 = 0; i2 < this.field_74939_a; i2++)
-+                for (int i2 = 0; i2 < this.field_74939_a; ++i2)
+-                for (int i2 = 0; i2 < this.width; i2++)
++                for (int i2 = 0; i2 < this.width; ++i2)
                  {
--                    for (int j = 0; j < this.field_74938_c; j++)
-+                    for (int j = 0; j < this.field_74938_c; ++j)
+-                    for (int j = 0; j < this.depth; j++)
++                    for (int j = 0; j < this.depth; ++j)
                      {
                          int k = -5;
-                         this.func_175808_b(p_74875_1_, Blocks.field_150322_A.func_176223_P(), i2, -5, j, p_74875_3_);
+                         this.replaceAirAndLiquidDownwards(worldIn, Blocks.SANDSTONE.getDefaultState(), i2, -5, j, structureBoundingBoxIn);
 @@ -615,16 +615,16 @@
                      int j = 0;
                      BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
  
--                    for (int k = this.field_74887_e.field_78896_c; k <= this.field_74887_e.field_78892_f; k++)
-+                    for (int k = this.field_74887_e.field_78896_c; k <= this.field_74887_e.field_78892_f; ++k)
+-                    for (int k = this.boundingBox.minZ; k <= this.boundingBox.maxZ; k++)
++                    for (int k = this.boundingBox.minZ; k <= this.boundingBox.maxZ; ++k)
                      {
--                        for (int l = this.field_74887_e.field_78897_a; l <= this.field_74887_e.field_78893_d; l++)
-+                        for (int l = this.field_74887_e.field_78897_a; l <= this.field_74887_e.field_78893_d; ++l)
+-                        for (int l = this.boundingBox.minX; l <= this.boundingBox.maxX; l++)
++                        for (int l = this.boundingBox.minX; l <= this.boundingBox.maxX; ++l)
                          {
-                             blockpos$mutableblockpos.func_181079_c(l, 64, k);
+                             blockpos$mutableblockpos.setPos(l, 64, k);
  
-                             if (p_74935_2_.func_175898_b(blockpos$mutableblockpos))
+                             if (structurebb.isVecInside(blockpos$mutableblockpos))
                              {
-                                 i += Math.max(p_74935_1_.func_175672_r(blockpos$mutableblockpos).func_177956_o(), p_74935_1_.field_73011_w.func_76557_i());
+                                 i += Math.max(worldIn.getTopSolidOrLiquidBlock(blockpos$mutableblockpos).getY(), worldIn.provider.getAverageGroundLevel());
 -                                j++;
 +                                ++j;
                              }
                          }
                      }
 @@ -685,7 +685,7 @@
-                         Template template2 = templatemanager.func_186237_a(minecraftserver, field_186172_g);
-                         int i = p_74875_2_.nextInt(8) + 4;
+                         Template template2 = templatemanager.getTemplate(minecraftserver, IGLOO_BOTTOM_ID);
+                         int i = randomIn.nextInt(8) + 4;
  
 -                        for (int j = 0; j < i; j++)
 +                        for (int j = 0; j < i; ++j)
                          {
-                             BlockPos blockpos1 = template.func_186262_a(placementsettings, new BlockPos(3, -1 - j * 3, 5), placementsettings, new BlockPos(1, 2, 1));
-                             template1.func_186260_a(p_74875_1_, blockpos.func_177971_a(blockpos1), placementsettings);
+                             BlockPos blockpos1 = template.calculateConnectedPos(placementsettings, new BlockPos(3, -1 - j * 3, 5), placementsettings, new BlockPos(1, 2, 1));
+                             template1.addBlocksToWorldChunk(worldIn, blockpos.add(blockpos1), placementsettings);
 @@ -851,7 +851,7 @@
-                     this.func_175811_a(p_74875_1_, iblockstate2, 4, 4, 5, p_74875_3_);
-                     this.func_175811_a(p_74875_1_, iblockstate3, 7, 4, 5, p_74875_3_);
+                     this.setBlockState(worldIn, iblockstate2, 4, 4, 5, structureBoundingBoxIn);
+                     this.setBlockState(worldIn, iblockstate3, 7, 4, 5, structureBoundingBoxIn);
  
 -                    for (int k = 0; k < 4; k++)
 +                    for (int k = 0; k < 4; ++k)
                      {
-                         this.func_175811_a(p_74875_1_, iblockstate, 5, 0 - k, 6 + k, p_74875_3_);
-                         this.func_175811_a(p_74875_1_, iblockstate, 6, 0 - k, 6 + k, p_74875_3_);
+                         this.setBlockState(worldIn, iblockstate, 5, 0 - k, 6 + k, structureBoundingBoxIn);
+                         this.setBlockState(worldIn, iblockstate, 6, 0 - k, 6 + k, structureBoundingBoxIn);
 @@ -1203,9 +1203,9 @@
-                             this.field_82682_h = true;
-                             EntityWitch entitywitch = new EntityWitch(p_74875_1_);
-                             entitywitch.func_110163_bv();
--                            entitywitch.func_70012_b((double)l + 0.5, (double)i1, (double)k + 0.5, 0.0F, 0.0F);
-+                            entitywitch.func_70012_b((double)l + 0.5D, (double)i1, (double)k + 0.5D, 0.0F, 0.0F);
-                             entitywitch.func_180482_a(p_74875_1_.func_175649_E(new BlockPos(l, i1, k)), null);
--                            p_74875_1_.func_72838_d(entitywitch);
-+                            p_74875_1_.addEntity(entitywitch, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.CHUNK_GEN);
+                             this.hasWitch = true;
+                             EntityWitch entitywitch = new EntityWitch(worldIn);
+                             entitywitch.enablePersistence();
+-                            entitywitch.setLocationAndAngles((double)l + 0.5, (double)i1, (double)k + 0.5, 0.0F, 0.0F);
++                            entitywitch.setLocationAndAngles((double)l + 0.5D, (double)i1, (double)k + 0.5D, 0.0F, 0.0F);
+                             entitywitch.onInitialSpawn(worldIn.getDifficultyForLocation(new BlockPos(l, i1, k)), null);
+-                            worldIn.spawnEntity(entitywitch);
++                            worldIn.addEntity(entitywitch, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.CHUNK_GEN);
                          }
                      }
  

@@ -2,10 +2,10 @@
 +++ after/net/minecraft/village/VillageDoorInfo.java
 @@ -70,7 +70,7 @@
  
-     public void func_75470_e()
+     public void incrementDoorOpeningRestrictionCounter()
      {
--        this.field_75482_h++;
-+        ++this.field_75482_h;
+-        this.doorOpeningRestrictionCounter++;
++        ++this.doorOpeningRestrictionCounter;
      }
  
-     public int func_75468_f()
+     public int getDoorOpeningRestrictionCounter()

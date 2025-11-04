@@ -2,10 +2,10 @@
 +++ after/net/minecraft/block/state/pattern/BlockStateMatcher.java
 @@ -60,7 +60,7 @@
      }
-     protected <T extends Comparable<T>> boolean func_185927_a(IBlockState p_185927_1_, IProperty<T> p_185927_2_, Predicate<T> p_185927_3_)
+     protected <T extends Comparable<T>> boolean matches(IBlockState blockState, IProperty<T> property, Predicate<T> predicate)
      {
--        return ((Predicate<T>)p_185927_3_).apply(p_185927_1_.func_177229_b(p_185927_2_));
-+        return p_185927_3_.apply(p_185927_1_.func_177229_b(p_185927_2_));
+-        return ((Predicate<T>)predicate).apply(blockState.getValue(property));
++        return predicate.apply(blockState.getValue(property));
      }
  
-     public <V extends Comparable<V>> BlockStateMatcher func_177637_a(IProperty<V> p_177637_1_, Predicate <? extends V > p_177637_2_)
+     public <V extends Comparable<V>> BlockStateMatcher where(IProperty<V> property, Predicate <? extends V > is)

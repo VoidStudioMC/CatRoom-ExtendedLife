@@ -4,26 +4,26 @@
                  return;
              }
  
--            this.field_192773_j.field_78795_f = this.field_192773_j.field_78795_f + MathHelper.func_76134_b(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_;
--            this.field_192774_k.field_78795_f = this.field_192774_k.field_78795_f
--                                                + MathHelper.func_76134_b(p_78087_1_ * 0.6662F + (float) Math.PI) * 1.4F * p_78087_2_;
-+            this.field_192773_j.field_78795_f += MathHelper.func_76134_b(p_78087_1_ * 0.6662F) * 1.4F * p_78087_2_;
-+            this.field_192774_k.field_78795_f += MathHelper.func_76134_b(p_78087_1_ * 0.6662F + (float) Math.PI) * 1.4F * p_78087_2_;
+-            this.legLeft.rotateAngleX = this.legLeft.rotateAngleX + MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+-            this.legRight.rotateAngleX = this.legRight.rotateAngleX
+-                                                + MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
++            this.legLeft.rotateAngleX += MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
++            this.legRight.rotateAngleX += MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
          }
  
-         this.field_192768_e.field_78797_d = 15.69F + f;
+         this.head.rotationPointY = 15.69F + f;
 @@ -174,10 +173,10 @@
-                 this.field_192766_c.field_78797_d = 18.84F;
-                 this.field_192767_d.field_78808_h = 0.0873F;
-                 this.field_192767_d.field_78797_d = 18.84F;
--                this.field_192773_j.field_78797_d++;
--                this.field_192774_k.field_78797_d++;
--                this.field_192773_j.field_78795_f++;
--                this.field_192774_k.field_78795_f++;
-+                ++this.field_192773_j.field_78797_d;
-+                ++this.field_192774_k.field_78797_d;
-+                ++this.field_192773_j.field_78795_f;
-+                ++this.field_192774_k.field_78795_f;
-                 this.field_192775_l = ModelParrot.State.SITTING;
+                 this.wingLeft.rotationPointY = 18.84F;
+                 this.wingRight.rotateAngleZ = 0.0873F;
+                 this.wingRight.rotationPointY = 18.84F;
+-                this.legLeft.rotationPointY++;
+-                this.legRight.rotationPointY++;
+-                this.legLeft.rotateAngleX++;
+-                this.legRight.rotateAngleX++;
++                ++this.legLeft.rotationPointY;
++                ++this.legRight.rotationPointY;
++                ++this.legLeft.rotateAngleX;
++                ++this.legRight.rotateAngleX;
+                 this.state = ModelParrot.State.SITTING;
              }
-             else if (entityparrot.func_192002_a())
+             else if (entityparrot.isFlying())

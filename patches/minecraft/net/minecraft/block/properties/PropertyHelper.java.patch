@@ -6,6 +6,6 @@
          {
 -            PropertyHelper<?> propertyhelper = (PropertyHelper<?>)p_equals_1_;
 +            PropertyHelper<?> propertyhelper = (PropertyHelper)p_equals_1_;
-             return this.field_177704_a.equals(propertyhelper.field_177704_a) && this.field_177703_b.equals(propertyhelper.field_177703_b);
+             return this.valueClass.equals(propertyhelper.valueClass) && this.name.equals(propertyhelper.name);
          }
      }

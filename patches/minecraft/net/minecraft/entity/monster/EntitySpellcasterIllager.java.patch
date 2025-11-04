@@ -2,35 +2,35 @@
 +++ after/net/minecraft/entity/monster/EntitySpellcasterIllager.java
 @@ -54,7 +54,14 @@
  
-     public boolean func_193082_dl()
+     public boolean isSpellcasting()
      {
--        return this.field_70170_p.field_72995_K ? this.field_70180_af.func_187225_a(field_193088_c) > 0 : this.field_193087_b > 0;
-+        if (this.field_70170_p.field_72995_K)
+-        return this.world.isRemote ? this.dataManager.get(SPELL) > 0 : this.spellTicks > 0;
++        if (this.world.isRemote)
 +        {
-+            return this.field_70180_af.func_187225_a(field_193088_c) > 0;
++            return this.dataManager.get(SPELL) > 0;
 +        }
 +        else
 +        {
-+            return this.field_193087_b > 0;
++            return this.spellTicks > 0;
 +        }
      }
  
-     public void func_193081_a(EntitySpellcasterIllager.SpellType p_193081_1_)
+     public void setSpellType(EntitySpellcasterIllager.SpellType spellType)
 @@ -63,7 +70,7 @@
-         this.field_70180_af.func_187227_b(field_193088_c, (byte)p_193081_1_.field_193345_g);
+         this.dataManager.set(SPELL, (byte)spellType.id);
      }
  
--    protected EntitySpellcasterIllager.SpellType func_193083_dm()
-+    public SpellType func_193083_dm()
+-    protected EntitySpellcasterIllager.SpellType getSpellType()
++    public SpellType getSpellType()
      {
-         return !this.field_70170_p.field_72995_K
-                ? this.field_193089_bx
+         return !this.world.isRemote
+                ? this.activeSpell
 @@ -77,7 +84,7 @@
  
-         if (this.field_193087_b > 0)
+         if (this.spellTicks > 0)
          {
--            this.field_193087_b--;
-+            --this.field_193087_b;
+-            this.spellTicks--;
++            --this.spellTicks;
          }
      }
  
@@ -38,23 +38,23 @@
              {
                  return false;
              }
-+            else if (EntitySpellcasterIllager.this.func_193082_dl())
++            else if (EntitySpellcasterIllager.this.isSpellcasting())
 +            {
 +                return false;
 +            }
              else
              {
--                return EntitySpellcasterIllager.this.func_193082_dl() ? false : EntitySpellcasterIllager.this.field_70173_aa >= this.field_193322_d;
-+                return EntitySpellcasterIllager.this.field_70173_aa >= this.field_193322_d;
+-                return EntitySpellcasterIllager.this.isSpellcasting() ? false : EntitySpellcasterIllager.this.ticksExisted >= this.spellCooldown;
++                return EntitySpellcasterIllager.this.ticksExisted >= this.spellCooldown;
              }
          }
  
 @@ -202,7 +213,7 @@
          @Override
-         public void func_75246_d()
+         public void updateTask()
          {
--            this.field_193321_c--;
-+            --this.field_193321_c;
+-            this.spellWarmup--;
++            --this.spellWarmup;
  
-             if (this.field_193321_c == 0)
+             if (this.spellWarmup == 0)
              {

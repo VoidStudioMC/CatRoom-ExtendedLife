@@ -9,11 +9,11 @@
  public class BlockEndPortal extends BlockContainer
  {
 @@ -89,6 +90,8 @@
-                 && p_180634_4_.func_184222_aU()
-                 && p_180634_4_.func_174813_aQ().func_72326_a(p_180634_3_.func_185900_c(p_180634_1_, p_180634_2_).func_186670_a(p_180634_2_)))
+                 && entityIn.isNonBoss()
+                 && entityIn.getEntityBoundingBox().intersects(state.getBoundingBox(worldIn, pos).offset(pos)))
          {
-+            EntityPortalEnterEvent event = new EntityPortalEnterEvent(p_180634_4_.getBukkitEntity(), new org.bukkit.Location(p_180634_1_.getWorld(), p_180634_2_.func_177958_n(), p_180634_2_.func_177956_o(), p_180634_2_.func_177952_p()));
-+            p_180634_1_.getServer().getPluginManager().callEvent(event);
-             p_180634_4_.func_184204_a(1);
++            EntityPortalEnterEvent event = new EntityPortalEnterEvent(entityIn.getBukkitEntity(), new org.bukkit.Location(worldIn.getWorld(), pos.getX(), pos.getY(), pos.getZ()));
++            worldIn.getServer().getPluginManager().callEvent(event);
+             entityIn.changeDimension(1);
          }
      }

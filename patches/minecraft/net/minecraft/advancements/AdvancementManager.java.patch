@@ -11,18 +11,18 @@
 @@ -41,25 +42,18 @@
  public class AdvancementManager
  {
-     private static final Logger field_192782_a = LogManager.getLogger();
--    public static final Gson field_192783_b = new GsonBuilder()
+     private static final Logger LOGGER = LogManager.getLogger();
+-    public static final Gson GSON = new GsonBuilder()
 -        .registerTypeHierarchyAdapter(
 -            Advancement.Builder.class,
 -            new JsonDeserializer<Advancement.Builder>()
 -    {
 -        public Advancement.Builder deserialize(JsonElement p_deserialize_1_, Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException
 -        {
-+    public static final Gson field_192783_b = new GsonBuilder().registerTypeHierarchyAdapter(Advancement.Builder.class, new JsonDeserializer<Advancement.Builder>() {
++    public static final Gson GSON = new GsonBuilder().registerTypeHierarchyAdapter(Advancement.Builder.class, new JsonDeserializer<Advancement.Builder>() {
 +        public Advancement.Builder deserialize(JsonElement p_deserialize_1_, Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException {
-             JsonObject jsonobject = JsonUtils.func_151210_l(p_deserialize_1_, "advancement");
-             return Advancement.Builder.func_192059_a(jsonobject, p_deserialize_3_);
+             JsonObject jsonobject = JsonUtils.getJsonObject(p_deserialize_1_, "advancement");
+             return Advancement.Builder.deserialize(jsonobject, p_deserialize_3_);
          }
 -    }
 -    )
@@ -31,26 +31,26 @@
 -    .registerTypeHierarchyAdapter(Style.class, new Style.Serializer())
 -    .registerTypeAdapterFactory(new EnumTypeAdapterFactory())
 -    .create();
--    private static final AdvancementList field_192784_c = new AdvancementList();
--    private final File field_192785_d;
+-    private static final AdvancementList ADVANCEMENT_LIST = new AdvancementList();
+-    private final File advancementsDir;
 +    }).registerTypeAdapter(AdvancementRewards.class, new AdvancementRewards.Deserializer())
 +        .registerTypeHierarchyAdapter(ITextComponent.class, new ITextComponent.Serializer())
 +        .registerTypeHierarchyAdapter(Style.class, new Style.Serializer())
 +        .registerTypeAdapterFactory(new EnumTypeAdapterFactory())
 +        .create();
-+    public static final AdvancementList field_192784_c = new AdvancementList();
-+    public final File field_192785_d;
-     private boolean field_193768_e;
++    public static final AdvancementList ADVANCEMENT_LIST = new AdvancementList();
++    public final File advancementsDir;
+     private boolean hasErrored;
  
-     public AdvancementManager(@Nullable File p_i47421_1_)
+     public AdvancementManager(@Nullable File advancementsDirIn)
 @@ -74,6 +68,7 @@
-         field_192784_c.func_192087_a();
-         Map<ResourceLocation, Advancement.Builder> map = this.func_192781_c();
-         this.func_192777_a(map);
-+        this.field_193768_e |= net.minecraftforge.common.ForgeHooks.loadAdvancements(map);
-         field_192784_c.func_192083_a(map);
+         ADVANCEMENT_LIST.clear();
+         Map<ResourceLocation, Advancement.Builder> map = this.loadCustomAdvancements();
+         this.loadBuiltInAdvancements(map);
++        this.hasErrored |= net.minecraftforge.common.ForgeHooks.loadAdvancements(map);
+         ADVANCEMENT_LIST.loadAdvancements(map);
  
-         for (Advancement advancement : field_192784_c.func_192088_b())
+         for (Advancement advancement : ADVANCEMENT_LIST.getRoots())
 @@ -187,6 +182,11 @@
                          Path path2 = path.relativize(path1);
                          String s = FilenameUtils.removeExtension(path2.toString()).replaceAll("\\\\", "/");
@@ -61,7 +61,7 @@
 +                        }
 +                        // Spigot end
  
-                         if (!p_192777_1_.containsKey(resourcelocation))
+                         if (!map.containsKey(resourcelocation))
                          {
 @@ -215,12 +215,18 @@
                          }
@@ -71,13 +71,13 @@
 +                return;
              }
 +
-+            field_192782_a.error("Couldn't find .mcassetsroot");
-+            this.field_193768_e = true;
++            LOGGER.error("Couldn't find .mcassetsroot");
++            this.hasErrored = true;
          }
          catch (IOException | URISyntaxException urisyntaxexception)
          {
-             field_192782_a.error("Couldn't get a list of all built-in advancement files", (Throwable)urisyntaxexception);
-             this.field_193768_e = true;
+             LOGGER.error("Couldn't get a list of all built-in advancement files", (Throwable)urisyntaxexception);
+             this.hasErrored = true;
 +            return;
          }
          finally

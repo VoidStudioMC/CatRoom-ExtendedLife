@@ -4,25 +4,25 @@
  
                  do
                  {
--                    this.field_145932_k = this.field_145932_k + (float)(field_145923_r.nextInt(4) - field_145923_r.nextInt(4));
-+                    this.field_145932_k += (float)(field_145923_r.nextInt(4) - field_145923_r.nextInt(4));
+-                    this.flipT = this.flipT + (float)(rand.nextInt(4) - rand.nextInt(4));
++                    this.flipT += (float)(rand.nextInt(4) - rand.nextInt(4));
                  }
-                 while (f1 == this.field_145932_k);
+                 while (f1 == this.flipT);
              }
 @@ -124,13 +124,13 @@
  
-         this.field_145928_o += f2 * 0.4F;
-         this.field_145930_m = MathHelper.func_76131_a(this.field_145930_m, 0.0F, 1.0F);
--        this.field_145926_a++;
-+        ++this.field_145926_a;
-         this.field_145931_j = this.field_145933_i;
-         float f = (this.field_145932_k - this.field_145933_i) * 0.4F;
+         this.bookRotation += f2 * 0.4F;
+         this.bookSpread = MathHelper.clamp(this.bookSpread, 0.0F, 1.0F);
+-        this.tickCount++;
++        ++this.tickCount;
+         this.pageFlipPrev = this.pageFlip;
+         float f = (this.flipT - this.pageFlip) * 0.4F;
          float f3 = 0.2F;
-         f = MathHelper.func_76131_a(f, -0.2F, 0.2F);
--        this.field_145929_l = this.field_145929_l + (f - this.field_145929_l) * 0.9F;
--        this.field_145933_i = this.field_145933_i + this.field_145929_l;
-+        this.field_145929_l += (f - this.field_145929_l) * 0.9F;
-+        this.field_145933_i += this.field_145929_l;
+         f = MathHelper.clamp(f, -0.2F, 0.2F);
+-        this.flipA = this.flipA + (f - this.flipA) * 0.9F;
+-        this.pageFlip = this.pageFlip + this.flipA;
++        this.flipA += (f - this.flipA) * 0.9F;
++        this.pageFlip += this.flipA;
      }
  
      @Override

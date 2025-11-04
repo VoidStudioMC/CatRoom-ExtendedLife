@@ -7,5 +7,5 @@
 -            for (int i = 0; i < this.size(); i++)
 +            for (int i = 0; i < this.size(); ++i)
              {
-                 this.set(i, this.field_191199_b);
+                 this.set(i, this.defaultElement);
              }

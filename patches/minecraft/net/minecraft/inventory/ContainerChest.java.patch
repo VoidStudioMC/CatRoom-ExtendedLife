@@ -11,29 +11,29 @@
  
  public class ContainerChest extends Container
  {
-     private final IInventory field_75155_e;
-     private final int field_75154_f;
+     private final IInventory lowerChestInventory;
+     private final int numRows;
  
 +    private CraftInventoryView bukkitEntity = null;
 +    private InventoryPlayer player;
 +
-     public ContainerChest(IInventory p_i45801_1_, IInventory p_i45801_2_, EntityPlayer p_i45801_3_)
+     public ContainerChest(IInventory playerInventory, IInventory chestInventory, EntityPlayer player)
      {
-         this.field_75155_e = p_i45801_2_;
+         this.lowerChestInventory = chestInventory;
 @@ -15,23 +21,26 @@
-         p_i45801_2_.func_174889_b(p_i45801_3_);
-         int i = (this.field_75154_f - 4) * 18;
+         chestInventory.openInventory(player);
+         int i = (this.numRows - 4) * 18;
  
--        for (int j = 0; j < this.field_75154_f; j++)
+-        for (int j = 0; j < this.numRows; j++)
 +        // TODO: Should we check to make sure it really is an InventoryPlayer?
-+        this.player = (InventoryPlayer) p_i45801_1_;
++        this.player = (InventoryPlayer) playerInventory;
 +
-+        for (int j = 0; j < this.field_75154_f; ++j)
++        for (int j = 0; j < this.numRows; ++j)
          {
 -            for (int k = 0; k < 9; k++)
 +            for (int k = 0; k < 9; ++k)
              {
-                 this.func_75146_a(new Slot(p_i45801_2_, k + j * 9, 8 + k * 18, 18 + j * 18));
+                 this.addSlotToContainer(new Slot(chestInventory, k + j * 9, 8 + k * 18, 18 + j * 18));
              }
          }
  
@@ -43,27 +43,27 @@
 -            for (int j1 = 0; j1 < 9; j1++)
 +            for (int j1 = 0; j1 < 9; ++j1)
              {
-                 this.func_75146_a(new Slot(p_i45801_1_, j1 + l * 9 + 9, 8 + j1 * 18, 103 + l * 18 + i));
+                 this.addSlotToContainer(new Slot(playerInventory, j1 + l * 9 + 9, 8 + j1 * 18, 103 + l * 18 + i));
              }
          }
  
 -        for (int i1 = 0; i1 < 9; i1++)
 +        for (int i1 = 0; i1 < 9; ++i1)
          {
-             this.func_75146_a(new Slot(p_i45801_1_, i1, 8 + i1 * 18, 161 + i));
+             this.addSlotToContainer(new Slot(playerInventory, i1, 8 + i1 * 18, 161 + i));
          }
 @@ -40,6 +49,7 @@
      @Override
-     public boolean func_75145_c(EntityPlayer p_75145_1_)
+     public boolean canInteractWith(EntityPlayer playerIn)
      {
 +        if (!this.checkReachable) return true;
-         return this.field_75155_e.func_70300_a(p_75145_1_);
+         return this.lowerChestInventory.isUsableByPlayer(playerIn);
      }
  
 @@ -89,5 +99,24 @@
-     public IInventory func_85151_d()
+     public IInventory getLowerChestInventory()
      {
-         return this.field_75155_e;
+         return this.lowerChestInventory;
 +    }
 +
 +    @Override
@@ -73,15 +73,15 @@
 +        }
 +
 +        CraftInventory inventory;
-+        if (this.field_75155_e instanceof InventoryPlayer) {
-+            inventory = new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryPlayer((InventoryPlayer) this.field_75155_e);
-+        } else if (this.field_75155_e instanceof InventoryLargeChest) {
-+            inventory = new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryDoubleChest((InventoryLargeChest) this.field_75155_e);
++        if (this.lowerChestInventory instanceof InventoryPlayer) {
++            inventory = new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryPlayer((InventoryPlayer) this.lowerChestInventory);
++        } else if (this.lowerChestInventory instanceof InventoryLargeChest) {
++            inventory = new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryDoubleChest((InventoryLargeChest) this.lowerChestInventory);
 +        } else {
-+            inventory = new CraftInventory(this.field_75155_e);
++            inventory = new CraftInventory(this.lowerChestInventory);
 +        }
 +
-+        bukkitEntity = new CraftInventoryView(this.player.field_70458_d.getBukkitEntity(), inventory, this);
++        bukkitEntity = new CraftInventoryView(this.player.player.getBukkitEntity(), inventory, this);
 +        return bukkitEntity;
      }
  }

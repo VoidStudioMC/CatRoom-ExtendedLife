@@ -2,32 +2,32 @@
 +++ after/net/minecraft/server/management/UserListEntryBan.java
 @@ -24,7 +24,7 @@
  
-     protected UserListEntryBan(T p_i1174_1_, JsonObject p_i1174_2_)
+     protected UserListEntryBan(T valueIn, JsonObject json)
      {
--        super(p_i1174_1_, p_i1174_2_);
-+        super(checkExpiry(p_i1174_1_, p_i1174_2_), p_i1174_2_);
+-        super(valueIn, json);
++        super(checkExpiry(valueIn, json), json);
          Date date;
  
          try
 @@ -76,5 +76,29 @@
-         p_152641_1_.addProperty("source", this.field_73695_e);
-         p_152641_1_.addProperty("expires", this.field_73692_f == null ? "forever" : field_73698_a.format(this.field_73692_f));
-         p_152641_1_.addProperty("reason", this.field_73693_g);
+         data.addProperty("source", this.bannedBy);
+         data.addProperty("expires", this.banEndDate == null ? "forever" : DATE_FORMAT.format(this.banEndDate));
+         data.addProperty("reason", this.reason);
 +    }
 +
 +    public String getSource() {
-+        return this.field_73695_e;
++        return this.bannedBy;
 +    }
 +
 +    public Date getCreated() {
-+        return this.field_73694_d;
++        return this.banStartDate;
 +    }
 +
 +    private static <T> T checkExpiry(T object, JsonObject jsonobject) {
 +        Date expires = null;
 +
 +        try {
-+            expires = jsonobject.has("expires") ? field_73698_a.parse(jsonobject.get("expires").getAsString()) : null;
++            expires = jsonobject.has("expires") ? DATE_FORMAT.parse(jsonobject.get("expires").getAsString()) : null;
 +        } catch (ParseException ex) {
 +            // Guess we don't have a date
 +        }

@@ -2,7 +2,7 @@
 +++ after/net/minecraft/world/gen/layer/GenLayerZoom.java
 @@ -20,13 +20,13 @@
          int j1 = l - 1 << 1;
-         int[] aint1 = IntCache.func_76445_a(i1 * j1);
+         int[] aint1 = IntCache.getIntCache(i1 * j1);
  
 -        for (int k1 = 0; k1 < l - 1; k1++)
 +        for (int k1 = 0; k1 < l - 1; ++k1)
@@ -14,16 +14,16 @@
 -            for (int k2 = aint[i2 + 0 + (k1 + 1) * k]; i2 < k - 1; i2++)
 +            for (int k2 = aint[i2 + 0 + (k1 + 1) * k]; i2 < k - 1; ++i2)
              {
-                 this.func_75903_a((long)(i2 + i << 1), (long)(k1 + j << 1));
+                 this.initChunkSeed((long)(i2 + i << 1), (long)(k1 + j << 1));
                  int l2 = aint[i2 + 1 + (k1 + 0) * k];
 @@ -42,7 +42,7 @@
  
-         int[] aint2 = IntCache.func_76445_a(p_75904_3_ * p_75904_4_);
+         int[] aint2 = IntCache.getIntCache(areaWidth * areaHeight);
  
--        for (int j3 = 0; j3 < p_75904_4_; j3++)
-+        for (int j3 = 0; j3 < p_75904_4_; ++j3)
+-        for (int j3 = 0; j3 < areaHeight; j3++)
++        for (int j3 = 0; j3 < areaHeight; ++j3)
          {
-             System.arraycopy(aint1, (j3 + (p_75904_2_ & 1)) * i1 + (p_75904_1_ & 1), aint2, j3 * p_75904_3_, p_75904_3_);
+             System.arraycopy(aint1, (j3 + (areaY & 1)) * i1 + (areaX & 1), aint2, j3 * areaWidth, areaWidth);
          }
 @@ -54,7 +54,7 @@
      {

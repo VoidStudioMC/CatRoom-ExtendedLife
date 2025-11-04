@@ -1,8 +1,8 @@
 --- before/net/minecraft/world/gen/structure/MapGenMineshaft.java
 +++ after/net/minecraft/world/gen/structure/MapGenMineshaft.java
 @@ -46,13 +46,13 @@
-         int j = p_180706_2_.func_177958_n() >> 4;
-         int k = p_180706_2_.func_177952_p() >> 4;
+         int j = pos.getX() >> 4;
+         int k = pos.getZ() >> 4;
  
 -        for (int l = 0; l <= 1000; l++)
 +        for (int l = 0; l <= 1000; ++l)

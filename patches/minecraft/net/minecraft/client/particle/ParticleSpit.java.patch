@@ -1,11 +1,11 @@
 --- before/net/minecraft/client/particle/ParticleSpit.java
 +++ after/net/minecraft/client/particle/ParticleSpit.java
 @@ -19,7 +19,7 @@
-     public void func_189213_a()
+     public void onUpdate()
      {
-         super.func_189213_a();
--        this.field_187130_j = this.field_187130_j - (0.004 + 0.04 * (double)this.field_70545_g);
-+        this.field_187130_j -= 0.004 + 0.04 * (double)this.field_70545_g;
+         super.onUpdate();
+-        this.motionY = this.motionY - (0.004 + 0.04 * (double)this.particleGravity);
++        this.motionY -= 0.004 + 0.04 * (double)this.particleGravity;
      }
  
      @SideOnly(Side.CLIENT)

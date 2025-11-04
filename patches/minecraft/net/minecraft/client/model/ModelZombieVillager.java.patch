@@ -1,16 +1,16 @@
 --- before/net/minecraft/client/model/ModelZombieVillager.java
 +++ after/net/minecraft/client/model/ModelZombieVillager.java
 @@ -77,9 +77,9 @@
-         this.field_178724_i.field_78795_f = f2;
-         this.field_178723_h.field_78795_f += f * 1.2F - f1 * 0.4F;
-         this.field_178724_i.field_78795_f += f * 1.2F - f1 * 0.4F;
--        this.field_178723_h.field_78808_h = this.field_178723_h.field_78808_h + MathHelper.func_76134_b(p_78087_3_ * 0.09F) * 0.05F + 0.05F;
--        this.field_178724_i.field_78808_h = this.field_178724_i.field_78808_h - (MathHelper.func_76134_b(p_78087_3_ * 0.09F) * 0.05F + 0.05F);
--        this.field_178723_h.field_78795_f = this.field_178723_h.field_78795_f + MathHelper.func_76126_a(p_78087_3_ * 0.067F) * 0.05F;
--        this.field_178724_i.field_78795_f = this.field_178724_i.field_78795_f - MathHelper.func_76126_a(p_78087_3_ * 0.067F) * 0.05F;
-+        this.field_178723_h.field_78808_h += MathHelper.func_76134_b(p_78087_3_ * 0.09F) * 0.05F + 0.05F;
-+        this.field_178724_i.field_78808_h -= MathHelper.func_76134_b(p_78087_3_ * 0.09F) * 0.05F + 0.05F;
-+        this.field_178723_h.field_78795_f += MathHelper.func_76126_a(p_78087_3_ * 0.067F) * 0.05F;
-+        this.field_178724_i.field_78795_f -= MathHelper.func_76126_a(p_78087_3_ * 0.067F) * 0.05F;
+         this.bipedLeftArm.rotateAngleX = f2;
+         this.bipedRightArm.rotateAngleX += f * 1.2F - f1 * 0.4F;
+         this.bipedLeftArm.rotateAngleX += f * 1.2F - f1 * 0.4F;
+-        this.bipedRightArm.rotateAngleZ = this.bipedRightArm.rotateAngleZ + MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+-        this.bipedLeftArm.rotateAngleZ = this.bipedLeftArm.rotateAngleZ - (MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F);
+-        this.bipedRightArm.rotateAngleX = this.bipedRightArm.rotateAngleX + MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+-        this.bipedLeftArm.rotateAngleX = this.bipedLeftArm.rotateAngleX - MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
++        this.bipedRightArm.rotateAngleZ += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
++        this.bipedLeftArm.rotateAngleZ -= MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
++        this.bipedRightArm.rotateAngleX += MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
++        this.bipedLeftArm.rotateAngleX -= MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
      }
  }

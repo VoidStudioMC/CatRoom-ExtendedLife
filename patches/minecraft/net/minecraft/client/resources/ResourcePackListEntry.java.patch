@@ -1,11 +1,11 @@
 --- before/net/minecraft/client/resources/ResourcePackListEntry.java
 +++ after/net/minecraft/client/resources/ResourcePackListEntry.java
 @@ -137,7 +137,7 @@
-         this.field_148317_a.field_71466_p.func_175063_a(s, (float)(p_192634_2_ + 32 + 2), (float)(p_192634_3_ + 1), 16777215);
-         List<String> list = this.field_148317_a.field_71466_p.func_78271_c(s1, 157);
+         this.mc.fontRenderer.drawStringWithShadow(s, (float)(x + 32 + 2), (float)(y + 1), 16777215);
+         List<String> list = this.mc.fontRenderer.listFormattedStringToWidth(s1, 157);
  
 -        for (int l = 0; l < 2 && l < list.size(); l++)
 +        for (int l = 0; l < 2 && l < list.size(); ++l)
          {
-             this.field_148317_a.field_71466_p.func_175063_a(list.get(l), (float)(p_192634_2_ + 32 + 2), (float)(p_192634_3_ + 12 + 10 * l), 8421504);
+             this.mc.fontRenderer.drawStringWithShadow(list.get(l), (float)(x + 32 + 2), (float)(y + 12 + 10 * l), 8421504);
          }

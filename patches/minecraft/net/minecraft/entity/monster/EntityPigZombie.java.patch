@@ -2,19 +2,19 @@
 +++ after/net/minecraft/entity/monster/EntityPigZombie.java
 @@ -31,7 +31,7 @@
  {
-     private static final UUID field_110189_bq = UUID.fromString("49455A49-7EC5-45BA-B886-3B90B23A1718");
-     private static final AttributeModifier field_110190_br = new AttributeModifier(field_110189_bq, "Attacking speed boost", 0.05, 0).func_111168_a(false);
--    private int field_70837_d;
-+    public int field_70837_d;
-     private int field_70838_e;
-     private UUID field_175459_bn;
+     private static final UUID ATTACK_SPEED_BOOST_MODIFIER_UUID = UUID.fromString("49455A49-7EC5-45BA-B886-3B90B23A1718");
+     private static final AttributeModifier ATTACK_SPEED_BOOST_MODIFIER = new AttributeModifier(ATTACK_SPEED_BOOST_MODIFIER_UUID, "Attacking speed boost", 0.05, 0).setSaved(false);
+-    private int angerLevel;
++    public int angerLevel;
+     private int randomSoundDelay;
+     private UUID angerTargetUUID;
  
 @@ -80,7 +80,7 @@
-                 iattributeinstance.func_111121_a(field_110190_br);
+                 iattributeinstance.applyModifier(ATTACK_SPEED_BOOST_MODIFIER);
              }
  
--            this.field_70837_d--;
-+            --this.field_70837_d;
+-            this.angerLevel--;
++            --this.angerLevel;
          }
-         else if (iattributeinstance.func_180374_a(field_110190_br))
+         else if (iattributeinstance.hasModifier(ATTACK_SPEED_BOOST_MODIFIER))
          {

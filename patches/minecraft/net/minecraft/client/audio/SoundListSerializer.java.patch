@@ -2,7 +2,7 @@
 +++ after/net/minecraft/client/audio/SoundListSerializer.java
 @@ -34,7 +34,7 @@
          {
-             JsonArray jsonarray = JsonUtils.func_151214_t(p_188733_1_, "sounds");
+             JsonArray jsonarray = JsonUtils.getJsonArray(object, "sounds");
  
 -            for (int i = 0; i < jsonarray.size(); i++)
 +            for (int i = 0; i < jsonarray.size(); ++i)

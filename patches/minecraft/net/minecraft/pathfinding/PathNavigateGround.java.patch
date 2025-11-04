@@ -4,10 +4,10 @@
                  return;
              }
  
--            for (int i = 0; i < this.field_75514_c.func_75874_d(); i++)
-+            for (int i = 0; i < this.field_75514_c.func_75874_d(); ++i)
+-            for (int i = 0; i < this.currentPath.getCurrentPathLength(); i++)
++            for (int i = 0; i < this.currentPath.getCurrentPathLength(); ++i)
              {
-                 PathPoint pathpoint = this.field_75514_c.func_75877_a(i);
+                 PathPoint pathpoint = this.currentPath.getPathPointFromIndex(i);
  
 @@ -192,12 +192,12 @@
  
@@ -28,11 +28,11 @@
          }
          else
          {
--            for (int k = i; k < i + p_179683_4_; k++)
-+            for (int k = i; k < i + p_179683_4_; ++k)
+-            for (int k = i; k < i + sizeX; k++)
++            for (int k = i; k < i + sizeX; ++k)
              {
--                for (int l = j; l < j + p_179683_6_; l++)
-+                for (int l = j; l < j + p_179683_6_; ++l)
+-                for (int l = j; l < j + sizeZ; l++)
++                for (int l = j; l < j + sizeZ; ++l)
                  {
-                     double d0 = (double)k + 0.5 - p_179683_7_.field_72450_a;
-                     double d1 = (double)l + 0.5 - p_179683_7_.field_72449_c;
+                     double d0 = (double)k + 0.5 - vec31.x;
+                     double d1 = (double)l + 0.5 - vec31.z;

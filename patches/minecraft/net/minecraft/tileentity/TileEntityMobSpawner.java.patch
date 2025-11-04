@@ -2,10 +2,10 @@
 +++ after/net/minecraft/tileentity/TileEntityMobSpawner.java
 @@ -61,7 +61,7 @@
                      {
-                         NBTTagList nbttaglist = p_188266_2_.func_150295_c("SpawnPotentials", 10);
+                         NBTTagList nbttaglist = compound.getTagList("SpawnPotentials", 10);
  
--                        for (int i = 0; i < nbttaglist.func_74745_c(); i++)
-+                        for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+-                        for (int i = 0; i < nbttaglist.tagCount(); i++)
++                        for (int i = 0; i < nbttaglist.tagCount(); ++i)
                          {
-                             NBTTagCompound nbttagcompound = nbttaglist.func_150305_b(i);
-                             nbttagcompound.func_74782_a("Entity", p_188266_1_.func_188251_a(FixTypes.ENTITY, nbttagcompound.func_74775_l("Entity"), p_188266_3_));
+                             NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+                             nbttagcompound.setTag("Entity", fixer.process(FixTypes.ENTITY, nbttagcompound.getCompoundTag("Entity"), versionIn));

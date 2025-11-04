@@ -1,18 +1,18 @@
 --- before/net/minecraft/item/ItemSpade.java
 +++ after/net/minecraft/item/ItemSpade.java
 @@ -41,7 +41,15 @@
-     public boolean func_150897_b(IBlockState p_150897_1_)
+     public boolean canHarvestBlock(IBlockState blockIn)
      {
-         Block block = p_150897_1_.func_177230_c();
--        return block == Blocks.field_150431_aC ? true : block == Blocks.field_150433_aE;
+         Block block = blockIn.getBlock();
+-        return block == Blocks.SNOW_LAYER ? true : block == Blocks.SNOW;
 +
-+        if (block == Blocks.field_150431_aC)
++        if (block == Blocks.SNOW_LAYER)
 +        {
 +            return true;
 +        }
 +        else
 +        {
-+            return block == Blocks.field_150433_aE;
++            return block == Blocks.SNOW;
 +        }
      }
  

@@ -2,16 +2,16 @@
 +++ after/net/minecraft/advancements/critereon/EnchantedItemTrigger.java
 @@ -92,7 +92,14 @@
  
-             public boolean func_192257_a(ItemStack p_192257_1_, int p_192257_2_)
+             public boolean test(ItemStack item, int levelsIn)
              {
--                return !this.field_192258_a.func_192493_a(p_192257_1_) ? false : this.field_192259_b.func_192514_a((float)p_192257_2_);
-+                if (!this.field_192258_a.func_192493_a(p_192257_1_))
+-                return !this.item.test(item) ? false : this.levels.test((float)levelsIn);
++                if (!this.item.test(item))
 +                {
 +                    return false;
 +                }
 +                else
 +                {
-+                    return this.field_192259_b.func_192514_a((float)p_192257_2_);
++                    return this.levels.test((float)levelsIn);
 +                }
              }
          }

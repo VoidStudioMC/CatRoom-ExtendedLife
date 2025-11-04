@@ -1,11 +1,11 @@
 --- before/net/minecraft/network/EnumConnectionState.java
 +++ after/net/minecraft/network/EnumConnectionState.java
 @@ -313,7 +313,7 @@
-     public Packet<?> func_179244_a(EnumPacketDirection p_179244_1_, int p_179244_2_) throws InstantiationException, IllegalAccessException
+     public Packet<?> getPacket(EnumPacketDirection direction, int packetId) throws InstantiationException, IllegalAccessException
      {
-         Class <? extends Packet<? >> oclass = this.field_179247_h.get(p_179244_1_).get(Integer.valueOf(p_179244_2_));
+         Class <? extends Packet<? >> oclass = this.directionMaps.get(direction).get(Integer.valueOf(packetId));
 -        return (Packet<?>)(oclass == null ? null : oclass.newInstance());
 +        return oclass == null ? null : oclass.newInstance();
      }
  
-     public int func_150759_c()
+     public int getId()

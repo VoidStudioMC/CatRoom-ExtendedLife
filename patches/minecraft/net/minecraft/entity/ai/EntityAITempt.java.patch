@@ -17,28 +17,28 @@
  public class EntityAITempt extends EntityAIBase
  {
 @@ -17,7 +21,7 @@
-     private double field_75281_e;
-     private double field_75278_f;
-     private double field_75279_g;
--    private EntityPlayer field_75289_h;
-+    private EntityLivingBase field_75289_h;
-     private int field_75290_i;
-     private boolean field_75287_j;
-     private final Set<Item> field_151484_k;
+     private double targetZ;
+     private double pitch;
+     private double yaw;
+-    private EntityPlayer temptingPlayer;
++    private EntityLivingBase temptingPlayer;
+     private int delayTemptCounter;
+     private boolean isRunning;
+     private final Set<Item> temptItem;
 @@ -47,15 +51,32 @@
      {
-         if (this.field_75290_i > 0)
+         if (this.delayTemptCounter > 0)
          {
--            this.field_75290_i--;
-+            --this.field_75290_i;
+-            this.delayTemptCounter--;
++            --this.delayTemptCounter;
              return false;
          }
          else
          {
-             this.field_75289_h = this.field_75284_a.field_70170_p.func_72890_a(this.field_75284_a, 10.0);
--            return this.field_75289_h == null
+             this.temptingPlayer = this.temptedEntity.world.getClosestPlayerToEntity(this.temptedEntity, 10.0);
+-            return this.temptingPlayer == null
 -                   ? false
--                   : this.func_188508_a(this.field_75289_h.func_184614_ca()) || this.func_188508_a(this.field_75289_h.func_184592_cb());
+-                   : this.isTempting(this.temptingPlayer.getHeldItemMainhand()) || this.isTempting(this.temptingPlayer.getHeldItemOffhand());
 +
 +            /*
 +            if (this.temptingPlayer == null)
@@ -50,13 +50,13 @@
 +                return this.isTempting(this.temptingPlayer.getHeldItemMainhand()) || this.isTempting(this.temptingPlayer.getHeldItemOffhand());
 +            }
 +            */
-+            boolean tempt = this.field_75289_h == null ? false : this.func_188508_a(this.field_75289_h.func_184614_ca()) || this.func_188508_a(this.field_75289_h.func_184592_cb());
++            boolean tempt = this.temptingPlayer == null ? false : this.isTempting(this.temptingPlayer.getHeldItemMainhand()) || this.isTempting(this.temptingPlayer.getHeldItemOffhand());
 +            if (tempt) {
-+                EntityTargetLivingEntityEvent event = CraftEventFactory.callEntityTargetLivingEvent(this.field_75284_a, this.field_75289_h, EntityTargetEvent.TargetReason.TEMPT);
++                EntityTargetLivingEntityEvent event = CraftEventFactory.callEntityTargetLivingEvent(this.temptedEntity, this.temptingPlayer, EntityTargetEvent.TargetReason.TEMPT);
 +                if (event.isCancelled()) {
 +                    return false;
 +                }
-+                this.field_75289_h = (event.getTarget() == null) ? null : ((CraftLivingEntity) event.getTarget()).getHandle();
++                this.temptingPlayer = (event.getTarget() == null) ? null : ((CraftLivingEntity) event.getTarget()).getHandle();
 +            }
 +            return tempt;
          }

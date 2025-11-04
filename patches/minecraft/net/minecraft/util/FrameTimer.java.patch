@@ -1,20 +1,20 @@
 --- before/net/minecraft/util/FrameTimer.java
 +++ after/net/minecraft/util/FrameTimer.java
 @@ -14,7 +14,7 @@
-     public void func_181747_a(long p_181747_1_)
+     public void addFrame(long runningTime)
      {
-         this.field_181752_a[this.field_181755_d] = p_181747_1_;
--        this.field_181755_d++;
-+        ++this.field_181755_d;
+         this.frames[this.index] = runningTime;
+-        this.index++;
++        ++this.index;
  
-         if (this.field_181755_d == 240)
+         if (this.index == 240)
          {
 @@ -24,7 +24,7 @@
-         if (this.field_181754_c < 240)
+         if (this.counter < 240)
          {
-             this.field_181753_b = 0;
--            this.field_181754_c++;
-+            ++this.field_181754_c;
+             this.lastIndex = 0;
+-            this.counter++;
++            ++this.counter;
          }
          else
          {

@@ -10,131 +10,131 @@
  {
 @@ -90,8 +91,11 @@
  
-         if (!p_180634_1_.field_72995_K && p_180634_4_.func_70027_ad() && i > 0 && p_180634_4_.func_174813_aQ().field_72338_b <= (double)f)
+         if (!worldIn.isRemote && entityIn.isBurning() && i > 0 && entityIn.getEntityBoundingBox().minY <= (double)f)
          {
-+            if (!this.changeLevel(p_180634_1_, p_180634_2_, p_180634_3_, i - 1, p_180634_4_, CauldronLevelChangeEvent.ChangeReason.EXTINGUISH)) {
++            if (!this.changeLevel(worldIn, pos, state, i - 1, entityIn, CauldronLevelChangeEvent.ChangeReason.EXTINGUISH)) {
 +                return;
 +            }
-             p_180634_4_.func_70066_B();
--            this.func_176590_a(p_180634_1_, p_180634_2_, p_180634_3_, i - 1);
+             entityIn.extinguish();
+-            this.setWaterLevel(worldIn, pos, state, i - 1);
 +//            this.setWaterLevel(worldIn, pos, state, i - 1);
          }
      }
  
 @@ -123,13 +127,16 @@
              {
-                 if (i < 3 && !p_180639_1_.field_72995_K)
+                 if (i < 3 && !worldIn.isRemote)
                  {
-+                    if (!this.changeLevel(p_180639_1_, p_180639_2_, p_180639_3_, 3, p_180639_4_, CauldronLevelChangeEvent.ChangeReason.BUCKET_EMPTY)) {
++                    if (!this.changeLevel(worldIn, pos, state, 3, playerIn, CauldronLevelChangeEvent.ChangeReason.BUCKET_EMPTY)) {
 +                        return true;
 +                    }
-                     if (!p_180639_4_.field_71075_bZ.field_75098_d)
+                     if (!playerIn.capabilities.isCreativeMode)
                      {
-                         p_180639_4_.func_184611_a(p_180639_5_, new ItemStack(Items.field_151133_ar));
+                         playerIn.setHeldItem(hand, new ItemStack(Items.BUCKET));
                      }
  
-                     p_180639_4_.func_71029_a(StatList.field_188077_K);
--                    this.func_176590_a(p_180639_1_, p_180639_2_, p_180639_3_, 3);
+                     playerIn.addStat(StatList.CAULDRON_FILLED);
+-                    this.setWaterLevel(worldIn, pos, state, 3);
 +//                    this.setWaterLevel(worldIn, pos, state, 3);
-                     p_180639_1_.func_184133_a(null, p_180639_2_, SoundEvents.field_187624_K, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                     worldIn.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
                  }
  
 @@ -139,6 +146,9 @@
              {
-                 if (i == 3 && !p_180639_1_.field_72995_K)
+                 if (i == 3 && !worldIn.isRemote)
                  {
-+                    if (!this.changeLevel(p_180639_1_, p_180639_2_, p_180639_3_, 0, p_180639_4_, CauldronLevelChangeEvent.ChangeReason.BUCKET_FILL)) {
++                    if (!this.changeLevel(worldIn, pos, state, 0, playerIn, CauldronLevelChangeEvent.ChangeReason.BUCKET_FILL)) {
 +                        return true;
 +                    }
-                     if (!p_180639_4_.field_71075_bZ.field_75098_d)
+                     if (!playerIn.capabilities.isCreativeMode)
                      {
-                         itemstack.func_190918_g(1);
+                         itemstack.shrink(1);
 @@ -154,7 +164,7 @@
                      }
  
-                     p_180639_4_.func_71029_a(StatList.field_188078_L);
--                    this.func_176590_a(p_180639_1_, p_180639_2_, p_180639_3_, 0);
+                     playerIn.addStat(StatList.CAULDRON_USED);
+-                    this.setWaterLevel(worldIn, pos, state, 0);
 +//                    this.setWaterLevel(worldIn, pos, state, 0);
-                     p_180639_1_.func_184133_a(null, p_180639_2_, SoundEvents.field_187630_M, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                     worldIn.playSound(null, pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
                  }
  
 @@ -164,6 +174,9 @@
              {
-                 if (i > 0 && !p_180639_1_.field_72995_K)
+                 if (i > 0 && !worldIn.isRemote)
                  {
-+                    if (!this.changeLevel(p_180639_1_, p_180639_2_, p_180639_3_, i - 1, p_180639_4_, CauldronLevelChangeEvent.ChangeReason.BOTTLE_FILL)) {
++                    if (!this.changeLevel(worldIn, pos, state, i - 1, playerIn, CauldronLevelChangeEvent.ChangeReason.BOTTLE_FILL)) {
 +                        return true;
 +                    }
-                     if (!p_180639_4_.field_71075_bZ.field_75098_d)
+                     if (!playerIn.capabilities.isCreativeMode)
                      {
-                         ItemStack itemstack3 = PotionUtils.func_185188_a(new ItemStack(Items.field_151068_bn), PotionTypes.field_185230_b);
+                         ItemStack itemstack3 = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER);
 @@ -185,7 +198,7 @@
                      }
  
-                     p_180639_1_.func_184133_a(null, p_180639_2_, SoundEvents.field_187615_H, SoundCategory.BLOCKS, 1.0F, 1.0F);
--                    this.func_176590_a(p_180639_1_, p_180639_2_, p_180639_3_, i - 1);
+                     worldIn.playSound(null, pos, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+-                    this.setWaterLevel(worldIn, pos, state, i - 1);
 +//                    this.setWaterLevel(worldIn, pos, state, i - 1);
                  }
  
                  return true;
 @@ -194,6 +207,9 @@
              {
-                 if (i < 3 && !p_180639_1_.field_72995_K)
+                 if (i < 3 && !worldIn.isRemote)
                  {
-+                    if (!this.changeLevel(p_180639_1_, p_180639_2_, p_180639_3_, i + 1, p_180639_4_, CauldronLevelChangeEvent.ChangeReason.BOTTLE_EMPTY)) {
++                    if (!this.changeLevel(worldIn, pos, state, i + 1, playerIn, CauldronLevelChangeEvent.ChangeReason.BOTTLE_EMPTY)) {
 +                        return true;
 +                    }
-                     if (!p_180639_4_.field_71075_bZ.field_75098_d)
+                     if (!playerIn.capabilities.isCreativeMode)
                      {
-                         ItemStack itemstack2 = new ItemStack(Items.field_151069_bo);
+                         ItemStack itemstack2 = new ItemStack(Items.GLASS_BOTTLE);
 @@ -207,7 +223,7 @@
                      }
  
-                     p_180639_1_.func_184133_a(null, p_180639_2_, SoundEvents.field_191241_J, SoundCategory.BLOCKS, 1.0F, 1.0F);
--                    this.func_176590_a(p_180639_1_, p_180639_2_, p_180639_3_, i + 1);
+                     worldIn.playSound(null, pos, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+-                    this.setWaterLevel(worldIn, pos, state, i + 1);
 +//                    this.setWaterLevel(worldIn, pos, state, i + 1);
                  }
  
                  return true;
 @@ -220,8 +236,11 @@
  
-                     if (itemarmor.func_82812_d() == ItemArmor.ArmorMaterial.LEATHER && itemarmor.func_82816_b_(itemstack) && !p_180639_1_.field_72995_K)
+                     if (itemarmor.getArmorMaterial() == ItemArmor.ArmorMaterial.LEATHER && itemarmor.hasColor(itemstack) && !worldIn.isRemote)
                      {
-+                        if (!this.changeLevel(p_180639_1_, p_180639_2_, p_180639_3_, i - 1, p_180639_4_, CauldronLevelChangeEvent.ChangeReason.ARMOR_WASH)) {
++                        if (!this.changeLevel(worldIn, pos, state, i - 1, playerIn, CauldronLevelChangeEvent.ChangeReason.ARMOR_WASH)) {
 +                            return true;
 +                        }
-                         itemarmor.func_82815_c(itemstack);
--                        this.func_176590_a(p_180639_1_, p_180639_2_, p_180639_3_, i - 1);
+                         itemarmor.removeColor(itemstack);
+-                        this.setWaterLevel(worldIn, pos, state, i - 1);
 +//                        this.setWaterLevel(worldIn, pos, state, i - 1);
-                         p_180639_4_.func_71029_a(StatList.field_188079_M);
+                         playerIn.addStat(StatList.ARMOR_CLEANED);
                          return true;
                      }
 @@ -231,6 +250,9 @@
                  {
-                     if (TileEntityBanner.func_175113_c(itemstack) > 0 && !p_180639_1_.field_72995_K)
+                     if (TileEntityBanner.getPatterns(itemstack) > 0 && !worldIn.isRemote)
                      {
-+                        if (!this.changeLevel(p_180639_1_, p_180639_2_, p_180639_3_, i - 1, p_180639_4_, CauldronLevelChangeEvent.ChangeReason.BANNER_WASH)) {
++                        if (!this.changeLevel(worldIn, pos, state, i - 1, playerIn, CauldronLevelChangeEvent.ChangeReason.BANNER_WASH)) {
 +                            return true;
 +                        }
-                         ItemStack itemstack1 = itemstack.func_77946_l();
-                         itemstack1.func_190920_e(1);
-                         TileEntityBanner.func_175117_e(itemstack1);
+                         ItemStack itemstack1 = itemstack.copy();
+                         itemstack1.setCount(1);
+                         TileEntityBanner.removeBannerData(itemstack1);
 @@ -239,7 +261,7 @@
-                         if (!p_180639_4_.field_71075_bZ.field_75098_d)
+                         if (!playerIn.capabilities.isCreativeMode)
                          {
-                             itemstack.func_190918_g(1);
--                            this.func_176590_a(p_180639_1_, p_180639_2_, p_180639_3_, i - 1);
+                             itemstack.shrink(1);
+-                            this.setWaterLevel(worldIn, pos, state, i - 1);
 +//                            this.setWaterLevel(worldIn, pos, state, i - 1);
                          }
  
-                         if (itemstack.func_190926_b())
+                         if (itemstack.isEmpty())
 @@ -268,8 +290,27 @@
  
-     public void func_176590_a(World p_176590_1_, BlockPos p_176590_2_, IBlockState p_176590_3_, int p_176590_4_)
+     public void setWaterLevel(World worldIn, BlockPos pos, IBlockState state, int level)
      {
--        p_176590_1_.func_180501_a(p_176590_2_, p_176590_3_.func_177226_a(field_176591_a, MathHelper.func_76125_a(p_176590_4_, 0, 3)), 2);
--        p_176590_1_.func_175666_e(p_176590_2_, this);
-+        this.changeLevel(p_176590_1_, p_176590_2_, p_176590_3_, p_176590_4_, null, CauldronLevelChangeEvent.ChangeReason.UNKNOWN);
+-        worldIn.setBlockState(pos, state.withProperty(LEVEL, MathHelper.clamp(level, 0, 3)), 2);
+-        worldIn.updateComparatorOutputLevel(pos, this);
++        this.changeLevel(worldIn, pos, state, level, null, CauldronLevelChangeEvent.ChangeReason.UNKNOWN);
 +    }
 +
 +    public void changeLevel(World world, BlockPos blockposition, IBlockState iblockdata, int i) {
@@ -142,35 +142,35 @@
 +    }
 +
 +    private boolean changeLevel(World world, BlockPos blockposition, IBlockState iblockdata, int i, Entity entity, CauldronLevelChangeEvent.ChangeReason reason) {
-+        int newLevel = MathHelper.func_76125_a(i, 0, 3);
++        int newLevel = MathHelper.clamp(i, 0, 3);
 +        CauldronLevelChangeEvent event = new CauldronLevelChangeEvent(
-+                world.getWorld().getBlockAt(blockposition.func_177958_n(), blockposition.func_177956_o(), blockposition.func_177952_p()),
-+                (entity == null) ? null : entity.getBukkitEntity(), reason, iblockdata.func_177229_b(BlockCauldron.field_176591_a), newLevel
++                world.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ()),
++                (entity == null) ? null : entity.getBukkitEntity(), reason, iblockdata.getValue(BlockCauldron.LEVEL), newLevel
 +        );
 +        world.getServer().getPluginManager().callEvent(event);
 +        if (event.isCancelled()) {
 +            return false;
 +        }
-+        world.func_180501_a(blockposition, iblockdata.func_177226_a(BlockCauldron.field_176591_a, event.getNewLevel()), 2);
-+        world.func_175666_e(blockposition, this);
-+        world.func_175666_e(blockposition, this);
++        world.setBlockState(blockposition, iblockdata.withProperty(BlockCauldron.LEVEL, event.getNewLevel()), 2);
++        world.updateComparatorOutputLevel(blockposition, this);
++        world.updateComparatorOutputLevel(blockposition, this);
 +        return true;
      }
  
      @Override
 @@ -279,13 +320,13 @@
          {
-             float f = p_176224_1_.func_180494_b(p_176224_2_).func_180626_a(p_176224_2_);
+             float f = worldIn.getBiome(pos).getTemperature(pos);
  
--            if (!(p_176224_1_.func_72959_q().func_76939_a(f, p_176224_2_.func_177956_o()) < 0.15F))
-+            if (!(p_176224_1_.func_72959_q().func_76939_a(f, p_176224_2_.func_177956_o()) >= 0.15F))
+-            if (!(worldIn.getBiomeProvider().getTemperatureAtHeight(f, pos.getY()) < 0.15F))
++            if (!(worldIn.getBiomeProvider().getTemperatureAtHeight(f, pos.getY()) >= 0.15F))
              {
-                 IBlockState iblockstate = p_176224_1_.func_180495_p(p_176224_2_);
+                 IBlockState iblockstate = worldIn.getBlockState(pos);
  
-                 if (iblockstate.func_177229_b(field_176591_a) < 3)
+                 if (iblockstate.getValue(LEVEL) < 3)
                  {
--                    p_176224_1_.func_180501_a(p_176224_2_, iblockstate.func_177231_a(field_176591_a), 2);
-+                    this.changeLevel(p_176224_1_, p_176224_2_, iblockstate.func_177231_a(field_176591_a), 2);
+-                    worldIn.setBlockState(pos, iblockstate.cycleProperty(LEVEL), 2);
++                    this.changeLevel(worldIn, pos, iblockstate.cycleProperty(LEVEL), 2);
                  }
              }
          }

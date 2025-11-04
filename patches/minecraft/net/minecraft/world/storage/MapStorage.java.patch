@@ -1,51 +1,51 @@
 --- before/net/minecraft/world/storage/MapStorage.java
 +++ after/net/minecraft/world/storage/MapStorage.java
 @@ -56,9 +56,14 @@
-                             throw new RuntimeException("Failed to instantiate " + p_75742_1_, exception);
+                             throw new RuntimeException("Failed to instantiate " + clazz, exception);
                          }
  
 -                        FileInputStream fileinputstream = new FileInputStream(file1);
--                        NBTTagCompound nbttagcompound = CompressedStreamTools.func_74796_a(fileinputstream);
+-                        NBTTagCompound nbttagcompound = CompressedStreamTools.readCompressed(fileinputstream);
 -                        fileinputstream.close();
 +                        // CatServer start
 +                        NBTTagCompound nbttagcompound = null;
 +                        synchronized (MapStorage.this) {
 +                            FileInputStream fileinputstream = new FileInputStream(file1);
-+                            nbttagcompound = CompressedStreamTools.func_74796_a(fileinputstream);
++                            nbttagcompound = CompressedStreamTools.readCompressed(fileinputstream);
 +                            fileinputstream.close();
 +                        }
 +                        // CatServer end
-                         worldsaveddata.func_76184_a(nbttagcompound.func_74775_l("data"));
+                         worldsaveddata.readFromNBT(nbttagcompound.getCompoundTag("data"));
                      }
                  }
 @@ -91,7 +96,7 @@
  
-     public void func_75744_a()
+     public void saveAllData()
      {
--        for (int i = 0; i < this.field_75750_c.size(); i++)
-+        for (int i = 0; i < this.field_75750_c.size(); ++i)
+-        for (int i = 0; i < this.loadedDataList.size(); i++)
++        for (int i = 0; i < this.loadedDataList.size(); ++i)
          {
-             WorldSavedData worldsaveddata = this.field_75750_c.get(i);
+             WorldSavedData worldsaveddata = this.loadedDataList.get(i);
  
 @@ -114,10 +119,21 @@
                  if (file1 != null)
                  {
                      NBTTagCompound nbttagcompound = new NBTTagCompound();
--                    nbttagcompound.func_74782_a("data", p_75747_1_.func_189551_b(new NBTTagCompound()));
+-                    nbttagcompound.setTag("data", data.writeToNBT(new NBTTagCompound()));
 -                    FileOutputStream fileoutputstream = new FileOutputStream(file1);
--                    CompressedStreamTools.func_74799_a(nbttagcompound, fileoutputstream);
+-                    CompressedStreamTools.writeCompressed(nbttagcompound, fileoutputstream);
 -                    fileoutputstream.close();
 +                    // CatServer start
-+                    nbttagcompound.func_74782_a("data", p_75747_1_.func_189551_b(new NBTTagCompound()).func_74737_b());
++                    nbttagcompound.setTag("data", data.writeToNBT(new NBTTagCompound()).copy());
 +                    Runnable runnable = () -> {
 +                        try {
 +                            synchronized (MapStorage.this) {
 +                                FileOutputStream fileoutputstream = new FileOutputStream(file1);
-+                                CompressedStreamTools.func_74799_a(nbttagcompound, fileoutputstream);
++                                CompressedStreamTools.writeCompressed(nbttagcompound, fileoutputstream);
 +                                fileoutputstream.close();
 +                            }
 +                        } catch (Exception e) {
-+                            catserver.server.CatServer.log.warn("An exception occurred while saving " + p_75747_1_.field_76190_i + " to " + file1.getName(), e);
++                            catserver.server.CatServer.log.warn("An exception occurred while saving " + data.mapName + " to " + file1.getName(), e);
 +                        }
 +                    };
 +                    catserver.server.CatServer.scheduleAsyncTask(runnable);

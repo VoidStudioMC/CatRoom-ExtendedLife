@@ -1,41 +1,41 @@
 --- before/net/minecraft/client/model/ModelBiped.java
 +++ after/net/minecraft/client/model/ModelBiped.java
 @@ -213,9 +213,9 @@
-             this.field_178723_h.field_78800_c = -MathHelper.func_76134_b(this.field_78115_e.field_78796_g) * 5.0F;
-             this.field_178724_i.field_78798_e = -MathHelper.func_76126_a(this.field_78115_e.field_78796_g) * 5.0F;
-             this.field_178724_i.field_78800_c = MathHelper.func_76134_b(this.field_78115_e.field_78796_g) * 5.0F;
--            this.field_178723_h.field_78796_g = this.field_178723_h.field_78796_g + this.field_78115_e.field_78796_g;
--            this.field_178724_i.field_78796_g = this.field_178724_i.field_78796_g + this.field_78115_e.field_78796_g;
--            this.field_178724_i.field_78795_f = this.field_178724_i.field_78795_f + this.field_78115_e.field_78796_g;
-+            this.field_178723_h.field_78796_g += this.field_78115_e.field_78796_g;
-+            this.field_178724_i.field_78796_g += this.field_78115_e.field_78796_g;
-+            this.field_178724_i.field_78795_f += this.field_78115_e.field_78796_g;
-             f1 = 1.0F - this.field_78095_p;
+             this.bipedRightArm.rotationPointX = -MathHelper.cos(this.bipedBody.rotateAngleY) * 5.0F;
+             this.bipedLeftArm.rotationPointZ = -MathHelper.sin(this.bipedBody.rotateAngleY) * 5.0F;
+             this.bipedLeftArm.rotationPointX = MathHelper.cos(this.bipedBody.rotateAngleY) * 5.0F;
+-            this.bipedRightArm.rotateAngleY = this.bipedRightArm.rotateAngleY + this.bipedBody.rotateAngleY;
+-            this.bipedLeftArm.rotateAngleY = this.bipedLeftArm.rotateAngleY + this.bipedBody.rotateAngleY;
+-            this.bipedLeftArm.rotateAngleX = this.bipedLeftArm.rotateAngleX + this.bipedBody.rotateAngleY;
++            this.bipedRightArm.rotateAngleY += this.bipedBody.rotateAngleY;
++            this.bipedLeftArm.rotateAngleY += this.bipedBody.rotateAngleY;
++            this.bipedLeftArm.rotateAngleX += this.bipedBody.rotateAngleY;
+             f1 = 1.0F - this.swingProgress;
              f1 *= f1;
              f1 *= f1;
 @@ -223,8 +223,8 @@
-             float f2 = MathHelper.func_76126_a(f1 * (float) Math.PI);
-             float f3 = MathHelper.func_76126_a(this.field_78095_p * (float) Math.PI) * -(this.field_78116_c.field_78795_f - 0.7F) * 0.75F;
-             modelrenderer.field_78795_f = (float)((double)modelrenderer.field_78795_f - ((double)f2 * 1.2 + (double)f3));
--            modelrenderer.field_78796_g = modelrenderer.field_78796_g + this.field_78115_e.field_78796_g * 2.0F;
--            modelrenderer.field_78808_h = modelrenderer.field_78808_h + MathHelper.func_76126_a(this.field_78095_p * (float) Math.PI) * -0.4F;
-+            modelrenderer.field_78796_g += this.field_78115_e.field_78796_g * 2.0F;
-+            modelrenderer.field_78808_h += MathHelper.func_76126_a(this.field_78095_p * (float) Math.PI) * -0.4F;
+             float f2 = MathHelper.sin(f1 * (float) Math.PI);
+             float f3 = MathHelper.sin(this.swingProgress * (float) Math.PI) * -(this.bipedHead.rotateAngleX - 0.7F) * 0.75F;
+             modelrenderer.rotateAngleX = (float)((double)modelrenderer.rotateAngleX - ((double)f2 * 1.2 + (double)f3));
+-            modelrenderer.rotateAngleY = modelrenderer.rotateAngleY + this.bipedBody.rotateAngleY * 2.0F;
+-            modelrenderer.rotateAngleZ = modelrenderer.rotateAngleZ + MathHelper.sin(this.swingProgress * (float) Math.PI) * -0.4F;
++            modelrenderer.rotateAngleY += this.bipedBody.rotateAngleY * 2.0F;
++            modelrenderer.rotateAngleZ += MathHelper.sin(this.swingProgress * (float) Math.PI) * -0.4F;
          }
  
-         if (this.field_78117_n)
+         if (this.isSneak)
 @@ -248,10 +248,10 @@
-             this.field_78116_c.field_78797_d = 0.0F;
+             this.bipedHead.rotationPointY = 0.0F;
          }
  
--        this.field_178723_h.field_78808_h = this.field_178723_h.field_78808_h + MathHelper.func_76134_b(p_78087_3_ * 0.09F) * 0.05F + 0.05F;
--        this.field_178724_i.field_78808_h = this.field_178724_i.field_78808_h - (MathHelper.func_76134_b(p_78087_3_ * 0.09F) * 0.05F + 0.05F);
--        this.field_178723_h.field_78795_f = this.field_178723_h.field_78795_f + MathHelper.func_76126_a(p_78087_3_ * 0.067F) * 0.05F;
--        this.field_178724_i.field_78795_f = this.field_178724_i.field_78795_f - MathHelper.func_76126_a(p_78087_3_ * 0.067F) * 0.05F;
-+        this.field_178723_h.field_78808_h += MathHelper.func_76134_b(p_78087_3_ * 0.09F) * 0.05F + 0.05F;
-+        this.field_178724_i.field_78808_h -= MathHelper.func_76134_b(p_78087_3_ * 0.09F) * 0.05F + 0.05F;
-+        this.field_178723_h.field_78795_f += MathHelper.func_76126_a(p_78087_3_ * 0.067F) * 0.05F;
-+        this.field_178724_i.field_78795_f -= MathHelper.func_76126_a(p_78087_3_ * 0.067F) * 0.05F;
+-        this.bipedRightArm.rotateAngleZ = this.bipedRightArm.rotateAngleZ + MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+-        this.bipedLeftArm.rotateAngleZ = this.bipedLeftArm.rotateAngleZ - (MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F);
+-        this.bipedRightArm.rotateAngleX = this.bipedRightArm.rotateAngleX + MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+-        this.bipedLeftArm.rotateAngleX = this.bipedLeftArm.rotateAngleX - MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
++        this.bipedRightArm.rotateAngleZ += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
++        this.bipedLeftArm.rotateAngleZ -= MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
++        this.bipedRightArm.rotateAngleX += MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
++        this.bipedLeftArm.rotateAngleX -= MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
  
-         if (this.field_187076_m == ModelBiped.ArmPose.BOW_AND_ARROW)
+         if (this.rightArmPose == ModelBiped.ArmPose.BOW_AND_ARROW)
          {

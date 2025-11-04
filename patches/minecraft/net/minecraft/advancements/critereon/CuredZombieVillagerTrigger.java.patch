@@ -2,16 +2,16 @@
 +++ after/net/minecraft/advancements/critereon/CuredZombieVillagerTrigger.java
 @@ -93,7 +93,14 @@
  
-             public boolean func_192254_a(EntityPlayerMP p_192254_1_, EntityZombie p_192254_2_, EntityVillager p_192254_3_)
+             public boolean test(EntityPlayerMP player, EntityZombie zombie, EntityVillager villager)
              {
--                return !this.field_192255_a.func_192482_a(p_192254_1_, p_192254_2_) ? false : this.field_192256_b.func_192482_a(p_192254_1_, p_192254_3_);
-+                if (!this.field_192255_a.func_192482_a(p_192254_1_, p_192254_2_))
+-                return !this.zombie.test(player, zombie) ? false : this.villager.test(player, villager);
++                if (!this.zombie.test(player, zombie))
 +                {
 +                    return false;
 +                }
 +                else
 +                {
-+                    return this.field_192256_b.func_192482_a(p_192254_1_, p_192254_3_);
++                    return this.villager.test(player, villager);
 +                }
              }
          }

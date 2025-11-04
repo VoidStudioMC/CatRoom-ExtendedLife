@@ -2,37 +2,37 @@
 +++ after/net/minecraft/client/settings/HotbarSnapshot.java
 @@ -17,7 +17,7 @@
      {
-         this.ensureCapacity(field_192835_a);
+         this.ensureCapacity(HOTBAR_SIZE);
  
--        for (int i = 0; i < field_192835_a; i++)
-+        for (int i = 0; i < field_192835_a; ++i)
+-        for (int i = 0; i < HOTBAR_SIZE; i++)
++        for (int i = 0; i < HOTBAR_SIZE; ++i)
          {
-             this.add(ItemStack.field_190927_a);
+             this.add(ItemStack.EMPTY);
          }
 @@ -27,7 +27,7 @@
      {
          NBTTagList nbttaglist = new NBTTagList();
  
--        for (int i = 0; i < field_192835_a; i++)
-+        for (int i = 0; i < field_192835_a; ++i)
+-        for (int i = 0; i < HOTBAR_SIZE; i++)
++        for (int i = 0; i < HOTBAR_SIZE; ++i)
          {
-             nbttaglist.func_74742_a(this.get(i).func_77955_b(new NBTTagCompound()));
+             nbttaglist.appendTag(this.get(i).writeToNBT(new NBTTagCompound()));
          }
 @@ -37,7 +37,7 @@
  
-     public void func_192833_a(NBTTagList p_192833_1_)
+     public void fromTag(NBTTagList tag)
      {
--        for (int i = 0; i < field_192835_a; i++)
-+        for (int i = 0; i < field_192835_a; ++i)
+-        for (int i = 0; i < HOTBAR_SIZE; i++)
++        for (int i = 0; i < HOTBAR_SIZE; ++i)
          {
-             this.set(i, new ItemStack(p_192833_1_.func_150305_b(i)));
+             this.set(i, new ItemStack(tag.getCompoundTagAt(i)));
          }
 @@ -46,7 +46,7 @@
      @Override
      public boolean isEmpty()
      {
--        for (int i = 0; i < field_192835_a; i++)
-+        for (int i = 0; i < field_192835_a; ++i)
+-        for (int i = 0; i < HOTBAR_SIZE; i++)
++        for (int i = 0; i < HOTBAR_SIZE; ++i)
          {
-             if (!this.get(i).func_190926_b())
+             if (!this.get(i).isEmpty())
              {

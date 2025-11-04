@@ -1,11 +1,11 @@
 --- before/net/minecraft/client/gui/GuiLabel.java
 +++ after/net/minecraft/client/gui/GuiLabel.java
 @@ -71,7 +71,7 @@
-             int i = this.field_146174_h + this.field_146161_f / 2 + this.field_146163_s / 2;
-             int j = i - this.field_146173_k.size() * 10 / 2;
+             int i = this.y + this.height / 2 + this.border / 2;
+             int j = i - this.labels.size() * 10 / 2;
  
--            for (int k = 0; k < this.field_146173_k.size(); k++)
-+            for (int k = 0; k < this.field_146173_k.size(); ++k)
+-            for (int k = 0; k < this.labels.size(); k++)
++            for (int k = 0; k < this.labels.size(); ++k)
              {
-                 if (this.field_146170_l)
+                 if (this.centered)
                  {

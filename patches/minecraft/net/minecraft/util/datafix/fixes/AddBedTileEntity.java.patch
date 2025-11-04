@@ -1,15 +1,15 @@
 --- before/net/minecraft/util/datafix/fixes/AddBedTileEntity.java
 +++ after/net/minecraft/util/datafix/fixes/AddBedTileEntity.java
 @@ -29,13 +29,13 @@
-             NBTTagList nbttaglist = nbttagcompound.func_150295_c("TileEntities", 10);
-             NBTTagList nbttaglist1 = nbttagcompound.func_150295_c("Sections", 10);
+             NBTTagList nbttaglist = nbttagcompound.getTagList("TileEntities", 10);
+             NBTTagList nbttaglist1 = nbttagcompound.getTagList("Sections", 10);
  
--            for (int l = 0; l < nbttaglist1.func_74745_c(); l++)
-+            for (int l = 0; l < nbttaglist1.func_74745_c(); ++l)
+-            for (int l = 0; l < nbttaglist1.tagCount(); l++)
++            for (int l = 0; l < nbttaglist1.tagCount(); ++l)
              {
-                 NBTTagCompound nbttagcompound1 = nbttaglist1.func_150305_b(l);
-                 int i1 = nbttagcompound1.func_74771_c("Y");
-                 byte[] abyte = nbttagcompound1.func_74770_j("Blocks");
+                 NBTTagCompound nbttagcompound1 = nbttaglist1.getCompoundTagAt(l);
+                 int i1 = nbttagcompound1.getByte("Y");
+                 byte[] abyte = nbttagcompound1.getByteArray("Blocks");
  
 -                for (int j1 = 0; j1 < abyte.length; j1++)
 +                for (int j1 = 0; j1 < abyte.length; ++j1)

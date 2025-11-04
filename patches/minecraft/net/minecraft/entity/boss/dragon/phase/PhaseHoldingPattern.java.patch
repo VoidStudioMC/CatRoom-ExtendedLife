@@ -2,7 +2,7 @@
 +++ after/net/minecraft/entity/boss/dragon/phase/PhaseHoldingPattern.java
 @@ -100,11 +100,11 @@
  
-             if (this.field_188679_d)
+             if (this.clockwise)
              {
 -                k++;
 +                ++k;
@@ -13,4 +13,4 @@
 +                --k;
              }
  
-             if (this.field_188661_a.func_184664_cU() != null && this.field_188661_a.func_184664_cU().func_186092_c() >= 0)
+             if (this.dragon.getFightManager() != null && this.dragon.getFightManager().getNumAliveCrystals() >= 0)

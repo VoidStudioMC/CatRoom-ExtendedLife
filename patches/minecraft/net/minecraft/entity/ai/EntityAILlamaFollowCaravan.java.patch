@@ -2,19 +2,19 @@
 +++ after/net/minecraft/entity/ai/EntityAILlamaFollowCaravan.java
 @@ -24,7 +24,7 @@
          {
-             List<EntityLlama> list = this.field_190859_a
-                                      .field_70170_p
--                                     .func_72872_a((Class <? extends EntityLlama >)this.field_190859_a.getClass(), this.field_190859_a.func_174813_aQ().func_72314_b(9.0, 4.0, 9.0));
-+                                     .func_72872_a(this.field_190859_a.getClass(), this.field_190859_a.func_174813_aQ().func_72314_b(9.0, 4.0, 9.0));
+             List<EntityLlama> list = this.llama
+                                      .world
+-                                     .getEntitiesWithinAABB((Class <? extends EntityLlama >)this.llama.getClass(), this.llama.getEntityBoundingBox().grow(9.0, 4.0, 9.0));
++                                     .getEntitiesWithinAABB(this.llama.getClass(), this.llama.getEntityBoundingBox().grow(9.0, 4.0, 9.0));
              EntityLlama entityllama = null;
              double d0 = Double.MAX_VALUE;
  
 @@ -107,7 +107,7 @@
  
-             if (this.field_190861_c > 0)
+             if (this.distCheckCounter > 0)
              {
--                this.field_190861_c--;
-+                --this.field_190861_c;
+-                this.distCheckCounter--;
++                --this.distCheckCounter;
              }
  
              return true;

@@ -4,8 +4,8 @@
              final Proxy p_180192_5_
          )
      {
--        return (ListenableFuture<Object>)field_180193_a.submit(new Runnable()
-+        return field_180193_a.submit(new Runnable()
+-        return (ListenableFuture<Object>)DOWNLOADER_EXECUTOR.submit(new Runnable()
++        return DOWNLOADER_EXECUTOR.submit(new Runnable()
          {
              @Override
              public void run()

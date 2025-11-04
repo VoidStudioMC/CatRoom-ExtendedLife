@@ -28,30 +28,30 @@
 -            for (int i = 0; i < 8; i++)
 +            for (int i = 0; i < 8; ++i)
              {
-                 this.field_70170_p
-                 .func_175688_a(
+                 this.world
+                 .spawnParticle(
 @@ -69,21 +74,43 @@
  
-         if (!this.field_70170_p.field_72995_K)
+         if (!this.world.isRemote)
          {
--            if (this.field_70146_Z.nextInt(8) == 0)
-+            boolean hatching = this.field_70146_Z.nextInt(8) == 0;
+-            if (this.rand.nextInt(8) == 0)
++            boolean hatching = this.rand.nextInt(8) == 0;
 +            if (/*this.rand.nextInt(8) == 0*/ true)
              {
 -                int i = 1;
 +                byte i = 1;
  
-                 if (this.field_70146_Z.nextInt(32) == 0)
+                 if (this.rand.nextInt(32) == 0)
                  {
                      i = 4;
                  }
  
 -                for (int j = 0; j < i; j++)
 -                {
--                    EntityChicken entitychicken = new EntityChicken(this.field_70170_p);
--                    entitychicken.func_70873_a(-24000);
--                    entitychicken.func_70012_b(this.field_70165_t, this.field_70163_u, this.field_70161_v, this.field_70177_z, 0.0F);
--                    this.field_70170_p.func_72838_d(entitychicken);
+-                    EntityChicken entitychicken = new EntityChicken(this.world);
+-                    entitychicken.setGrowingAge(-24000);
+-                    entitychicken.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, 0.0F);
+-                    this.world.spawnEntity(entitychicken);
 +//                for (int j = 0; j < i; ++j) {
 +//                    EntityChicken entitychicken = new EntityChicken(this.world);
 +                if (!hatching) {
@@ -59,10 +59,10 @@
 +                }
 +                EntityType hatchingType = EntityType.CHICKEN;
 +
-+                Entity shooter = this.func_85052_h();
++                Entity shooter = this.getThrower();
 +                if (shooter instanceof EntityPlayer) {
 +                    PlayerEggThrowEvent event = new PlayerEggThrowEvent((Player) shooter.getBukkitEntity(), (org.bukkit.entity.Egg) this.getBukkitEntity(), hatching, i, hatchingType);
-+                    this.field_70170_p.getServer().getPluginManager().callEvent(event);
++                    this.world.getServer().getPluginManager().callEvent(event);
 +
 +                    i = event.getNumHatches();
 +                    hatching = event.isHatching();
@@ -73,11 +73,11 @@
 +//                    this.world.spawnEntity(entitychicken);
 +                if (hatching) {
 +                    for (int k = 0; k < i; ++k) {
-+                        Entity entity = field_70170_p.getWorld().createEntity(new org.bukkit.Location(field_70170_p.getWorld(), this.field_70165_t, this.field_70163_u, this.field_70161_v, this.field_70177_z, 0.0F), hatchingType.getEntityClass());
++                        Entity entity = world.getWorld().createEntity(new org.bukkit.Location(world.getWorld(), this.posX, this.posY, this.posZ, this.rotationYaw, 0.0F), hatchingType.getEntityClass());
 +                        if (entity.getBukkitEntity() instanceof Ageable) {
 +                            ((Ageable) entity.getBukkitEntity()).setBaby();
 +                        }
-+                        field_70170_p.getWorld().addEntity(entity, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.EGG);
++                        world.getWorld().addEntity(entity, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.EGG);
 +                    }
                  }
              }

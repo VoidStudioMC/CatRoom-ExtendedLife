@@ -2,46 +2,46 @@
 +++ after/net/minecraft/world/chunk/BlockStatePaletteLinear.java
 @@ -24,7 +24,7 @@
      @Override
-     public int func_186041_a(IBlockState p_186041_1_)
+     public int idFor(IBlockState state)
      {
--        for (int i = 0; i < this.field_186045_d; i++)
-+        for (int i = 0; i < this.field_186045_d; ++i)
+-        for (int i = 0; i < this.arraySize; i++)
++        for (int i = 0; i < this.arraySize; ++i)
          {
-             if (this.field_186042_a[i] == p_186041_1_)
+             if (this.states[i] == state)
              {
 @@ -37,7 +37,7 @@
-         if (j < this.field_186042_a.length)
+         if (j < this.states.length)
          {
-             this.field_186042_a[j] = p_186041_1_;
--            this.field_186045_d++;
-+            ++this.field_186045_d;
+             this.states[j] = state;
+-            this.arraySize++;
++            ++this.arraySize;
              return j;
          }
          else
 @@ -59,7 +59,7 @@
      {
-         this.field_186045_d = p_186038_1_.func_150792_a();
+         this.arraySize = buf.readVarInt();
  
--        for (int i = 0; i < this.field_186045_d; i++)
-+        for (int i = 0; i < this.field_186045_d; ++i)
+-        for (int i = 0; i < this.arraySize; i++)
++        for (int i = 0; i < this.arraySize; ++i)
          {
-             this.field_186042_a[i] = Block.field_176229_d.func_148745_a(p_186038_1_.func_150792_a());
+             this.states[i] = Block.BLOCK_STATE_IDS.getByValue(buf.readVarInt());
          }
 @@ -70,7 +70,7 @@
      {
-         p_186037_1_.func_150787_b(this.field_186045_d);
+         buf.writeVarInt(this.arraySize);
  
--        for (int i = 0; i < this.field_186045_d; i++)
-+        for (int i = 0; i < this.field_186045_d; ++i)
+-        for (int i = 0; i < this.arraySize; i++)
++        for (int i = 0; i < this.arraySize; ++i)
          {
-             p_186037_1_.func_150787_b(Block.field_176229_d.func_148747_b(this.field_186042_a[i]));
+             buf.writeVarInt(Block.BLOCK_STATE_IDS.get(this.states[i]));
          }
 @@ -81,7 +81,7 @@
      {
-         int i = PacketBuffer.func_150790_a(this.field_186045_d);
+         int i = PacketBuffer.getVarIntSize(this.arraySize);
  
--        for (int j = 0; j < this.field_186045_d; j++)
-+        for (int j = 0; j < this.field_186045_d; ++j)
+-        for (int j = 0; j < this.arraySize; j++)
++        for (int j = 0; j < this.arraySize; ++j)
          {
-             i += PacketBuffer.func_150790_a(Block.field_176229_d.func_148747_b(this.field_186042_a[j]));
+             i += PacketBuffer.getVarIntSize(Block.BLOCK_STATE_IDS.get(this.states[j]));
          }

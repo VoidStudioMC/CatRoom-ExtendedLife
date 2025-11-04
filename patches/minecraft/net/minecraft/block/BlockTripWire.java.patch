@@ -15,18 +15,18 @@
 -            for (int i = 1; i < 42; i++)
 +            for (int i = 1; i < 42; ++i)
              {
-                 BlockPos blockpos = p_176286_2_.func_177967_a(enumfacing, i);
-                 IBlockState iblockstate = p_176286_1_.func_180495_p(blockpos);
+                 BlockPos blockpos = pos.offset(enumfacing, i);
+                 IBlockState iblockstate = worldIn.getBlockState(blockpos);
 @@ -206,6 +207,40 @@
                  }
              }
          }
 +
 +        // CraftBukkit start - Call interact even when triggering connected tripwire
-+        if (flag != flag1 && flag1 && iblockstate.func_177229_b(field_176294_M)) {
-+            org.bukkit.World bworld = p_176288_1_.getWorld();
-+            org.bukkit.plugin.PluginManager manager = p_176288_1_.getServer().getPluginManager();
-+            org.bukkit.block.Block block = bworld.getBlockAt(p_176288_2_.func_177958_n(), p_176288_2_.func_177956_o(), p_176288_2_.func_177952_p());
++        if (flag != flag1 && flag1 && iblockstate.getValue(ATTACHED)) {
++            org.bukkit.World bworld = worldIn.getWorld();
++            org.bukkit.plugin.PluginManager manager = worldIn.getServer().getPluginManager();
++            org.bukkit.block.Block block = bworld.getBlockAt(pos.getX(), pos.getY(), pos.getZ());
 +            boolean allowed = false;
 +
 +            // If all of the events are cancelled block the tripwire trigger, else allow
@@ -35,7 +35,7 @@
 +                    org.bukkit.event.Cancellable cancellable;
 +
 +                    if (object instanceof EntityPlayer) {
-+                        cancellable = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerInteractEvent((EntityPlayer) object, org.bukkit.event.block.Action.PHYSICAL, p_176288_2_, null, null, null);
++                        cancellable = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerInteractEvent((EntityPlayer) object, org.bukkit.event.block.Action.PHYSICAL, pos, null, null, null);
 +                    } else if (object instanceof Entity) {
 +                        cancellable = new EntityInteractEvent(((Entity) object).getBukkitEntity(), block);
 +                        manager.callEvent((EntityInteractEvent) cancellable);

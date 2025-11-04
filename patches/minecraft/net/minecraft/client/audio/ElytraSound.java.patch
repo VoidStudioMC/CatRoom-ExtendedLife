@@ -2,10 +2,10 @@
 +++ after/net/minecraft/client/audio/ElytraSound.java
 @@ -25,7 +25,7 @@
      @Override
-     public void func_73660_a()
+     public void update()
      {
--        this.field_189406_n++;
-+        ++this.field_189406_n;
+-        this.time++;
++        ++this.time;
  
-         if (!this.field_189405_m.field_70128_L && (this.field_189406_n <= 20 || this.field_189405_m.func_184613_cA()))
+         if (!this.player.isDead && (this.time <= 20 || this.player.isElytraFlying()))
          {

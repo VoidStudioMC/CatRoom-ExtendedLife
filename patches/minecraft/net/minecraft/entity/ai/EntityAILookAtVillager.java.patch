@@ -1,10 +1,10 @@
 --- before/net/minecraft/entity/ai/EntityAILookAtVillager.java
 +++ after/net/minecraft/entity/ai/EntityAILookAtVillager.java
 @@ -59,6 +59,6 @@
-     public void func_75246_d()
+     public void updateTask()
      {
-         this.field_75397_a.func_70671_ap().func_75651_a(this.field_75395_b, 30.0F, 30.0F);
--        this.field_75396_c--;
-+        --this.field_75396_c;
+         this.ironGolem.getLookHelper().setLookPositionWithEntity(this.villager, 30.0F, 30.0F);
+-        this.lookTime--;
++        --this.lookTime;
      }
  }

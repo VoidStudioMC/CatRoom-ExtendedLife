@@ -2,11 +2,11 @@
 +++ after/net/minecraft/entity/ai/EntityAISit.java
 @@ -19,7 +19,8 @@
      {
-         if (!this.field_75272_a.func_70909_n())
+         if (!this.tameable.isTamed())
          {
 -            return false;
 +            // return false;
-+            return this.field_75271_b && this.field_75272_a.func_70638_az() == null; // CraftBukkit - Allow sitting for wild animals
++            return this.isSitting && this.tameable.getAttackTarget() == null; // CraftBukkit - Allow sitting for wild animals
          }
-         else if (this.field_75272_a.func_70090_H())
+         else if (this.tameable.isInWater())
          {

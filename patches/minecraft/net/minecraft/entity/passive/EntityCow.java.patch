@@ -11,29 +11,29 @@
  {
 @@ -104,16 +106,24 @@
  
-         if (itemstack.func_77973_b() == Items.field_151133_ar && !p_184645_1_.field_71075_bZ.field_75098_d && !this.func_70631_g_())
+         if (itemstack.getItem() == Items.BUCKET && !player.capabilities.isCreativeMode && !this.isChild())
          {
 +            org.bukkit.Location loc = this.getBukkitEntity().getLocation();
-+            org.bukkit.event.player.PlayerBucketFillEvent event = CraftEventFactory.callPlayerBucketFillEvent(p_184645_1_, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), null, itemstack, Items.field_151117_aB);
++            org.bukkit.event.player.PlayerBucketFillEvent event = CraftEventFactory.callPlayerBucketFillEvent(player, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), null, itemstack, Items.MILK_BUCKET);
 +
 +            if (event.isCancelled()) {
 +                return false;
 +            }
 +            ItemStack result = CraftItemStack.asNMSCopy(event.getItemStack());
 +
-             p_184645_1_.func_184185_a(SoundEvents.field_187564_an, 1.0F, 1.0F);
-             itemstack.func_190918_g(1);
+             player.playSound(SoundEvents.ENTITY_COW_MILK, 1.0F, 1.0F);
+             itemstack.shrink(1);
  
-             if (itemstack.func_190926_b())
+             if (itemstack.isEmpty())
              {
--                p_184645_1_.func_184611_a(p_184645_2_, new ItemStack(Items.field_151117_aB));
-+                p_184645_1_.func_184611_a(p_184645_2_, result);
+-                player.setHeldItem(hand, new ItemStack(Items.MILK_BUCKET));
++                player.setHeldItem(hand, result);
              }
--            else if (!p_184645_1_.field_71071_by.func_70441_a(new ItemStack(Items.field_151117_aB)))
-+            else if (!p_184645_1_.field_71071_by.func_70441_a(result))
+-            else if (!player.inventory.addItemStackToInventory(new ItemStack(Items.MILK_BUCKET)))
++            else if (!player.inventory.addItemStackToInventory(result))
              {
--                p_184645_1_.func_71019_a(new ItemStack(Items.field_151117_aB), false);
-+                p_184645_1_.func_71019_a(result, false);
+-                player.dropItem(new ItemStack(Items.MILK_BUCKET), false);
++                player.dropItem(result, false);
              }
  
              return true;

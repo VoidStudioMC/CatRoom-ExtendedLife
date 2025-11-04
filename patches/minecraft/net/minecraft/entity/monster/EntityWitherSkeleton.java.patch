@@ -2,27 +2,18 @@
 +++ after/net/minecraft/entity/monster/EntityWitherSkeleton.java
 @@ -69,7 +69,7 @@
      @Override
-     public void func_70645_a(DamageSource p_70645_1_)
+     public void onDeath(DamageSource cause)
      {
--        super.func_70645_a(p_70645_1_);
+-        super.onDeath(cause);
 +        // super.onDeath(cause); // CraftBukkit - down
  
-         if (p_70645_1_.func_76346_g() instanceof EntityCreeper)
+         if (cause.getTrueSource() instanceof EntityCreeper)
          {
 @@ -81,6 +81,7 @@
-                 this.func_70099_a(new ItemStack(Items.field_151144_bL, 1, 1), 0.0F);
+                 this.entityDropItem(new ItemStack(Items.SKULL, 1, 1), 0.0F);
              }
          }
-+        super.func_70645_a(p_70645_1_); // CraftBukkit - moved from above
++        super.onDeath(cause); // CraftBukkit - moved from above
      }
  
      @Override
-@@ -132,7 +133,7 @@
-     protected EntityArrow func_190726_a(float p_190726_1_)
-     {
-         EntityArrow entityarrow = super.func_190726_a(p_190726_1_);
--        entityarrow.func_70015_d(100);
-+        entityarrow.setFire(100);
-         return entityarrow;
-     }
- }

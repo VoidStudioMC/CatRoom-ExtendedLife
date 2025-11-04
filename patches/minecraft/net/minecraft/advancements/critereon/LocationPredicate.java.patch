@@ -3,18 +3,18 @@
 @@ -69,9 +69,15 @@
          else
          {
-             BlockPos blockpos = new BlockPos((double)p_193453_2_, (double)p_193453_3_, (double)p_193453_4_);
--            return this.field_193456_b != null && this.field_193456_b != p_193453_1_.func_180494_b(blockpos)
+             BlockPos blockpos = new BlockPos((double)x, (double)y, (double)z);
+-            return this.biome != null && this.biome != world.getBiome(blockpos)
 -                   ? false
--                   : this.field_193460_f == null || p_193453_1_.func_72863_F().func_193413_a(p_193453_1_, this.field_193460_f, blockpos);
+-                   : this.feature == null || world.getChunkProvider().isInsideStructure(world, this.feature, blockpos);
 +
-+            if (this.field_193456_b != null && this.field_193456_b != p_193453_1_.func_180494_b(blockpos))
++            if (this.biome != null && this.biome != world.getBiome(blockpos))
 +            {
 +                return false;
 +            }
 +            else
 +            {
-+                return this.field_193460_f == null || p_193453_1_.func_72863_F().func_193413_a(p_193453_1_, this.field_193460_f, blockpos);
++                return this.feature == null || world.getChunkProvider().isInsideStructure(world, this.feature, blockpos);
 +            }
          }
      }

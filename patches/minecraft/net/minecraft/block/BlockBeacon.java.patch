@@ -2,10 +2,10 @@
 +++ after/net/minecraft/block/BlockBeacon.java
 @@ -131,7 +131,7 @@
              {
-                 Chunk chunk = p_176450_0_.func_175726_f(p_176450_1_);
+                 Chunk chunk = worldIn.getChunk(glassPos);
  
--                for (int i = p_176450_1_.func_177956_o() - 1; i >= 0; i--)
-+                for (int i = p_176450_1_.func_177956_o() - 1; i >= 0; --i)
+-                for (int i = glassPos.getY() - 1; i >= 0; i--)
++                for (int i = glassPos.getY() - 1; i >= 0; --i)
                  {
-                     final BlockPos blockpos = new BlockPos(p_176450_1_.func_177958_n(), i, p_176450_1_.func_177952_p());
+                     final BlockPos blockpos = new BlockPos(glassPos.getX(), i, glassPos.getZ());
  

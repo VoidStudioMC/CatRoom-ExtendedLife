@@ -1,11 +1,11 @@
 --- before/net/minecraft/world/gen/structure/StructureMineshaftPieces.java
 +++ after/net/minecraft/world/gen/structure/StructureMineshaftPieces.java
 @@ -178,7 +178,7 @@
-                 StructureBoundingBox structureboundingbox = new StructureBoundingBox(p_175814_2_, p_175814_3_, p_175814_4_, p_175814_2_, p_175814_3_ + 2, p_175814_4_);
+                 StructureBoundingBox structureboundingbox = new StructureBoundingBox(x, y, z, x, y + 2, z);
                  int i;
  
--                for (i = p_175814_1_.nextInt(3) + 2; i > 0; i--)
-+                for (i = p_175814_1_.nextInt(3) + 2; i > 0; --i)
+-                for (i = rand.nextInt(3) + 2; i > 0; i--)
++                for (i = rand.nextInt(3) + 2; i > 0; --i)
                  {
                      int j = i * 5;
  
@@ -13,11 +13,11 @@
                          );
                      }
  
--                    for (int j1 = 0; j1 < this.field_74955_d; j1++)
-+                    for (int j1 = 0; j1 < this.field_74955_d; ++j1)
+-                    for (int j1 = 0; j1 < this.sectionCount; j1++)
++                    for (int j1 = 0; j1 < this.sectionCount; ++j1)
                      {
                          int k1 = 2 + j1 * 5;
-                         this.func_189921_a(p_74875_1_, p_74875_3_, 0, 0, k1, 2, 2, p_74875_2_);
+                         this.placeSupport(worldIn, structureBoundingBoxIn, 0, 0, k1, 2, 2, randomIn);
 @@ -580,9 +580,9 @@
                          }
                      }
@@ -29,43 +29,43 @@
 +                        for (int i3 = 0; i3 <= i1; ++i3)
                          {
                              int k3 = -1;
-                             IBlockState iblockstate3 = this.func_175807_a(p_74875_1_, l2, -1, i3, p_74875_3_);
+                             IBlockState iblockstate3 = this.getBlockStateFromPos(worldIn, l2, -1, i3, structureBoundingBoxIn);
 @@ -601,7 +601,7 @@
-                                                    .func_176223_P()
-                                                    .func_177226_a(BlockRail.field_176565_b, BlockRailBase.EnumRailDirection.NORTH_SOUTH);
+                                                    .getDefaultState()
+                                                    .withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.NORTH_SOUTH);
  
 -                        for (int j3 = 0; j3 <= i1; j3++)
 +                        for (int j3 = 0; j3 <= i1; ++j3)
                          {
-                             IBlockState iblockstate2 = this.func_175807_a(p_74875_1_, 1, -1, j3, p_74875_3_);
+                             IBlockState iblockstate2 = this.getBlockStateFromPos(worldIn, 1, -1, j3, structureBoundingBoxIn);
  
 @@ -1099,9 +1099,9 @@
-                         this.field_74887_e.field_78894_e
+                         this.boundingBox.maxY
                      );
  
--                    for (int i = this.field_74887_e.field_78897_a; i <= this.field_74887_e.field_78893_d; i++)
-+                    for (int i = this.field_74887_e.field_78897_a; i <= this.field_74887_e.field_78893_d; ++i)
+-                    for (int i = this.boundingBox.minX; i <= this.boundingBox.maxX; i++)
++                    for (int i = this.boundingBox.minX; i <= this.boundingBox.maxX; ++i)
                      {
--                        for (int j = this.field_74887_e.field_78896_c; j <= this.field_74887_e.field_78892_f; j++)
-+                        for (int j = this.field_74887_e.field_78896_c; j <= this.field_74887_e.field_78892_f; ++j)
+-                        for (int j = this.boundingBox.minZ; j <= this.boundingBox.maxZ; j++)
++                        for (int j = this.boundingBox.minZ; j <= this.boundingBox.maxZ; ++j)
                          {
-                             if (this.func_175807_a(p_74875_1_, i, this.field_74887_e.field_78895_b - 1, j, p_74875_3_).func_185904_a() == Material.field_151579_a
-                                     && this.func_189916_b(p_74875_1_, i, this.field_74887_e.field_78895_b - 1, j, p_74875_3_) < 8)
+                             if (this.getBlockStateFromPos(worldIn, i, this.boundingBox.minY - 1, j, structureBoundingBoxIn).getMaterial() == Material.AIR
+                                     && this.getSkyBrightness(worldIn, i, this.boundingBox.minY - 1, j, structureBoundingBoxIn) < 8)
 @@ -1188,7 +1188,7 @@
  
-             protected boolean func_189918_a(World p_189918_1_, StructureBoundingBox p_189918_2_, int p_189918_3_, int p_189918_4_, int p_189918_5_, int p_189918_6_)
+             protected boolean isSupportingBox(World p_189918_1_, StructureBoundingBox p_189918_2_, int p_189918_3_, int p_189918_4_, int p_189918_5_, int p_189918_6_)
              {
 -                for (int i = p_189918_3_; i <= p_189918_4_; i++)
 +                for (int i = p_189918_3_; i <= p_189918_4_; ++i)
                  {
-                     if (this.func_175807_a(p_189918_1_, i, p_189918_5_ + 1, p_189918_6_, p_189918_2_).func_185904_a() == Material.field_151579_a)
+                     if (this.getBlockStateFromPos(p_189918_1_, i, p_189918_5_ + 1, p_189918_6_, p_189918_2_).getMaterial() == Material.AIR)
                      {
 @@ -1221,20 +1221,20 @@
-             public void func_74861_a(StructureComponent p_74861_1_, List<StructureComponent> p_74861_2_, Random p_74861_3_)
+             public void buildComponent(StructureComponent componentIn, List<StructureComponent> listIn, Random rand)
              {
-                 int i = this.func_74877_c();
--                int k = this.field_74887_e.func_78882_c() - 3 - 1;
-+                int j = this.field_74887_e.func_78882_c() - 3 - 1;
+                 int i = this.getComponentType();
+-                int k = this.boundingBox.getYSize() - 3 - 1;
++                int j = this.boundingBox.getYSize() - 3 - 1;
  
 -                if (k <= 0)
 +                if (j <= 0)
@@ -77,26 +77,26 @@
 -                int j = 0;
 +                int k;
  
--                while (j < this.field_74887_e.func_78883_b())
-+                for (k = 0; k < this.field_74887_e.func_78883_b(); k += 4)
+-                while (j < this.boundingBox.getXSize())
++                for (k = 0; k < this.boundingBox.getXSize(); k += 4)
                  {
--                    j += p_74861_3_.nextInt(this.field_74887_e.func_78883_b());
-+                    k += p_74861_3_.nextInt(this.field_74887_e.func_78883_b());
+-                    j += rand.nextInt(this.boundingBox.getXSize());
++                    k += rand.nextInt(this.boundingBox.getXSize());
  
--                    if (j + 3 > this.field_74887_e.func_78883_b())
-+                    if (k + 3 > this.field_74887_e.func_78883_b())
+-                    if (j + 3 > this.boundingBox.getXSize())
++                    if (k + 3 > this.boundingBox.getXSize())
                      {
                          break;
                      }
 @@ -1243,8 +1243,8 @@
-                                 p_74861_1_,
-                                 p_74861_2_,
-                                 p_74861_3_,
--                                this.field_74887_e.field_78897_a + j,
--                                this.field_74887_e.field_78895_b + p_74861_3_.nextInt(k) + 1,
-+                                this.field_74887_e.field_78897_a + k,
-+                                this.field_74887_e.field_78895_b + p_74861_3_.nextInt(j) + 1,
-                                 this.field_74887_e.field_78896_c - 1,
+                                 componentIn,
+                                 listIn,
+                                 rand,
+-                                this.boundingBox.minX + j,
+-                                this.boundingBox.minY + rand.nextInt(k) + 1,
++                                this.boundingBox.minX + k,
++                                this.boundingBox.minY + rand.nextInt(j) + 1,
+                                 this.boundingBox.minZ - 1,
                                  EnumFacing.NORTH,
                                  i
 @@ -1265,17 +1265,13 @@
@@ -109,26 +109,26 @@
  
 -                j = 0;
 -
--                while (j < this.field_74887_e.func_78883_b())
-+                for (k = 0; k < this.field_74887_e.func_78883_b(); k += 4)
+-                while (j < this.boundingBox.getXSize())
++                for (k = 0; k < this.boundingBox.getXSize(); k += 4)
                  {
--                    j += p_74861_3_.nextInt(this.field_74887_e.func_78883_b());
-+                    k += p_74861_3_.nextInt(this.field_74887_e.func_78883_b());
+-                    j += rand.nextInt(this.boundingBox.getXSize());
++                    k += rand.nextInt(this.boundingBox.getXSize());
  
--                    if (j + 3 > this.field_74887_e.func_78883_b())
-+                    if (k + 3 > this.field_74887_e.func_78883_b())
+-                    if (j + 3 > this.boundingBox.getXSize())
++                    if (k + 3 > this.boundingBox.getXSize())
                      {
                          break;
                      }
 @@ -1284,8 +1280,8 @@
-                                 p_74861_1_,
-                                 p_74861_2_,
-                                 p_74861_3_,
--                                this.field_74887_e.field_78897_a + j,
--                                this.field_74887_e.field_78895_b + p_74861_3_.nextInt(k) + 1,
-+                                this.field_74887_e.field_78897_a + k,
-+                                this.field_74887_e.field_78895_b + p_74861_3_.nextInt(j) + 1,
-                                 this.field_74887_e.field_78892_f + 1,
+                                 componentIn,
+                                 listIn,
+                                 rand,
+-                                this.boundingBox.minX + j,
+-                                this.boundingBox.minY + rand.nextInt(k) + 1,
++                                this.boundingBox.minX + k,
++                                this.boundingBox.minY + rand.nextInt(j) + 1,
+                                 this.boundingBox.maxZ + 1,
                                  EnumFacing.SOUTH,
                                  i
 @@ -1306,17 +1302,13 @@
@@ -141,25 +141,25 @@
  
 -                j = 0;
 -
--                while (j < this.field_74887_e.func_78880_d())
-+                for (k = 0; k < this.field_74887_e.func_78880_d(); k += 4)
+-                while (j < this.boundingBox.getZSize())
++                for (k = 0; k < this.boundingBox.getZSize(); k += 4)
                  {
--                    j += p_74861_3_.nextInt(this.field_74887_e.func_78880_d());
-+                    k += p_74861_3_.nextInt(this.field_74887_e.func_78880_d());
+-                    j += rand.nextInt(this.boundingBox.getZSize());
++                    k += rand.nextInt(this.boundingBox.getZSize());
  
--                    if (j + 3 > this.field_74887_e.func_78880_d())
-+                    if (k + 3 > this.field_74887_e.func_78880_d())
+-                    if (j + 3 > this.boundingBox.getZSize())
++                    if (k + 3 > this.boundingBox.getZSize())
                      {
                          break;
                      }
 @@ -1326,8 +1318,8 @@
-                                 p_74861_2_,
-                                 p_74861_3_,
-                                 this.field_74887_e.field_78897_a - 1,
--                                this.field_74887_e.field_78895_b + p_74861_3_.nextInt(k) + 1,
--                                this.field_74887_e.field_78896_c + j,
-+                                this.field_74887_e.field_78895_b + p_74861_3_.nextInt(j) + 1,
-+                                this.field_74887_e.field_78896_c + k,
+                                 listIn,
+                                 rand,
+                                 this.boundingBox.minX - 1,
+-                                this.boundingBox.minY + rand.nextInt(k) + 1,
+-                                this.boundingBox.minZ + j,
++                                this.boundingBox.minY + rand.nextInt(j) + 1,
++                                this.boundingBox.minZ + k,
                                  EnumFacing.WEST,
                                  i
                              );
@@ -173,25 +173,25 @@
  
 -                j = 0;
 -
--                while (j < this.field_74887_e.func_78880_d())
-+                for (k = 0; k < this.field_74887_e.func_78880_d(); k += 4)
+-                while (j < this.boundingBox.getZSize())
++                for (k = 0; k < this.boundingBox.getZSize(); k += 4)
                  {
--                    j += p_74861_3_.nextInt(this.field_74887_e.func_78880_d());
-+                    k += p_74861_3_.nextInt(this.field_74887_e.func_78880_d());
+-                    j += rand.nextInt(this.boundingBox.getZSize());
++                    k += rand.nextInt(this.boundingBox.getZSize());
  
--                    if (j + 3 > this.field_74887_e.func_78880_d())
-+                    if (k + 3 > this.field_74887_e.func_78880_d())
+-                    if (j + 3 > this.boundingBox.getZSize())
++                    if (k + 3 > this.boundingBox.getZSize())
                      {
                          break;
                      }
 @@ -1367,8 +1355,8 @@
-                                                                 p_74861_2_,
-                                                                 p_74861_3_,
-                                                                 this.field_74887_e.field_78893_d + 1,
--                                                                this.field_74887_e.field_78895_b + p_74861_3_.nextInt(k) + 1,
--                                                                this.field_74887_e.field_78896_c + j,
-+                                                                this.field_74887_e.field_78895_b + p_74861_3_.nextInt(j) + 1,
-+                                                                this.field_74887_e.field_78896_c + k,
+                                                                 listIn,
+                                                                 rand,
+                                                                 this.boundingBox.maxX + 1,
+-                                                                this.boundingBox.minY + rand.nextInt(k) + 1,
+-                                                                this.boundingBox.minZ + j,
++                                                                this.boundingBox.minY + rand.nextInt(j) + 1,
++                                                                this.boundingBox.minZ + k,
                                                                  EnumFacing.EAST,
                                                                  i
                                                              );
@@ -205,20 +205,20 @@
              }
  
 @@ -1493,7 +1479,7 @@
-                 super.func_143011_b(p_143011_1_, p_143011_2_);
-                 NBTTagList nbttaglist = p_143011_1_.func_150295_c("Entrances", 11);
+                 super.readStructureFromNBT(tagCompound, p_143011_2_);
+                 NBTTagList nbttaglist = tagCompound.getTagList("Entrances", 11);
  
--                for (int i = 0; i < nbttaglist.func_74745_c(); i++)
-+                for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+-                for (int i = 0; i < nbttaglist.tagCount(); i++)
++                for (int i = 0; i < nbttaglist.tagCount(); ++i)
                  {
-                     this.field_74949_a.add(new StructureBoundingBox(nbttaglist.func_150306_c(i)));
+                     this.connectedRooms.add(new StructureBoundingBox(nbttaglist.getIntArrayAt(i)));
                  }
 @@ -1618,7 +1604,7 @@
-                     this.func_175804_a(p_74875_1_, p_74875_3_, 0, 5, 0, 2, 7, 1, Blocks.field_150350_a.func_176223_P(), Blocks.field_150350_a.func_176223_P(), false);
-                     this.func_175804_a(p_74875_1_, p_74875_3_, 0, 0, 7, 2, 2, 8, Blocks.field_150350_a.func_176223_P(), Blocks.field_150350_a.func_176223_P(), false);
+                     this.fillWithBlocks(worldIn, structureBoundingBoxIn, 0, 5, 0, 2, 7, 1, Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), false);
+                     this.fillWithBlocks(worldIn, structureBoundingBoxIn, 0, 0, 7, 2, 2, 8, Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), false);
  
 -                    for (int i = 0; i < 5; i++)
 +                    for (int i = 0; i < 5; ++i)
                      {
-                         this.func_175804_a(
-                             p_74875_1_,
+                         this.fillWithBlocks(
+                             worldIn,

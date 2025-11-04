@@ -8,21 +8,21 @@
 +        for (int i = 0; i <= 15; ++i)
          {
              float f1 = 1.0F - (float)i / 15.0F;
-             this.field_76573_f[i] = (1.0F - f1) / (f1 * 3.0F + 1.0F) * 0.9F + 0.1F;
+             this.lightBrightnessTable[i] = (1.0F - f1) / (f1 * 3.0F + 1.0F) * 0.9F + 0.1F;
 @@ -83,12 +83,14 @@
              @Override
-             public double func_177731_f()
+             public double getCenterX()
              {
--                return super.func_177731_f() / 8.0;
+-                return super.getCenterX() / 8.0;
 +                // return super.getCenterX() / 8.0D;
-+                return super.func_177731_f(); // CraftBukkit
++                return super.getCenterX(); // CraftBukkit
              }
              @Override
-             public double func_177721_g()
+             public double getCenterZ()
              {
--                return super.func_177721_g() / 8.0;
+-                return super.getCenterZ() / 8.0;
 +                // return super.getCenterZ() / 8.0D;
-+                return super.func_177721_g(); // CraftBukkit
++                return super.getCenterZ(); // CraftBukkit
              }
          };
      }

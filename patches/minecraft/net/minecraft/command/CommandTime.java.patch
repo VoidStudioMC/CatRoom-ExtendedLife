@@ -2,19 +2,19 @@
 +++ after/net/minecraft/command/CommandTime.java
 @@ -114,7 +114,7 @@
  
-     protected void func_184929_a(MinecraftServer p_184929_1_, int p_184929_2_)
+     protected void setAllWorldTimes(MinecraftServer server, int time)
      {
--        for (int i = 0; i < p_184929_1_.field_71305_c.length; i++)
-+        for (int i = 0; i < p_184929_1_.field_71305_c.length; ++i)
+-        for (int i = 0; i < server.worlds.length; i++)
++        for (int i = 0; i < server.worlds.length; ++i)
          {
-             p_184929_1_.field_71305_c[i].func_72877_b((long)p_184929_2_);
+             server.worlds[i].setWorldTime((long)time);
          }
 @@ -122,7 +122,7 @@
  
-     protected void func_184928_b(MinecraftServer p_184928_1_, int p_184928_2_)
+     protected void incrementAllWorldTimes(MinecraftServer server, int amount)
      {
--        for (int i = 0; i < p_184928_1_.field_71305_c.length; i++)
-+        for (int i = 0; i < p_184928_1_.field_71305_c.length; ++i)
+-        for (int i = 0; i < server.worlds.length; i++)
++        for (int i = 0; i < server.worlds.length; ++i)
          {
-             WorldServer worldserver = p_184928_1_.field_71305_c[i];
-             worldserver.func_72877_b(worldserver.func_72820_D() + (long)p_184928_2_);
+             WorldServer worldserver = server.worlds[i];
+             worldserver.setWorldTime(worldserver.getWorldTime() + (long)amount);

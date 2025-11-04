@@ -2,19 +2,19 @@
 +++ after/net/minecraft/client/multiplayer/ServerList.java
 @@ -39,7 +39,7 @@
  
-             NBTTagList nbttaglist = nbttagcompound.func_150295_c("servers", 10);
+             NBTTagList nbttaglist = nbttagcompound.getTagList("servers", 10);
  
--            for (int i = 0; i < nbttaglist.func_74745_c(); i++)
-+            for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+-            for (int i = 0; i < nbttaglist.tagCount(); i++)
++            for (int i = 0; i < nbttaglist.tagCount(); ++i)
              {
-                 this.field_78858_b.add(ServerData.func_78837_a(nbttaglist.func_150305_b(i)));
+                 this.servers.add(ServerData.getServerDataFromNBTCompound(nbttaglist.getCompoundTagAt(i)));
              }
 @@ -109,7 +109,7 @@
-         ServerList serverlist = new ServerList(Minecraft.func_71410_x());
-         serverlist.func_78853_a();
+         ServerList serverlist = new ServerList(Minecraft.getMinecraft());
+         serverlist.loadServerList();
  
--        for (int i = 0; i < serverlist.func_78856_c(); i++)
-+        for (int i = 0; i < serverlist.func_78856_c(); ++i)
+-        for (int i = 0; i < serverlist.countServers(); i++)
++        for (int i = 0; i < serverlist.countServers(); ++i)
          {
-             ServerData serverdata = serverlist.func_78850_a(i);
+             ServerData serverdata = serverlist.getServerData(i);
  

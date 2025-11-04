@@ -4,10 +4,10 @@
                  flag = false;
                  boolean flag1 = false;
  
--                for (int j = 0; j < ItemDye.field_150922_c.length; j++)
-+                for (int j = 0; j < ItemDye.field_150922_c.length; ++j)
+-                for (int j = 0; j < ItemDye.DYE_COLORS.length; j++)
++                for (int j = 0; j < ItemDye.DYE_COLORS.length; ++j)
                  {
-                     if (i == ItemDye.field_150922_c[j])
+                     if (i == ItemDye.DYE_COLORS[j])
                      {
 @@ -110,7 +110,7 @@
                  flag2 = false;
@@ -16,5 +16,5 @@
 -                for (int k = 0; k < 16; k++)
 +                for (int k = 0; k < 16; ++k)
                  {
-                     if (l == ItemDye.field_150922_c[k])
+                     if (l == ItemDye.DYE_COLORS[k])
                      {

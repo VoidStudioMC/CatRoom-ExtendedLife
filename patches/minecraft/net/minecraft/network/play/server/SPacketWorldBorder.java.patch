@@ -9,17 +9,17 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
 @@ -27,8 +28,12 @@
-     public SPacketWorldBorder(WorldBorder p_i46921_1_, SPacketWorldBorder.Action p_i46921_2_)
+     public SPacketWorldBorder(WorldBorder border, SPacketWorldBorder.Action actionIn)
      {
-         this.field_179795_a = p_i46921_2_;
--        this.field_179794_c = p_i46921_1_.func_177731_f();
--        this.field_179791_d = p_i46921_1_.func_177721_g();
+         this.action = actionIn;
+-        this.centerX = border.getCenterX();
+-        this.centerZ = border.getCenterZ();
 +        // CraftBukkit start - multiply out nether border
 +        // this.centerX = border.getCenterX();
 +        // this.centerZ = border.getCenterZ();
-+        this.field_179794_c = p_i46921_1_.func_177731_f() * (p_i46921_1_.world != null && p_i46921_1_.world.field_73011_w instanceof WorldProviderHell ? 8 : 1);
-+        this.field_179791_d = p_i46921_1_.func_177721_g() * (p_i46921_1_.world != null && p_i46921_1_.world.field_73011_w instanceof WorldProviderHell ? 8 : 1);
++        this.centerX = border.getCenterX() * (border.world != null && border.world.provider instanceof WorldProviderHell ? 8 : 1);
++        this.centerZ = border.getCenterZ() * (border.world != null && border.world.provider instanceof WorldProviderHell ? 8 : 1);
 +        // CraftBukkit end
-         this.field_179789_f = p_i46921_1_.func_177741_h();
-         this.field_179792_e = p_i46921_1_.func_177751_j();
-         this.field_179790_g = p_i46921_1_.func_177732_i();
+         this.diameter = border.getDiameter();
+         this.targetSize = border.getTargetSize();
+         this.timeUntilTarget = border.getTimeUntilTarget();

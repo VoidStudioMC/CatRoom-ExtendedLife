@@ -1,11 +1,11 @@
 --- before/net/minecraft/client/particle/ParticleSweepAttack.java
 +++ after/net/minecraft/client/particle/ParticleSweepAttack.java
 @@ -129,7 +129,7 @@
-         this.field_187123_c = this.field_187126_f;
-         this.field_187124_d = this.field_187127_g;
-         this.field_187125_e = this.field_187128_h;
--        this.field_187139_H++;
-+        ++this.field_187139_H;
+         this.prevPosX = this.posX;
+         this.prevPosY = this.posY;
+         this.prevPosZ = this.posZ;
+-        this.life++;
++        ++this.life;
  
-         if (this.field_187139_H == this.field_187140_I)
+         if (this.life == this.lifeTime)
          {

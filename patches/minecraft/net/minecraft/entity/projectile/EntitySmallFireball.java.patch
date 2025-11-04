@@ -10,70 +10,70 @@
  {
 @@ -21,11 +22,13 @@
      {
-         super(p_i1771_1_, p_i1771_2_, p_i1771_3_, p_i1771_5_, p_i1771_7_);
-         this.func_70105_a(0.3125F, 0.3125F);
-+        if (this.field_70235_a != null && this.field_70235_a instanceof EntityLiving) {
+         super(worldIn, shooter, accelX, accelY, accelZ);
+         this.setSize(0.3125F, 0.3125F);
++        if (this.shootingEntity != null && this.shootingEntity instanceof EntityLiving) {
 +            // TODO: Maybe we should use net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent instead of this?{
-+            isIncendiary = this.field_70170_p.func_82736_K().func_82766_b("mobGriefing");
++            isIncendiary = this.world.getGameRules().getBoolean("mobGriefing");
 +        }
      }
  
 -    public EntitySmallFireball(
--        World p_i1772_1_, double p_i1772_2_, double p_i1772_4_, double p_i1772_6_, double p_i1772_8_, double p_i1772_10_, double p_i1772_12_
+-        World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ
 -    )
-+    public EntitySmallFireball(World p_i1772_1_, double p_i1772_2_, double p_i1772_4_, double p_i1772_6_, double p_i1772_8_, double p_i1772_10_, double p_i1772_12_)
++    public EntitySmallFireball(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ)
      {
-         super(p_i1772_1_, p_i1772_2_, p_i1772_4_, p_i1772_6_, p_i1772_8_, p_i1772_10_, p_i1772_12_);
-         this.func_70105_a(0.3125F, 0.3125F);
+         super(worldIn, x, y, z, accelX, accelY, accelZ);
+         this.setSize(0.3125F, 0.3125F);
 @@ -36,7 +39,6 @@
-         EntityFireball.func_189743_a(p_189745_0_, "SmallFireball");
+         EntityFireball.registerFixesFireball(fixer, "SmallFireball");
      }
  
 -    @Override
-     protected void func_70227_a(RayTraceResult p_70227_1_)
+     protected void onImpact(RayTraceResult result)
      {
-         if (!this.field_70170_p.field_72995_K)
+         if (!this.world.isRemote)
 @@ -45,12 +47,17 @@
              {
-                 if (!p_70227_1_.field_72308_g.func_70045_F())
+                 if (!result.entityHit.isImmuneToFire())
                  {
--                    boolean flag = p_70227_1_.field_72308_g.func_70097_a(DamageSource.func_76362_a(this, this.field_70235_a), 5.0F);
+-                    boolean flag = result.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 5.0F);
 -
 -                    if (flag)
 -                    {
 +                    // CraftBukkit start - Entity damage by entity event + combust event
-+                    isIncendiary = p_70227_1_.field_72308_g.func_70097_a(DamageSource.func_76362_a(this, this.field_70235_a), 5.0F);
++                    isIncendiary = result.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 5.0F);
 +                    if (isIncendiary) {
-                         this.func_174815_a(this.field_70235_a, p_70227_1_.field_72308_g);
--                        p_70227_1_.field_72308_g.func_70015_d(5);
+                         this.applyEnchantments(this.shootingEntity, result.entityHit);
+-                        result.entityHit.setFire(5);
 +                        // result.entityHit.setFire(5);
-+                        EntityCombustByEntityEvent event = new EntityCombustByEntityEvent(this.getBukkitEntity(), p_70227_1_.field_72308_g.getBukkitEntity(), 5);
-+                        p_70227_1_.field_72308_g.field_70170_p.getServer().getPluginManager().callEvent(event);
++                        EntityCombustByEntityEvent event = new EntityCombustByEntityEvent(this.getBukkitEntity(), result.entityHit.getBukkitEntity(), 5);
++                        result.entityHit.world.getServer().getPluginManager().callEvent(event);
 +
 +                        if (!event.isCancelled()) {
-+                            p_70227_1_.field_72308_g.setFire(event.getDuration());
++                            result.entityHit.setFire(event.getDuration());
 +                        }
                      }
                  }
              }
 @@ -60,16 +67,18 @@
  
-                 if (this.field_70235_a != null && this.field_70235_a instanceof EntityLiving)
+                 if (this.shootingEntity != null && this.shootingEntity instanceof EntityLiving)
                  {
--                    flag1 = this.field_70170_p.func_82736_K().func_82766_b("mobGriefing");
-+                    flag1 = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.field_70170_p, this.field_70235_a);
+-                    flag1 = this.world.getGameRules().getBoolean("mobGriefing");
++                    flag1 = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this.shootingEntity);
                  }
  
 -                if (flag1)
 +                if (isIncendiary)
                  {
-                     BlockPos blockpos = p_70227_1_.func_178782_a().func_177972_a(p_70227_1_.field_178784_b);
+                     BlockPos blockpos = result.getBlockPos().offset(result.sideHit);
  
-                     if (this.field_70170_p.func_175623_d(blockpos))
+                     if (this.world.isAirBlock(blockpos))
                      {
--                        this.field_70170_p.func_175656_a(blockpos, Blocks.field_150480_ab.func_176223_P());
-+                        if (!org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockIgniteEvent(field_70170_p, blockpos.func_177958_n(), blockpos.func_177956_o(), blockpos.func_177952_p(), this).isCancelled()) {
-+                            this.field_70170_p.func_175656_a(blockpos, Blocks.field_150480_ab.func_176223_P());
+-                        this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
++                        if (!org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockIgniteEvent(world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), this).isCancelled()) {
++                            this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 +                        }
                      }
                  }
@@ -83,12 +83,12 @@
      }
  
 -    @Override
-     public boolean func_70067_L()
+     public boolean canBeCollidedWith()
      {
          return false;
      }
  
 -    @Override
-     public boolean func_70097_a(DamageSource p_70097_1_, float p_70097_2_)
+     public boolean attackEntityFrom(DamageSource source, float amount)
      {
          return false;

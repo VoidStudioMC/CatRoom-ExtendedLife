@@ -24,26 +24,26 @@
  public class EntityAreaEffectCloud extends Entity
  {
 @@ -32,15 +38,15 @@
-     private static final DataParameter<Integer> field_189736_e = EntityDataManager.func_187226_a(EntityAreaEffectCloud.class, DataSerializers.field_187192_b);
-     private static final DataParameter<Integer> field_189737_f = EntityDataManager.func_187226_a(EntityAreaEffectCloud.class, DataSerializers.field_187192_b);
-     private PotionType field_184502_e = PotionTypes.field_185229_a;
--    private final List<PotionEffect> field_184503_f = Lists.newArrayList();
-+    public final List<PotionEffect> field_184503_f = Lists.newArrayList();
-     private final Map<Entity, Integer> field_184504_g = Maps.newHashMap();
-     private int field_184505_h = 600;
--    private int field_184506_as = 20;
--    private int field_184507_at = 20;
-+    public int field_184506_as = 20;
-+    public int field_184507_at = 20;
-     private boolean field_184508_au;
--    private int field_184509_av;
--    private float field_184510_aw;
--    private float field_184511_ax;
-+    public int field_184509_av;
-+    public float field_184510_aw;
-+    public float field_184511_ax;
-     private EntityLivingBase field_184512_ay;
-     private UUID field_184513_az;
+     private static final DataParameter<Integer> PARTICLE_PARAM_1 = EntityDataManager.createKey(EntityAreaEffectCloud.class, DataSerializers.VARINT);
+     private static final DataParameter<Integer> PARTICLE_PARAM_2 = EntityDataManager.createKey(EntityAreaEffectCloud.class, DataSerializers.VARINT);
+     private PotionType potion = PotionTypes.EMPTY;
+-    private final List<PotionEffect> effects = Lists.newArrayList();
++    public final List<PotionEffect> effects = Lists.newArrayList();
+     private final Map<Entity, Integer> reapplicationDelayMap = Maps.newHashMap();
+     private int duration = 600;
+-    private int waitTime = 20;
+-    private int reapplicationDelay = 20;
++    public int waitTime = 20;
++    public int reapplicationDelay = 20;
+     private boolean colorSet;
+-    private int durationOnUse;
+-    private float radiusOnUse;
+-    private float radiusPerTick;
++    public int durationOnUse;
++    public float radiusOnUse;
++    public float radiusPerTick;
+     private EntityLivingBase owner;
+     private UUID ownerUniqueId;
  
 @@ -120,6 +126,22 @@
          }
@@ -51,32 +51,32 @@
  
 +    // CraftBukkit start accessor methods
 +    public void refreshEffects() {
-+        if (!this.field_184508_au) {
-+            this.func_184212_Q().func_187227_b(EntityAreaEffectCloud.field_184499_b, PotionUtils.func_185181_a(PotionUtils.func_185186_a(this.field_184502_e, (Collection) this.field_184503_f)));
++        if (!this.colorSet) {
++            this.getDataManager().set(EntityAreaEffectCloud.COLOR, PotionUtils.getPotionColorFromEffectList(PotionUtils.mergeEffects(this.potion, (Collection) this.effects)));
 +        }
 +    }
 +
 +    public String getType() {
-+        return (PotionType.field_185176_a.func_177774_c(this.field_184502_e)).toString();
++        return (PotionType.REGISTRY.getNameForObject(this.potion)).toString();
 +    }
 +
 +    public void setType(String string) {
-+        func_184484_a(PotionType.field_185176_a.func_82594_a(new ResourceLocation(string)));
++        setPotion(PotionType.REGISTRY.getObject(new ResourceLocation(string)));
 +    }
 +    // CraftBukkit end
 +
-     public int func_184492_k()
+     public int getColor()
      {
-         return this.func_184212_Q().func_187225_a(field_184499_b);
+         return this.getDataManager().get(COLOR);
 @@ -207,7 +229,7 @@
              {
-                 if (this.field_70146_Z.nextBoolean())
+                 if (this.rand.nextBoolean())
                  {
 -                    for (int i = 0; i < 2; i++)
 +                    for (int i = 0; i < 2; ++i)
                      {
-                         float f1 = this.field_70146_Z.nextFloat() * (float)(Math.PI * 2);
-                         float f2 = MathHelper.func_76129_c(this.field_70146_Z.nextFloat()) * 0.2F;
+                         float f1 = this.rand.nextFloat() * (float)(Math.PI * 2);
+                         float f2 = MathHelper.sqrt(this.rand.nextFloat()) * 0.2F;
 @@ -252,7 +274,7 @@
              {
                  float f5 = (float) Math.PI * f * f;
@@ -84,8 +84,8 @@
 -                for (int k1 = 0; (float)k1 < f5; k1++)
 +                for (int k1 = 0; (float)k1 < f5; ++k1)
                  {
-                     float f6 = this.field_70146_Z.nextFloat() * (float)(Math.PI * 2);
-                     float f7 = MathHelper.func_76129_c(this.field_70146_Z.nextFloat()) * f;
+                     float f6 = this.rand.nextFloat() * (float)(Math.PI * 2);
+                     float f7 = MathHelper.sqrt(this.rand.nextFloat()) * f;
 @@ -340,11 +362,11 @@
                      }
                  }
@@ -93,29 +93,29 @@
 -                List<PotionEffect> list = Lists.newArrayList();
 +                List<PotionEffect> potions = Lists.newArrayList();
  
-                 for (PotionEffect potioneffect1 : this.field_184502_e.func_185170_a())
+                 for (PotionEffect potioneffect1 : this.potion.getEffects())
                  {
 -                    list.add(
 +                    potions.add(
                          new PotionEffect(
-                             potioneffect1.func_188419_a(),
-                             potioneffect1.func_76459_b() / 4,
+                             potioneffect1.getPotion(),
+                             potioneffect1.getDuration() / 4,
 @@ -355,19 +377,20 @@
                      );
                  }
  
--                list.addAll(this.field_184503_f);
-+                potions.addAll(this.field_184503_f);
+-                list.addAll(this.effects);
++                potions.addAll(this.effects);
  
 -                if (list.isEmpty())
 +                if (potions.isEmpty())
                  {
-                     this.field_184504_g.clear();
+                     this.reapplicationDelayMap.clear();
                  }
                  else
                  {
--                    List<EntityLivingBase> list1 = this.field_70170_p.func_72872_a(EntityLivingBase.class, this.func_174813_aQ());
-+                    List<EntityLivingBase> list = this.field_70170_p.<EntityLivingBase>func_72872_a(EntityLivingBase.class, this.func_174813_aQ());
+-                    List<EntityLivingBase> list1 = this.world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox());
++                    List<EntityLivingBase> list = this.world.<EntityLivingBase>getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox());
  
 -                    if (!list1.isEmpty())
 +                    if (!list.isEmpty())
@@ -124,13 +124,13 @@
 +                        List<LivingEntity> entities = new ArrayList<>();
 +                        for (EntityLivingBase entitylivingbase : list)
                          {
-                             if (!this.field_184504_g.containsKey(entitylivingbase) && entitylivingbase.func_184603_cC())
+                             if (!this.reapplicationDelayMap.containsKey(entitylivingbase) && entitylivingbase.canBeHitWithPotion())
                              {
 @@ -377,13 +400,22 @@
  
                                  if (d2 <= (double)(f * f))
                                  {
--                                    this.field_184504_g.put(entitylivingbase, this.field_70173_aa + this.field_184507_at);
+-                                    this.reapplicationDelayMap.put(entitylivingbase, this.ticksExisted + this.reapplicationDelay);
 +                                    entities.add((LivingEntity) entitylivingbase.getBukkitEntity());
 +                                }
 +                            }
@@ -140,33 +140,33 @@
 +                            for (LivingEntity entity : event.getAffectedEntities()) {
 +                                if (entity instanceof CraftLivingEntity) {
 +                                    EntityLivingBase entitylivingbase = ((CraftLivingEntity) entity).getHandle();
-+                                    this.field_184504_g.put(entitylivingbase, Integer.valueOf(this.field_70173_aa + this.field_184507_at));
++                                    this.reapplicationDelayMap.put(entitylivingbase, Integer.valueOf(this.ticksExisted + this.reapplicationDelay));
  
 -                                    for (PotionEffect potioneffect : list)
 +                                    for (PotionEffect potioneffect : potions)
                                      {
-                                         if (potioneffect.func_188419_a().func_76403_b())
+                                         if (potioneffect.getPotion().isInstant())
                                          {
--                                            potioneffect.func_188419_a().func_180793_a(this, this.func_184494_w(), entitylivingbase, potioneffect.func_76458_c(), 0.5);
-+                                            potioneffect.func_188419_a().func_180793_a(this, this.func_184494_w(), entitylivingbase, potioneffect.func_76458_c(), 0.5D);
+-                                            potioneffect.getPotion().affectEntity(this, this.getOwner(), entitylivingbase, potioneffect.getAmplifier(), 0.5);
++                                            potioneffect.getPotion().affectEntity(this, this.getOwner(), entitylivingbase, potioneffect.getAmplifier(), 0.5D);
                                          }
                                          else
                                          {
 @@ -406,7 +438,7 @@
  
-                                     if (this.field_184509_av != 0)
+                                     if (this.durationOnUse != 0)
                                      {
--                                        this.field_184505_h = this.field_184505_h + this.field_184509_av;
-+                                        this.field_184505_h += this.field_184509_av;
+-                                        this.duration = this.duration + this.durationOnUse;
++                                        this.duration += this.durationOnUse;
  
-                                         if (this.field_184505_h <= 0)
+                                         if (this.duration <= 0)
                                          {
 @@ -500,7 +532,7 @@
-             NBTTagList nbttaglist = p_70037_1_.func_150295_c("Effects", 10);
-             this.field_184503_f.clear();
+             NBTTagList nbttaglist = compound.getTagList("Effects", 10);
+             this.effects.clear();
  
--            for (int i = 0; i < nbttaglist.func_74745_c(); i++)
-+            for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+-            for (int i = 0; i < nbttaglist.tagCount(); i++)
++            for (int i = 0; i < nbttaglist.tagCount(); ++i)
              {
-                 PotionEffect potioneffect = PotionEffect.func_82722_b(nbttaglist.func_150305_b(i));
+                 PotionEffect potioneffect = PotionEffect.readCustomPotionEffectFromNBT(nbttaglist.getCompoundTagAt(i));
  

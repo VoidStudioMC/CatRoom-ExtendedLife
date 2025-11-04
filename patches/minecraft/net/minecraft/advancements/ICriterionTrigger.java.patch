@@ -7,5 +7,5 @@
 -                    ICriterionTrigger.Listener<?> listener = (ICriterionTrigger.Listener<?>)p_equals_1_;
 +                    ICriterionTrigger.Listener<?> listener = (ICriterionTrigger.Listener)p_equals_1_;
  
-                     if (!this.field_192160_a.equals(listener.field_192160_a))
+                     if (!this.criterionInstance.equals(listener.criterionInstance))
                      {

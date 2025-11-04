@@ -1,14 +1,14 @@
 --- before/net/minecraft/world/gen/MapGenBase.java
 +++ after/net/minecraft/world/gen/MapGenBase.java
 @@ -18,9 +18,9 @@
-         long j = this.field_75038_b.nextLong();
-         long k = this.field_75038_b.nextLong();
+         long j = this.rand.nextLong();
+         long k = this.rand.nextLong();
  
--        for (int l = p_186125_2_ - i; l <= p_186125_2_ + i; l++)
-+        for (int l = p_186125_2_ - i; l <= p_186125_2_ + i; ++l)
+-        for (int l = x - i; l <= x + i; l++)
++        for (int l = x - i; l <= x + i; ++l)
          {
--            for (int i1 = p_186125_3_ - i; i1 <= p_186125_3_ + i; i1++)
-+            for (int i1 = p_186125_3_ - i; i1 <= p_186125_3_ + i; ++i1)
+-            for (int i1 = z - i; i1 <= z + i; i1++)
++            for (int i1 = z - i; i1 <= z + i; ++i1)
              {
                  long j1 = (long)l * j;
                  long k1 = (long)i1 * k;

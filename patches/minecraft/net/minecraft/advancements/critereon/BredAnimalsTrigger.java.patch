@@ -2,20 +2,20 @@
 +++ after/net/minecraft/advancements/critereon/BredAnimalsTrigger.java
 @@ -96,10 +96,15 @@
  
-             public boolean func_192246_a(EntityPlayerMP p_192246_1_, EntityAnimal p_192246_2_, EntityAnimal p_192246_3_, EntityAgeable p_192246_4_)
+             public boolean test(EntityPlayerMP player, EntityAnimal parent1In, EntityAnimal parent2In, EntityAgeable childIn)
              {
--                return !this.field_192249_c.func_192482_a(p_192246_1_, p_192246_4_)
+-                return !this.child.test(player, childIn)
 -                       ? false
--                       : this.field_192247_a.func_192482_a(p_192246_1_, p_192246_2_) && this.field_192248_b.func_192482_a(p_192246_1_, p_192246_3_)
--                       || this.field_192247_a.func_192482_a(p_192246_1_, p_192246_3_) && this.field_192248_b.func_192482_a(p_192246_1_, p_192246_2_);
-+                if (!this.field_192249_c.func_192482_a(p_192246_1_, p_192246_4_))
+-                       : this.parent.test(player, parent1In) && this.partner.test(player, parent2In)
+-                       || this.parent.test(player, parent2In) && this.partner.test(player, parent1In);
++                if (!this.child.test(player, childIn))
 +                {
 +                    return false;
 +                }
 +                else
 +                {
-+                    return this.field_192247_a.func_192482_a(p_192246_1_, p_192246_2_) && this.field_192248_b.func_192482_a(p_192246_1_, p_192246_3_)
-+                           || this.field_192247_a.func_192482_a(p_192246_1_, p_192246_3_) && this.field_192248_b.func_192482_a(p_192246_1_, p_192246_2_);
++                    return this.parent.test(player, parent1In) && this.partner.test(player, parent2In)
++                           || this.parent.test(player, parent2In) && this.partner.test(player, parent1In);
 +                }
              }
          }

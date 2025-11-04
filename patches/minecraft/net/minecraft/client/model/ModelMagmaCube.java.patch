@@ -4,8 +4,8 @@
  
      public ModelMagmaCube()
      {
--        for (int i = 0; i < this.field_78109_a.length; i++)
-+        for (int i = 0; i < this.field_78109_a.length; ++i)
+-        for (int i = 0; i < this.segments.length; i++)
++        for (int i = 0; i < this.segments.length; ++i)
          {
              int j = 0;
              int k = i;
@@ -13,8 +13,8 @@
              f = 0.0F;
          }
  
--        for (int i = 0; i < this.field_78109_a.length; i++)
-+        for (int i = 0; i < this.field_78109_a.length; ++i)
+-        for (int i = 0; i < this.segments.length; i++)
++        for (int i = 0; i < this.segments.length; ++i)
          {
-             this.field_78109_a[i].field_78797_d = (float)(-(4 - i)) * f * 1.7F;
+             this.segments[i].rotationPointY = (float)(-(4 - i)) * f * 1.7F;
          }

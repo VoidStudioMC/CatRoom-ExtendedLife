@@ -4,8 +4,8 @@
                  }
                  else
                  {
--                    this.field_75666_b++;
-+                    ++this.field_75666_b;
+-                    this.rotationTickCounter++;
++                    ++this.rotationTickCounter;
                      int i = 10;
  
-                     if (this.field_75666_b > 10)
+                     if (this.rotationTickCounter > 10)

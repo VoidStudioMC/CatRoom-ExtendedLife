@@ -9,31 +9,31 @@
  
  public abstract class BossInfo
  {
-     private final UUID field_186756_h;
--    protected ITextComponent field_186749_a;
--    protected float field_186750_b;
--    protected BossInfo.Color field_186751_c;
--    protected BossInfo.Overlay field_186752_d;
-+    public ITextComponent field_186749_a;
-+    public float field_186750_b;
-+    public Color field_186751_c;
-+    public Overlay field_186752_d;
-     protected boolean field_186753_e;
-     protected boolean field_186754_f;
-     protected boolean field_186755_g;
+     private final UUID uniqueId;
+-    protected ITextComponent name;
+-    protected float percent;
+-    protected BossInfo.Color color;
+-    protected BossInfo.Overlay overlay;
++    public ITextComponent name;
++    public float percent;
++    public Color color;
++    public Overlay overlay;
+     protected boolean darkenSky;
+     protected boolean playEndBossMusic;
+     protected boolean createFog;
 @@ -55,7 +53,6 @@
-         return this.field_186751_c;
+         return this.color;
      }
  
 -    @SideOnly(Side.CLIENT)
-     public void func_186745_a(BossInfo.Color p_186745_1_)
+     public void setColor(BossInfo.Color colorIn)
      {
-         this.field_186751_c = p_186745_1_;
+         this.color = colorIn;
 @@ -66,7 +63,6 @@
-         return this.field_186752_d;
+         return this.overlay;
      }
  
 -    @SideOnly(Side.CLIENT)
-     public void func_186746_a(BossInfo.Overlay p_186746_1_)
+     public void setOverlay(BossInfo.Overlay overlayIn)
      {
-         this.field_186752_d = p_186746_1_;
+         this.overlay = overlayIn;

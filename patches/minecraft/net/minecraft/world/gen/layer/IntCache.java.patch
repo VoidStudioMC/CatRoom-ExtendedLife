@@ -4,17 +4,17 @@
              }
              else
              {
--                int[] aint3 = field_76449_b.remove(field_76449_b.size() - 1);
-+                int[] aint3 = (int[])field_76449_b.remove(field_76449_b.size() - 1);
-                 field_76450_c.add(aint3);
+-                int[] aint3 = freeSmallArrays.remove(freeSmallArrays.size() - 1);
++                int[] aint3 = (int[])freeSmallArrays.remove(freeSmallArrays.size() - 1);
+                 inUseSmallArrays.add(aint3);
                  return aint3;
              }
 @@ -45,7 +45,7 @@
          }
          else
          {
--            int[] aint = field_76447_d.remove(field_76447_d.size() - 1);
-+            int[] aint = (int[])field_76447_d.remove(field_76447_d.size() - 1);
-             field_76448_e.add(aint);
+-            int[] aint = freeLargeArrays.remove(freeLargeArrays.size() - 1);
++            int[] aint = (int[])freeLargeArrays.remove(freeLargeArrays.size() - 1);
+             inUseLargeArrays.add(aint);
              return aint;
          }

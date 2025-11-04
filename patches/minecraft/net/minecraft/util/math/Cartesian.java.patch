@@ -1,31 +1,31 @@
 --- before/net/minecraft/util/math/Cartesian.java
 +++ after/net/minecraft/util/math/Cartesian.java
 @@ -89,7 +89,7 @@
-                         this.field_179424_b = p_i46018_2_;
-                         this.field_179425_c = Cartesian.func_179319_b(Iterator.class, this.field_179424_b.length);
+                         this.iterables = iterables;
+                         this.iterators = Cartesian.createArray(Iterator.class, this.iterables.length);
  
--                        for (int i = 0; i < this.field_179424_b.length; i++)
-+                        for (int i = 0; i < this.field_179424_b.length; ++i)
+-                        for (int i = 0; i < this.iterables.length; i++)
++                        for (int i = 0; i < this.iterables.length; ++i)
                          {
-                             this.field_179425_c[i] = p_i46018_2_[i].iterator();
+                             this.iterators[i] = iterables[i].iterator();
                          }
 @@ -126,7 +126,7 @@
                          {
-                             if (this.field_179426_a >= this.field_179425_c.length)
+                             if (this.index >= this.iterators.length)
                              {
--                                for (this.field_179426_a = this.field_179425_c.length - 1; this.field_179426_a >= 0; this.field_179426_a--)
-+                                for (this.field_179426_a = this.field_179425_c.length - 1; this.field_179426_a >= 0; --this.field_179426_a)
+-                                for (this.index = this.iterators.length - 1; this.index >= 0; this.index--)
++                                for (this.index = this.iterators.length - 1; this.index >= 0; --this.index)
                                  {
-                                     Iterator <? extends T > iterator = this.field_179425_c[this.field_179426_a];
+                                     Iterator <? extends T > iterator = this.iterators[this.index];
  
 @@ -166,8 +166,8 @@
                          {
-                             while (this.field_179426_a < this.field_179425_c.length)
+                             while (this.index < this.iterators.length)
                              {
--                                this.field_179423_d[this.field_179426_a] = (T)this.field_179425_c[this.field_179426_a].next();
--                                this.field_179426_a++;
-+                                this.field_179423_d[this.field_179426_a] = this.field_179425_c[this.field_179426_a].next();
-+                                ++this.field_179426_a;
+-                                this.results[this.index] = (T)this.iterators[this.index].next();
+-                                this.index++;
++                                this.results[this.index] = this.iterators[this.index].next();
++                                ++this.index;
                              }
  
-                             return (T[])((Object[])this.field_179423_d.clone());
+                             return (T[])((Object[])this.results.clone());

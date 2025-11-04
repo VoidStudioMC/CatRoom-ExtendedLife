@@ -16,50 +16,50 @@
 +
  public class EntityAISkeletonRiders extends EntityAIBase
  {
-     private final EntitySkeletonHorse field_188516_a;
+     private final EntitySkeletonHorse horse;
 @@ -43,17 +46,19 @@
              )
          );
-         EntitySkeleton entityskeleton = this.func_188514_a(difficultyinstance, this.field_188516_a);
--        entityskeleton.func_184220_m(this.field_188516_a);
-+        if (entityskeleton != null) entityskeleton.func_184220_m(this.field_188516_a);
+         EntitySkeleton entityskeleton = this.createSkeleton(difficultyinstance, this.horse);
+-        entityskeleton.startRiding(this.horse);
++        if (entityskeleton != null) entityskeleton.startRiding(this.horse);
  
 -        for (int i = 0; i < 3; i++)
 +        for (int i = 0; i < 3; ++i)
          {
-             AbstractHorse abstracthorse = this.func_188515_a(difficultyinstance);
+             AbstractHorse abstracthorse = this.createHorse(difficultyinstance);
 +            if (abstracthorse == null) continue; // CraftBukkit
-             EntitySkeleton entityskeleton1 = this.func_188514_a(difficultyinstance, abstracthorse);
--            entityskeleton1.func_184220_m(abstracthorse);
--            abstracthorse.func_70024_g(this.field_188516_a.func_70681_au().nextGaussian() * 0.5, 0.0, this.field_188516_a.func_70681_au().nextGaussian() * 0.5);
-+            if (entityskeleton1 != null) entityskeleton1.func_184220_m(abstracthorse);
-+            abstracthorse.func_70024_g(this.field_188516_a.func_70681_au().nextGaussian() * 0.5D, 0.0D, this.field_188516_a.func_70681_au().nextGaussian() * 0.5D);
+             EntitySkeleton entityskeleton1 = this.createSkeleton(difficultyinstance, abstracthorse);
+-            entityskeleton1.startRiding(abstracthorse);
+-            abstracthorse.addVelocity(this.horse.getRNG().nextGaussian() * 0.5, 0.0, this.horse.getRNG().nextGaussian() * 0.5);
++            if (entityskeleton1 != null) entityskeleton1.startRiding(abstracthorse);
++            abstracthorse.addVelocity(this.horse.getRNG().nextGaussian() * 0.5D, 0.0D, this.horse.getRNG().nextGaussian() * 0.5D);
          }
      }
  
 +    @Nullable
-     private AbstractHorse func_188515_a(DifficultyInstance p_188515_1_)
+     private AbstractHorse createHorse(DifficultyInstance p_188515_1_)
      {
-         EntitySkeletonHorse entityskeletonhorse = new EntitySkeletonHorse(this.field_188516_a.field_70170_p);
+         EntitySkeletonHorse entityskeletonhorse = new EntitySkeletonHorse(this.horse.world);
 @@ -63,10 +68,11 @@
-         entityskeletonhorse.func_110163_bv();
-         entityskeletonhorse.func_110234_j(true);
-         entityskeletonhorse.func_70873_a(0);
--        entityskeletonhorse.field_70170_p.func_72838_d(entityskeletonhorse);
-+        if (!entityskeletonhorse.field_70170_p.addEntity(entityskeletonhorse, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.TRAP)) return null; // CraftBukkit
+         entityskeletonhorse.enablePersistence();
+         entityskeletonhorse.setHorseTamed(true);
+         entityskeletonhorse.setGrowingAge(0);
+-        entityskeletonhorse.world.spawnEntity(entityskeletonhorse);
++        if (!entityskeletonhorse.world.addEntity(entityskeletonhorse, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.TRAP)) return null; // CraftBukkit
          return entityskeletonhorse;
      }
  
 +    @Nullable
-     private EntitySkeleton func_188514_a(DifficultyInstance p_188514_1_, AbstractHorse p_188514_2_)
+     private EntitySkeleton createSkeleton(DifficultyInstance p_188514_1_, AbstractHorse p_188514_2_)
      {
-         EntitySkeleton entityskeleton = new EntitySkeleton(p_188514_2_.field_70170_p);
+         EntitySkeleton entityskeleton = new EntitySkeleton(p_188514_2_.world);
 @@ -98,7 +104,7 @@
                  false
              )
          );
--        entityskeleton.field_70170_p.func_72838_d(entityskeleton);
-+        if (!entityskeleton.field_70170_p.addEntity(entityskeleton, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.JOCKEY)) return null; // CraftBukkit
+-        entityskeleton.world.spawnEntity(entityskeleton);
++        if (!entityskeleton.world.addEntity(entityskeleton, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.JOCKEY)) return null; // CraftBukkit
          return entityskeleton;
      }
  }

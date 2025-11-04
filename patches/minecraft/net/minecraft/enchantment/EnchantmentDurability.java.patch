@@ -2,16 +2,16 @@
 +++ after/net/minecraft/enchantment/EnchantmentDurability.java
 @@ -39,6 +39,13 @@
  
-     public static boolean func_92097_a(ItemStack p_92097_0_, int p_92097_1_, Random p_92097_2_)
+     public static boolean negateDamage(ItemStack stack, int level, Random rand)
      {
--        return p_92097_0_.func_77973_b() instanceof ItemArmor && p_92097_2_.nextFloat() < 0.6F ? false : p_92097_2_.nextInt(p_92097_1_ + 1) > 0;
-+        if (p_92097_0_.func_77973_b() instanceof ItemArmor && p_92097_2_.nextFloat() < 0.6F)
+-        return stack.getItem() instanceof ItemArmor && rand.nextFloat() < 0.6F ? false : rand.nextInt(level + 1) > 0;
++        if (stack.getItem() instanceof ItemArmor && rand.nextFloat() < 0.6F)
 +        {
 +            return false;
 +        }
 +        else
 +        {
-+            return p_92097_2_.nextInt(p_92097_1_ + 1) > 0;
++            return rand.nextInt(level + 1) > 0;
 +        }
      }
  }

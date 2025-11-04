@@ -6,6 +6,6 @@
          {
 -            DataParameter<?> dataparameter = (DataParameter<?>)p_equals_1_;
 +            DataParameter<?> dataparameter = (DataParameter)p_equals_1_;
-             return this.field_187157_a == dataparameter.field_187157_a;
+             return this.id == dataparameter.id;
          }
          else

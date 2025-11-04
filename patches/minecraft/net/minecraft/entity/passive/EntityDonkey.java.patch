@@ -4,16 +4,16 @@
          {
              return false;
          }
-+        else if (!(p_70878_1_ instanceof EntityDonkey) && !(p_70878_1_ instanceof EntityHorse))
++        else if (!(otherAnimal instanceof EntityDonkey) && !(otherAnimal instanceof EntityHorse))
 +        {
 +            return false;
 +        }
          else
          {
--            return !(p_70878_1_ instanceof EntityDonkey) && !(p_70878_1_ instanceof EntityHorse)
+-            return !(otherAnimal instanceof EntityDonkey) && !(otherAnimal instanceof EntityHorse)
 -                   ? false
--                   : this.func_110200_cJ() && ((AbstractHorse)p_70878_1_).func_110200_cJ();
-+            return this.func_110200_cJ() && ((AbstractHorse)p_70878_1_).func_110200_cJ();
+-                   : this.canMate() && ((AbstractHorse)otherAnimal).canMate();
++            return this.canMate() && ((AbstractHorse)otherAnimal).canMate();
          }
      }
  

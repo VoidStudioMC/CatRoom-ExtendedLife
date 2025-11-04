@@ -3,40 +3,40 @@
 @@ -19,8 +19,8 @@
  public class TileEntityBanner extends TileEntity implements IWorldNameable
  {
-     private String field_190617_a;
--    private EnumDyeColor field_175120_a = EnumDyeColor.BLACK;
--    private NBTTagList field_175118_f;
-+    public EnumDyeColor field_175120_a = EnumDyeColor.BLACK;
-+    public NBTTagList field_175118_f;
-     private boolean field_175119_g;
-     private List<BannerPattern> field_175122_h;
-     private List<EnumDyeColor> field_175123_i;
+     private String name;
+-    private EnumDyeColor baseColor = EnumDyeColor.BLACK;
+-    private NBTTagList patterns;
++    public EnumDyeColor baseColor = EnumDyeColor.BLACK;
++    public NBTTagList patterns;
+     private boolean patternDataSet;
+     private List<BannerPattern> patternList;
+     private List<EnumDyeColor> colorList;
 @@ -34,6 +34,9 @@
-         if (nbttagcompound != null && nbttagcompound.func_150297_b("Patterns", 9))
+         if (nbttagcompound != null && nbttagcompound.hasKey("Patterns", 9))
          {
-             this.field_175118_f = nbttagcompound.func_150295_c("Patterns", 10).func_74737_b();
-+            while (this.field_175118_f.func_74745_c() > 20) {
-+                this.field_175118_f.func_74744_a(20);
+             this.patterns = nbttagcompound.getTagList("Patterns", 10).copy();
++            while (this.patterns.tagCount() > 20) {
++                this.patterns.removeTag(20);
 +            }
          }
  
-         this.field_175120_a = p_175112_2_ ? func_190616_d(p_175112_1_) : ItemBanner.func_179225_h(p_175112_1_);
+         this.baseColor = p_175112_2_ ? getColor(stack) : ItemBanner.getBaseColor(stack);
 @@ -93,6 +96,9 @@
  
-         this.field_175120_a = EnumDyeColor.func_176766_a(p_145839_1_.func_74762_e("Base"));
-         this.field_175118_f = p_145839_1_.func_150295_c("Patterns", 10);
-+        while (this.field_175118_f.func_74745_c() > 20) {
-+            this.field_175118_f.func_74744_a(20);
+         this.baseColor = EnumDyeColor.byDyeDamage(compound.getInteger("Base"));
+         this.patterns = compound.getTagList("Patterns", 10);
++        while (this.patterns.tagCount() > 20) {
++            this.patterns.removeTag(20);
 +        }
-         this.field_175122_h = null;
-         this.field_175123_i = null;
-         this.field_175121_j = null;
+         this.patternList = null;
+         this.colorList = null;
+         this.patternResourceLocation = null;
 @@ -158,7 +164,7 @@
  
-                 if (this.field_175118_f != null)
+                 if (this.patterns != null)
                  {
--                    for (int i = 0; i < this.field_175118_f.func_74745_c(); i++)
-+                    for (int i = 0; i < this.field_175118_f.func_74745_c(); ++i)
+-                    for (int i = 0; i < this.patterns.tagCount(); i++)
++                    for (int i = 0; i < this.patterns.tagCount(); ++i)
                      {
-                         NBTTagCompound nbttagcompound = this.field_175118_f.func_150305_b(i);
-                         BannerPattern bannerpattern = BannerPattern.func_190994_a(nbttagcompound.func_74779_i("Pattern"));
+                         NBTTagCompound nbttagcompound = this.patterns.getCompoundTagAt(i);
+                         BannerPattern bannerpattern = BannerPattern.byHash(nbttagcompound.getString("Pattern"));

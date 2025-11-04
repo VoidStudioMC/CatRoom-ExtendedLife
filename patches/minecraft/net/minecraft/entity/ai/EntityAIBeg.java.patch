@@ -4,25 +4,25 @@
          {
              return false;
          }
-+        else if (this.field_75387_a.func_70068_e(this.field_75385_b) > (double)(this.field_75383_d * this.field_75383_d))
++        else if (this.wolf.getDistanceSq(this.player) > (double)(this.minPlayerDistance * this.minPlayerDistance))
 +        {
 +            return false;
 +        }
          else
          {
--            return this.field_75387_a.func_70068_e(this.field_75385_b) > (double)(this.field_75383_d * this.field_75383_d)
+-            return this.wolf.getDistanceSq(this.player) > (double)(this.minPlayerDistance * this.minPlayerDistance)
 -                   ? false
--                   : this.field_75384_e > 0 && this.func_75382_a(this.field_75385_b);
-+            return this.field_75384_e > 0 && this.func_75382_a(this.field_75385_b);
+-                   : this.timeoutCounter > 0 && this.hasTemptationItemInHand(this.player);
++            return this.timeoutCounter > 0 && this.hasTemptationItemInHand(this.player);
          }
      }
  
 @@ -71,7 +73,7 @@
              10.0F,
-             (float)this.field_75387_a.func_70646_bf()
+             (float)this.wolf.getVerticalFaceSpeed()
          );
--        this.field_75384_e--;
-+        --this.field_75384_e;
+-        this.timeoutCounter--;
++        --this.timeoutCounter;
      }
  
-     private boolean func_75382_a(EntityPlayer p_75382_1_)
+     private boolean hasTemptationItemInHand(EntityPlayer player)

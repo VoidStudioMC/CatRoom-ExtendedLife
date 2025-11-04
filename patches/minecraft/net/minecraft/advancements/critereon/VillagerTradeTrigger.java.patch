@@ -2,16 +2,16 @@
 +++ after/net/minecraft/advancements/critereon/VillagerTradeTrigger.java
 @@ -93,7 +93,14 @@
  
-             public boolean func_192285_a(EntityPlayerMP p_192285_1_, EntityVillager p_192285_2_, ItemStack p_192285_3_)
+             public boolean test(EntityPlayerMP player, EntityVillager villager, ItemStack item)
              {
--                return !this.field_192286_a.func_192482_a(p_192285_1_, p_192285_2_) ? false : this.field_192287_b.func_192493_a(p_192285_3_);
-+                if (!this.field_192286_a.func_192482_a(p_192285_1_, p_192285_2_))
+-                return !this.villager.test(player, villager) ? false : this.item.test(item);
++                if (!this.villager.test(player, villager))
 +                {
 +                    return false;
 +                }
 +                else
 +                {
-+                    return this.field_192287_b.func_192493_a(p_192285_3_);
++                    return this.item.test(item);
 +                }
              }
          }

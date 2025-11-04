@@ -4,8 +4,8 @@
          {
              Vector<String> vector = new Vector<>();
  
--            for (int i = 0; i < this.field_120015_a.func_184103_al().func_181057_v().size(); i++)
-+            for (int i = 0; i < this.field_120015_a.func_184103_al().func_181057_v().size(); ++i)
+-            for (int i = 0; i < this.server.getPlayerList().getPlayers().size(); i++)
++            for (int i = 0; i < this.server.getPlayerList().getPlayers().size(); ++i)
              {
-                 vector.add(this.field_120015_a.func_184103_al().func_181057_v().get(i).func_70005_c_());
+                 vector.add(this.server.getPlayerList().getPlayers().get(i).getName());
              }

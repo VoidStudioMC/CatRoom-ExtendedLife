@@ -1,29 +1,29 @@
 --- before/net/minecraft/item/ItemEnchantedBook.java
 +++ after/net/minecraft/item/ItemEnchantedBook.java
 @@ -48,7 +48,7 @@
-         super.func_77624_a(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
-         NBTTagList nbttaglist = func_92110_g(p_77624_1_);
+         super.addInformation(stack, worldIn, tooltip, flagIn);
+         NBTTagList nbttaglist = getEnchantments(stack);
  
--        for (int i = 0; i < nbttaglist.func_74745_c(); i++)
-+        for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+-        for (int i = 0; i < nbttaglist.tagCount(); i++)
++        for (int i = 0; i < nbttaglist.tagCount(); ++i)
          {
-             NBTTagCompound nbttagcompound = nbttaglist.func_150305_b(i);
-             int j = nbttagcompound.func_74765_d("id");
+             NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+             int j = nbttagcompound.getShort("id");
 @@ -66,7 +66,7 @@
-         NBTTagList nbttaglist = func_92110_g(p_92115_0_);
+         NBTTagList nbttaglist = getEnchantments(p_92115_0_);
          boolean flag = true;
  
--        for (int i = 0; i < nbttaglist.func_74745_c(); i++)
-+        for (int i = 0; i < nbttaglist.func_74745_c(); ++i)
+-        for (int i = 0; i < nbttaglist.tagCount(); i++)
++        for (int i = 0; i < nbttaglist.tagCount(); ++i)
          {
-             NBTTagCompound nbttagcompound = nbttaglist.func_150305_b(i);
+             NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
  
 @@ -114,7 +114,7 @@
              {
-                 if (enchantment.field_77351_y != null)
+                 if (enchantment.type != null)
                  {
--                    for (int i = enchantment.func_77319_d(); i <= enchantment.func_77325_b(); i++)
-+                    for (int i = enchantment.func_77319_d(); i <= enchantment.func_77325_b(); ++i)
+-                    for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++)
++                    for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); ++i)
                      {
-                         p_150895_2_.add(func_92111_a(new EnchantmentData(enchantment, i)));
+                         items.add(getEnchantedItemStack(new EnchantmentData(enchantment, i)));
                      }

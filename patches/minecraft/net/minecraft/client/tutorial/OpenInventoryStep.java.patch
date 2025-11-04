@@ -2,10 +2,10 @@
 +++ after/net/minecraft/client/tutorial/OpenInventoryStep.java
 @@ -24,7 +24,7 @@
      @Override
-     public void func_193245_a()
+     public void update()
      {
--        this.field_193285_e++;
-+        ++this.field_193285_e;
+-        this.timeWaiting++;
++        ++this.timeWaiting;
  
-         if (this.field_193283_c.func_194072_f() != GameType.SURVIVAL)
+         if (this.tutorial.getGameType() != GameType.SURVIVAL)
          {

@@ -1,19 +1,19 @@
 --- before/net/minecraft/network/play/server/SPacketEntityProperties.java
 +++ after/net/minecraft/network/play/server/SPacketEntityProperties.java
 @@ -43,14 +43,14 @@
-         this.field_149445_a = p_148837_1_.func_150792_a();
-         int i = p_148837_1_.readInt();
+         this.entityId = buf.readVarInt();
+         int i = buf.readInt();
  
 -        for (int j = 0; j < i; j++)
 +        for (int j = 0; j < i; ++j)
          {
-             String s = p_148837_1_.func_150789_c(64);
-             double d0 = p_148837_1_.readDouble();
+             String s = buf.readString(64);
+             double d0 = buf.readDouble();
              List<AttributeModifier> list = Lists.newArrayList();
-             int k = p_148837_1_.func_150792_a();
+             int k = buf.readVarInt();
  
 -            for (int l = 0; l < k; l++)
 +            for (int l = 0; l < k; ++l)
              {
-                 UUID uuid = p_148837_1_.func_179253_g();
-                 list.add(new AttributeModifier(uuid, "Unknown synced attribute modifier", p_148837_1_.readDouble(), p_148837_1_.readByte()));
+                 UUID uuid = buf.readUniqueId();
+                 list.add(new AttributeModifier(uuid, "Unknown synced attribute modifier", buf.readDouble(), buf.readByte()));

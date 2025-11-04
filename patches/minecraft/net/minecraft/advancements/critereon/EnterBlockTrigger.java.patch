@@ -4,8 +4,8 @@
                  if (iproperty == null)
                  {
                      throw new JsonSyntaxException(
--                        "Unknown block state property '" + entry.getKey() + "' for block '" + Block.field_149771_c.func_177774_c(block) + "'"
-+                        "Unknown block state property '" + (String)entry.getKey() + "' for block '" + Block.field_149771_c.func_177774_c(block) + "'"
+-                        "Unknown block state property '" + entry.getKey() + "' for block '" + Block.REGISTRY.getNameForObject(block) + "'"
++                        "Unknown block state property '" + (String)entry.getKey() + "' for block '" + Block.REGISTRY.getNameForObject(block) + "'"
                      );
                  }
  
@@ -13,13 +13,13 @@
                  if (!optional.isPresent())
                  {
                      throw new JsonSyntaxException(
--                        "Invalid block state value '" + s + "' for property '" + entry.getKey() + "' on block '" + Block.field_149771_c.func_177774_c(block) + "'"
+-                        "Invalid block state value '" + s + "' for property '" + entry.getKey() + "' on block '" + Block.REGISTRY.getNameForObject(block) + "'"
 +                        "Invalid block state value '"
 +                        + s
 +                        + "' for property '"
 +                        + (String)entry.getKey()
 +                        + "' on block '"
-+                        + Block.field_149771_c.func_177774_c(block)
++                        + Block.REGISTRY.getNameForObject(block)
 +                        + "'"
                      );
                  }

@@ -4,20 +4,20 @@
  
          if (flag1)
          {
--            for (int k1 = 0; k1 < this.field_192997_l.size(); k1++)
-+            for (int k1 = 0; k1 < this.field_192997_l.size(); ++k1)
+-            for (int k1 = 0; k1 < this.description.size(); k1++)
++            for (int k1 = 0; k1 < this.description.size(); ++k1)
              {
-                 this.field_191833_k
-                 .field_71466_p
+                 this.minecraft
+                 .fontRenderer
 @@ -328,7 +328,7 @@
          }
          else
          {
--            for (int l1 = 0; l1 < this.field_192997_l.size(); l1++)
-+            for (int l1 = 0; l1 < this.field_192997_l.size(); ++l1)
+-            for (int l1 = 0; l1 < this.description.size(); l1++)
++            for (int l1 = 0; l1 < this.description.size(); ++l1)
              {
-                 this.field_191833_k
-                 .field_71466_p
+                 this.minecraft
+                 .fontRenderer
 @@ -419,23 +419,17 @@
          int p_192993_1_, int p_192993_2_, int p_192993_3_, int p_192993_4_, int p_192993_5_, int p_192993_6_, int p_192993_7_, int p_192993_8_
      )
@@ -36,7 +36,7 @@
              {
                  int i1 = p_192993_2_ + l;
                  int j1 = Math.min(p_192993_8_, p_192993_4_ - l);
-                 this.func_73729_b(j, i1, p_192993_5_, p_192993_6_, k, j1);
+                 this.drawTexturedModalRect(j, i1, p_192993_5_, p_192993_6_, k, j1);
 -                l += p_192993_8_;
              }
 -
