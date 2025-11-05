@@ -21,6 +21,7 @@ package net.minecraftforge.fml.common.discovery;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraftforge.classloading.FMLForgePlugin;
@@ -80,9 +81,11 @@ public class ModDiscoverer
                 continue;
             }
             FMLLog.log.debug("Adding path {} and {} as developing mod", devPaths.get(i), devPaths.get(i + 1));
-            addCandidate(new ModCandidate(devPaths.get(i), devPaths.get(i + 1)));
-        }
 
+            addCandidate(new ModCandidate(devPaths.get(i), devPaths.get(i), ContainerType.DIR, false, true));
+            // funkyra's comment: idk what kappa was trying to do here, but it doesn't work
+            //addCandidate(new ModCandidate(devPaths.get(i), devPaths.get(i + 1)));
+        }
     }
 
     public List<ModContainer> identifyMods()
