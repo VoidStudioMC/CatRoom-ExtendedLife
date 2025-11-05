@@ -28,7 +28,6 @@ import net.minecraftforge.fml.common.ModContainer;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-
 public class ModCandidate {
     private final File classPathRoot;
     private final File resourcePathRoot;
