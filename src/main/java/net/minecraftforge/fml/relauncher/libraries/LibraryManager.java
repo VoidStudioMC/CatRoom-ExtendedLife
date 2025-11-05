@@ -65,7 +65,7 @@ public class LibraryManager
     private static final Attributes.Name TIMESTAMP = new Attributes.Name("Timestamp");
     private static final Attributes.Name MD5 = new Attributes.Name("MD5");
     private static Repository libraries_dir = null;
-    private static Set<File> processed = new HashSet<File>();
+    private static Set<File> processed = new HashSet<>();
     private static File minecraftHome;
     private static List<File> candidates;
 

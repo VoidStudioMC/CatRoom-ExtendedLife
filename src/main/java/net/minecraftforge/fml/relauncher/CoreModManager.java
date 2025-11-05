@@ -61,7 +61,7 @@ public class CoreModManager {
         "net.minecraftforge.fml.relauncher.FMLCorePlugin",
         "net.minecraftforge.classloading.FMLForgePlugin",
         "net.minecraftforge.fml.relauncher.MixinBooterPlugin",
-        "catserver.server.CatCorePlugin"
+//        "catserver.server.CatCorePlugin"
     };
 
     private static List<String> ignoredModFiles = Lists.newArrayList();
