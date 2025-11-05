@@ -39,7 +39,7 @@ compileJava {
 
         target.withWriter { def writer ->
             template.eachLine { def line ->
-                def newLine = line.replace("%VERSION%", versionDetails().lastTag)
+                def newLine = line.replace("%VERSION%", rootProject.cleanroom_version)
                     .replace("%BUILD_VERSION%", rootProject.version.toString())
                 writer.write(newLine + "\n")
             }
