@@ -7,7 +7,7 @@ Cleanroom version: 0.3.20-alpha
 
 ## Warnings
 
-- Java 25 is unstable and may cause problems (I think that's netty's problem)
+- Java 25 is unstable and may cause problems
 
 ## Features:
 
