@@ -7,10 +7,6 @@ This fork is supporting by VoidStudio. We are on [Discord](https://discord.gg/RX
 
 Cleanroom version: 0.3.24-alpha
 
-## Warnings
-
-- Java 25 is unstable and may cause problems
-
 ## Features:
 
 - Replaced Forge with Cleanroom
