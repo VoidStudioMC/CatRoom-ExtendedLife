@@ -7,6 +7,8 @@ This fork is supporting by VoidStudio. We are on [Discord](https://discord.gg/RX
 
 Cleanroom version: 0.3.24-alpha
 
+All updates will continue to be released in 2026
+
 ## Features:
 
 - Replaced Forge with Cleanroom
