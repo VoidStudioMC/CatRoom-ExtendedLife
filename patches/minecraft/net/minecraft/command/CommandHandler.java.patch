@@ -124,7 +124,7 @@
              textcomponenttranslation.getStyle().setColor(TextFormatting.RED);
              sender.sendMessage(textcomponenttranslation);
              LOGGER.warn("Couldn't process command: " + input, throwable);
-@@ -141,13 +157,19 @@
+@@ -141,13 +157,20 @@
          this.commandMap.put(command.getName(), command);
          this.commandSet.add(command);
  
@@ -137,6 +137,7 @@
 -                this.commandMap.put(s, command);
 +        CraftSimpleCommandMap commandMap = MinecraftServer.getServerInst().server.getCraftCommandMap();
 +        ModCustomCommand customCommand = new ModCustomCommand(command);
++        customCommand.setPermission(command.getName());
 +
 +        List<String> list = command.getAliases();
 +        if (list != null) customCommand.setAliases(list);
@@ -151,7 +152,7 @@
              }
          }
  
-@@ -161,7 +183,6 @@
+@@ -161,7 +184,6 @@
          return astring;
      }
  
@@ -159,7 +160,7 @@
      public List<String> getTabCompletions(ICommandSender sender, String input, @Nullable BlockPos pos)
      {
          String[] astring = input.split(" ", -1);
-@@ -169,11 +190,11 @@
+@@ -169,11 +191,11 @@
  
          if (astring.length == 1)
          {
@@ -173,7 +174,7 @@
                  {
                      list.add(entry.getKey());
                  }
-@@ -193,14 +214,13 @@
+@@ -193,14 +215,13 @@
                  }
              }
  
@@ -190,7 +191,7 @@
  
          for (ICommand icommand : this.commandSet)
          {
-@@ -213,7 +233,6 @@
+@@ -213,7 +234,6 @@
          return list;
      }
  
@@ -198,7 +199,7 @@
      public Map<String, ICommand> getCommands()
      {
          return this.commandMap;
-@@ -227,7 +246,7 @@
+@@ -227,7 +247,7 @@
          }
          else
          {

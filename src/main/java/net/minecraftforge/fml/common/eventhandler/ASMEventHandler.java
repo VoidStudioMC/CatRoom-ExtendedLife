@@ -35,7 +35,7 @@ public class ASMEventHandler implements IEventListener
     private final IEventListener handler;
     private final SubscribeEvent subInfo;
     private ModContainer owner;
-    private String readable;
+    private final String readable;
 
     @Deprecated
     public ASMEventHandler(Object target, Method method, ModContainer owner) throws Exception
@@ -46,8 +46,8 @@ public class ASMEventHandler implements IEventListener
     public ASMEventHandler(Object target, Method method, ModContainer owner, boolean isGeneric) throws Exception
     {
         this.owner = owner;
-        subInfo = method.getAnnotation(SubscribeEvent.class);
-        readable = "ASM: " + target + " " + method.getName() + Type.getMethodDescriptor(method);
+        this.subInfo = method.getAnnotation(SubscribeEvent.class);
+        this.readable = "ASM: " + target + " " + method.getName() + Type.getMethodDescriptor(method);
 
         var rawHandler = EventListenerFactory.createRawListener(
             method,
