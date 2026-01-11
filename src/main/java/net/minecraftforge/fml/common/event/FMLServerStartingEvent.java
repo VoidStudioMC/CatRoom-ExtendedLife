@@ -19,11 +19,9 @@
 
 package net.minecraftforge.fml.common.event;
 
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.LoaderState.ModState;
 
 /**
