@@ -1159,18 +1159,21 @@
          if ("seed".equals(commandName) && !this.server.isDedicatedServer())
          {
              return true;
-@@ -1335,22 +1574,39 @@
+@@ -1335,22 +1574,42 @@
          {
              return true;
          }
 +        */
-+        if ("@".equals(commandName)) {
-+            return this.getBukkitEntity().hasPermission("minecraft.command.selector");
++        if ("@".equals(commandName)) return this.getBukkitEntity().hasPermission("minecraft.command.selector");
++        if (commandName.isEmpty()) return this.getBukkitEntity().isOp();
++
++        if (this.server.getPlayerList().canSendCommands(this.getGameProfile())) {
++            UserListOpsEntry userlistopsentry = this.server.getPlayerList().getOppedPlayers().getEntry(this.getGameProfile());
++            if (userlistopsentry != null) return userlistopsentry.getPermissionLevel() >= permLevel;
++            else return this.server.getOpPermissionLevel() >= permLevel;
 +        }
-+        if (commandName.isEmpty()) {
-+            return this.getBukkitEntity().isOp();
-+        }
-+        return this.getBukkitEntity().hasPermission("minecraft.command." + commandName) || this.getBukkitEntity().hasPermission(commandName);
++
++        return this.getBukkitEntity().hasPermission("minecraft.command." + commandName) || this.getBukkitEntity().hasPermission(commandName) || this.getBukkitEntity().hasPermission(catroom.CatRoom.forgeCommandPerms.get(commandName));
      }
  
      public String getPlayerIP()
@@ -1202,7 +1205,7 @@
      }
  
      public EntityPlayer.EnumChatVisibility getChatVisibility()
-@@ -1363,10 +1619,9 @@
+@@ -1363,10 +1622,9 @@
          this.connection.sendPacket(new SPacketResourcePackSend(url, hash));
      }
  
@@ -1214,7 +1217,7 @@
      }
  
      public void markPlayerActive()
-@@ -1388,11 +1643,11 @@
+@@ -1388,11 +1646,11 @@
      {
          if (entityIn instanceof EntityPlayer)
          {
@@ -1228,7 +1231,7 @@
          }
      }
  
-@@ -1401,7 +1656,6 @@
+@@ -1401,7 +1659,6 @@
          this.entityRemoveQueue.remove(Integer.valueOf(entityIn.getEntityId()));
      }
  
@@ -1236,7 +1239,7 @@
      protected void updatePotionMetadata()
      {
          if (this.isSpectator())
-@@ -1430,20 +1684,18 @@
+@@ -1430,20 +1687,18 @@
          if (entity != this.spectatingEntity)
          {
              this.connection.sendPacket(new SPacketCamera(this.spectatingEntity));
@@ -1259,7 +1262,7 @@
      public void attackTargetEntityWithCurrentItem(Entity targetEntity)
      {
          if (this.interactionManager.getGameType() == GameType.SPECTATOR)
-@@ -1464,10 +1716,10 @@
+@@ -1464,10 +1719,10 @@
      @Nullable
      public ITextComponent getTabListDisplayName()
      {
@@ -1272,7 +1275,7 @@
      public void swingArm(EnumHand hand)
      {
          super.swingArm(hand);
-@@ -1486,13 +1738,16 @@
+@@ -1486,13 +1741,16 @@
  
      public void setElytraFlying()
      {
@@ -1292,7 +1295,7 @@
      }
  
      public PlayerAdvancements getAdvancements()
-@@ -1504,5 +1759,145 @@
+@@ -1504,5 +1762,145 @@
      public Vec3d getEnteredNetherPosition()
      {
          return this.enteredNetherPosition;

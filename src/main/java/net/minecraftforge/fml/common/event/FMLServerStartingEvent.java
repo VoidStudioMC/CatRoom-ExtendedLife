@@ -19,9 +19,12 @@
 
 package net.minecraftforge.fml.common.event;
 
+import catroom.CatRoom;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.LoaderState.ModState;
 
 /**
@@ -56,6 +59,14 @@ public class FMLServerStartingEvent extends FMLStateEvent
     public void registerServerCommand(ICommand command)
     {
         CommandHandler ch = (CommandHandler) getServer().getCommandManager();
+
+        if (command instanceof CommandBase) {
+            String modid = Loader.instance().activeModContainer().getModId();
+            String per = modid + ".command." + command.getName();
+            ((CommandBase) command).permissionNode = per;
+            CatRoom.forgeCommandPerms.put(command.getName(), per);
+        }
+
         ch.registerCommand(command);
     }
 }

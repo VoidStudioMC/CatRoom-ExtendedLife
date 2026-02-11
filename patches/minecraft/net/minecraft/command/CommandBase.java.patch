@@ -1,6 +1,14 @@
 --- before/net/minecraft/command/CommandBase.java
 +++ after/net/minecraft/command/CommandBase.java
-@@ -56,7 +56,7 @@
+@@ -40,6 +40,7 @@
+     private static ICommandListener commandListener;
+     private static final Splitter COMMA_SPLITTER = Splitter.on(',');
+     private static final Splitter EQUAL_SPLITTER = Splitter.on('=').limit(2);
++    public String permissionNode = "minecraft";
+ 
+     protected static SyntaxErrorException toSyntaxException(JsonParseException e)
+     {
+@@ -56,7 +57,7 @@
              }
          }
  
@@ -9,7 +17,7 @@
      }
  
      public static NBTTagCompound entityToNBT(Entity theEntity)
-@@ -81,22 +81,19 @@
+@@ -81,22 +82,19 @@
          return 4;
      }
  
@@ -34,7 +42,7 @@
      }
  
      public static int parseInt(String input) throws NumberInvalidException
-@@ -105,9 +102,9 @@
+@@ -105,9 +103,9 @@
          {
              return Integer.parseInt(input);
          }
@@ -46,7 +54,7 @@
          }
      }
  
-@@ -122,11 +119,11 @@
+@@ -122,11 +120,11 @@
  
          if (i < min)
          {
@@ -60,7 +68,7 @@
          }
          else
          {
-@@ -140,9 +137,9 @@
+@@ -140,9 +138,9 @@
          {
              return Long.parseLong(input);
          }
@@ -72,7 +80,7 @@
          }
      }
  
-@@ -152,11 +149,11 @@
+@@ -152,11 +150,11 @@
  
          if (i < min)
          {
@@ -86,7 +94,7 @@
          }
          else
          {
-@@ -167,11 +164,7 @@
+@@ -167,11 +165,7 @@
      public static BlockPos parseBlockPos(ICommandSender sender, String[] args, int startIndex, boolean centerBlock) throws NumberInvalidException
      {
          BlockPos blockpos = sender.getPosition();
@@ -99,7 +107,7 @@
      }
  
      public static double parseDouble(String input) throws NumberInvalidException
-@@ -182,16 +175,16 @@
+@@ -182,16 +176,16 @@
  
              if (!Doubles.isFinite(d0))
              {
@@ -119,7 +127,7 @@
          }
      }
  
-@@ -206,11 +199,11 @@
+@@ -206,11 +200,11 @@
  
          if (d0 < min)
          {
@@ -133,7 +141,7 @@
          }
          else
          {
-@@ -220,18 +213,21 @@
+@@ -220,18 +214,21 @@
  
      public static boolean parseBoolean(String input) throws CommandException
      {
@@ -164,7 +172,7 @@
      }
  
      public static EntityPlayerMP getCommandSenderAsPlayer(ICommandSender sender) throws PlayerNotFoundException
-@@ -249,7 +245,7 @@
+@@ -249,7 +246,7 @@
      public static List<EntityPlayerMP> getPlayers(MinecraftServer p_193513_0_, ICommandSender p_193513_1_, String p_193513_2_) throws CommandException
      {
          List<EntityPlayerMP> list = EntitySelector.getPlayers(p_193513_1_, p_193513_2_);
@@ -173,7 +181,7 @@
      }
  
      public static EntityPlayerMP getPlayer(MinecraftServer server, ICommandSender sender, String target) throws PlayerNotFoundException, CommandException
-@@ -265,8 +261,9 @@
+@@ -265,8 +262,9 @@
              {
                  p_193512_1_ = p_193512_0_.getPlayerList().getPlayerByUUID(UUID.fromString(p_193512_2_));
              }
@@ -184,7 +192,7 @@
              }
          }
  
-@@ -277,7 +274,7 @@
+@@ -277,7 +275,7 @@
  
          if (p_193512_1_ == null)
          {
@@ -193,7 +201,7 @@
          }
          else
          {
-@@ -311,11 +308,11 @@
+@@ -311,11 +309,11 @@
                      entity = server.getPlayerList().getPlayerByUUID(uuid);
                  }
              }
@@ -207,7 +215,7 @@
                  }
              }
          }
-@@ -332,9 +329,7 @@
+@@ -332,9 +330,7 @@
  
      public static List<Entity> getEntityList(MinecraftServer server, ICommandSender sender, String target) throws EntityNotFoundException, CommandException
      {
@@ -218,7 +226,7 @@
      }
  
      public static String getPlayerName(MinecraftServer server, ICommandSender sender, String target) throws PlayerNotFoundException, CommandException
-@@ -362,7 +357,7 @@
+@@ -362,7 +358,7 @@
          {
              return getPlayer(server, sender, target).getName();
          }
@@ -227,7 +235,7 @@
          {
              try
              {
-@@ -391,14 +386,14 @@
+@@ -391,14 +387,14 @@
      {
          ITextComponent itextcomponent = new TextComponentString("");
  
@@ -244,7 +252,7 @@
  
              if (p_147176_3_)
              {
-@@ -408,7 +403,7 @@
+@@ -408,7 +404,7 @@
                  {
                      if (EntitySelector.isSelector(args[i]))
                      {
@@ -253,7 +261,7 @@
                      }
                  }
                  else
-@@ -427,7 +422,7 @@
+@@ -427,7 +423,7 @@
      {
          StringBuilder stringbuilder = new StringBuilder();
  
@@ -262,7 +270,7 @@
          {
              if (i > startPos)
              {
-@@ -452,11 +447,11 @@
+@@ -452,11 +448,11 @@
  
          if (flag && Double.isNaN(base))
          {
@@ -276,7 +284,7 @@
  
              if (!flag || selectorArg.length() > 1)
              {
-@@ -471,22 +466,22 @@
+@@ -471,22 +467,22 @@
  
                  if (!flag1 && !flag && centerBlock)
                  {
@@ -303,7 +311,7 @@
                  }
              }
  
-@@ -505,11 +500,11 @@
+@@ -505,11 +501,11 @@
  
          if (flag && Double.isNaN(base))
          {
@@ -317,7 +325,7 @@
  
              if (!flag || input.length() > 1)
              {
-@@ -524,7 +519,7 @@
+@@ -524,7 +520,7 @@
  
                  if (!flag1 && !flag && centerBlock)
                  {
@@ -326,7 +334,7 @@
                  }
              }
  
-@@ -532,12 +527,12 @@
+@@ -532,12 +528,12 @@
              {
                  if (d0 < (double)min)
                  {
@@ -341,7 +349,7 @@
                  }
              }
  
-@@ -552,7 +547,7 @@
+@@ -552,7 +548,7 @@
  
          if (item == null)
          {
@@ -350,7 +358,7 @@
          }
          else
          {
-@@ -566,7 +561,7 @@
+@@ -566,7 +562,7 @@
  
          if (!Block.REGISTRY.containsKey(resourcelocation))
          {
@@ -359,7 +367,7 @@
          }
          else
          {
-@@ -582,18 +577,18 @@
+@@ -582,18 +578,18 @@
  
              if (i < 0)
              {
@@ -381,7 +389,7 @@
          {
              try
              {
-@@ -607,16 +602,16 @@
+@@ -607,16 +603,16 @@
  
                  return iblockstate;
              }
@@ -401,7 +409,7 @@
      }
  
      public static Predicate<IBlockState> convertArgToBlockStatePredicate(final Block p_190791_0_, String p_190791_1_) throws InvalidBlockStateException
-@@ -634,7 +629,7 @@
+@@ -634,7 +630,7 @@
                      }
                  };
              }
@@ -410,7 +418,7 @@
              {
                  final Map < IProperty<?>, Comparable<? >> map = getBlockStatePropertyValueMap(p_190791_0_, p_190791_1_);
                  return new Predicate<IBlockState>()
-@@ -669,7 +664,7 @@
+@@ -669,7 +665,7 @@
  
      private static Map < IProperty<?>, Comparable<? >> getBlockStatePropertyValueMap(Block p_190795_0_, String p_190795_1_) throws InvalidBlockStateException
      {
@@ -419,7 +427,7 @@
  
          if ("default".equals(p_190795_1_))
          {
-@@ -678,7 +673,7 @@
+@@ -678,7 +674,7 @@
          else
          {
              BlockStateContainer blockstatecontainer = p_190795_0_.getBlockState();
@@ -428,7 +436,7 @@
  
              while (true)
              {
-@@ -702,7 +697,7 @@
+@@ -702,7 +698,7 @@
                      break;
                  }
  
@@ -437,7 +445,7 @@
  
                  if (comparable == null)
                  {
-@@ -712,21 +707,21 @@
+@@ -712,21 +708,21 @@
                  map.put(iproperty, comparable);
              }
  
@@ -462,7 +470,7 @@
          {
              String s = elements[i].toString();
  
-@@ -752,7 +747,7 @@
+@@ -752,7 +748,7 @@
      {
          ITextComponent itextcomponent = new TextComponentString("");
  
@@ -471,7 +479,7 @@
          {
              if (i > 0)
              {
-@@ -800,7 +795,7 @@
+@@ -800,7 +796,7 @@
              {
                  if (i != index + 2)
                  {
@@ -480,7 +488,7 @@
                  }
  
                  s = Integer.toString(pos.getZ());
-@@ -829,7 +824,7 @@
+@@ -829,7 +825,7 @@
              {
                  if (i != index + 1)
                  {
@@ -489,7 +497,7 @@
                  }
  
                  s = Integer.toString(lookedPos.getZ());
-@@ -852,11 +847,11 @@
+@@ -852,11 +848,11 @@
      public static List<String> getListOfStringsMatchingLastWord(String[] inputArgs, Collection<?> possibleCompletions)
      {
          String s = inputArgs[inputArgs.length - 1];
@@ -503,7 +511,7 @@
              {
                  if (doesStringStartWith(s, s1))
                  {
-@@ -879,7 +874,6 @@
+@@ -879,7 +875,6 @@
          return list;
      }
  
