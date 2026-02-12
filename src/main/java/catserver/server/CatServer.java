@@ -27,7 +27,7 @@ public class CatServer {
     }
 
     public static void onServerStart() {
-        RealtimeThread.INSTANCE.start();
+//        RealtimeThread.INSTANCE.start();
         // new VersionCheck(); // CatRoom
     }
 
@@ -64,6 +64,6 @@ public class CatServer {
     }
 
     public static int getCurrentTick() {
-        return getConfig().enableRealtime ? RealtimeThread.currentTick : MinecraftServer.currentTick;
+        return getConfig().enableRealtime ? (int) MinecraftServer.realTimeTicks : MinecraftServer.currentTick;
     }
 }
