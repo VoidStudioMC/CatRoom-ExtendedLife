@@ -84,6 +84,7 @@ public class ModClassLoader extends URLClassLoader
 
     // CREF - fix for new foundation
     private void applyClassLoaderInclusions() {
+        ActualClassLoader.classLoaderInclusions.put("catroom.", true);
         ActualClassLoader.classLoaderInclusions.put("catserver.", true);
         ActualClassLoader.classLoaderInclusions.put("org.bukkit.", true);
         ActualClassLoader.classLoaderInclusions.put("org.spigotmc.", true);
