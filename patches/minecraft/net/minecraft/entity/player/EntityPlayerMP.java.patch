@@ -1173,7 +1173,7 @@
 +            else return this.server.getOpPermissionLevel() >= permLevel;
 +        }
 +
-+        return this.getBukkitEntity().hasPermission("minecraft.command." + commandName) || this.getBukkitEntity().hasPermission(commandName) || this.getBukkitEntity().hasPermission(catroom.CatRoom.forgeCommandPerms.get(commandName));
++        return catroom.CatRoom.hasPlayerPermission(this, commandName);
      }
  
      public String getPlayerIP()
