@@ -39,24 +39,14 @@ public class ModCustomCommand extends Command {
     }
 
     private ICommandSender getListener(final CommandSender sender) {
-        if (sender instanceof Player) {
-            return ((CraftPlayer)sender).getHandle();
-        }
-        if (sender instanceof BlockCommandSender) {
-            return ((CraftBlockCommandSender)sender).getTileEntity();
-        }
-        if (sender instanceof CommandMinecart) {
-            return ((CraftMinecartCommand)sender).getHandle().getCommandBlockLogic();
-        }
-        if (sender instanceof RemoteConsoleCommandSender) {
-            return ((DedicatedServer)MinecraftServer.getServerInst()).rconConsoleSource;
-        }
-        if (sender instanceof ConsoleCommandSender) {
-            return (ICommandSender)((CraftServer)sender.getServer()).getServer();
-        }
-        if (sender instanceof ProxiedCommandSender) {
-            return ((ProxiedNativeCommandSender)sender).getHandle();
-        }
-        throw new IllegalArgumentException("Cannot make " + sender + " a vanilla command listener");
+        return switch (sender) {
+            case Player s -> ((CraftPlayer) s).getHandle();
+            case BlockCommandSender s -> ((CraftBlockCommandSender) s).getTileEntity();
+            case CommandMinecart s -> ((CraftMinecartCommand) s).getHandle().getCommandBlockLogic();
+            case RemoteConsoleCommandSender ignored -> ((DedicatedServer) MinecraftServer.getServerInst()).rconConsoleSource;
+            case ConsoleCommandSender s -> ((CraftServer) s.getServer()).getServer();
+            case ProxiedCommandSender s -> ((ProxiedNativeCommandSender) s).getHandle();
+            default -> throw new IllegalArgumentException("Cannot make " + sender + " a vanilla command listener");
+        };
     }
 }

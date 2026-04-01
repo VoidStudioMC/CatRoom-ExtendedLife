@@ -84,6 +84,7 @@ public class ModClassLoader extends URLClassLoader
 
     // CREF - fix for new foundation
     private void applyClassLoaderInclusions() {
+        ActualClassLoader.classLoaderInclusions.put("catroom.", true);
         ActualClassLoader.classLoaderInclusions.put("catserver.", true);
         ActualClassLoader.classLoaderInclusions.put("org.bukkit.", true);
         ActualClassLoader.classLoaderInclusions.put("org.spigotmc.", true);
@@ -102,7 +103,7 @@ public class ModClassLoader extends URLClassLoader
 
     public File[] getParentSources() {
         try {
-            List<File> files = new ArrayList<File>();
+            List<File> files = new ArrayList<>();
             for(URL url : this.mainClassLoader.getSources()) {
                 URI uri = url.toURI();
                 if(uri.getScheme().equals("file")) {

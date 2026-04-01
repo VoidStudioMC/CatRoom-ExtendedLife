@@ -63,7 +63,8 @@ public class PermissibleBase implements Permissible {
 
     public boolean hasPermission(String inName) {
         if (inName == null) {
-            throw new IllegalArgumentException("Permission name cannot be null");
+//            throw new IllegalArgumentException("Permission name cannot be null"); // CatRoom: i think that throwing out the exception would be unnecessary
+            return false;
         }
 
         String name = inName.toLowerCase(java.util.Locale.ENGLISH);
@@ -86,7 +87,8 @@ public class PermissibleBase implements Permissible {
 
     public boolean hasPermission(Permission perm) {
         if (perm == null) {
-            throw new IllegalArgumentException("Permission cannot be null");
+//            throw new IllegalArgumentException("Permission cannot be null"); // CatRoom: i think that throwing out the exception would be unnecessary
+            return false;
         }
 
         String name = perm.getName().toLowerCase(java.util.Locale.ENGLISH);

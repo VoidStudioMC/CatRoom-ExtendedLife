@@ -124,7 +124,7 @@
              textcomponenttranslation.getStyle().setColor(TextFormatting.RED);
              sender.sendMessage(textcomponenttranslation);
              LOGGER.warn("Couldn't process command: " + input, throwable);
-@@ -141,13 +157,19 @@
+@@ -141,15 +157,24 @@
          this.commandMap.put(command.getName(), command);
          this.commandSet.add(command);
  
@@ -137,21 +137,26 @@
 -                this.commandMap.put(s, command);
 +        CraftSimpleCommandMap commandMap = MinecraftServer.getServerInst().server.getCraftCommandMap();
 +        ModCustomCommand customCommand = new ModCustomCommand(command);
++        customCommand.setPermission(catroom.CatRoom.getForgeCommandPermission(command));
 +
 +        List<String> list = command.getAliases();
-+        if (list != null) customCommand.setAliases(list);
-+        commandMap.register(command.getName(), customCommand);
 +
 +        if (list != null) {
++            customCommand.setAliases(list);
++
 +            for (String s : list) {
-+                ICommand icommand = (ICommand)this.commandMap.get(s);
++                ICommand icommand = this.commandMap.get(s);
 +                if (icommand == null || !icommand.getName().equals(s)) {
 +                    this.commandMap.put(s, command);
 +                }
              }
          }
++
++        commandMap.register(command.getName(), customCommand);
  
-@@ -161,7 +183,6 @@
+         return command;
+     }
+@@ -161,7 +186,6 @@
          return astring;
      }
  
@@ -159,7 +164,7 @@
      public List<String> getTabCompletions(ICommandSender sender, String input, @Nullable BlockPos pos)
      {
          String[] astring = input.split(" ", -1);
-@@ -169,11 +190,11 @@
+@@ -169,11 +193,11 @@
  
          if (astring.length == 1)
          {
@@ -173,7 +178,7 @@
                  {
                      list.add(entry.getKey());
                  }
-@@ -193,14 +214,13 @@
+@@ -193,14 +217,13 @@
                  }
              }
  
@@ -190,7 +195,7 @@
  
          for (ICommand icommand : this.commandSet)
          {
-@@ -213,7 +233,6 @@
+@@ -213,7 +236,6 @@
          return list;
      }
  
@@ -198,7 +203,7 @@
      public Map<String, ICommand> getCommands()
      {
          return this.commandMap;
-@@ -227,7 +246,7 @@
+@@ -227,7 +249,7 @@
          }
          else
          {

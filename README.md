@@ -9,6 +9,10 @@ Cleanroom version: 0.3.24-alpha
 
 All updates will continue to be released in 2026
 
+## Recommendations:
+- Use Java 25 or higher for running server
+- Install [HybridFix](https://modrinth.com/mod/hybridfix) for some fixes and more features
+
 ## Features:
 
 - Replaced Forge with Cleanroom

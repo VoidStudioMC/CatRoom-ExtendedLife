@@ -1130,7 +1130,7 @@
          this.interactionManager.setGameType(gameType);
          this.connection.sendPacket(new SPacketChangeGameState(3, (float)gameType.getID()));
  
-@@ -1294,28 +1536,25 @@
+@@ -1294,27 +1536,24 @@
          this.markPotionsDirty();
      }
  
@@ -1155,44 +1155,25 @@
 -    @Override
      public boolean canUseCommand(int permLevel, String commandName)
      {
--        if ("seed".equals(commandName) && !this.server.isDedicatedServer())
-+        /* CraftBukkit start
-+        if ("seed".equals(commandName) && !this.mcServer.isDedicatedServer())
++        /* CraftBukkit
+         if ("seed".equals(commandName) && !this.server.isDedicatedServer())
          {
              return true;
-         }
-@@ -1323,8 +1562,16 @@
-         {
-             if (this.server.getPlayerList().canSendCommands(this.getGameProfile()))
-             {
--                UserListOpsEntry userlistopsentry = this.server.getPlayerList().getOppedPlayers().getEntry(this.getGameProfile());
--                return userlistopsentry != null ? userlistopsentry.getPermissionLevel() >= permLevel : this.server.getOpPermissionLevel() >= permLevel;
-+                UserListOpsEntry userlistopsentry = (UserListOpsEntry)this.server.getPlayerList().getOppedPlayers().getEntry(this.getGameProfile());
-+
-+                if (userlistopsentry != null)
-+                {
-+                    return userlistopsentry.getPermissionLevel() >= permLevel;
-+                }
-+                else
-+                {
-+                    return this.server.getOpPermissionLevel() >= permLevel;
-+                }
-             }
-             else
-             {
-@@ -1335,22 +1582,40 @@
+@@ -1335,22 +1574,42 @@
          {
              return true;
          }
 +        */
-+        if ("@".equals(commandName)) {
-+            return getBukkitEntity().hasPermission("minecraft.command.selector");
++        if ("@".equals(commandName)) return this.getBukkitEntity().hasPermission("minecraft.command.selector");
++        if (commandName.isEmpty()) return this.getBukkitEntity().isOp();
++
++        if (this.server.getPlayerList().canSendCommands(this.getGameProfile())) {
++            UserListOpsEntry userlistopsentry = this.server.getPlayerList().getOppedPlayers().getEntry(this.getGameProfile());
++            if (userlistopsentry != null) return userlistopsentry.getPermissionLevel() >= permLevel;
++            else return this.server.getOpPermissionLevel() >= permLevel;
 +        }
-+        if ("".equals(commandName)) {
-+            return getBukkitEntity().isOp();
-+        }
-+        return getBukkitEntity().hasPermission("minecraft.command." + commandName);
-+        // CraftBukkit end
++
++        return catroom.CatRoom.hasPlayerPermission(this, commandName);
      }
  
      public String getPlayerIP()
@@ -1224,7 +1205,7 @@
      }
  
      public EntityPlayer.EnumChatVisibility getChatVisibility()
-@@ -1363,10 +1628,9 @@
+@@ -1363,10 +1622,9 @@
          this.connection.sendPacket(new SPacketResourcePackSend(url, hash));
      }
  
@@ -1236,7 +1217,7 @@
      }
  
      public void markPlayerActive()
-@@ -1388,11 +1652,11 @@
+@@ -1388,11 +1646,11 @@
      {
          if (entityIn instanceof EntityPlayer)
          {
@@ -1250,7 +1231,7 @@
          }
      }
  
-@@ -1401,7 +1665,6 @@
+@@ -1401,7 +1659,6 @@
          this.entityRemoveQueue.remove(Integer.valueOf(entityIn.getEntityId()));
      }
  
@@ -1258,7 +1239,7 @@
      protected void updatePotionMetadata()
      {
          if (this.isSpectator())
-@@ -1430,20 +1693,18 @@
+@@ -1430,20 +1687,18 @@
          if (entity != this.spectatingEntity)
          {
              this.connection.sendPacket(new SPacketCamera(this.spectatingEntity));
@@ -1281,7 +1262,7 @@
      public void attackTargetEntityWithCurrentItem(Entity targetEntity)
      {
          if (this.interactionManager.getGameType() == GameType.SPECTATOR)
-@@ -1464,10 +1725,10 @@
+@@ -1464,10 +1719,10 @@
      @Nullable
      public ITextComponent getTabListDisplayName()
      {
@@ -1294,7 +1275,7 @@
      public void swingArm(EnumHand hand)
      {
          super.swingArm(hand);
-@@ -1486,13 +1747,16 @@
+@@ -1486,13 +1741,16 @@
  
      public void setElytraFlying()
      {
@@ -1314,7 +1295,7 @@
      }
  
      public PlayerAdvancements getAdvancements()
-@@ -1504,5 +1768,145 @@
+@@ -1504,5 +1762,145 @@
      public Vec3d getEnteredNetherPosition()
      {
          return this.enteredNetherPosition;
