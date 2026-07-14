@@ -124,7 +124,25 @@
              textcomponenttranslation.getStyle().setColor(TextFormatting.RED);
              sender.sendMessage(textcomponenttranslation);
              LOGGER.warn("Couldn't process command: " + input, throwable);
-@@ -141,15 +157,24 @@
+@@ -138,18 +154,42 @@
+ 
+     public ICommand registerCommand(ICommand command)
+     {
++        String pre = command.getClass().getName().substring(command.getClass().getName().lastIndexOf('.')+1).toLowerCase() + "." + command.getName();
++
++        if (command instanceof CommandBase) {
++            if (!((CommandBase) command).permissionNode.equals("minecraft")) {
++                pre = ((CommandBase)command).permissionNode;
++            } else {
++                ((CommandBase)command).permissionNode = pre;
++            }
++        }
++
++        return registerCommand(command, pre);
++    }
++
++    public ICommand registerCommand(ICommand command, String per)
++    {
          this.commandMap.put(command.getName(), command);
          this.commandSet.add(command);
  
@@ -156,7 +174,7 @@
  
          return command;
      }
-@@ -161,7 +186,6 @@
+@@ -161,7 +201,6 @@
          return astring;
      }
  
@@ -164,7 +182,7 @@
      public List<String> getTabCompletions(ICommandSender sender, String input, @Nullable BlockPos pos)
      {
          String[] astring = input.split(" ", -1);
-@@ -169,11 +193,11 @@
+@@ -169,11 +208,11 @@
  
          if (astring.length == 1)
          {
@@ -178,7 +196,7 @@
                  {
                      list.add(entry.getKey());
                  }
-@@ -193,14 +217,13 @@
+@@ -193,14 +232,13 @@
                  }
              }
  
@@ -195,7 +213,7 @@
  
          for (ICommand icommand : this.commandSet)
          {
-@@ -213,7 +236,6 @@
+@@ -213,7 +251,6 @@
          return list;
      }
  
@@ -203,7 +221,7 @@
      public Map<String, ICommand> getCommands()
      {
          return this.commandMap;
-@@ -227,7 +249,7 @@
+@@ -227,7 +264,7 @@
          }
          else
          {
