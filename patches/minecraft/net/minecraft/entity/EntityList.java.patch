@@ -1,55 +1,26 @@
 --- before/net/minecraft/entity/EntityList.java
 +++ after/net/minecraft/entity/EntityList.java
-@@ -3,6 +3,9 @@
- import com.google.common.collect.Lists;
- import com.google.common.collect.Maps;
- import com.google.common.collect.Sets;
-+
-+import catserver.server.entity.CatEntityRegistry;
-+
- import java.util.List;
- import java.util.Map;
- import java.util.Set;
-@@ -97,8 +100,13 @@
- import net.minecraft.util.ResourceLocation;
- import net.minecraft.util.registry.RegistryNamespaced;
- import net.minecraft.world.World;
-+import net.minecraftforge.fml.common.FMLLog;
-+import net.minecraftforge.fml.common.registry.EntityEntry;
-+import net.minecraftforge.fml.common.registry.EntityRegistry;
-+import net.minecraftforge.fml.common.registry.ForgeRegistries;
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
-+import net.minecraftforge.registries.GameData;
- import org.apache.logging.log4j.LogManager;
- import org.apache.logging.log4j.Logger;
- 
-@@ -107,49 +115,65 @@
+@@ -107,10 +107,11 @@
      public static final ResourceLocation LIGHTNING_BOLT = new ResourceLocation("lightning_bolt");
      private static final ResourceLocation PLAYER = new ResourceLocation("player");
      private static final Logger LOGGER = LogManager.getLogger();
 -    public static final RegistryNamespaced < ResourceLocation, Class <? extends Entity >> REGISTRY = new RegistryNamespaced<>();
--    public static final Map<ResourceLocation, EntityList.EntityEggInfo> ENTITY_EGGS = Maps.newLinkedHashMap();
+     public static final Map<ResourceLocation, EntityList.EntityEggInfo> ENTITY_EGGS = Maps.newLinkedHashMap();
 -    public static final Set<ResourceLocation> KNOWN_TYPES = Sets.newHashSet();
 -    private static final List<String> OLD_NAMES = Lists.newArrayList();
-+    public static final CatEntityRegistry<ResourceLocation, Class<? extends Entity>> REGISTRY = new CatEntityRegistry<>(); // CatServer - compatible with bukkit plugin
-+    public static final Map<ResourceLocation, EntityEggInfo> ENTITY_EGGS = Maps.<ResourceLocation, EntityEggInfo>newLinkedHashMap();
 +    private static final Set<ResourceLocation> EXTRA_NAMES = Sets.newHashSet();
-+    public static final Set<ResourceLocation> KNOWN_TYPES_Legacy = Sets.<ResourceLocation>newHashSet(); // CatServer
-+    private static final List<String> OLD_NAMES_Legacy = Lists.<String>newArrayList(); // CatServer
++    public static final catserver.server.entity.CatEntityRegistry<ResourceLocation, Class<? extends Entity>> REGISTRY = new catserver.server.entity.CatEntityRegistry<>(); // CatServer - compatible with bukkit plugin
++    public static final Set<ResourceLocation> KNOWN_TYPES_Legacy = Sets.newHashSet(); // CatServer
++    private static final List<String> OLD_NAMES_Legacy = Lists.newArrayList(); // CatServer
  
      @Nullable
      public static ResourceLocation getKey(Entity entityIn)
-     {
--        return getKey((Class <? extends Entity >)entityIn.getClass());
-+        return getKey(entityIn.getClass());
-     }
- 
+@@ -121,35 +122,50 @@
      @Nullable
      public static ResourceLocation getKey(Class <? extends Entity > entityIn)
      {
 -        return REGISTRY.getNameForObject(entityIn);
-+        EntityEntry entry = EntityRegistry.getEntry(entityIn);
++        net.minecraftforge.fml.common.registry.EntityEntry entry = net.minecraftforge.fml.common.registry.EntityRegistry.getEntry(entityIn);
 +        return entry == null ? null : entry.getRegistryName();
      }
  
@@ -58,7 +29,7 @@
      {
 -        int i = REGISTRY.getIDForObject((Class <? extends Entity >)entityIn.getClass());
 -        return i == -1 ? null : OLD_NAMES.get(i);
-+        EntityEntry entry = EntityRegistry.getEntry(entityIn.getClass());
++        net.minecraftforge.fml.common.registry.EntityEntry entry = net.minecraftforge.fml.common.registry.EntityRegistry.getEntry(entityIn.getClass());
 +        return entry == null ? null : entry.getName();
      }
  
@@ -67,7 +38,7 @@
      {
 -        int i = REGISTRY.getIDForObject(REGISTRY.getObject(entityType));
 -        return i == -1 ? null : OLD_NAMES.get(i);
-+        EntityEntry entry = ForgeRegistries.ENTITIES.getValue(entityType);
++        net.minecraftforge.fml.common.registry.EntityEntry entry = net.minecraftforge.fml.common.registry.ForgeRegistries.ENTITIES.getValue(entityType);
 +        return entry == null ? null : entry.getName();
      }
  
@@ -76,7 +47,7 @@
      public static Class <? extends Entity > getClassFromID(int entityID)
      {
 -        return REGISTRY.getObjectById(entityID);
-+        EntityEntry entry = GameData.getEntityRegistry().getValue(entityID);
++        net.minecraftforge.fml.common.registry.EntityEntry entry = net.minecraftforge.registries.GameData.getEntityRegistry().getValue(entityID);
 +        return entry == null ? null : entry.getEntityClass();
      }
  
@@ -85,7 +56,7 @@
      public static Class <? extends Entity > getClassFromName(String p_192839_0_)
      {
 -        return REGISTRY.getObject(new ResourceLocation(p_192839_0_));
-+        EntityEntry entry = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(p_192839_0_));
++        net.minecraftforge.fml.common.registry.EntityEntry entry = net.minecraftforge.fml.common.registry.ForgeRegistries.ENTITIES.getValue(new ResourceLocation(p_192839_0_));
 +        return entry == null ? null : entry.getEntityClass();
 +    }
 +
@@ -97,26 +68,26 @@
 +    @Nullable
 +    public static Class<? extends Entity> getClass(ResourceLocation key)
 +    {
-+        EntityEntry entry = ForgeRegistries.ENTITIES.getValue(key);
++        net.minecraftforge.fml.common.registry.EntityEntry entry = net.minecraftforge.fml.common.registry.ForgeRegistries.ENTITIES.getValue(key);
 +        return entry == null ? null : entry.getEntityClass();
      }
  
      @Nullable
-@@ -163,6 +187,8 @@
+@@ -163,6 +179,8 @@
          {
              try
              {
-+                EntityEntry entry = EntityRegistry.getEntry(clazz);
++                net.minecraftforge.fml.common.registry.EntityEntry entry = net.minecraftforge.fml.common.registry.EntityRegistry.getEntry(clazz);
 +                if (entry != null) return entry.newInstance(worldIn);
                  return clazz.getConstructor(World.class).newInstance(worldIn);
              }
              catch (Exception exception)
-@@ -177,13 +203,15 @@
+@@ -177,13 +195,15 @@
      @SideOnly(Side.CLIENT)
      public static Entity createEntityByID(int entityID, World worldIn)
      {
 -        return newEntity(getClassFromID(entityID), worldIn);
-+        EntityEntry entry = GameData.getEntityRegistry().getValue(entityID);
++        net.minecraftforge.fml.common.registry.EntityEntry entry = net.minecraftforge.registries.GameData.getEntityRegistry().getValue(entityID);
 +        return entry == null ? null : entry.newInstance(worldIn);
      }
  
@@ -124,12 +95,12 @@
      public static Entity createEntityByIDFromName(ResourceLocation name, World worldIn)
      {
 -        return newEntity(REGISTRY.getObject(name), worldIn);
-+        EntityEntry entry = ForgeRegistries.ENTITIES.getValue(name);
++        net.minecraftforge.fml.common.registry.EntityEntry entry = net.minecraftforge.fml.common.registry.ForgeRegistries.ENTITIES.getValue(name);
 +        return entry == null ? null : entry.newInstance(worldIn);
      }
  
      @Nullable
-@@ -198,7 +226,16 @@
+@@ -198,7 +218,16 @@
          }
          else
          {
@@ -139,38 +110,23 @@
 +            }
 +            catch (Exception e)
 +            {
-+                FMLLog.log.error("An Entity {}({}) has thrown an exception during loading, its state cannot be restored. Report this to the mod author",
++                net.minecraftforge.fml.common.FMLLog.log.error("An Entity {}({}) has thrown an exception during loading, its state cannot be restored. Report this to the mod author",
 +                        nbt.getString("id"), entity.getName(), e);
 +                entity = null;
 +            }
          }
  
          return entity;
-@@ -206,12 +243,12 @@
+@@ -206,7 +235,7 @@
  
      public static Set<ResourceLocation> getEntityNameList()
      {
 -        return KNOWN_TYPES;
-+        return Sets.union(ForgeRegistries.ENTITIES.getKeys(), EXTRA_NAMES);
++        return Sets.union(net.minecraftforge.fml.common.registry.ForgeRegistries.ENTITIES.getKeys(), EXTRA_NAMES);
      }
  
      public static boolean isMatchingName(Entity entityIn, ResourceLocation entityName)
-     {
--        ResourceLocation resourcelocation = getKey((Class <? extends Entity >)entityIn.getClass());
-+        ResourceLocation resourcelocation = getKey(entityIn.getClass());
- 
-         if (resourcelocation != null)
-         {
-@@ -223,7 +260,7 @@
-         }
-         else
-         {
--            return entityIn instanceof EntityLightningBolt ? LIGHTNING_BOLT.equals(entityName) : false;
-+            return entityIn instanceof EntityLightningBolt && LIGHTNING_BOLT.equals(entityName);
-         }
-     }
- 
-@@ -373,7 +410,8 @@
+@@ -373,7 +402,8 @@
          addSpawnInfo("zombie_horse", 3232308, 9945732);
          addSpawnInfo("zombie_pigman", 15373203, 5009705);
          addSpawnInfo("zombie_villager", 5651507, 7969893);
@@ -180,16 +136,7 @@
      }
  
      private static void register(int id, String name, Class <? extends Entity > clazz, String oldName)
-@@ -382,7 +420,7 @@
-         {
-             clazz.getConstructor(World.class);
-         }
--        catch (NoSuchMethodException nosuchmethodexception)
-+        catch (NoSuchMethodException var5)
-         {
-             throw new RuntimeException("Invalid class " + clazz + " no constructor taking " + World.class.getName());
-         }
-@@ -394,22 +432,27 @@
+@@ -394,22 +424,27 @@
          else
          {
              ResourceLocation resourcelocation = new ResourceLocation(name);
@@ -208,7 +155,7 @@
 -            OLD_NAMES.set(id, oldName);
 +            OLD_NAMES_Legacy.set(id, oldName);
 +            // CatServer end
-+            GameData.registerEntity(id, resourcelocation, clazz, oldName);
++            net.minecraftforge.registries.GameData.registerEntity(id, resourcelocation, clazz, oldName);
          }
      }
  
@@ -217,13 +164,13 @@
          ResourceLocation resourcelocation = new ResourceLocation(id);
 -        return ENTITY_EGGS.put(resourcelocation, new EntityList.EntityEggInfo(resourcelocation, primaryColor, secondaryColor));
 +        EntityList.EntityEggInfo egg = new EntityList.EntityEggInfo(resourcelocation, primaryColor, secondaryColor);
-+        EntityEntry entry = ForgeRegistries.ENTITIES.getValue(resourcelocation);
++        net.minecraftforge.fml.common.registry.EntityEntry entry = net.minecraftforge.fml.common.registry.ForgeRegistries.ENTITIES.getValue(resourcelocation);
 +        if (entry != null) entry.setEgg(egg);
 +        return (EntityList.EntityEggInfo)ENTITY_EGGS.put(resourcelocation, egg);
      }
  
      public static class EntityEggInfo
-@@ -428,5 +471,16 @@
+@@ -428,5 +463,16 @@
                  this.killEntityStat = StatList.getStatKillEntity(this);
                  this.entityKilledByStat = StatList.getStatEntityKilledBy(this);
              }

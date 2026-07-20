@@ -37,10 +37,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import catserver.server.CatServer;
 import catserver.server.permission.BukkitPermissionsHandler;
 import com.cleanroommc.common.CleanroomContainer;
 import com.cleanroommc.common.MixinContainer;
 import com.cleanroommc.common.ConfigAnytimeContainer;
+import com.cleanroommc.kirino.KirinoCommonCore;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -273,7 +275,7 @@ public class Loader
                     if (required || modVersions.containsKey(acceptedVersion.getLabel()))
                     {
                         ArtifactVersion currentVersion = modVersions.get(acceptedVersion.getLabel());
-                        if (currentVersion == null || !acceptedVersion.containsVersion(currentVersion) && !acceptedVersion.getLabel().contains("forge"))
+                        if (currentVersion == null || !acceptedVersion.containsVersion(currentVersion))
                         {
                             missingModsException.addMissingMod(acceptedVersion, currentVersion, required);
                         }
@@ -374,9 +376,10 @@ public class Loader
         mods.add(minecraft);
         // Add in the MCP mod container
         mods.add(new InjectedModContainer(mcp,new File("minecraft.jar")));
-        mods.add(new InjectedModContainer(new ConfigAnytimeContainer(), FMLSanityChecker.fmlLocation));
-        mods.add(new InjectedModContainer(new MixinContainer(), FMLSanityChecker.fmlLocation));
         mods.add(new InjectedModContainer(new CleanroomContainer(), FMLSanityChecker.fmlLocation));
+        mods.add(new InjectedModContainer(new MixinContainer(), FMLSanityChecker.fmlLocation));
+        mods.add(new InjectedModContainer(new ConfigAnytimeContainer(), FMLSanityChecker.fmlLocation));
+        KirinoCommonCore.identifyMods(mods);
 
         for (String cont : injectedContainers)
         {
@@ -411,6 +414,10 @@ public class Loader
             if (CoreModManager.getIgnoredMods().contains(mod.getName()))
             {
                 FMLLog.log.trace("Skipping already parsed coremod or tweaker {}", mod.getName());
+            }
+            else if(mod.isDirectory())
+            {
+                FMLLog.log.trace("Skipping directory {}", mod.getName());
             }
             else
             {
@@ -607,7 +614,7 @@ public class Loader
         {
             FMLLog.log.debug("No user mod signature data found");
         }
-        progressBar.step("Initializing mods Phase 1");
+
         modController.transition(LoaderState.PREINITIALIZATION, false);
     }
 
@@ -618,10 +625,11 @@ public class Loader
             FMLLog.log.warn("There were errors previously. Not beginning mod initialization phase");
             return;
         }
+
         GameData.fireCreateRegistryEvents();
         ObjectHolderRegistry.INSTANCE.findObjectHolders(discoverer.getASMTable());
         ItemStackHolderInjector.INSTANCE.findHolders(discoverer.getASMTable());
-        if (!catserver.server.CatServer.DISABLE_PERMISSION_BRIDGE) PermissionAPI.setPermissionHandler(new BukkitPermissionsHandler()); // CatRoom - Permission bridge
+        if (!CatServer.DISABLE_PERMISSION_BRIDGE) PermissionAPI.setPermissionHandler(new BukkitPermissionsHandler()); // CatRoom - Permission bridge
         CapabilityManager.INSTANCE.injectCapabilities(discoverer.getASMTable());
         modController.distributeStateMessage(LoaderState.PREINITIALIZATION, discoverer.getASMTable(), canonicalConfigDir);
         GameData.fireRegistryEvents(rl -> !rl.equals(GameData.RECIPES));
@@ -973,13 +981,12 @@ public class Loader
             FMLLog.log.debug("File {} not found. No dependencies injected", injectedDepFile.getAbsolutePath());
             return;
         }
-        JsonParser parser = new JsonParser();
         JsonElement injectedDeps;
         try
         {
             try (Reader reader = new InputStreamReader(new FileInputStream(injectedDepFile), StandardCharsets.UTF_8))
             {
-                injectedDeps = parser.parse(reader);
+                injectedDeps = JsonParser.parseReader(reader);
             }
             for (JsonElement el : injectedDeps.getAsJsonArray())
             {

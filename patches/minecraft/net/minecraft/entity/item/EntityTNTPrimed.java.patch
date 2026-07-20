@@ -48,20 +48,19 @@
          }
          else
          {
-@@ -103,8 +110,15 @@
+@@ -103,8 +110,14 @@
  
      private void explode()
      {
 -        float f = 4.0F;
--        this.world.createExplosion(this, this.posX, this.posY + (double)(this.height / 16.0F), this.posZ, 4.0F, true);
-+        // float f = 4.0F;
-+        // this.world.createExplosion(this, this.posX, this.posY + (double)(this.height / 16.0F), this.posZ, 4.0F, true);
+-        this.world.createExplosion(this, this.posX, this.posY + this.height / 16.0F, this.posZ, 4.0F, true);
 +        org.bukkit.craftbukkit.v1_12_R1.CraftServer server = this.world.getServer();
-+        ExplosionPrimeEvent event = new ExplosionPrimeEvent((org.bukkit.entity.Explosive) org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity.getEntity(server, this));
++        ExplosionPrimeEvent event = new ExplosionPrimeEvent((org.bukkit.entity.Explosive)org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity.getEntity(server, this));
 +        server.getPluginManager().callEvent(event);
 +
-+        if (!event.isCancelled()) {
-+            this.world.newExplosion(this, this.posX, this.posY + (double) (this.height / 16.0F), this.posZ, event.getRadius(), event.getFire(), true);
++        if (!event.isCancelled())
++        {
++            this.world.newExplosion(this, this.posX, this.posY + this.height / 16.0F, this.posZ, event.getRadius(), event.getFire(), true);
 +        }
      }
  

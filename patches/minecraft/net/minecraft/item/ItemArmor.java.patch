@@ -1,20 +1,6 @@
 --- before/net/minecraft/item/ItemArmor.java
 +++ after/net/minecraft/item/ItemArmor.java
-@@ -21,6 +21,7 @@
- import net.minecraft.util.ActionResult;
- import net.minecraft.util.EntitySelectors;
- import net.minecraft.util.EnumActionResult;
-+import net.minecraft.util.EnumFacing;
- import net.minecraft.util.EnumHand;
- import net.minecraft.util.SoundEvent;
- import net.minecraft.util.math.AxisAlignedBB;
-@@ -28,27 +29,16 @@
- import net.minecraft.world.World;
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
-+import org.bukkit.event.block.BlockDispenseEvent;
- 
+@@ -32,23 +32,10 @@
  public class ItemArmor extends Item
  {
      private static final int[] MAX_DAMAGE_ARRAY = new int[] {13, 15, 16, 11};
@@ -40,29 +26,15 @@
          protected ItemStack dispenseStack(IBlockSource source, ItemStack stack)
          {
              ItemStack itemstack = ItemArmor.dispenseArmor(source, stack);
-@@ -63,11 +53,8 @@
- 
-     public static ItemStack dispenseArmor(IBlockSource blockSource, ItemStack stack)
-     {
--        BlockPos blockpos = blockSource.getBlockPos().offset(blockSource.getBlockState().getValue(BlockDispenser.FACING));
--        List<EntityLivingBase> list = blockSource.getWorld()
--                                      .getEntitiesWithinAABB(
--                                          EntityLivingBase.class, new AxisAlignedBB(blockpos), Predicates.and(EntitySelectors.NOT_SPECTATING, new EntitySelectors.ArmoredMob(stack))
--                                      );
-+        BlockPos blockpos = blockSource.getBlockPos().offset((EnumFacing)blockSource.getBlockState().getValue(BlockDispenser.FACING));
-+        List<EntityLivingBase> list = blockSource.getWorld().<EntityLivingBase>getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(blockpos), Predicates.and(EntitySelectors.NOT_SPECTATING, new EntitySelectors.ArmoredMob(stack)));
- 
-         if (list.isEmpty())
-         {
 @@ -78,6 +65,28 @@
              EntityLivingBase entitylivingbase = list.get(0);
              EntityEquipmentSlot entityequipmentslot = EntityLiving.getSlotForItemStack(stack);
              ItemStack itemstack = stack.splitStack(1);
 +            World world = blockSource.getWorld();
 +            org.bukkit.block.Block block = world.getWorld().getBlockAt(blockSource.getBlockPos().getX(), blockSource.getBlockPos().getY(), blockSource.getBlockPos().getZ());
-+            CraftItemStack craftItem = CraftItemStack.asCraftMirror(itemstack);
++            org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack craftItem = org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asCraftMirror(itemstack);
 +
-+            BlockDispenseEvent event = new BlockDispenseEvent(block, craftItem.clone(), new org.bukkit.util.Vector(0, 0, 0));
++            org.bukkit.event.block.BlockDispenseEvent event = new org.bukkit.event.block.BlockDispenseEvent(block, craftItem.clone(), new org.bukkit.util.Vector(0, 0, 0));
 +            world.getServer().getPluginManager().callEvent(event);
 +
 +            if (event.isCancelled()) {
@@ -73,7 +45,7 @@
 +            if (!event.getItem().equals(craftItem)) {
 +                itemstack.grow(1);
 +                // Chain to handler for new item
-+                ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());
++                ItemStack eventStack = org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(event.getItem());
 +                IBehaviorDispenseItem idispensebehavior = (IBehaviorDispenseItem) BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.getObject(eventStack.getItem());
 +                if (idispensebehavior != IBehaviorDispenseItem.DEFAULT_BEHAVIOR && idispensebehavior != ItemArmor.DISPENSER_BEHAVIOR) {
 +                    idispensebehavior.dispense(blockSource, eventStack);
@@ -83,30 +55,8 @@
              entitylivingbase.setItemStackToSlot(entityequipmentslot, itemstack);
  
              if (entitylivingbase instanceof EntityLiving)
-@@ -108,7 +117,6 @@
-         return this.armorType;
-     }
- 
--    @Override
-     public int getItemEnchantability()
-     {
-         return this.material.getEnchantability();
-@@ -128,9 +136,7 @@
-         else
-         {
-             NBTTagCompound nbttagcompound = stack.getTagCompound();
--            return nbttagcompound != null && nbttagcompound.hasKey("display", 10)
--                   ? nbttagcompound.getCompoundTag("display").hasKey("color", 3)
--                   : false;
-+            return nbttagcompound != null && nbttagcompound.hasKey("display", 10) ? nbttagcompound.getCompoundTag("display").hasKey("color", 3) : false;
-         }
-     }
- 
-@@ -203,13 +209,13 @@
-         }
-     }
- 
--    @Override
+@@ -206,7 +215,9 @@
+     @Override
      public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
      {
 -        return this.material.getRepairItem() == repair.getItem() ? true : super.getIsRepairable(toRepair, repair);
@@ -115,43 +65,8 @@
 +        return super.getIsRepairable(toRepair, repair);
      }
  
--    @Override
-     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
-     {
-         ItemStack itemstack = playerIn.getHeldItem(handIn);
-@@ -220,34 +226,40 @@
-         {
-             playerIn.setItemStackToSlot(entityequipmentslot, itemstack.copy());
-             itemstack.setCount(0);
--            return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
-+            return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
-         }
-         else
-         {
--            return new ActionResult<>(EnumActionResult.FAIL, itemstack);
-+            return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
-         }
-     }
- 
--    @Override
-     public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot)
-     {
-         Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(equipmentSlot);
- 
-         if (equipmentSlot == this.armorType)
-         {
--            multimap.put(
--                SharedMonsterAttributes.ARMOR.getName(),
--                new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor modifier", (double)this.damageReduceAmount, 0)
--            );
--            multimap.put(
--                SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(),
--                new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor toughness", (double)this.toughness, 0)
--            );
-+            multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor modifier", (double)this.damageReduceAmount, 0));
-+            multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor toughness", (double)this.toughness, 0));
-         }
- 
+     @Override
+@@ -248,6 +259,19 @@
          return multimap;
      }
  
@@ -171,7 +86,7 @@
      public static enum ArmorMaterial
      {
          LEATHER("leather", 5, new int[]{1, 2, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F),
-@@ -262,6 +274,8 @@
+@@ -262,6 +286,8 @@
          private final int enchantability;
          private final SoundEvent soundEvent;
          private final float toughness;
@@ -180,7 +95,7 @@
  
          private ArmorMaterial(String nameIn, int maxDamageFactorIn, int[] damageReductionAmountArrayIn, int enchantabilityIn, SoundEvent soundEventIn, float toughnessIn)
          {
-@@ -293,6 +307,7 @@
+@@ -293,6 +319,7 @@
              return this.soundEvent;
          }
  
@@ -188,7 +103,7 @@
          public Item getRepairItem()
          {
              if (this == LEATHER)
-@@ -326,6 +341,22 @@
+@@ -326,6 +353,22 @@
          public float getToughness()
          {
              return this.toughness;

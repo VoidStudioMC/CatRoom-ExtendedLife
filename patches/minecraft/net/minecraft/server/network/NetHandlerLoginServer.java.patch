@@ -1,24 +1,6 @@
 --- before/net/minecraft/server/network/NetHandlerLoginServer.java
 +++ after/net/minecraft/server/network/NetHandlerLoginServer.java
-@@ -16,6 +16,7 @@
- import java.util.concurrent.atomic.AtomicInteger;
- import javax.annotation.Nullable;
- import javax.crypto.SecretKey;
-+
- import net.minecraft.entity.player.EntityPlayerMP;
- import net.minecraft.network.NetworkManager;
- import net.minecraft.network.login.INetHandlerLoginServer;
-@@ -33,6 +34,9 @@
- import org.apache.commons.lang3.Validate;
- import org.apache.logging.log4j.LogManager;
- import org.apache.logging.log4j.Logger;
-+import org.bukkit.craftbukkit.v1_12_R1.util.Waitable;
-+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-+import org.bukkit.event.player.PlayerPreLoginEvent;
- 
- public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
- {
-@@ -49,6 +53,8 @@
+@@ -49,6 +49,8 @@
      private SecretKey secretKey;
      private EntityPlayerMP player;
  
@@ -27,15 +9,7 @@
      public NetHandlerLoginServer(MinecraftServer serverIn, NetworkManager networkManagerIn)
      {
          this.server = serverIn;
-@@ -56,7 +62,6 @@
-         RANDOM.nextBytes(this.verifyToken);
-     }
- 
--    @Override
-     public void update()
-     {
-         if (this.currentLoginState == NetHandlerLoginServer.LoginState.READY_TO_ACCEPT)
-@@ -70,16 +75,29 @@
+@@ -70,7 +72,7 @@
              if (entityplayermp == null)
              {
                  this.currentLoginState = NetHandlerLoginServer.LoginState.READY_TO_ACCEPT;
@@ -44,16 +18,10 @@
                  this.player = null;
              }
          }
+@@ -81,6 +83,19 @@
+         }
+     }
  
-         if (this.connectionTimer++ == 600)
-         {
--            this.disconnect(new TextComponentTranslation("multiplayer.disconnect.slow_login"));
--        }
--    }
-+            this.disconnect(new TextComponentTranslation("multiplayer.disconnect.slow_login", new Object[0]));
-+        }
-+    }
-+
 +    // CraftBukkit start
 +    @Deprecated
 +    public void disconnect(String s) {
@@ -66,10 +34,11 @@
 +        }
 +    }
 +    // CraftBukkit end
- 
++
      public void disconnect(ITextComponent reason)
      {
-@@ -95,18 +113,48 @@
+         try
+@@ -95,18 +110,48 @@
          }
      }
  
@@ -123,7 +92,7 @@
          }
          else
          {
-@@ -133,12 +181,11 @@
+@@ -133,7 +178,7 @@
              }
              else
              {
@@ -132,26 +101,7 @@
              }
          }
      }
- 
--    @Override
-     public void onDisconnect(ITextComponent reason)
-     {
-         LOGGER.info("{} lost connection: {}", this.getConnectionInfo(), reason.getUnformattedText());
-@@ -146,12 +193,9 @@
- 
-     public String getConnectionInfo()
-     {
--        return this.loginGameProfile != null
--               ? this.loginGameProfile + " (" + this.networkManager.getRemoteAddress() + ")"
--               : String.valueOf(this.networkManager.getRemoteAddress());
-+        return this.loginGameProfile != null ? this.loginGameProfile + " (" + this.networkManager.getRemoteAddress() + ")" : String.valueOf((Object)this.networkManager.getRemoteAddress());
-     }
- 
--    @Override
-     public void processLoginStart(CPacketLoginStart packetIn)
-     {
-         Validate.validState(this.currentLoginState == NetHandlerLoginServer.LoginState.HELLO, "Unexpected hello packet");
-@@ -164,11 +208,23 @@
+@@ -164,11 +209,23 @@
          }
          else
          {
@@ -177,31 +127,16 @@
      public void processEncryptionResponse(CPacketEncryptionResponse packetIn)
      {
          Validate.validState(this.currentLoginState == NetHandlerLoginServer.LoginState.KEY, "Unexpected key packet");
-@@ -183,32 +239,25 @@
+@@ -183,7 +240,7 @@
              this.secretKey = packetIn.getSecretKey(privatekey);
              this.currentLoginState = NetHandlerLoginServer.LoginState.AUTHENTICATING;
              this.networkManager.enableEncryption(this.secretKey);
 -            (new Thread("User Authenticator #" + AUTHENTICATOR_THREAD_ID.incrementAndGet())
 +            (new Thread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, "User Authenticator #" + AUTHENTICATOR_THREAD_ID.incrementAndGet())
              {
--                @Override
+                 @Override
                  public void run()
-                 {
-                     GameProfile gameprofile = NetHandlerLoginServer.this.loginGameProfile;
- 
-                     try
-                     {
--                        String s = new BigInteger(
--                            CryptManager.getServerIdHash(
--                                "", NetHandlerLoginServer.this.server.getKeyPair().getPublic(), NetHandlerLoginServer.this.secretKey
--                            )
--                        )
--                        .toString(16);
--                        NetHandlerLoginServer.this.loginGameProfile = NetHandlerLoginServer.this.server
--                                .getMinecraftSessionService()
--                                .hasJoinedServer(new GameProfile(null, gameprofile.getName()), s, this.getAddress());
-+                        String s = (new BigInteger(CryptManager.getServerIdHash("", NetHandlerLoginServer.this.server.getKeyPair().getPublic(), NetHandlerLoginServer.this.secretKey))).toString(16);
-+                        NetHandlerLoginServer.this.loginGameProfile = NetHandlerLoginServer.this.server.getMinecraftSessionService().hasJoinedServer(new GameProfile((UUID)null, gameprofile.getName()), s, this.getAddress());
+@@ -204,11 +261,12 @@
  
                          if (NetHandlerLoginServer.this.loginGameProfile != null)
                          {
@@ -211,7 +146,7 @@
 -                            );
 -                            NetHandlerLoginServer.this.currentLoginState = NetHandlerLoginServer.LoginState.READY_TO_ACCEPT;
 +                            // CraftBukkit start - fire PlayerPreLoginEvent
-+                            if (!networkManager.isChannelOpen()) {
++                            if (!networkManager.isChannelOpen()){
 +                                return;
 +                            }
 +
@@ -219,27 +154,9 @@
                          }
                          else if (NetHandlerLoginServer.this.server.isSinglePlayer())
                          {
-@@ -218,11 +267,11 @@
-                         }
-                         else
+@@ -234,7 +292,13 @@
                          {
--                            NetHandlerLoginServer.this.disconnect(new TextComponentTranslation("multiplayer.disconnect.unverified_username"));
--                            NetHandlerLoginServer.LOGGER.error("Username '{}' tried to join with an invalid session", gameprofile.getName());
-+                            NetHandlerLoginServer.this.disconnect(new TextComponentTranslation("multiplayer.disconnect.unverified_username", new Object[0]));
-+                            NetHandlerLoginServer.LOGGER.error("Username '{}' tried to join with an invalid session", (Object)gameprofile.getName());
-                         }
-                     }
--                    catch (AuthenticationUnavailableException authenticationunavailableexception)
-+                    catch (AuthenticationUnavailableException var3)
-                     {
-                         if (NetHandlerLoginServer.this.server.isSinglePlayer())
-                         {
-@@ -232,23 +281,67 @@
-                         }
-                         else
-                         {
--                            NetHandlerLoginServer.this.disconnect(new TextComponentTranslation("multiplayer.disconnect.authservers_down"));
-+                            NetHandlerLoginServer.this.disconnect(new TextComponentTranslation("multiplayer.disconnect.authservers_down", new Object[0]));
+                             NetHandlerLoginServer.this.disconnect(new TextComponentTranslation("multiplayer.disconnect.authservers_down"));
                              NetHandlerLoginServer.LOGGER.error("Couldn't verify username because servers are unavailable");
 +
                          }
@@ -251,22 +168,10 @@
                      }
                  }
                  @Nullable
-                 private InetAddress getAddress()
-                 {
-                     SocketAddress socketaddress = NetHandlerLoginServer.this.networkManager.getRemoteAddress();
--                    return NetHandlerLoginServer.this.server.getPreventProxyConnections() && socketaddress instanceof InetSocketAddress
--                           ? ((InetSocketAddress)socketaddress).getAddress()
--                           : null;
--                }
--            })
--            .start();
--        }
--    }
-+                    return NetHandlerLoginServer.this.server.getPreventProxyConnections() && socketaddress instanceof InetSocketAddress ? ((InetSocketAddress)socketaddress).getAddress() : null;
-+                }
-+            }).start();
-+        }
-+    }
+@@ -249,6 +313,47 @@
+             .start();
+         }
+     }
 +
 +    // Spigot start
 +    public class LoginHandler {
@@ -276,28 +181,28 @@
 +            java.util.UUID uniqueId = loginGameProfile.getId();
 +            final org.bukkit.craftbukkit.v1_12_R1.CraftServer server = NetHandlerLoginServer.this.server.server;
 +
-+            AsyncPlayerPreLoginEvent asyncEvent = new AsyncPlayerPreLoginEvent(playerName, address, uniqueId);
++            org.bukkit.event.player.AsyncPlayerPreLoginEvent asyncEvent = new org.bukkit.event.player.AsyncPlayerPreLoginEvent(playerName, address, uniqueId);
 +            server.getPluginManager().callEvent(asyncEvent);
 +
-+            if (PlayerPreLoginEvent.getHandlerList().getRegisteredListeners().length != 0) {
-+                final PlayerPreLoginEvent event = new PlayerPreLoginEvent(playerName, address, uniqueId);
-+                if (asyncEvent.getResult() != PlayerPreLoginEvent.Result.ALLOWED) {
++            if (org.bukkit.event.player.PlayerPreLoginEvent.getHandlerList().getRegisteredListeners().length != 0) {
++                final org.bukkit.event.player.PlayerPreLoginEvent event = new org.bukkit.event.player.PlayerPreLoginEvent(playerName, address, uniqueId);
++                if (asyncEvent.getResult() != org.bukkit.event.player.PlayerPreLoginEvent.Result.ALLOWED) {
 +                    event.disallow(asyncEvent.getResult(), asyncEvent.getKickMessage());
 +                }
-+                Waitable<PlayerPreLoginEvent.Result> waitable = new Waitable<PlayerPreLoginEvent.Result>() {
++                org.bukkit.craftbukkit.v1_12_R1.util.Waitable<org.bukkit.event.player.PlayerPreLoginEvent.Result> waitable = new org.bukkit.craftbukkit.v1_12_R1.util.Waitable<org.bukkit.event.player.PlayerPreLoginEvent.Result>() {
 +                    @Override
-+                    protected PlayerPreLoginEvent.Result evaluate() {
++                    protected org.bukkit.event.player.PlayerPreLoginEvent.Result evaluate() {
 +                        server.getPluginManager().callEvent(event);
 +                        return event.getResult();
 +                    }};
 +
 +                    NetHandlerLoginServer.this.server.processQueue.add(waitable);
-+                    if (waitable.get() != PlayerPreLoginEvent.Result.ALLOWED) {
++                    if (waitable.get() != org.bukkit.event.player.PlayerPreLoginEvent.Result.ALLOWED) {
 +                        disconnect(event.getKickMessage());
 +                        return;
 +                    }
 +            } else {
-+                if (asyncEvent.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED) {
++                if (asyncEvent.getLoginResult() != org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result.ALLOWED) {
 +                    disconnect(asyncEvent.getKickMessage());
 +                    return;
 +                }

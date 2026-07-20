@@ -7,40 +7,14 @@
 -        this.squidRotation = this.squidRotation + this.rotationVelocity;
 +        this.squidRotation += this.rotationVelocity;
  
-         if ((double)this.squidRotation > Math.PI * 2)
+         if (this.squidRotation > Math.PI * 2)
          {
-@@ -164,12 +164,11 @@
-             }
- 
-             float f1 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
--            this.renderYawOffset = this.renderYawOffset
--                                  + (-((float)MathHelper.atan2(this.motionX, this.motionZ)) * (180.0F / (float)Math.PI) - this.renderYawOffset) * 0.1F;
-+            this.renderYawOffset += (-((float)MathHelper.atan2(this.motionX, this.motionZ)) * (180.0F / (float)Math.PI) - this.renderYawOffset)
-+                                   * 0.1F;
-             this.rotationYaw = this.renderYawOffset;
-             this.squidYaw = (float)((double)this.squidYaw + Math.PI * (double)this.rotateSpeed * 1.5);
--            this.squidPitch = this.squidPitch
--                                 + (-((float)MathHelper.atan2((double)f1, this.motionY)) * (180.0F / (float)Math.PI) - this.squidPitch) * 0.1F;
-+            this.squidPitch += (-((float)MathHelper.atan2((double)f1, this.motionY)) * (180.0F / (float)Math.PI) - this.squidPitch) * 0.1F;
-         }
-         else
-         {
-@@ -182,8 +181,7 @@
- 
-                 if (this.isPotionActive(MobEffects.LEVITATION))
-                 {
--                    this.motionY = this.motionY
--                                         + (0.05 * (double)(this.getActivePotionEffect(MobEffects.LEVITATION).getAmplifier() + 1) - this.motionY);
-+                    this.motionY += 0.05 * (double)(this.getActivePotionEffect(MobEffects.LEVITATION).getAmplifier() + 1) - this.motionY;
-                 }
-                 else if (!this.hasNoGravity())
-                 {
-@@ -206,7 +204,7 @@
+@@ -205,7 +205,7 @@
      @Override
      public boolean getCanSpawnHere()
      {
--        return this.posY > 45.0 && this.posY < (double)this.world.getSeaLevel() && super.getCanSpawnHere();
-+        return this.posY > this.world.spigotConfig.squidSpawnRangeMin && this.posY < (double)this.world.getSeaLevel() && super.getCanSpawnHere();
+-        return this.posY > 45.0 && this.posY < this.world.getSeaLevel() && super.getCanSpawnHere();
++        return this.posY > this.world.spigotConfig.squidSpawnRangeMin && this.posY < this.world.getSeaLevel() && super.getCanSpawnHere();
      }
  
      @SideOnly(Side.CLIENT)

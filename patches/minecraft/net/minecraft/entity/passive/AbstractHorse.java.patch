@@ -173,7 +173,7 @@
              }
  
 -            IBlockState iblockstate = this.world
--                                      .getBlockState(new BlockPos(this.posX, this.posY - 0.2 - (double)this.prevRotationYaw, this.posZ));
+-                                      .getBlockState(new BlockPos(this.posX, this.posY - 0.2 - this.prevRotationYaw, this.posZ));
 +            IBlockState iblockstate = this.world.getBlockState(new BlockPos(this.posX, this.posY - 0.2D - (double)this.prevRotationYaw, this.posZ));
              Block block = iblockstate.getBlock();
  
@@ -335,9 +335,9 @@
 -            this.world
 -            .spawnParticle(
 -                EnumParticleTypes.VILLAGER_HAPPY,
--                this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width,
--                this.posY + 0.5 + (double)(this.rand.nextFloat() * this.height),
--                this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width,
+-                this.posX + this.rand.nextFloat() * this.width * 2.0F - this.width,
+-                this.posY + 0.5 + this.rand.nextFloat() * this.height,
+-                this.posZ + this.rand.nextFloat() * this.width * 2.0F - this.width,
 -                0.0,
 -                0.0,
 -                0.0
@@ -448,7 +448,7 @@
  
          if (this.isEatingHaystack())
          {
--            this.headLean = this.headLean + (1.0F - this.headLean) * 0.4F + 0.05F;
+-            this.headLean = this.headLean + ((1.0F - this.headLean) * 0.4F + 0.05F);
 +            this.headLean += (1.0F - this.headLean) * 0.4F + 0.05F;
  
              if (this.headLean > 1.0F)
@@ -466,7 +466,7 @@
          {
              this.headLean = 0.0F;
              this.prevHeadLean = this.headLean;
--            this.rearingAmount = this.rearingAmount + (1.0F - this.rearingAmount) * 0.4F + 0.05F;
+-            this.rearingAmount = this.rearingAmount + ((1.0F - this.rearingAmount) * 0.4F + 0.05F);
 +            this.rearingAmount += (1.0F - this.rearingAmount) * 0.4F + 0.05F;
  
              if (this.rearingAmount > 1.0F)
@@ -485,7 +485,7 @@
  
          if (this.getHorseWatchableBoolean(64))
          {
--            this.mouthOpenness = this.mouthOpenness + (1.0F - this.mouthOpenness) * 0.7F + 0.05F;
+-            this.mouthOpenness = this.mouthOpenness + ((1.0F - this.mouthOpenness) * 0.7F + 0.05F);
 +            this.mouthOpenness += (1.0F - this.mouthOpenness) * 0.7F + 0.05F;
  
              if (this.mouthOpenness > 1.0F)
@@ -511,7 +511,7 @@
  
                  if (this.isPotionActive(MobEffects.JUMP_BOOST))
                  {
--                    this.motionY = this.motionY + (double)((float)(this.getActivePotionEffect(MobEffects.JUMP_BOOST).getAmplifier() + 1) * 0.1F);
+-                    this.motionY = this.motionY + (this.getActivePotionEffect(MobEffects.JUMP_BOOST).getAmplifier() + 1) * 0.1F;
 +                    this.motionY += (double)((float)(this.getActivePotionEffect(MobEffects.JUMP_BOOST).getAmplifier() + 1) * 0.1F);
                  }
  
@@ -522,8 +522,8 @@
                  {
 -                    float f = MathHelper.sin(this.rotationYaw * (float)(Math.PI / 180.0));
 -                    float f1 = MathHelper.cos(this.rotationYaw * (float)(Math.PI / 180.0));
--                    this.motionX = this.motionX + (double)(-0.4F * f * this.jumpPower);
--                    this.motionZ = this.motionZ + (double)(0.4F * f1 * this.jumpPower);
+-                    this.motionX = this.motionX + -0.4F * f * this.jumpPower;
+-                    this.motionZ = this.motionZ + 0.4F * f1 * this.jumpPower;
 +                    float f = MathHelper.sin(this.rotationYaw * 0.017453292F);
 +                    float f1 = MathHelper.cos(this.rotationYaw * 0.017453292F);
 +                    this.motionX += (double)(-0.4F * f * this.jumpPower);
@@ -632,7 +632,7 @@
      {
 -        double d0 = this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue()
 -                    + p_190681_1_.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue()
--                    + (double)this.getModifiedMaxHealth();
+-                    + this.getModifiedMaxHealth();
 -        p_190681_2_.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(d0 / 3.0);
 +        double d0 = this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue() + p_190681_1_.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue() + (double)this.getModifiedMaxHealth();
 +        p_190681_2_.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(d0 / 3.0D);
@@ -703,9 +703,9 @@
 -            this.world
 -            .spawnParticle(
 -                enumparticletypes,
--                this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width,
--                this.posY + 0.5 + (double)(this.rand.nextFloat() * this.height),
--                this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width,
+-                this.posX + this.rand.nextFloat() * this.width * 2.0F - this.width,
+-                this.posY + 0.5 + this.rand.nextFloat() * this.height,
+-                this.posZ + this.rand.nextFloat() * this.width * 2.0F - this.width,
 -                d0,
 -                d1,
 -                d2
@@ -730,7 +730,7 @@
      public void updatePassenger(Entity passenger)
      {
          super.updatePassenger(passenger);
-@@ -1222,15 +1145,11 @@
+@@ -1222,13 +1145,11 @@
  
          if (this.prevRearingAmount > 0.0F)
          {
@@ -741,15 +741,13 @@
              float f1 = 0.7F * this.prevRearingAmount;
              float f2 = 0.15F * this.prevRearingAmount;
 -            passenger.setPosition(
--                this.posX + (double)(f1 * f3),
--                this.posY + this.getMountedYOffset() + passenger.getYOffset() + (double)f2,
--                this.posZ - (double)(f1 * f)
+-                this.posX + f1 * f3, this.posY + this.getMountedYOffset() + passenger.getYOffset() + f2, this.posZ - f1 * f
 -            );
 +            passenger.setPosition(this.posX + (double)(f1 * f3), this.posY + this.getMountedYOffset() + passenger.getYOffset() + (double)f2, this.posZ - (double)(f1 * f));
  
              if (passenger instanceof EntityLivingBase)
              {
-@@ -1246,21 +1165,19 @@
+@@ -1244,21 +1165,19 @@
  
      protected double getModifiedJumpStrength()
      {
@@ -773,7 +771,7 @@
      public float getEyeHeight()
      {
          return this.height;
-@@ -1276,7 +1193,6 @@
+@@ -1274,7 +1193,6 @@
          return false;
      }
  
@@ -781,7 +779,7 @@
      public boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)
      {
          int i = inventorySlot - 400;
-@@ -1315,14 +1231,12 @@
+@@ -1313,14 +1231,12 @@
      }
  
      @Nullable
@@ -797,7 +795,7 @@
      public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)
      {
          livingdata = super.onInitialSpawn(difficulty, livingdata);
-@@ -1333,5 +1247,23 @@
+@@ -1331,5 +1247,23 @@
          }
  
          return livingdata;

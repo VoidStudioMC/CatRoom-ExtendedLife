@@ -21,7 +21,9 @@ package net.minecraftforge.fml.common.discovery;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraftforge.classloading.FMLForgePlugin;
 import net.minecraftforge.fml.common.FMLLog;
@@ -34,11 +36,11 @@ import com.google.common.collect.Lists;
 
 public class ModDiscoverer
 {
-    private List<ModCandidate> candidates = Lists.newArrayList();
+    private final List<ModCandidate> candidates = Lists.newArrayList();
 
-    private ASMDataTable dataTable = new ASMDataTable();
+    private final ASMDataTable dataTable = new ASMDataTable();
 
-    private List<File> nonModLibs = Lists.newArrayList();
+    private final List<File> nonModLibs = Lists.newArrayList();
 
     public void findClasspathMods(ModClassLoader modClassLoader)
     {
@@ -72,18 +74,42 @@ public class ModDiscoverer
                 devPaths.add(source);
             }
         }
-        for (int i = 0 ; i < devPaths.size() - 1 ; i += 2)
+        // Put paths into source set map
+        Map<String, List<File>> pathsBySourceSet = new HashMap<>();
+        for (File path : devPaths)
         {
-            if (devPaths.get(i).equals(FMLForgePlugin.forgeLocation))
+            if (path.equals(FMLForgePlugin.forgeLocation))
             {
                 continue;
             }
-            FMLLog.log.debug("Adding path {} and {} as developing mod", devPaths.get(i), devPaths.get(i + 1));
-
-            addCandidate(new ModCandidate(devPaths.get(i), devPaths.get(i), ContainerType.DIR, false, true));
-            // funkyra's comment: idk what kappa was trying to do here, but it doesn't work
-            //addCandidate(new ModCandidate(devPaths.get(i), devPaths.get(i + 1)));
+            String sourceSet = path.getName();
+            pathsBySourceSet.computeIfAbsent(sourceSet, k -> new ArrayList<>()).add(path);
         }
+        // Add every classes path as a candidate
+        for (Map.Entry<String, List<File>> entry : pathsBySourceSet.entrySet())
+        {
+            List<File> classDirs = new ArrayList<>();
+            File resourcesDir = null;
+            for (File path : entry.getValue())
+            {
+                String type = path.getParentFile().getName();
+                if ("resources".equals(type))
+                {
+                    resourcesDir = path;
+                }
+                else
+                {
+                    classDirs.add(path);
+                }
+            }
+            if (resourcesDir == null) continue;
+            for (File classDir : classDirs)
+            {
+                FMLLog.log.debug("Adding path {} and {} as developing mod", classDir, resourcesDir);
+                this.addCandidate(new ModCandidate(classDir, resourcesDir, ContainerType.DIR, false, true));
+            }
+        }
+
     }
 
     public List<ModContainer> identifyMods()

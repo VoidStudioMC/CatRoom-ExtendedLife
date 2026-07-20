@@ -1,40 +1,12 @@
 --- before/net/minecraft/block/BlockRedstoneDiode.java
 +++ after/net/minecraft/block/BlockRedstoneDiode.java
-@@ -15,10 +15,11 @@
- import net.minecraft.world.World;
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
-+import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
- 
- public abstract class BlockRedstoneDiode extends BlockHorizontal
- {
--    protected static final AxisAlignedBB REDSTONE_DIODE_AABB = new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.125, 1.0);
-+    protected static final AxisAlignedBB REDSTONE_DIODE_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
-     protected final boolean isRepeaterPowered;
- 
-     protected BlockRedstoneDiode(boolean powered)
-@@ -27,35 +28,32 @@
-         this.isRepeaterPowered = powered;
-     }
- 
--    @Override
-     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-     {
-         return REDSTONE_DIODE_AABB;
-     }
- 
--    @Override
-     public boolean isFullCube(IBlockState state)
-     {
-         return false;
-     }
- 
--    @Override
+@@ -42,12 +42,14 @@
+     @Override
      public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
      {
 -        return worldIn.getBlockState(pos.down()).isTopSolid() ? super.canPlaceBlockAt(worldIn, pos) : false;
 +        IBlockState downState = worldIn.getBlockState(pos.down());
-+        return (downState.isTopSolid() || downState.getBlockFaceShape(worldIn, pos.down(), EnumFacing.UP) == BlockFaceShape.SOLID) ? super.canPlaceBlockAt(worldIn, pos) : false;
++        return (downState.isTopSolid() || downState.getBlockFaceShape(worldIn, pos.down(), EnumFacing.UP) == BlockFaceShape.SOLID) && super.canPlaceBlockAt(worldIn, pos);
      }
  
      public boolean canBlockStay(World worldIn, BlockPos pos)
@@ -44,207 +16,41 @@
 +        return downState.isTopSolid() || downState.getBlockFaceShape(worldIn, pos.down(), EnumFacing.UP) == BlockFaceShape.SOLID;
      }
  
--    @Override
-     public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
-     {
-     }
- 
--    @Override
-     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-     {
-         if (!this.isLocked(worldIn, pos, state))
-@@ -64,10 +62,16 @@
+     @Override
+@@ -64,10 +66,16 @@
  
              if (this.isRepeaterPowered && !flag)
              {
-+                if (CraftEventFactory.callRedstoneChange(worldIn, pos.getX(), pos.getY(), pos.getZ(), 15, 0).getNewCurrent() != 0) {
++                if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callRedstoneChange(worldIn, pos.getX(), pos.getY(), pos.getZ(), 15, 0).getNewCurrent() != 0) {
 +                    return;
 +                }
                  worldIn.setBlockState(pos, this.getUnpoweredState(state), 2);
              }
              else if (!this.isRepeaterPowered)
              {
-+                if (CraftEventFactory.callRedstoneChange(worldIn, pos.getX(), pos.getY(), pos.getZ(), 0, 15).getNewCurrent() != 15) {
++                if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callRedstoneChange(worldIn, pos.getX(), pos.getY(), pos.getZ(), 0, 15).getNewCurrent() != 15) {
 +                    return;
 +                }
                  worldIn.setBlockState(pos, this.getPoweredState(state), 2);
  
                  if (!flag)
-@@ -79,7 +83,6 @@
-     }
- 
-     @SideOnly(Side.CLIENT)
--    @Override
-     public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+@@ -254,6 +262,8 @@
      {
-         return side.getAxis() != EnumFacing.Axis.Y;
-@@ -90,13 +93,11 @@
-         return this.isRepeaterPowered;
-     }
- 
--    @Override
-     public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-     {
-         return blockState.getWeakPower(blockAccess, pos, side);
-     }
- 
--    @Override
-     public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-     {
-         if (!this.isPowered(blockState))
-@@ -109,7 +110,6 @@
-         }
-     }
- 
--    @Override
-     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
-     {
-         if (this.canBlockStay(worldIn, pos))
-@@ -164,7 +164,7 @@
- 
-     protected int calculateInputStrength(World worldIn, BlockPos pos, IBlockState state)
-     {
--        EnumFacing enumfacing = state.getValue(FACING);
-+        EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
-         BlockPos blockpos = pos.offset(enumfacing);
-         int i = worldIn.getRedstonePower(blockpos, enumfacing);
- 
-@@ -175,19 +175,16 @@
-         else
-         {
-             IBlockState iblockstate = worldIn.getBlockState(blockpos);
--            return Math.max(i, iblockstate.getBlock() == Blocks.REDSTONE_WIRE ? iblockstate.getValue(BlockRedstoneWire.POWER) : 0);
-+            return Math.max(i, iblockstate.getBlock() == Blocks.REDSTONE_WIRE ? ((Integer)iblockstate.getValue(BlockRedstoneWire.POWER)).intValue() : 0);
-         }
-     }
- 
-     protected int getPowerOnSides(IBlockAccess worldIn, BlockPos pos, IBlockState state)
-     {
--        EnumFacing enumfacing = state.getValue(FACING);
-+        EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
-         EnumFacing enumfacing1 = enumfacing.rotateY();
-         EnumFacing enumfacing2 = enumfacing.rotateYCCW();
--        return Math.max(
--                   this.getPowerOnSide(worldIn, pos.offset(enumfacing1), enumfacing1),
--                   this.getPowerOnSide(worldIn, pos.offset(enumfacing2), enumfacing2)
--               );
-+        return Math.max(this.getPowerOnSide(worldIn, pos.offset(enumfacing1), enumfacing1), this.getPowerOnSide(worldIn, pos.offset(enumfacing2), enumfacing2));
-     }
- 
-     protected int getPowerOnSide(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
-@@ -203,9 +200,7 @@
-             }
-             else
-             {
--                return block == Blocks.REDSTONE_WIRE
--                       ? iblockstate.getValue(BlockRedstoneWire.POWER)
--                       : worldIn.getStrongPower(pos, side);
-+                return block == Blocks.REDSTONE_WIRE ? ((Integer)iblockstate.getValue(BlockRedstoneWire.POWER)).intValue() : worldIn.getStrongPower(pos, side);
-             }
-         }
-         else
-@@ -214,28 +209,16 @@
-         }
-     }
- 
--    @Override
-     public boolean canProvidePower(IBlockState state)
-     {
-         return true;
-     }
- 
--    @Override
--    public IBlockState getStateForPlacement(
--        World worldIn,
--        BlockPos pos,
--        EnumFacing facing,
--        float hitX,
--        float hitY,
--        float hitZ,
--        int meta,
--        EntityLivingBase placer
--    )
-+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-     {
-         return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
-     }
- 
--    @Override
-     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-     {
-         if (this.shouldBePowered(worldIn, pos, state))
-@@ -244,7 +227,6 @@
-         }
-     }
- 
--    @Override
-     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
-     {
-         this.notifyNeighbors(worldIn, pos, state);
-@@ -252,13 +234,14 @@
- 
-     protected void notifyNeighbors(World worldIn, BlockPos pos, IBlockState state)
-     {
--        EnumFacing enumfacing = state.getValue(FACING);
-+        EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
+         EnumFacing enumfacing = state.getValue(FACING);
          BlockPos blockpos = pos.offset(enumfacing.getOpposite());
 +        if(net.minecraftforge.event.ForgeEventFactory.onNeighborNotify(worldIn, pos, worldIn.getBlockState(pos), java.util.EnumSet.of(enumfacing.getOpposite()), false).isCanceled())
 +            return;
          worldIn.neighborChanged(blockpos, this, pos);
          worldIn.notifyNeighborsOfStateExcept(blockpos, this, enumfacing);
      }
- 
--    @Override
-     public void onPlayerDestroy(World worldIn, BlockPos pos, IBlockState state)
-     {
-         if (this.isRepeaterPowered)
-@@ -272,7 +255,6 @@
-         super.onPlayerDestroy(worldIn, pos, state);
-     }
- 
--    @Override
-     public boolean isOpaqueCube(IBlockState state)
-     {
-         return false;
-@@ -301,9 +283,17 @@
- 
-     public boolean isFacingTowardsRepeater(World worldIn, BlockPos pos, IBlockState state)
-     {
--        EnumFacing enumfacing = state.getValue(FACING).getOpposite();
-+        EnumFacing enumfacing = ((EnumFacing)state.getValue(FACING)).getOpposite();
-         BlockPos blockpos = pos.offset(enumfacing);
--        return isDiode(worldIn.getBlockState(blockpos)) ? worldIn.getBlockState(blockpos).getValue(FACING) != enumfacing : false;
-+
-+        if (isDiode(worldIn.getBlockState(blockpos)))
-+        {
-+            return worldIn.getBlockState(blockpos).getValue(FACING) != enumfacing;
-+        }
-+        else
-+        {
-+            return false;
-+        }
-     }
- 
-     protected int getTickDelay(IBlockState state)
-@@ -317,20 +307,36 @@
- 
-     protected abstract IBlockState getUnpoweredState(IBlockState poweredState);
- 
--    @Override
-     public boolean isAssociatedBlock(Block other)
-     {
-         return this.isSameDiode(other.getDefaultState());
-     }
- 
-     @SideOnly(Side.CLIENT)
--    @Override
+@@ -328,6 +338,25 @@
      public BlockRenderLayer getRenderLayer()
      {
          return BlockRenderLayer.CUTOUT;
-     }
- 
++    }
++
 +    /* ======================================== FORGE START =====================================*/
-     @Override
++    @Override
 +    public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis)
 +    {
 +        if (super.rotateBlock(world, pos, axis))
@@ -260,8 +66,6 @@
 +            return true;
 +        }
 +        return false;
-+    }
-+
-     public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-     {
-         return face == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
+     }
+ 
+     @Override

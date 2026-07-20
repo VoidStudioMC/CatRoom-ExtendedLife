@@ -1,26 +1,6 @@
 --- before/net/minecraft/entity/effect/EntityLightningBolt.java
 +++ after/net/minecraft/entity/effect/EntityLightningBolt.java
-@@ -3,14 +3,19 @@
- import java.util.List;
- import net.minecraft.block.material.Material;
- import net.minecraft.entity.Entity;
-+import net.minecraft.entity.player.EntityPlayer;
-+import net.minecraft.entity.player.EntityPlayerMP;
- import net.minecraft.init.Blocks;
- import net.minecraft.init.SoundEvents;
- import net.minecraft.nbt.NBTTagCompound;
-+import net.minecraft.network.play.server.SPacketSoundEffect;
- import net.minecraft.util.SoundCategory;
- import net.minecraft.util.math.AxisAlignedBB;
- import net.minecraft.util.math.BlockPos;
- import net.minecraft.world.EnumDifficulty;
- import net.minecraft.world.World;
-+import net.minecraft.world.WorldServer;
-+import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
- 
- public class EntityLightningBolt extends EntityWeatherEffect
- {
-@@ -19,9 +24,13 @@
+@@ -19,9 +19,13 @@
      private int boltLivingTime;
      private final boolean effectOnly;
  
@@ -34,46 +14,32 @@
          this.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
          this.lightningState = 2;
          this.boltVertex = this.rand.nextLong();
-@@ -29,68 +38,71 @@
-         this.effectOnly = effectOnlyIn;
-         BlockPos blockpos = new BlockPos(this);
- 
--        if (!effectOnlyIn
--                && !worldIn.isRemote
--                && worldIn.getGameRules().getBoolean("doFireTick")
--                && (worldIn.getDifficulty() == EnumDifficulty.NORMAL || worldIn.getDifficulty() == EnumDifficulty.HARD)
--                && worldIn.isAreaLoaded(blockpos, 10))
-+        if (!effectOnlyIn && !worldIn.isRemote && worldIn.getGameRules().getBoolean("doFireTick") && (worldIn.getDifficulty() == EnumDifficulty.NORMAL || worldIn.getDifficulty() == EnumDifficulty.HARD) && worldIn.isAreaLoaded(blockpos, 10))
+@@ -37,7 +41,10 @@
          {
              if (worldIn.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(worldIn, blockpos))
              {
 -                worldIn.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 +                // worldIn.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
-+                if (!CraftEventFactory.callBlockIgniteEvent(world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), this).isCancelled()) {
++                if (!org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockIgniteEvent(world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), this).isCancelled()) {
 +                    world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 +                }
              }
  
--            for (int i = 0; i < 4; i++)
-+            for (int i = 0; i < 4; ++i)
-             {
-                 BlockPos blockpos1 = blockpos.add(this.rand.nextInt(3) - 1, this.rand.nextInt(3) - 1, this.rand.nextInt(3) - 1);
- 
--                if (worldIn.getBlockState(blockpos1).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(worldIn, blockpos1)
--                   )
-+                if (worldIn.getBlockState(blockpos1).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(worldIn, blockpos1))
+             for (int i = 0; i < 4; i++)
+@@ -47,11 +54,22 @@
+                 if (worldIn.getBlockState(blockpos1).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(worldIn, blockpos1)
+                    )
                  {
 -                    worldIn.setBlockState(blockpos1, Blocks.FIRE.getDefaultState());
 +                    // worldIn.setBlockState(blockpos1, Blocks.FIRE.getDefaultState());
-+                    if (!CraftEventFactory.callBlockIgniteEvent(world, blockpos1.getX(), blockpos1.getY(), blockpos1.getZ(), this).isCancelled()) {
++                    if (!org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockIgniteEvent(world, blockpos1.getX(), blockpos1.getY(), blockpos1.getZ(), this).isCancelled()) {
 +                        world.setBlockState(blockpos1, Blocks.FIRE.getDefaultState());
 +                    }
                  }
              }
          }
      }
- 
--    @Override
++
 +    // Spigot start
 +    public EntityLightningBolt(World worldIn, double x, double y, double z, boolean effectOnlyIn, boolean isSilent)
 +    {
@@ -81,14 +47,10 @@
 +        this.isSilent = isSilent;
 +    }
 +    // Spigot end
-+
-     public SoundCategory getSoundCategory()
-     {
-         return SoundCategory.WEATHER;
-     }
  
--    @Override
-     public void onUpdate()
+     @Override
+     public SoundCategory getSoundCategory()
+@@ -64,30 +82,26 @@
      {
          super.onUpdate();
  
@@ -120,8 +82,8 @@
 +            // CraftBukkit start - Use relative location for far away sounds
 +            // this.world.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, 10000.0F, 0.8F + this.rand.nextFloat() * 0.2F);
 +            float pitch = 0.8F + this.rand.nextFloat() * 0.2F;
-+            int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16;
-+            for (EntityPlayerMP player : (List<EntityPlayerMP>) (List) this.world.playerEntities) {
++            int viewDistance = (this.world).getServer().getViewDistance() * 16;
++            for (net.minecraft.entity.player.EntityPlayerMP player : (List<net.minecraft.entity.player.EntityPlayerMP>) (List) this.world.playerEntities) {
 +                double deltaX = this.posX - player.posX;
 +                double deltaZ = this.posZ - player.posZ;
 +                double distanceSquared = deltaX * deltaX + deltaZ * deltaZ;
@@ -129,40 +91,21 @@
 +                    double deltaLength = Math.sqrt(distanceSquared);
 +                    double relativeX = player.posX + (deltaX / deltaLength) * viewDistance;
 +                    double relativeZ = player.posZ + (deltaZ / deltaLength) * viewDistance;
-+                    player.connection.sendPacket(new SPacketSoundEffect(SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, relativeX, this.posY, relativeZ, 10000.0F, pitch));
++                    player.connection.sendPacket(new net.minecraft.network.play.server.SPacketSoundEffect(SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, relativeX, this.posY, relativeZ, 10000.0F, pitch));
 +                } else {
-+                    player.connection.sendPacket(new SPacketSoundEffect(SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, this.posX, this.posY, this.posZ, 10000.0F, pitch));
++                    player.connection.sendPacket(new net.minecraft.network.play.server.SPacketSoundEffect(SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, this.posX, this.posY, this.posZ, 10000.0F, pitch));
 +                }
 +            }
-+            this.world.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.WEATHER, 2.0F, 0.5F + this.rand.nextFloat() * 0.2F);
++            this.world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.WEATHER, 2.0F, 0.5F + this.rand.nextFloat() * 0.2F);
          }
  
--        this.lightningState--;
-+        --this.lightningState;
- 
-         if (this.lightningState < 0)
-         {
-@@ -100,7 +112,7 @@
-             }
-             else if (this.lightningState < -this.rand.nextInt(10))
-             {
--                this.boltLivingTime--;
-+                --this.boltLivingTime;
-                 this.lightningState = 1;
- 
-                 if (!this.effectOnly && !this.world.isRemote)
-@@ -108,18 +120,17 @@
-                     this.boltVertex = this.rand.nextLong();
-                     BlockPos blockpos = new BlockPos(this);
- 
--                    if (this.world.getGameRules().getBoolean("doFireTick")
--                            && this.world.isAreaLoaded(blockpos, 10)
--                            && this.world.getBlockState(blockpos).getMaterial() == Material.AIR
--                            && Blocks.FIRE.canPlaceBlockAt(this.world, blockpos))
-+                    if (this.world.getGameRules().getBoolean("doFireTick") && this.world.isAreaLoaded(blockpos, 10) && this.world.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(this.world, blockpos))
+         this.lightningState--;
+@@ -113,13 +127,15 @@
+                             && this.world.getBlockState(blockpos).getMaterial() == Material.AIR
+                             && Blocks.FIRE.canPlaceBlockAt(this.world, blockpos))
                      {
 -                        this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
-+                        if (!isEffect && !CraftEventFactory.callBlockIgniteEvent(world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), this).isCancelled()) {
++                        if (!isEffect && !org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockIgniteEvent(world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), this).isCancelled()) {
 +                            this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 +                        }
                      }
@@ -175,28 +118,8 @@
          {
              if (this.world.isRemote)
              {
-@@ -127,40 +138,27 @@
-             }
-             else if (!this.effectOnly)
-             {
--                double d0 = 3.0;
--                List<Entity> list = this.world
--                                    .getEntitiesWithinAABBExcludingEntity(
--                                        this,
--                                        new AxisAlignedBB(
--                                            this.posX - 3.0,
--                                            this.posY - 3.0,
--                                            this.posZ - 3.0,
--                                            this.posX + 3.0,
--                                            this.posY + 6.0 + 3.0,
--                                            this.posZ + 3.0
--                                        )
--                                    );
-+                double d0 = 3.0D;
-+                List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB(this.posX - 3.0D, this.posY - 3.0D, this.posZ - 3.0D, this.posX + 3.0D, this.posY + 6.0D + 3.0D, this.posZ + 3.0D));
- 
--                for (int i = 0; i < list.size(); i++)
-+                for (int i = 0; i < list.size(); ++i)
+@@ -144,7 +160,8 @@
+                 for (int i = 0; i < list.size(); i++)
                  {
                      Entity entity = list.get(i);
 -                    entity.onStruckByLightning(this);
@@ -205,19 +128,3 @@
                  }
              }
          }
-     }
- 
--    @Override
-     protected void entityInit()
-     {
-     }
- 
--    @Override
-     protected void readEntityFromNBT(NBTTagCompound compound)
-     {
-     }
- 
--    @Override
-     protected void writeEntityToNBT(NBTTagCompound compound)
-     {
-     }

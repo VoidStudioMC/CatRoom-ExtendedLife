@@ -89,7 +89,7 @@
          }
          else
          {
--            entityLivingBaseIn.heal((float)Math.max(4 << amplifier, 0));
+-            entityLivingBaseIn.heal(Math.max(4 << amplifier, 0));
 +            entityLivingBaseIn.heal((float)Math.max(4 << amplifier, 0), RegainReason.MAGIC);
          }
      }
@@ -98,7 +98,7 @@
          {
              if (this == MobEffects.INSTANT_DAMAGE && !entityLivingBaseIn.isEntityUndead() || this == MobEffects.INSTANT_HEALTH && entityLivingBaseIn.isEntityUndead())
              {
--                int j = (int)(health * (double)(6 << amplifier) + 0.5);
+-                int j = (int)(health * (6 << amplifier) + 0.5);
 +                int j = (int)(health * (double)(6 << amplifier) + 0.5D);
  
                  if (source == null)
@@ -107,9 +107,9 @@
          }
          else
          {
--            int i = (int)(health * (double)(4 << amplifier) + 0.5);
+-            int i = (int)(health * (4 << amplifier) + 0.5);
 +            int i = (int)(health * (double)(4 << amplifier) + 0.5D);
-             entityLivingBaseIn.heal((float)i);
+             entityLivingBaseIn.heal(i);
          }
      }
 @@ -146,17 +162,41 @@
@@ -234,7 +234,7 @@
          }
      }
 @@ -276,6 +308,121 @@
-         return modifier.getAmount() * (double)(amplifier + 1);
+         return modifier.getAmount() * (amplifier + 1);
      }
  
 +    /* ======================================== FORGE START =====================================*/

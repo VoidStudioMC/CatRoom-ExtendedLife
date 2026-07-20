@@ -1,30 +1,7 @@
 --- before/net/minecraft/block/BlockMushroom.java
 +++ after/net/minecraft/block/BlockMushroom.java
-@@ -9,26 +9,28 @@
- import net.minecraft.world.World;
- import net.minecraft.world.gen.feature.WorldGenBigMushroom;
- import net.minecraft.world.gen.feature.WorldGenerator;
-+import org.bukkit.TreeType;
-+import org.bukkit.block.BlockState;
-+import org.bukkit.event.block.BlockSpreadEvent;
- 
- public class BlockMushroom extends BlockBush implements IGrowable
- {
--    protected static final AxisAlignedBB MUSHROOM_AABB = new AxisAlignedBB(0.3F, 0.0, 0.3F, 0.7F, 0.4F, 0.7F);
-+    protected static final AxisAlignedBB MUSHROOM_AABB = new AxisAlignedBB(0.30000001192092896D, 0.0D, 0.30000001192092896D, 0.699999988079071D, 0.4000000059604645D, 0.699999988079071D);
- 
-     protected BlockMushroom()
-     {
-         this.setTickRandomly(true);
-     }
- 
--    @Override
-     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-     {
-         return MUSHROOM_AABB;
-     }
- 
--    @Override
+@@ -28,7 +28,8 @@
+     @Override
      public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
      {
 -        if (rand.nextInt(25) == 0)
@@ -33,37 +10,17 @@
          {
              int i = 5;
              int j = 4;
-@@ -37,7 +39,9 @@
-             {
-                 if (worldIn.getBlockState(blockpos).getBlock() == this)
-                 {
--                    if (--i <= 0)
-+                    --i;
-+
-+                    if (i <= 0)
-                     {
-                         return;
-                     }
-@@ -46,7 +50,7 @@
- 
-             BlockPos blockpos1 = pos.add(rand.nextInt(3) - 1, rand.nextInt(2) - rand.nextInt(2), rand.nextInt(3) - 1);
- 
--            for (int k = 0; k < 4; k++)
-+            for (int k = 0; k < 4; ++k)
-             {
-                 if (worldIn.isAirBlock(blockpos1) && this.canBlockStay(worldIn, blockpos1, this.getDefaultState()))
-                 {
-@@ -58,24 +62,31 @@
+@@ -58,7 +59,17 @@
  
              if (worldIn.isAirBlock(blockpos1) && this.canBlockStay(worldIn, blockpos1, this.getDefaultState()))
              {
 -                worldIn.setBlockState(blockpos1, this.getDefaultState(), 2);
 +//                worldIn.setBlockState(blockpos1, this.getDefaultState(), 2);
 +                org.bukkit.World bworld = worldIn.getWorld();
-+                BlockState blockState = bworld.getBlockAt(blockpos1.getX(), blockpos1.getY(), blockpos1.getZ()).getState();
++                org.bukkit.block.BlockState blockState = bworld.getBlockAt(blockpos1.getX(), blockpos1.getY(), blockpos1.getZ()).getState();
 +                blockState.setType(org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers.getMaterial(this)); // nms: this.id, 0, 2
 +
-+                BlockSpreadEvent event = new BlockSpreadEvent(blockState.getBlock(), bworld.getBlockAt(sourceX, sourceY, sourceZ), blockState);
++                org.bukkit.event.block.BlockSpreadEvent event = new org.bukkit.event.block.BlockSpreadEvent(blockState.getBlock(), bworld.getBlockAt(sourceX, sourceY, sourceZ), blockState);
 +                worldIn.getServer().getPluginManager().callEvent(event);
 +
 +                if (!event.isCancelled()) {
@@ -72,23 +29,6 @@
              }
          }
      }
- 
--    @Override
-     public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
-     {
-         return super.canPlaceBlockAt(worldIn, pos) && this.canBlockStay(worldIn, pos, this.getDefaultState());
-     }
- 
--    @Override
-     protected boolean canSustainBush(IBlockState state)
-     {
-         return state.isFullBlock();
-     }
- 
--    @Override
-     public boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)
-     {
-         if (pos.getY() >= 0 && pos.getY() < 256)
 @@ -86,11 +97,13 @@
              {
                  return true;
@@ -110,33 +50,12 @@
  
          if (this == Blocks.BROWN_MUSHROOM)
          {
-+            BlockSapling.treeType = TreeType.BROWN_MUSHROOM;
++            BlockSapling.treeType = org.bukkit.TreeType.BROWN_MUSHROOM;
              worldgenerator = new WorldGenBigMushroom(Blocks.BROWN_MUSHROOM_BLOCK);
          }
          else if (this == Blocks.RED_MUSHROOM)
          {
-+            BlockSapling.treeType = TreeType.RED_MUSHROOM;
++            BlockSapling.treeType = org.bukkit.TreeType.RED_MUSHROOM;
              worldgenerator = new WorldGenBigMushroom(Blocks.RED_MUSHROOM_BLOCK);
          }
  
-@@ -124,19 +139,16 @@
-         }
-     }
- 
--    @Override
-     public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient)
-     {
-         return true;
-     }
- 
--    @Override
-     public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, IBlockState state)
-     {
--        return (double)rand.nextFloat() < 0.4;
-+        return (double)rand.nextFloat() < 0.4D;
-     }
- 
--    @Override
-     public void grow(World worldIn, Random rand, BlockPos pos, IBlockState state)
-     {
-         this.generateBigMushroom(worldIn, pos, state, rand);

@@ -1,10 +1,6 @@
 --- before/net/minecraft/world/chunk/storage/AnvilSaveHandler.java
 +++ after/net/minecraft/world/chunk/storage/AnvilSaveHandler.java
-@@ -18,37 +18,32 @@
-         super(p_i46650_1_, saveDirectoryName, p_i46650_3_, dataFixerIn);
-     }
- 
--    @Override
+@@ -22,23 +22,23 @@
      public IChunkLoader getChunkLoader(WorldProvider provider)
      {
          File file1 = this.getWorldDirectory();
@@ -13,7 +9,8 @@
 +        // for the world container with provider.getSaveFolder().
  
 -        if (provider instanceof WorldProviderHell)
-+        /*if (provider.getSaveFolder() != null)
++        /*
++        if (provider.getSaveFolder() != null)
          {
 -            File file3 = new File(file1, "DIM-1");
 +            File file3 = new File(file1, provider.getSaveFolder());
@@ -29,19 +26,9 @@
          else
          {
              return new AnvilChunkLoader(file1, this.dataFixer);
--        }
-+        }*/
+         }
++        */
 +        return new AnvilChunkLoader(file1,this.dataFixer);
      }
  
--    @Override
-     public void saveWorldInfoWithPlayer(WorldInfo worldInformation, @Nullable NBTTagCompound tagCompound)
-     {
-         worldInformation.setSaveVersion(19133);
-         super.saveWorldInfoWithPlayer(worldInformation, tagCompound);
-     }
- 
--    @Override
-     public void flush()
-     {
-         try
+     @Override

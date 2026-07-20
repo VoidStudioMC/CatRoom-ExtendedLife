@@ -34,13 +34,13 @@
 +            for (int j2 = aint[l1 + (k1 + 1) * k]; l1 < k - 1; ++l1)
              {
 -                double d0 = 3.6;
-                 this.initChunkSeed((long)(l1 + i << 2), (long)(k1 + j << 2));
-                 double d1 = ((double)this.nextInt(1024) / 1024.0 - 0.5) * 3.6;
-                 double d2 = ((double)this.nextInt(1024) / 1024.0 - 0.5) * 3.6;
+                 this.initChunkSeed(l1 + i << 2, k1 + j << 2);
+                 double d1 = (this.nextInt(1024) / 1024.0 - 0.5) * 3.6;
+                 double d2 = (this.nextInt(1024) / 1024.0 - 0.5) * 3.6;
 @@ -42,14 +45,14 @@
-                 this.initChunkSeed((long)(l1 + i + 1 << 2), (long)(k1 + j + 1 << 2));
-                 double d7 = ((double)this.nextInt(1024) / 1024.0 - 0.5) * 3.6 + 4.0;
-                 double d8 = ((double)this.nextInt(1024) / 1024.0 - 0.5) * 3.6 + 4.0;
+                 this.initChunkSeed(l1 + i + 1 << 2, k1 + j + 1 << 2);
+                 double d7 = (this.nextInt(1024) / 1024.0 - 0.5) * 3.6 + 4.0;
+                 double d8 = (this.nextInt(1024) / 1024.0 - 0.5) * 3.6 + 4.0;
 -                int k2 = aint[l1 + 1 + (k1 + 0) * k] & 0xFF;
 +                int k2 = aint[l1 + 1 + k1 * k] & 0xFF;
                  int l2 = aint[l1 + 1 + (k1 + 1) * k] & 0xFF;
@@ -53,8 +53,8 @@
 -                    for (int k3 = 0; k3 < 4; k3++)
 +                    for (int k3 = 0; k3 < 4; ++k3)
                      {
-                         double d9 = ((double)i3 - d2) * ((double)i3 - d2) + ((double)k3 - d1) * ((double)k3 - d1);
-                         double d10 = ((double)i3 - d4) * ((double)i3 - d4) + ((double)k3 - d3) * ((double)k3 - d3);
+                         double d9 = (i3 - d2) * (i3 - d2) + (k3 - d1) * (k3 - d1);
+                         double d10 = (i3 - d4) * (i3 - d4) + (k3 - d3) * (k3 - d3);
 @@ -82,7 +85,7 @@
  
          int[] aint2 = IntCache.getIntCache(areaWidth * areaHeight);

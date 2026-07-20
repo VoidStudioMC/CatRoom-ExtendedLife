@@ -47,24 +47,24 @@
              if (this.exitPortal != null)
              {
                  BlockPos blockpos = this.exactTeleport ? this.exitPortal : this.findExitPosition();
--                entityIn.setPositionAndUpdate((double)blockpos.getX() + 0.5, (double)blockpos.getY() + 0.5, (double)blockpos.getZ() + 0.5);
-+                if (entityIn instanceof EntityPlayerMP) {
-+                    org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer player = (CraftPlayer) entityIn.getBukkitEntity();
-+                    org.bukkit.Location location = new Location(world.getWorld(), (double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.5D, (double) blockpos.getZ() + 0.5D);
+-                entityIn.setPositionAndUpdate(blockpos.getX() + 0.5, blockpos.getY() + 0.5, blockpos.getZ() + 0.5);
++                if (entityIn instanceof EntityPlayerMP)
++                {
++                    CraftPlayer player = (CraftPlayer)entityIn.getBukkitEntity();
++                    Location location = new Location(world.getWorld(), blockpos.getX() + 0.5D, blockpos.getY() + 0.5D, blockpos.getZ() + 0.5D);
 +                    location.setPitch(player.getLocation().getPitch());
 +                    location.setYaw(player.getLocation().getYaw());
-+
 +                    PlayerTeleportEvent teleEvent = new PlayerTeleportEvent(player, player.getLocation(), location, PlayerTeleportEvent.TeleportCause.END_GATEWAY);
 +                    Bukkit.getPluginManager().callEvent(teleEvent);
-+                    if (teleEvent.isCancelled()) {
++                    if (teleEvent.isCancelled())
++                    {
 +                        return;
 +                    }
-+
-+                    ((EntityPlayerMP) entityIn).connection.teleport(teleEvent.getTo());
-+                    this.triggerCooldown(); // CraftBukkit - call at end of method
++                    ((EntityPlayerMP)entityIn).connection.teleport(teleEvent.getTo());
++                    this.triggerCooldown();
 +                    return;
 +                }
-+                entityIn.setPositionAndUpdate((double)blockpos.getX() + 0.5D, (double)blockpos.getY() + 0.5D, (double)blockpos.getZ() + 0.5D);
++                entityIn.setPositionAndUpdate(blockpos.getX() + 0.5D, blockpos.getY() + 0.5D, blockpos.getZ() + 0.5D);
              }
  
              this.triggerCooldown();

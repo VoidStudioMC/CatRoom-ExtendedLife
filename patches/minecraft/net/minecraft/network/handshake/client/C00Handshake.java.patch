@@ -13,17 +13,17 @@
  
      public C00Handshake()
      {
-@@ -28,20 +29,28 @@
+@@ -28,20 +29,30 @@
          this.requestedState = p_i47613_3_;
      }
  
--    @Override
 +    public C00Handshake(String address, int port, EnumConnectionState state, boolean addFMLMarker)
 +    {
 +        this(address, port, state);
 +        this.hasFMLMarker = addFMLMarker;
 +    }
 +
+     @Override
      public void readPacketData(PacketBuffer buf) throws IOException
      {
          this.protocolVersion = buf.readVarInt();
@@ -34,10 +34,10 @@
 +        this.hasFMLMarker = this.ip.contains("\0FML\0");
 +        if (this.hasFMLMarker) {
 +            this.ip = this.ip.replace("\0FML\0", "");
-+        }else if (this.ip.split("\0").length>2) this.hasFMLMarker = true; //CatServer - Bungee support
++        } else if (this.ip.split("\0").length>2) this.hasFMLMarker = true; //CatServer - Bungee support
      }
  
--    @Override
+     @Override
      public void writePacketData(PacketBuffer buf) throws IOException
      {
          buf.writeVarInt(this.protocolVersion);
@@ -46,7 +46,7 @@
          buf.writeShort(this.port);
          buf.writeVarInt(this.requestedState.getId());
      }
-@@ -59,5 +68,10 @@
+@@ -59,5 +70,10 @@
      public int getProtocolVersion()
      {
          return this.protocolVersion;

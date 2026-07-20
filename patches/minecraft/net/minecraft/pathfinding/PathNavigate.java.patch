@@ -68,7 +68,7 @@
 -        for (int j = this.currentPath.getCurrentPathIndex(); j < this.currentPath.getCurrentPathLength(); j++)
 +        for (int j = this.currentPath.getCurrentPathIndex(); j < this.currentPath.getCurrentPathLength(); ++j)
          {
-             if ((double)this.currentPath.getPathPointFromIndex(j).y != Math.floor(vec3d.y))
+             if (this.currentPath.getPathPointFromIndex(j).y != Math.floor(vec3d.y))
              {
 @@ -265,7 +284,7 @@
          int l = MathHelper.ceil(this.entity.height);

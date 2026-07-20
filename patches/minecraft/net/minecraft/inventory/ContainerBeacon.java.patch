@@ -1,89 +1,27 @@
 --- before/net/minecraft/inventory/ContainerBeacon.java
 +++ after/net/minecraft/inventory/ContainerBeacon.java
-@@ -1,40 +1,44 @@
- package net.minecraft.inventory;
- 
- import net.minecraft.entity.player.EntityPlayer;
--import net.minecraft.init.Items;
--import net.minecraft.item.Item;
-+import net.minecraft.entity.player.InventoryPlayer;
- import net.minecraft.item.ItemStack;
-+import net.minecraft.tileentity.TileEntityBeacon;
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView;
- 
- public class ContainerBeacon extends Container
- {
+@@ -12,8 +12,12 @@
      private final IInventory tileBeacon;
--    private final ContainerBeacon.BeaconSlot beaconSlot;
-+    private final BeaconSlot beaconSlot;
-+
-+    private CraftInventoryView bukkitEntity = null;
-+    private InventoryPlayer player;
+     private final ContainerBeacon.BeaconSlot beaconSlot;
  
++    private org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView bukkitEntity = null;
++    private net.minecraft.entity.player.InventoryPlayer player;
++
      public ContainerBeacon(IInventory playerInventory, IInventory tileBeaconIn)
      {
-+        player = (InventoryPlayer) playerInventory; // CraftBukkit - TODO: check this
++        player = (net.minecraft.entity.player.InventoryPlayer) playerInventory; // CraftBukkit - TODO: check this
          this.tileBeacon = tileBeaconIn;
          this.beaconSlot = new ContainerBeacon.BeaconSlot(tileBeaconIn, 0, 136, 110);
          this.addSlotToContainer(this.beaconSlot);
-         int i = 36;
-         int j = 137;
- 
--        for (int k = 0; k < 3; k++)
-+        for (int k = 0; k < 3; ++k)
-         {
--            for (int l = 0; l < 9; l++)
-+            for (int l = 0; l < 9; ++l)
-             {
-                 this.addSlotToContainer(new Slot(playerInventory, l + k * 9 + 9, 36 + l * 18, 137 + k * 18));
-             }
-         }
- 
--        for (int i1 = 0; i1 < 9; i1++)
-+        for (int i1 = 0; i1 < 9; ++i1)
-         {
-             this.addSlotToContainer(new Slot(playerInventory, i1, 36 + i1 * 18, 195));
-         }
-     }
- 
--    @Override
-     public void addListener(IContainerListener listener)
-     {
-         super.addListener(listener);
-@@ -42,7 +46,6 @@
-     }
- 
-     @SideOnly(Side.CLIENT)
--    @Override
-     public void updateProgressBar(int id, int data)
-     {
-         this.tileBeacon.setField(id, data);
-@@ -53,7 +56,6 @@
-         return this.tileBeacon;
-     }
- 
--    @Override
-     public void onContainerClosed(EntityPlayer playerIn)
-     {
-         super.onContainerClosed(playerIn);
-@@ -69,13 +71,12 @@
-         }
-     }
- 
--    @Override
+@@ -72,6 +76,7 @@
+     @Override
      public boolean canInteractWith(EntityPlayer playerIn)
      {
 +        if (!this.checkReachable) return true;
          return this.tileBeacon.isUsableByPlayer(playerIn);
      }
  
--    @Override
-     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
-     {
-         ItemStack itemstack = ItemStack.EMPTY;
-@@ -95,12 +96,9 @@
+@@ -95,12 +100,9 @@
  
                  slot.onSlotChange(itemstack1, itemstack);
              }
@@ -98,11 +36,8 @@
              }
              else if (index >= 1 && index < 28)
              {
-@@ -148,17 +146,25 @@
-             super(inventoryIn, index, xIn, yIn);
-         }
- 
--        @Override
+@@ -151,8 +153,7 @@
+         @Override
          public boolean isItemValid(ItemStack stack)
          {
 -            Item item = stack.getItem();
@@ -110,21 +45,21 @@
 +            return stack.getItem().isBeaconPayment(stack);
          }
  
--        @Override
-         public int getSlotStackLimit()
+         @Override
+@@ -160,5 +161,16 @@
          {
              return 1;
          }
 +    }
 +
 +    @Override
-+    public CraftInventoryView getBukkitView() {
++    public org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView getBukkitView() {
 +        if (bukkitEntity != null) {
 +            return bukkitEntity;
 +        }
 +
 +        org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventory inventory = new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryBeacon(this.tileBeacon); // CatServer
-+        bukkitEntity = new CraftInventoryView(this.player.player.getBukkitEntity(), inventory, this);
++        bukkitEntity = new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView(this.player.player.getBukkitEntity(), inventory, this);
 +        return bukkitEntity;
      }
  }

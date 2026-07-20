@@ -1,18 +1,13 @@
 --- before/net/minecraft/world/WorldServerMulti.java
 +++ after/net/minecraft/world/WorldServerMulti.java
-@@ -7,61 +7,102 @@
- import net.minecraft.world.border.WorldBorder;
- import net.minecraft.world.storage.DerivedWorldInfo;
- import net.minecraft.world.storage.ISaveHandler;
-+import net.minecraft.world.storage.WorldInfo;
- 
+@@ -11,12 +11,54 @@
  public class WorldServerMulti extends WorldServer
  {
      private final WorldServer delegate;
 +    private IBorderListener borderListener;
 +
 +    // CraftBukkit start - Add WorldInfo, Environment and ChunkGenerator arguments
-+    public WorldServerMulti(MinecraftServer server, ISaveHandler saveHandlerIn, int dimensionId, WorldServer delegate, Profiler profilerIn, WorldInfo worldData, org.bukkit.World.Environment env, org.bukkit.generator.ChunkGenerator gen)
++    public WorldServerMulti(MinecraftServer server, ISaveHandler saveHandlerIn, int dimensionId, WorldServer delegate, Profiler profilerIn, net.minecraft.world.storage.WorldInfo worldData, org.bukkit.World.Environment env, org.bukkit.generator.ChunkGenerator gen)
 +    {
 +        super(server, saveHandlerIn, worldData, dimensionId, profilerIn, env, gen);
 +        this.delegate = delegate;
@@ -59,38 +54,9 @@
 -        delegate.getWorldBorder().addListener(new IBorderListener()
 +        this.borderListener = new IBorderListener()
          {
--            @Override
+             @Override
              public void onSizeChanged(WorldBorder border, double newSize)
-             {
-                 WorldServerMulti.this.getWorldBorder().setTransition(newSize);
-             }
--            @Override
-             public void onTransitionStarted(WorldBorder border, double oldSize, double newSize, long time)
-             {
-                 WorldServerMulti.this.getWorldBorder().setTransition(oldSize, newSize, time);
-             }
--            @Override
-             public void onCenterChanged(WorldBorder border, double x, double z)
-             {
-                 WorldServerMulti.this.getWorldBorder().setCenter(x, z);
-             }
--            @Override
-             public void onWarningTimeChanged(WorldBorder border, int newTime)
-             {
-                 WorldServerMulti.this.getWorldBorder().setWarningTime(newTime);
-             }
--            @Override
-             public void onWarningDistanceChanged(WorldBorder border, int newDistance)
-             {
-                 WorldServerMulti.this.getWorldBorder().setWarningDistance(newDistance);
-             }
--            @Override
-             public void onDamageAmountChanged(WorldBorder border, double newAmount)
-             {
-                 WorldServerMulti.this.getWorldBorder().setDamageAmount(newAmount);
-             }
--            @Override
-             public void onDamageBufferChanged(WorldBorder border, double newSize)
+@@ -53,13 +95,20 @@
              {
                  WorldServerMulti.this.getWorldBorder().setDamageBuffer(newSize);
              }
@@ -99,22 +65,20 @@
 +        this.delegate.getWorldBorder().addListener(this.borderListener);
      }
  
--    @Override
 +    /* we handle all saving including perWorldStorage in WorldServer.saveLevel. This needs to be disabled since we follow
 +    // bukkit's world saving methods by using a seperate save handler for each world. Each world folder needs to generate a corresponding 
 +    // level.dat for plugins that require it such as MultiWorld.
 +    /*
+     @Override
      protected void saveLevel() throws MinecraftException
      {
 +        this.perWorldStorage.saveAllData();
      }
 +    */
  
--    @Override
+     @Override
      public World init()
-     {
-         this.mapStorage = this.delegate.getMapStorage();
-@@ -69,12 +110,12 @@
+@@ -69,12 +118,12 @@
          this.lootTable = this.delegate.getLootTableManager();
          this.advancementManager = this.delegate.getAdvancementManager();
          String s = VillageCollection.fileNameForProvider(this.provider);
@@ -129,7 +93,7 @@
          }
          else
          {
-@@ -82,7 +123,17 @@
+@@ -82,7 +131,17 @@
              this.villageCollection.setWorldsForAll(this);
          }
  

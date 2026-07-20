@@ -58,36 +58,18 @@
          {
              this.addSlotToContainer(new Slot(playerInventory, l, 8 + l * 18, 142));
          }
-@@ -64,14 +75,20 @@
+@@ -64,6 +75,10 @@
      @Override
      public boolean canInteractWith(EntityPlayer playerIn)
      {
--        return this.world.getBlockState(this.pos).getBlock() != Blocks.CRAFTING_TABLE
--               ? false
--               : playerIn.getDistanceSq(
--                   (double)this.pos.getX() + 0.5,
--                   (double)this.pos.getY() + 0.5,
--                   (double)this.pos.getZ() + 0.5
--               )
--               <= 64.0;
-+        if (!this.checkReachable) return true;
-+        if (this.world.getBlockState(this.pos).getBlock() != Blocks.CRAFTING_TABLE)
++        if (!this.checkReachable)
 +        {
-+            return false;
++            return true;
 +        }
-+        else
-+        {
-+            return playerIn.getDistanceSq(
-+                       (double)this.pos.getX() + 0.5,
-+                       (double)this.pos.getY() + 0.5,
-+                       (double)this.pos.getZ() + 0.5
-+                   )
-+                   <= 64.0;
-+        }
-     }
- 
-     @Override
-@@ -144,5 +161,16 @@
+         return this.world.getBlockState(this.pos).getBlock() != Blocks.CRAFTING_TABLE
+                ? false
+                : playerIn.getDistanceSq(
+@@ -142,5 +157,16 @@
      public boolean canMergeSlot(ItemStack stack, Slot slotIn)
      {
          return slotIn.inventory != this.craftResult && super.canMergeSlot(stack, slotIn);

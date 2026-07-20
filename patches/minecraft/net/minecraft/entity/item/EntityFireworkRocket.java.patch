@@ -40,26 +40,7 @@
      protected void entityInit()
      {
          this.dataManager.register(FIREWORK_ITEM, ItemStack.EMPTY);
-@@ -132,15 +141,9 @@
-                     Vec3d vec3d = this.boostedEntity.getLookVec();
-                     double d0 = 1.5;
-                     double d1 = 0.1;
--                    this.boostedEntity.motionX = this.boostedEntity.motionX
--                                                        + vec3d.x * 0.1
--                                                        + (vec3d.x * 1.5 - this.boostedEntity.motionX) * 0.5;
--                    this.boostedEntity.motionY = this.boostedEntity.motionY
--                                                        + vec3d.y * 0.1
--                                                        + (vec3d.y * 1.5 - this.boostedEntity.motionY) * 0.5;
--                    this.boostedEntity.motionZ = this.boostedEntity.motionZ
--                                                        + vec3d.z * 0.1
--                                                        + (vec3d.z * 1.5 - this.boostedEntity.motionZ) * 0.5;
-+                    this.boostedEntity.motionX += vec3d.x * 0.1 + (vec3d.x * 1.5 - this.boostedEntity.motionX) * 0.5;
-+                    this.boostedEntity.motionY += vec3d.y * 0.1 + (vec3d.y * 1.5 - this.boostedEntity.motionY) * 0.5;
-+                    this.boostedEntity.motionZ += vec3d.z * 0.1 + (vec3d.z * 1.5 - this.boostedEntity.motionZ) * 0.5;
-                 }
- 
-                 this.setPosition(this.boostedEntity.posX, this.boostedEntity.posY, this.boostedEntity.posZ);
-@@ -190,7 +193,7 @@
+@@ -187,7 +196,7 @@
              .playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_FIREWORK_LAUNCH, SoundCategory.AMBIENT, 3.0F, 1.0F);
          }
  
@@ -68,7 +49,7 @@
  
          if (this.world.isRemote && this.fireworkAge % 2 < 2)
          {
-@@ -208,8 +211,10 @@
+@@ -205,8 +214,10 @@
  
          if (!this.world.isRemote && this.fireworkAge > this.lifetime)
          {
@@ -81,17 +62,17 @@
              this.setDead();
          }
      }
-@@ -230,7 +235,9 @@
+@@ -227,7 +238,9 @@
          {
              if (this.boostedEntity != null)
              {
 +                CraftEventFactory.entityDamage = this;
-                 this.boostedEntity.attackEntityFrom(DamageSource.FIREWORKS, (float)(5 + nbttaglist.tagCount() * 2));
+                 this.boostedEntity.attackEntityFrom(DamageSource.FIREWORKS, 5 + nbttaglist.tagCount() * 2);
 +                CraftEventFactory.entityDamage = null;
              }
  
              double d0 = 5.0;
-@@ -242,7 +249,7 @@
+@@ -239,7 +252,7 @@
                  {
                      boolean flag = false;
  
@@ -100,10 +81,10 @@
                      {
                          RayTraceResult raytraceresult = this.world
                                                          .rayTraceBlocks(
-@@ -267,7 +274,9 @@
+@@ -264,7 +277,9 @@
                      if (flag)
                      {
-                         float f1 = f * (float)Math.sqrt((5.0 - (double)this.getDistance(entitylivingbase)) / 5.0);
+                         float f1 = f * (float)Math.sqrt((5.0 - this.getDistance(entitylivingbase)) / 5.0);
 +                        CraftEventFactory.entityDamage = this;
                          entitylivingbase.attackEntityFrom(DamageSource.FIREWORKS, f1);
 +                        CraftEventFactory.entityDamage = null;

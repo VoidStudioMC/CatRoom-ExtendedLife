@@ -1,11 +1,12 @@
 /.idea/*
 /.run/
 /.gradle/
-/projects/mcp/build
-/projects/minecraft/build
-/projects/minecraft/src
-/projects/catroom/build
-/projects/catroom/src
+/projects/catroom/**
+/projects/minecraft/**
+/projects/mcp/**
+/projects/catroom/!build.gradle
+/projects/minecraft/!build.gradle
+/projects/mcp/!build.gradle
 /buildSrc/.gradle/
 /buildSrc/build/
 /buildSrc/out/

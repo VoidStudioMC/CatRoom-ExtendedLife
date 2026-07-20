@@ -1,27 +1,6 @@
 --- before/net/minecraft/inventory/ContainerRepair.java
 +++ after/net/minecraft/inventory/ContainerRepair.java
-@@ -18,27 +18,24 @@
- import org.apache.commons.lang3.StringUtils;
- import org.apache.logging.log4j.LogManager;
- import org.apache.logging.log4j.Logger;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView;
- 
- public class ContainerRepair extends Container
- {
-     private static final Logger LOGGER = LogManager.getLogger();
--    private final IInventory outputSlot = new InventoryCraftResult();
--    private final IInventory inputSlots = new InventoryBasic("Repair", true, 2)
--    {
--        @Override
--        public void markDirty()
--        {
--            super.markDirty();
--            ContainerRepair.this.onCraftMatrixChanged(this);
--        }
--    };
-+    private final IInventory outputSlot;
-+    private final IInventory inputSlots;
-     private final World world;
+@@ -36,9 +36,13 @@
      private final BlockPos pos;
      public int maximumCost;
      public int materialCost;
@@ -30,53 +9,21 @@
      private final EntityPlayer player;
  
 +    private int lastLevelCost;
-+    private CraftInventoryView bukkitEntity;
++    private org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView bukkitEntity;
 +    private InventoryPlayer playerInventory;
 +
      @SideOnly(Side.CLIENT)
      public ContainerRepair(InventoryPlayer playerInventory, World worldIn, EntityPlayer player)
      {
-@@ -47,27 +44,31 @@
+@@ -47,6 +51,7 @@
  
      public ContainerRepair(InventoryPlayer playerInventory, final World worldIn, final BlockPos blockPosIn, EntityPlayer player)
      {
 +        this.playerInventory = playerInventory;
-+        this.outputSlot = new InventoryCraftResult();
-+        this.inputSlots = new InventoryBasic("Repair", true, 2)
-+        {
-+            public void markDirty()
-+            {
-+                super.markDirty();
-+                ContainerRepair.this.onCraftMatrixChanged(this);
-+            }
-+        };
          this.pos = blockPosIn;
          this.world = worldIn;
          this.player = player;
-         this.addSlotToContainer(new Slot(this.inputSlots, 0, 27, 47));
-         this.addSlotToContainer(new Slot(this.inputSlots, 1, 76, 47));
--        this.addSlotToContainer(
--            new Slot(this.outputSlot, 2, 134, 47)
-+        this.addSlotToContainer(new Slot(this.outputSlot, 2, 134, 47)
-         {
--            @Override
-             public boolean isItemValid(ItemStack stack)
-             {
-                 return false;
-             }
--            @Override
-             public boolean canTakeStack(EntityPlayer playerIn)
-             {
--                return (playerIn.capabilities.isCreativeMode || playerIn.experienceLevel >= ContainerRepair.this.maximumCost)
--                       && ContainerRepair.this.maximumCost > 0
--                       && this.getHasStack();
-+                return (playerIn.capabilities.isCreativeMode || playerIn.experienceLevel >= ContainerRepair.this.maximumCost) && ContainerRepair.this.maximumCost > 0 && this.getHasStack();
-             }
--            @Override
-             public ItemStack onTake(EntityPlayer thePlayer, ItemStack stack)
-             {
-                 if (!thePlayer.capabilities.isCreativeMode)
-@@ -75,6 +76,8 @@
+@@ -75,6 +80,8 @@
                      thePlayer.addExperienceLevel(-ContainerRepair.this.maximumCost);
                  }
  
@@ -85,63 +32,16 @@
                  ContainerRepair.this.inputSlots.setInventorySlotContents(0, ItemStack.EMPTY);
  
                  if (ContainerRepair.this.materialCost > 0)
-@@ -99,21 +102,19 @@
-                 ContainerRepair.this.maximumCost = 0;
-                 IBlockState iblockstate = worldIn.getBlockState(blockPosIn);
- 
--                if (!thePlayer.capabilities.isCreativeMode
--                        && !worldIn.isRemote
--                        && iblockstate.getBlock() == Blocks.ANVIL
+@@ -102,7 +109,7 @@
+                 if (!thePlayer.capabilities.isCreativeMode
+                         && !worldIn.isRemote
+                         && iblockstate.getBlock() == Blocks.ANVIL
 -                        && thePlayer.getRNG().nextFloat() < 0.12F)
-+                if (!thePlayer.capabilities.isCreativeMode && !worldIn.isRemote && iblockstate.getBlock() == Blocks.ANVIL && thePlayer.getRNG().nextFloat() < breakChance)
++                        && thePlayer.getRNG().nextFloat() < breakChance)
                  {
--                    int l = iblockstate.getValue(BlockAnvil.DAMAGE);
-+                    int l = ((Integer)iblockstate.getValue(BlockAnvil.DAMAGE)).intValue();
-+                    ++l;
+                     int l = iblockstate.getValue(BlockAnvil.DAMAGE);
  
--                    if (++l > 2)
-+                    if (l > 2)
-                     {
-                         worldIn.setBlockToAir(blockPosIn);
-                         worldIn.playEvent(1029, blockPosIn, 0);
-                     }
-                     else
-                     {
--                        worldIn.setBlockState(blockPosIn, iblockstate.withProperty(BlockAnvil.DAMAGE, l), 2);
-+                        worldIn.setBlockState(blockPosIn, iblockstate.withProperty(BlockAnvil.DAMAGE, Integer.valueOf(l)), 2);
-                         worldIn.playEvent(1030, blockPosIn, 0);
-                     }
-                 }
-@@ -124,24 +125,22 @@
- 
-                 return stack;
-             }
--        }
--        );
-+        });
- 
--        for (int i = 0; i < 3; i++)
-+        for (int i = 0; i < 3; ++i)
-         {
--            for (int j = 0; j < 9; j++)
-+            for (int j = 0; j < 9; ++j)
-             {
-                 this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-             }
-         }
- 
--        for (int k = 0; k < 9; k++)
-+        for (int k = 0; k < 9; ++k)
-         {
-             this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
-         }
-     }
- 
--    @Override
-     public void onCraftMatrixChanged(IInventory inventoryIn)
-     {
-         super.onCraftMatrixChanged(inventoryIn);
-@@ -162,7 +161,8 @@
+@@ -162,7 +169,8 @@
  
          if (itemstack.isEmpty())
          {
@@ -151,12 +51,9 @@
              this.maximumCost = 0;
          }
          else
-@@ -170,12 +170,19 @@
-             ItemStack itemstack1 = itemstack.copy();
-             ItemStack itemstack2 = this.inputSlots.getStackInSlot(1);
+@@ -172,10 +180,17 @@
              Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemstack1);
--            j += itemstack.getRepairCost() + (itemstack2.isEmpty() ? 0 : itemstack2.getRepairCost());
-+            j = j + itemstack.getRepairCost() + (itemstack2.isEmpty() ? 0 : itemstack2.getRepairCost());
+             j += itemstack.getRepairCost() + (itemstack2.isEmpty() ? 0 : itemstack2.getRepairCost());
              this.materialCost = 0;
 +            boolean flag = false;
  
@@ -173,7 +70,7 @@
  
                  if (itemstack1.isItemStackDamageable() && itemstack1.getItem().getIsRepairable(itemstack, itemstack2))
                  {
-@@ -183,18 +190,19 @@
+@@ -183,7 +198,8 @@
  
                      if (l2 <= 0)
                      {
@@ -183,20 +80,7 @@
                          this.maximumCost = 0;
                          return;
                      }
- 
-                     int i3;
- 
--                    for (i3 = 0; l2 > 0 && i3 < itemstack2.getCount(); i3++)
-+                    for (i3 = 0; l2 > 0 && i3 < itemstack2.getCount(); ++i3)
-                     {
-                         int j3 = itemstack1.getItemDamage() - l2;
-                         itemstack1.setItemDamage(j3);
--                        i++;
-+                        ++i;
-                         l2 = Math.min(itemstack1.getItemDamage(), itemstack1.getMaxDamage() / 4);
-                     }
- 
-@@ -204,7 +212,8 @@
+@@ -204,7 +220,8 @@
                  {
                      if (!flag && (itemstack1.getItem() != itemstack2.getItem() || !itemstack1.isItemStackDamageable()))
                      {
@@ -206,7 +90,7 @@
                          this.maximumCost = 0;
                          return;
                      }
-@@ -222,7 +231,7 @@
+@@ -222,7 +239,7 @@
                              l1 = 0;
                          }
  
@@ -215,36 +99,7 @@
                          {
                              itemstack1.setItemDamage(l1);
                              i += 2;
-@@ -237,8 +246,8 @@
-                     {
-                         if (enchantment1 != null)
-                         {
--                            int i2 = map.containsKey(enchantment1) ? map.get(enchantment1) : 0;
--                            int j2 = map1.get(enchantment1);
-+                            int i2 = map.containsKey(enchantment1) ? ((Integer)map.get(enchantment1)).intValue() : 0;
-+                            int j2 = ((Integer)map1.get(enchantment1)).intValue();
-                             j2 = i2 == j2 ? j2 + 1 : Math.max(j2, i2);
-                             boolean flag1 = enchantment1.canApply(itemstack);
- 
-@@ -252,7 +261,7 @@
-                                 if (enchantment != enchantment1 && !enchantment1.isCompatibleWith(enchantment))
-                                 {
-                                     flag1 = false;
--                                    i++;
-+                                    ++i;
-                                 }
-                             }
- 
-@@ -269,7 +278,7 @@
-                                     j2 = enchantment1.getMaxLevel();
-                                 }
- 
--                                map.put(enchantment1, j2);
-+                                map.put(enchantment1, Integer.valueOf(j2));
-                                 int k3 = 0;
- 
-                                 switch (enchantment1.getRarity())
-@@ -304,7 +313,8 @@
+@@ -304,7 +321,8 @@
  
                      if (flag3 && !flag2)
                      {
@@ -254,7 +109,7 @@
                          this.maximumCost = 0;
                          return;
                      }
-@@ -326,6 +336,7 @@
+@@ -326,6 +344,7 @@
                  i += k;
                  itemstack1.setStackDisplayName(this.repairedItemName);
              }
@@ -262,7 +117,7 @@
  
              this.maximumCost = j + i;
  
-@@ -362,12 +373,12 @@
+@@ -362,7 +381,8 @@
                  EnchantmentHelper.setEnchantments(map, itemstack1);
              }
  
@@ -272,58 +127,15 @@
              this.detectAndSendChanges();
          }
      }
- 
--    @Override
-     public void addListener(IContainerListener listener)
-     {
-         super.addListener(listener);
-@@ -375,7 +386,6 @@
-     }
- 
-     @SideOnly(Side.CLIENT)
--    @Override
-     public void updateProgressBar(int id, int data)
-     {
-         if (id == 0)
-@@ -384,7 +394,6 @@
-         }
-     }
- 
--    @Override
-     public void onContainerClosed(EntityPlayer playerIn)
-     {
-         super.onContainerClosed(playerIn);
-@@ -395,20 +404,19 @@
-         }
-     }
- 
--    @Override
+@@ -398,6 +418,7 @@
+     @Override
      public boolean canInteractWith(EntityPlayer playerIn)
      {
--        return this.world.getBlockState(this.pos).getBlock() != Blocks.ANVIL
--               ? false
--               : playerIn.getDistanceSq(
--                   (double)this.pos.getX() + 0.5,
--                   (double)this.pos.getY() + 0.5,
--                   (double)this.pos.getZ() + 0.5
--               )
--               <= 64.0;
 +        if (!this.checkReachable) return true;
-+        if (this.world.getBlockState(this.pos).getBlock() != Blocks.ANVIL)
-+        {
-+            return false;
-+        }
-+        else
-+        {
-+            return playerIn.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
-+        }
-     }
- 
--    @Override
-     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
-     {
-         ItemStack itemstack = ItemStack.EMPTY;
-@@ -479,5 +487,31 @@
+         return this.world.getBlockState(this.pos).getBlock() != Blocks.ANVIL
+                ? false
+                : playerIn.getDistanceSq(
+@@ -477,5 +498,31 @@
          }
  
          this.updateRepairOutput();
@@ -344,14 +156,14 @@
 +    }
 +
 +    @Override
-+    public CraftInventoryView getBukkitView() {
++    public org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView getBukkitView() {
 +        if (bukkitEntity != null) {
 +            return bukkitEntity;
 +        }
 +
 +        org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventory inventory = new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryAnvil(
 +                new org.bukkit.Location(world.getWorld(), pos.getX(), pos.getY(), pos.getZ()), this.inputSlots, this.outputSlot, this);
-+        bukkitEntity = new CraftInventoryView(this.playerInventory.player.getBukkitEntity(), inventory, this);
++        bukkitEntity = new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView(this.playerInventory.player.getBukkitEntity(), inventory, this);
 +        return bukkitEntity;
      }
  }

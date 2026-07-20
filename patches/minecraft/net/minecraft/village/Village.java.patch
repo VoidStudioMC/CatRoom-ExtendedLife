@@ -82,12 +82,12 @@
 -                                     .getEntitiesWithinAABB(
 -                                         EntityIronGolem.class,
 -                                         new AxisAlignedBB(
--                                             (double)(this.center.getX() - this.villageRadius),
--                                             (double)(this.center.getY() - 4),
--                                             (double)(this.center.getZ() - this.villageRadius),
--                                             (double)(this.center.getX() + this.villageRadius),
--                                             (double)(this.center.getY() + 4),
--                                             (double)(this.center.getZ() + this.villageRadius)
+-                                             this.center.getX() - this.villageRadius,
+-                                             this.center.getY() - 4,
+-                                             this.center.getZ() - this.villageRadius,
+-                                             this.center.getX() + this.villageRadius,
+-                                             this.center.getY() + 4,
+-                                             this.center.getZ() + this.villageRadius
 -                                         )
 -                                     );
 +        List<EntityIronGolem> list = this.world.<EntityIronGolem>getEntitiesWithinAABB(EntityIronGolem.class, new AxisAlignedBB((double)(this.center.getX() - this.villageRadius), (double)(this.center.getY() - 4), (double)(this.center.getZ() - this.villageRadius), (double)(this.center.getX() + this.villageRadius), (double)(this.center.getY() + 4), (double)(this.center.getZ() + this.villageRadius)));
@@ -100,12 +100,12 @@
 -                                    .getEntitiesWithinAABB(
 -                                        EntityVillager.class,
 -                                        new AxisAlignedBB(
--                                            (double)(this.center.getX() - this.villageRadius),
--                                            (double)(this.center.getY() - 4),
--                                            (double)(this.center.getZ() - this.villageRadius),
--                                            (double)(this.center.getX() + this.villageRadius),
--                                            (double)(this.center.getY() + 4),
--                                            (double)(this.center.getZ() + this.villageRadius)
+-                                            this.center.getX() - this.villageRadius,
+-                                            this.center.getY() - 4,
+-                                            this.center.getZ() - this.villageRadius,
+-                                            this.center.getX() + this.villageRadius,
+-                                            this.center.getY() + 4,
+-                                            this.center.getZ() + this.villageRadius
 -                                        )
 -                                    );
 +        List<EntityVillager> list = this.world.<EntityVillager>getEntitiesWithinAABB(EntityVillager.class, new AxisAlignedBB((double)(this.center.getX() - this.villageRadius), (double)(this.center.getY() - 4), (double)(this.center.getZ() - this.villageRadius), (double)(this.center.getX() + this.villageRadius), (double)(this.center.getY() + 4), (double)(this.center.getZ() + this.villageRadius)));

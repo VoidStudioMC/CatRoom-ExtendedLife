@@ -1,26 +1,7 @@
 --- before/net/minecraft/advancements/PlayerAdvancements.java
 +++ after/net/minecraft/advancements/PlayerAdvancements.java
-@@ -16,6 +16,7 @@
- import java.util.Map;
- import java.util.Set;
- import java.util.Map.Entry;
-+import java.util.function.Function;
- import java.util.stream.Collectors;
- import java.util.stream.Stream;
- import javax.annotation.Nullable;
-@@ -32,20 +33,16 @@
- public class PlayerAdvancements
- {
-     private static final Logger LOGGER = LogManager.getLogger();
--    private static final Gson GSON = new GsonBuilder()
--        .registerTypeAdapter(AdvancementProgress.class, new AdvancementProgress.Serializer())
--        .registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
--        .setPrettyPrinting()
--        .create();
-+    private static final Gson GSON = (new GsonBuilder()).registerTypeAdapter(AdvancementProgress.class, new AdvancementProgress.Serializer()).registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer()).setPrettyPrinting().create();
-     private static final TypeToken<Map<ResourceLocation, AdvancementProgress>> MAP_TOKEN = new TypeToken<Map<ResourceLocation, AdvancementProgress>>()
-     {
-     };
+@@ -40,10 +40,10 @@
+     private static final TypeToken<Map<ResourceLocation, AdvancementProgress>> MAP_TOKEN = new TypeToken<Map<ResourceLocation, AdvancementProgress>>() {};
      private final MinecraftServer server;
      private final File progressFile;
 -    private final Map<Advancement, AdvancementProgress> progress = Maps.newLinkedHashMap();
@@ -34,49 +15,15 @@
      private EntityPlayerMP player;
      @Nullable
      private Advancement lastSelectedTab;
-@@ -94,11 +91,11 @@
- 
-     private void ensureAllVisible()
-     {
--        List<Advancement> list = Lists.newArrayList();
-+        List<Advancement> list = Lists.<Advancement>newArrayList();
- 
-         for (Entry<Advancement, AdvancementProgress> entry : this.progress.entrySet())
-         {
--            if (entry.getValue().isDone())
-+            if (((AdvancementProgress)entry.getValue()).isDone())
-             {
-                 list.add(entry.getKey());
-                 this.progressChanged.add(entry.getKey());
-@@ -130,7 +127,7 @@
-             try
-             {
-                 String s = Files.toString(this.progressFile, StandardCharsets.UTF_8);
--                Map<ResourceLocation, AdvancementProgress> map = JsonUtils.gsonDeserialize(GSON, s, MAP_TOKEN.getType());
-+                Map<ResourceLocation, AdvancementProgress> map = (Map)JsonUtils.gsonDeserialize(GSON, s, MAP_TOKEN.getType());
- 
-                 if (map == null)
-                 {
-@@ -170,7 +167,8 @@
+@@ -168,6 +168,7 @@
  
      public void save()
      {
--        Map<ResourceLocation, AdvancementProgress> map = Maps.newHashMap();
 +        if (org.spigotmc.SpigotConfig.disableAdvancementSaving) return;
-+        Map<ResourceLocation, AdvancementProgress> map = Maps.<ResourceLocation, AdvancementProgress>newHashMap();
+         Map<ResourceLocation, AdvancementProgress> map = Maps.newHashMap();
  
          for (Entry<Advancement, AdvancementProgress> entry : this.progress.entrySet())
-         {
-@@ -178,7 +176,7 @@
- 
-             if (advancementprogress.hasProgress())
-             {
--                map.put(entry.getKey().getId(), advancementprogress);
-+                map.put(((Advancement)entry.getKey()).getId(), advancementprogress);
-             }
-         }
- 
-@@ -199,6 +197,9 @@
+@@ -197,6 +198,9 @@
  
      public boolean grantCriterion(Advancement p_192750_1_, String p_192750_2_)
      {
@@ -86,102 +33,20 @@
          boolean flag = false;
          AdvancementProgress advancementprogress = this.getProgress(p_192750_1_);
          boolean flag1 = advancementprogress.isDone();
-@@ -211,22 +212,15 @@
+@@ -209,6 +213,7 @@
  
              if (!flag1 && advancementprogress.isDone())
              {
 +                this.player.world.getServer().getPluginManager().callEvent(new org.bukkit.event.player.PlayerAdvancementDoneEvent(this.player.getBukkitEntity(), p_192750_1_.bukkit));
                  p_192750_1_.getRewards().apply(this.player);
  
--                if (p_192750_1_.getDisplay() != null
--                        && p_192750_1_.getDisplay().shouldAnnounceToChat()
--                        && this.player.world.getGameRules().getBoolean("announceAdvancements"))
-+                if (p_192750_1_.getDisplay() != null && p_192750_1_.getDisplay().shouldAnnounceToChat() && this.player.world.getGameRules().getBoolean("announceAdvancements"))
-                 {
--                    this.server
--                    .getPlayerList()
--                    .sendMessage(
--                        new TextComponentTranslation(
--                            "chat.type.advancement." + p_192750_1_.getDisplay().getFrame().getName(),
--                            this.player.getDisplayName(),
--                            p_192750_1_.getDisplayText()
--                        )
--                    );
-+                    this.server.getPlayerList().sendMessage(new TextComponentTranslation("chat.type.advancement." + p_192750_1_.getDisplay().getFrame().getName(), new Object[] {this.player.getDisplayName(), p_192750_1_.getDisplayText()}));
+                 if (p_192750_1_.getDisplay() != null
+@@ -225,6 +230,8 @@
+                         )
+                     );
                  }
 +
 +                net.minecraftforge.common.ForgeHooks.onAdvancement(this.player, p_192750_1_);
              }
          }
  
-@@ -270,15 +264,15 @@
- 
-                 if (criterionprogress != null && !criterionprogress.isObtained())
-                 {
--                    ICriterionInstance icriterioninstance = entry.getValue().getCriterionInstance();
-+                    ICriterionInstance icriterioninstance = ((Criterion)entry.getValue()).getCriterionInstance();
- 
-                     if (icriterioninstance != null)
-                     {
--                        ICriterionTrigger<ICriterionInstance> icriteriontrigger = CriteriaTriggers.get(icriterioninstance.getId());
-+                        ICriterionTrigger<ICriterionInstance> icriteriontrigger = CriteriaTriggers.<ICriterionInstance>get(icriterioninstance.getId());
- 
-                         if (icriteriontrigger != null)
-                         {
--                            icriteriontrigger.addListener(this, new ICriterionTrigger.Listener<>(icriterioninstance, p_193764_1_, entry.getKey()));
-+                            icriteriontrigger.addListener(this, new ICriterionTrigger.Listener(icriterioninstance, p_193764_1_, entry.getKey()));
-                         }
-                     }
-                 }
-@@ -296,15 +290,15 @@
- 
-             if (criterionprogress != null && (criterionprogress.isObtained() || advancementprogress.isDone()))
-             {
--                ICriterionInstance icriterioninstance = entry.getValue().getCriterionInstance();
-+                ICriterionInstance icriterioninstance = ((Criterion)entry.getValue()).getCriterionInstance();
- 
-                 if (icriterioninstance != null)
-                 {
--                    ICriterionTrigger<ICriterionInstance> icriteriontrigger = CriteriaTriggers.get(icriterioninstance.getId());
-+                    ICriterionTrigger<ICriterionInstance> icriteriontrigger = CriteriaTriggers.<ICriterionInstance>get(icriterioninstance.getId());
- 
-                     if (icriteriontrigger != null)
-                     {
--                        icriteriontrigger.removeListener(this, new ICriterionTrigger.Listener<>(icriterioninstance, p_193765_1_, entry.getKey()));
-+                        icriteriontrigger.removeListener(this, new ICriterionTrigger.Listener(icriterioninstance, p_193765_1_, entry.getKey()));
-                     }
-                 }
-             }
-@@ -315,9 +309,9 @@
-     {
-         if (!this.visibilityChanged.isEmpty() || !this.progressChanged.isEmpty())
-         {
--            Map<ResourceLocation, AdvancementProgress> map = Maps.newHashMap();
--            Set<Advancement> set = Sets.newLinkedHashSet();
--            Set<ResourceLocation> set1 = Sets.newLinkedHashSet();
-+            Map<ResourceLocation, AdvancementProgress> map = Maps.<ResourceLocation, AdvancementProgress>newHashMap();
-+            Set<Advancement> set = Sets.<Advancement>newLinkedHashSet();
-+            Set<ResourceLocation> set1 = Sets.<ResourceLocation>newLinkedHashSet();
- 
-             for (Advancement advancement : this.progressChanged)
-             {
-@@ -365,9 +359,7 @@
- 
-         if (advancement != this.lastSelectedTab)
-         {
--            this.player
--            .connection
--            .sendPacket(new SPacketSelectAdvancementsTab(this.lastSelectedTab == null ? null : this.lastSelectedTab.getId()));
-+            this.player.connection.sendPacket(new SPacketSelectAdvancementsTab(this.lastSelectedTab == null ? null : this.lastSelectedTab.getId()));
-         }
-     }
- 
-@@ -424,7 +416,7 @@
- 
-     private boolean shouldBeVisible(Advancement p_192738_1_)
-     {
--        for (int i = 0; p_192738_1_ != null && i <= 2; i++)
-+        for (int i = 0; p_192738_1_ != null && i <= 2; ++i)
-         {
-             if (i == 0 && this.hasCompletedChildrenOrSelf(p_192738_1_))
-             {

@@ -44,6 +44,15 @@ public class ModCandidate {
         this(classPathRoot, modContainer, sourceType, false, false);
     }
 
+    protected ModCandidate(File classPathRoot, File resourcePathRoot) {
+        this.classPathRoot = classPathRoot;
+        this.resourcePathRoot = resourcePathRoot;
+        this.modContainer = classPathRoot;
+        this.sourceType = ContainerType.DIR;
+        this.isMinecraft = false;
+        this.classpath = true;
+    }
+
     public ModCandidate(File classPathRoot, File modContainer, ContainerType sourceType, boolean isMinecraft, boolean classpath) {
         this.classPathRoot = classPathRoot;
         this.resourcePathRoot = classPathRoot;

@@ -12,7 +12,7 @@
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.init.SoundEvents;
  import net.minecraft.item.ItemStack;
-@@ -50,29 +52,16 @@
+@@ -50,15 +52,15 @@
      public void apply(final EntityPlayerMP player)
      {
          player.addExperience(this.experience);
@@ -22,30 +22,17 @@
  
          for (ResourceLocation resourcelocation : this.loot)
          {
--            for (ItemStack itemstack : player.world
+             for (ItemStack itemstack : player.world
 -                    .getLootTableManager()
 -                    .getLootTableFromLocation(resourcelocation)
 -                    .generateLootForPools(player.getRNG(), lootcontext))
-+            for (ItemStack itemstack : player.world.getLootTableManager().getLootTableFromLocation(resourcelocation).generateLootForPools(player.getRNG(), lootcontext))
++                .getLootTableManager()
++                .getLootTableFromLocation(resourcelocation)
++                .generateLootForPools(player.getRNG(), lootcontext))
              {
                  if (player.addItemStackToInventory(itemstack))
                  {
--                    player.world
--                    .playSound(
--                        null,
--                        player.posX,
--                        player.posY,
--                        player.posZ,
--                        SoundEvents.ENTITY_ITEM_PICKUP,
--                        SoundCategory.PLAYERS,
--                        0.2F,
--                        ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F
--                    );
-+                    player.world.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                     flag = true;
-                 }
-                 else
-@@ -103,79 +92,80 @@
+@@ -103,64 +105,74 @@
  
          if (functionobject != null)
          {
@@ -109,7 +96,7 @@
 +            ICommandSender icommandsender = new AdvancementCommandListener(player, minecraftserver);
 +
              minecraftserver.getFunctionManager().execute(functionobject, icommandsender);
-         }
++        }
 +
 +    }
 +
@@ -174,23 +161,6 @@
 +        @Override
 +        public MinecraftServer getServer() {
 +            return player.getServer();
-+        }
+         }
      }
  
-     @Override
--    public String toString()
--    {
--        return "AdvancementRewards{experience="
--               + this.experience
--               + ", loot="
--               + Arrays.toString((Object[])this.loot)
--               + ", recipes="
--               + Arrays.toString((Object[])this.recipes)
--               + ", function="
--               + this.function
--               + '}';
-+    public String toString() {
-+        return "AdvancementRewards{experience=" + this.experience + ", loot=" + Arrays.toString((Object[])this.loot) + ", recipes=" + Arrays.toString((Object[])this.recipes) + ", function=" + this.function + '}';
-     }
- 
-     public static class Deserializer implements JsonDeserializer<AdvancementRewards>

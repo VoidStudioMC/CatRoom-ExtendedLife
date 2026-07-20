@@ -14,8 +14,8 @@ body:
     id: version
     attributes:
       label: CatRoom Version
-      description: "What version of the CatRoom are you using?"
-      placeholder: "Example: 0.3.19-alpha"
+      description: "What version of the CatRoom are you using? (You need 25+ on 0.3.x and later)"
+      placeholder: "Example: 0.2.3-alpha"
     validations:
       required: true
   - type: dropdown
@@ -30,7 +30,8 @@ body:
         - Java 23
         - Java 24
         - Java 25
-        - Java 26 (Early Access)
+        - Java 26
+        - Java 27 (Early Access)
         - Other (Please Specify)
     validations:
       required: true

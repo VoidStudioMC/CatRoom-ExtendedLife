@@ -79,7 +79,7 @@ public class CraftVillager extends CraftAgeable implements Villager, InventoryHo
 
     @Override
     public Inventory getInventory() {
-        return new CraftInventory(getHandle().villagerInventory);
+        return new CraftInventory(getHandle().getVillagerInventory());
     }
 
     private CraftMerchant getMerchant() {

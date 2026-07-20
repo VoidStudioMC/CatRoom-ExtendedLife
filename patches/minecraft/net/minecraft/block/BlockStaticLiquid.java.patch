@@ -1,35 +1,6 @@
 --- before/net/minecraft/block/BlockStaticLiquid.java
 +++ after/net/minecraft/block/BlockStaticLiquid.java
-@@ -7,6 +7,7 @@
- import net.minecraft.util.EnumFacing;
- import net.minecraft.util.math.BlockPos;
- import net.minecraft.world.World;
-+import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
- 
- public class BlockStaticLiquid extends BlockLiquid
- {
-@@ -21,7 +22,6 @@
-         }
-     }
- 
--    @Override
-     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
-     {
-         if (!this.checkForMixing(worldIn, pos, state))
-@@ -37,7 +37,6 @@
-         worldIn.scheduleUpdate(pos, blockdynamicliquid, this.tickRate(worldIn));
-     }
- 
--    @Override
-     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-     {
-         if (this.material == Material.LAVA)
-@@ -50,26 +49,31 @@
-                 {
-                     BlockPos blockpos = pos;
- 
--                    for (int j = 0; j < i; j++)
-+                    for (int j = 0; j < i; ++j)
+@@ -54,22 +54,27 @@
                      {
                          blockpos = blockpos.add(rand.nextInt(3) - 1, 1, rand.nextInt(3) - 1);
  
@@ -49,7 +20,7 @@
                              {
 -                                worldIn.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 +                                if (worldIn.getBlockState(blockpos).getBlock() != Blocks.FIRE) {
-+                                    if (CraftEventFactory.callBlockIgniteEvent(worldIn, blockpos.getX(), blockpos.getY(), blockpos.getZ(), pos.getX(), pos.getY(), pos.getZ()).isCancelled()) {
++                                    if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockIgniteEvent(worldIn, blockpos.getX(), blockpos.getY(), blockpos.getZ(), pos.getX(), pos.getY(), pos.getZ()).isCancelled()) {
 +                                        continue;
 +                                    }
 +                                }
@@ -62,16 +33,7 @@
                          {
                              return;
                          }
-@@ -77,7 +81,7 @@
-                 }
-                 else
-                 {
--                    for (int k = 0; k < 3; k++)
-+                    for (int k = 0; k < 3; ++k)
-                     {
-                         BlockPos blockpos1 = pos.add(rand.nextInt(3) - 1, 0, rand.nextInt(3) - 1);
- 
-@@ -88,7 +92,15 @@
+@@ -88,7 +93,15 @@
  
                          if (worldIn.isAirBlock(blockpos1.up()) && this.getCanBlockBurn(worldIn, blockpos1))
                          {
@@ -79,7 +41,7 @@
 +                            // CraftBukkit start - Prevent lava putting something on fire
 +                            BlockPos up = blockpos1.up();
 +                            if (worldIn.getBlockState(up) != Blocks.FIRE) {
-+                                if (CraftEventFactory.callBlockIgniteEvent(worldIn, up.getX(), up.getY(), up.getZ(), pos.getX(), pos.getY(), pos.getZ()).isCancelled()) {
++                                if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockIgniteEvent(worldIn, up.getX(), up.getY(), up.getZ(), pos.getX(), pos.getY(), pos.getZ()).isCancelled()) {
 +                                    continue;
 +                                }
 +                            }
@@ -88,13 +50,3 @@
                          }
                      }
                  }
-@@ -111,8 +123,6 @@
- 
-     private boolean getCanBlockBurn(World worldIn, BlockPos pos)
-     {
--        return pos.getY() >= 0 && pos.getY() < 256 && !worldIn.isBlockLoaded(pos)
--               ? false
--               : worldIn.getBlockState(pos).getMaterial().getCanBurn();
-+        return pos.getY() >= 0 && pos.getY() < 256 && !worldIn.isBlockLoaded(pos) ? false : worldIn.getBlockState(pos).getMaterial().getCanBurn();
-     }
- }

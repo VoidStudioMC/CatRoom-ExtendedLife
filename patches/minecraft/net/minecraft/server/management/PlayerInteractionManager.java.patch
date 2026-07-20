@@ -1,61 +1,15 @@
 --- before/net/minecraft/server/management/PlayerInteractionManager.java
 +++ after/net/minecraft/server/management/PlayerInteractionManager.java
-@@ -1,19 +1,28 @@
- package net.minecraft.server.management;
+@@ -39,6 +39,8 @@
+     private BlockPos delayedDestroyPos = BlockPos.ORIGIN;
+     private int initialBlockDamage;
+     private int durabilityRemainingOnBlock = -1;
++    public boolean interactResult = false;
++    public boolean firedInteract = false;
  
- import net.minecraft.block.Block;
-+import net.minecraft.block.BlockCake;
- import net.minecraft.block.BlockChest;
- import net.minecraft.block.BlockCommandBlock;
-+import net.minecraft.block.BlockDoor;
-+import net.minecraft.block.BlockShulkerBox;
- import net.minecraft.block.BlockStructure;
- import net.minecraft.block.material.Material;
- import net.minecraft.block.state.IBlockState;
-+import net.minecraft.enchantment.EnchantmentHelper;
-+import net.minecraft.entity.item.EntityItem;
- import net.minecraft.entity.player.EntityPlayer;
- import net.minecraft.entity.player.EntityPlayerMP;
-+import net.minecraft.init.Blocks;
-+import net.minecraft.init.Enchantments;
-+import net.minecraft.inventory.EntityEquipmentSlot;
- import net.minecraft.inventory.IInventory;
- import net.minecraft.item.ItemBlock;
- import net.minecraft.item.ItemStack;
- import net.minecraft.item.ItemSword;
- import net.minecraft.network.play.server.SPacketBlockChange;
- import net.minecraft.network.play.server.SPacketPlayerListItem;
-+import net.minecraft.server.MinecraftServer;
- import net.minecraft.tileentity.TileEntity;
- import net.minecraft.tileentity.TileEntityChest;
- import net.minecraft.util.ActionResult;
-@@ -25,6 +34,13 @@
- import net.minecraft.world.ILockableContainer;
- import net.minecraft.world.World;
- import net.minecraft.world.WorldServer;
-+import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
-+import org.bukkit.event.Event;
-+import org.bukkit.event.block.Action;
-+import org.bukkit.event.block.BlockBreakEvent;
-+import org.bukkit.event.player.PlayerInteractEvent;
-+
-+import java.util.ArrayList;
- 
- public class PlayerInteractionManager
- {
-@@ -50,10 +66,7 @@
-         this.gameType = type;
-         type.configurePlayerCapabilities(this.player.capabilities);
-         this.player.sendPlayerAbilities();
--        this.player
--        .server
--        .getPlayerList()
--        .sendPacketToAllPlayers(new SPacketPlayerListItem(SPacketPlayerListItem.Action.UPDATE_GAME_MODE, this.player));
-+        this.player.server.getPlayerList().sendPacketToAllPlayers(new SPacketPlayerListItem(SPacketPlayerListItem.Action.UPDATE_GAME_MODE, new EntityPlayerMP[] {this.player}));
-         this.world.updateAllPlayersSleepingFlag();
-     }
- 
-@@ -84,14 +97,15 @@
+     public PlayerInteractionManager(World worldIn)
+     {
+@@ -84,14 +86,15 @@
  
      public void updateBlockRemoving()
      {
@@ -73,7 +27,7 @@
              {
                  this.receivedFinishDiggingPacket = false;
              }
-@@ -117,7 +131,7 @@
+@@ -117,7 +120,7 @@
          {
              IBlockState iblockstate1 = this.world.getBlockState(this.destroyPos);
  
@@ -82,20 +36,20 @@
              {
                  this.world.sendBlockBreakProgress(this.player.getEntityId(), this.destroyPos, -1);
                  this.durabilityRemainingOnBlock = -1;
-@@ -126,7 +140,7 @@
+@@ -126,7 +129,7 @@
              else
              {
                  int k = this.curblockDamage - this.initialDamage;
--                float f1 = iblockstate1.getPlayerRelativeBlockHardness(this.player, this.player.world, this.delayedDestroyPos) * (float)(k + 1);
-+                float f1 = iblockstate1.getPlayerRelativeBlockHardness(this.player, this.player.world, this.destroyPos) * (float)(k + 1); // Forge: Fix network break progress using wrong position
+-                float f1 = iblockstate1.getPlayerRelativeBlockHardness(this.player, this.player.world, this.delayedDestroyPos) * (k + 1);
++                float f1 = iblockstate1.getPlayerRelativeBlockHardness(this.player, this.player.world, this.destroyPos) * (k + 1); // Forge: Fix network break progress using wrong position
                  int l = (int)(f1 * 10.0F);
  
                  if (l != this.durabilityRemainingOnBlock)
-@@ -140,9 +154,30 @@
+@@ -140,6 +143,27 @@
  
      public void onBlockClicked(BlockPos pos, EnumFacing side)
      {
-+        PlayerInteractEvent playerInteractEvent = CraftEventFactory.callPlayerInteractEvent(this.player, Action.LEFT_CLICK_BLOCK, pos, side, this.player.inventory.getCurrentItem(), EnumHand.MAIN_HAND);
++        org.bukkit.event.player.PlayerInteractEvent playerInteractEvent = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerInteractEvent(this.player, org.bukkit.event.block.Action.LEFT_CLICK_BLOCK, pos, side, this.player.inventory.getCurrentItem(), EnumHand.MAIN_HAND);
 +        if (playerInteractEvent.isCancelled()) {
 +            // Let the client know the block still exists
 +            this.player.connection.sendPacket(new SPacketBlockChange(this.world, pos));
@@ -118,12 +72,8 @@
 +
          if (this.isCreative())
          {
--            if (!this.world.extinguishFire(null, pos, side))
-+            if (!this.world.extinguishFire((EntityPlayer)null, pos, side))
-             {
-                 this.tryHarvestBlock(pos);
-             }
-@@ -175,17 +210,67 @@
+             if (!this.world.extinguishFire(null, pos, side))
+@@ -175,17 +199,68 @@
                  }
              }
  
@@ -132,26 +82,26 @@
              float f = 1.0F;
  
 -            if (iblockstate.getMaterial() != Material.AIR)
--            {
--                block.onBlockClicked(this.world, pos, this.player);
 +            // CraftBukkit start - Swings at air do *NOT* exist.
-+            if (playerInteractEvent.useInteractedBlock() == Event.Result.DENY) {
++            if (playerInteractEvent.useInteractedBlock() == org.bukkit.event.Event.Result.DENY) {
 +                // If we denied a door from opening, we need to send a correcting update to the client, as it already opened the door.
 +                IBlockState data = this.world.getBlockState(pos);
-+                if (block == Blocks.OAK_DOOR) {
++                if (block == net.minecraft.init.Blocks.OAK_DOOR) {
 +                    // For some reason *BOTH* the bottom/top part have to be marked updated.
-+                    boolean bottom = data.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER;
-+                    ((EntityPlayerMP) this.player).connection.sendPacket(new SPacketBlockChange(this.world, pos));
-+                    ((EntityPlayerMP) this.player).connection.sendPacket(new SPacketBlockChange(this.world, bottom ? pos.up() : pos.down()));
-+                } else if (block == Blocks.TRAPDOOR) {
++                    boolean bottom = data.getValue(net.minecraft.block.BlockDoor.HALF) == net.minecraft.block.BlockDoor.EnumDoorHalf.LOWER;
++                    (this.player).connection.sendPacket(new SPacketBlockChange(this.world, pos));
++                    (this.player).connection.sendPacket(new SPacketBlockChange(this.world, bottom ? pos.up() : pos.down()));
++                } else if (block == net.minecraft.init.Blocks.TRAPDOOR) {
 +
-+                    ((EntityPlayerMP) this.player).connection.sendPacket(new SPacketBlockChange(this.world, pos));
++                    (this.player).connection.sendPacket(new SPacketBlockChange(this.world, pos));
 +                }
-+            } else if (iblockstate.getMaterial() != Material.AIR) {
++            } else if (iblockstate.getMaterial() != Material.AIR)
+             {
+-                block.onBlockClicked(this.world, pos, this.player);
 +                if (event.getUseBlock() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
 +                {
 +                    block.onBlockClicked(this.world, pos, this.player);
-+                    this.world.extinguishFire((EntityPlayer)null, pos, side);
++                    this.world.extinguishFire(null, pos, side);
 +                }
 +                else
 +                {
@@ -163,18 +113,18 @@
              }
 -
 -            if (iblockstate.getMaterial() != Material.AIR && f >= 1.0F)
-+            if (playerInteractEvent.useItemInHand() == Event.Result.DENY) {
++            if (playerInteractEvent.useItemInHand() == org.bukkit.event.Event.Result.DENY) {
 +                // If we 'insta destroyed' then the client needs to be informed.
 +                if (f > 1.0f) {
-+                    ((EntityPlayerMP) this.player).connection.sendPacket(new SPacketBlockChange(this.world, pos));
++                    this.player.connection.sendPacket(new SPacketBlockChange(this.world, pos));
 +                }
 +                return;
 +            }
-+            org.bukkit.event.block.BlockDamageEvent blockEvent = CraftEventFactory.callBlockDamageEvent(this.player, pos.getX(), pos.getY(), pos.getZ(), this.player.inventory.getCurrentItem(), f >= 1.0f);
++            org.bukkit.event.block.BlockDamageEvent blockEvent = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockDamageEvent(this.player, pos.getX(), pos.getY(), pos.getZ(), this.player.inventory.getCurrentItem(), f >= 1.0f);
 +
 +            if (blockEvent.isCancelled()) {
 +                // Let the client know the block still exists
-+                ((EntityPlayerMP) this.player).connection.sendPacket(new SPacketBlockChange(this.world, pos));
++                this.player.connection.sendPacket(new SPacketBlockChange(this.world, pos));
 +                return;
 +            }
 +
@@ -197,7 +147,7 @@
              {
                  this.tryHarvestBlock(pos);
              }
-@@ -204,10 +289,11 @@
+@@ -204,10 +279,11 @@
      {
          if (pos.equals(this.destroyPos))
          {
@@ -208,9 +158,9 @@
 -            if (iblockstate.getMaterial() != Material.AIR)
 +            if (!iblockstate.getBlock().isAir(iblockstate, world, pos))
              {
-                 float f = iblockstate.getPlayerRelativeBlockHardness(this.player, this.player.world, pos) * (float)(i + 1);
+                 float f = iblockstate.getPlayerRelativeBlockHardness(this.player, this.player.world, pos) * (i + 1);
  
-@@ -225,6 +311,16 @@
+@@ -225,6 +301,16 @@
                      this.initialBlockDamage = this.initialDamage;
                  }
              }
@@ -227,7 +177,7 @@
          }
      }
  
-@@ -236,9 +332,13 @@
+@@ -236,9 +322,13 @@
  
      private boolean removeBlock(BlockPos pos)
      {
@@ -243,7 +193,7 @@
  
          if (flag)
          {
-@@ -248,11 +348,14 @@
+@@ -248,11 +338,14 @@
          return flag;
      }
  
@@ -261,7 +211,7 @@
          {
              return false;
          }
-@@ -269,53 +372,41 @@
+@@ -269,53 +362,41 @@
              }
              else
              {
@@ -328,7 +278,7 @@
                  return flag1;
              }
          }
-@@ -333,8 +424,11 @@
+@@ -333,8 +414,11 @@
          }
          else
          {
@@ -340,7 +290,7 @@
              ActionResult<ItemStack> actionresult = stack.useItemRightClick(worldIn, player, hand);
              ItemStack itemstack = actionresult.getResult();
  
-@@ -362,6 +456,7 @@
+@@ -362,6 +446,7 @@
  
                  if (itemstack.isEmpty())
                  {
@@ -348,25 +298,9 @@
                      player.setHeldItem(hand, ItemStack.EMPTY);
                  }
  
-@@ -375,100 +470,156 @@
-         }
-     }
- 
--    public EnumActionResult processRightClickBlock(
--        EntityPlayer player,
--        World worldIn,
--        ItemStack stack,
--        EnumHand hand,
--        BlockPos pos,
--        EnumFacing facing,
--        float hitX,
--        float hitY,
--        float hitZ
--    )
-+    public boolean interactResult = false;
-+    public boolean firedInteract = false;
-+
-+    public EnumActionResult processRightClickBlock(EntityPlayer player, World worldIn, ItemStack stack, EnumHand hand, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ)
+@@ -387,88 +472,151 @@
+         float hitZ
+     )
      {
 -        if (this.gameType == GameType.SPECTATOR)
 -        {
@@ -418,7 +352,7 @@
 +        // CatServer - fire PlayerInteractEvent
 +        IBlockState blockdata = worldIn.getBlockState(pos);
 +
-+        if (blockdata.getBlock() != Blocks.AIR) {
++        if (blockdata.getBlock() != net.minecraft.init.Blocks.AIR) {
 +            boolean cancelledBlock = false;
 +
 +            if (this.gameType == GameType.SPECTATOR) {
@@ -430,20 +364,20 @@
 +                cancelledBlock = true;
 +            }
 +
-+            PlayerInteractEvent cbEvent = CraftEventFactory.callPlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, pos, facing, stack, cancelledBlock, hand);
++            org.bukkit.event.player.PlayerInteractEvent cbEvent = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerInteractEvent(player, org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK, pos, facing, stack, cancelledBlock, hand);
 +            firedInteract = true;
-+            interactResult = cbEvent.useItemInHand() == Event.Result.DENY;
++            interactResult = cbEvent.useItemInHand() == org.bukkit.event.Event.Result.DENY;
 +
-+            if (cbEvent.useInteractedBlock() == Event.Result.DENY) {
++            if (cbEvent.useInteractedBlock() == org.bukkit.event.Event.Result.DENY) {
 +                // If we denied a door from opening, we need to send a correcting update to the client, as it already opened the door.
-+                if (blockdata.getBlock() instanceof BlockDoor) {
-+                    boolean bottom = blockdata.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER;
++                if (blockdata.getBlock() instanceof net.minecraft.block.BlockDoor) {
++                    boolean bottom = blockdata.getValue(net.minecraft.block.BlockDoor.HALF) == net.minecraft.block.BlockDoor.EnumDoorHalf.LOWER;
 +                    ((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(worldIn, bottom ? pos.up() : pos.down()));
-+                } else if (blockdata.getBlock() instanceof BlockCake) {
++                } else if (blockdata.getBlock() instanceof net.minecraft.block.BlockCake) {
 +                    ((EntityPlayerMP) player).getBukkitEntity().sendHealthUpdate(); // SPIGOT-1341 - reset health for cake
 +                }
 +                ((EntityPlayerMP) player).getBukkitEntity().updateInventory(); // SPIGOT-2867
-+                return (cbEvent.useItemInHand() != Event.Result.ALLOW) ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
++                return (cbEvent.useItemInHand() != org.bukkit.event.Event.Result.ALLOW) ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
 +            }
 +            else if (this.gameType == GameType.SPECTATOR)
 +            {

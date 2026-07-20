@@ -59,12 +59,9 @@
                      {
                          this.setBlockState(worldIn, iblockstate, 5, 0 - k, 6 + k, structureBoundingBoxIn);
                          this.setBlockState(worldIn, iblockstate, 6, 0 - k, 6 + k, structureBoundingBoxIn);
-@@ -1203,9 +1203,9 @@
-                             this.hasWitch = true;
-                             EntityWitch entitywitch = new EntityWitch(worldIn);
+@@ -1205,7 +1205,7 @@
                              entitywitch.enablePersistence();
--                            entitywitch.setLocationAndAngles((double)l + 0.5, (double)i1, (double)k + 0.5, 0.0F, 0.0F);
-+                            entitywitch.setLocationAndAngles((double)l + 0.5D, (double)i1, (double)k + 0.5D, 0.0F, 0.0F);
+                             entitywitch.setLocationAndAngles(l + 0.5, i1, k + 0.5, 0.0F, 0.0F);
                              entitywitch.onInitialSpawn(worldIn.getDifficultyForLocation(new BlockPos(l, i1, k)), null);
 -                            worldIn.spawnEntity(entitywitch);
 +                            worldIn.addEntity(entitywitch, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.CHUNK_GEN);

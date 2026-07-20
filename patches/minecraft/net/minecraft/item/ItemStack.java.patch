@@ -1,10 +1,8 @@
 --- before/net/minecraft/item/ItemStack.java
 +++ after/net/minecraft/item/ItemStack.java
-@@ -49,14 +49,15 @@
- import net.minecraft.world.World;
+@@ -50,13 +50,13 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
-+import org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers;
  
 -public final class ItemStack
 +public final class ItemStack implements net.minecraftforge.common.capabilities.ICapabilitySerializable<NBTTagCompound>
@@ -18,7 +16,7 @@
      private NBTTagCompound stackTagCompound;
      private boolean isEmpty;
      int itemDamage;
-@@ -66,6 +67,10 @@
+@@ -66,6 +66,10 @@
      private Block canPlaceOnCacheBlock;
      private boolean canPlaceOnCacheResult;
  
@@ -29,7 +27,7 @@
      public ItemStack(Block blockIn)
      {
          this(blockIn, 1);
-@@ -91,8 +96,10 @@
+@@ -91,8 +95,10 @@
          this(itemIn, amount, 0);
      }
  
@@ -41,7 +39,7 @@
          this.item = itemIn;
          this.itemDamage = meta;
          this.stackSize = amount;
-@@ -103,6 +110,18 @@
+@@ -103,6 +109,18 @@
          }
  
          this.updateEmptyState();
@@ -60,7 +58,7 @@
      }
  
      private void updateEmptyState()
-@@ -112,37 +131,42 @@
+@@ -112,21 +130,37 @@
  
      public ItemStack(NBTTagCompound compound)
      {
@@ -103,50 +101,49 @@
      }
  
      public boolean isEmpty()
-     {
--        if (this == EMPTY)
--        {
--            return true;
--        }
+@@ -135,7 +169,7 @@
+         {
+             return true;
+         }
 -        else if (this.item == null || this.item == Item.getItemFromBlock(Blocks.AIR))
--        {
--            return true;
--        }
--        else
--        {
--            return this.stackSize <= 0 ? true : this.itemDamage < -32768 || this.itemDamage > 65535;
--        }
-+        return this == EMPTY || this.getItemRaw() == null || this.getItemRaw() == Items.AIR || this.stackSize <= 0 || this.itemDamage < -32768 || this.itemDamage > 65535; // Paper
-     }
- 
-     public static void registerFixes(DataFixer fixer)
-@@ -162,22 +186,26 @@
++        else if (this.getItemRaw() == null || this.getItemRaw() == Items.AIR)
+         {
+             return true;
+         }
+@@ -162,7 +196,7 @@
  
      public Item getItem()
      {
 -        return this.isEmpty ? Item.getItemFromBlock(Blocks.AIR) : this.item;
--    }
--
--    public EnumActionResult onItemUse(
--        EntityPlayer playerIn,
--        World worldIn,
--        BlockPos pos,
--        EnumHand hand,
--        EnumFacing side,
--        float hitX,
--        float hitY,
--        float hitZ
--    )
--    {
--        EnumActionResult enumactionresult = this.getItem()
--                                            .onItemUse(playerIn, worldIn, pos, hand, side, hitX, hitY, hitZ);
 +        return this.isEmpty || this.delegate == null ? Items.AIR : this.delegate.get();
-+    }
-+
-+    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
-+    {
+     }
+ 
+     public EnumActionResult onItemUse(
+@@ -176,6 +210,7 @@
+         float hitZ
+     )
+     {
 +        if (!worldIn.isRemote) return net.minecraftforge.common.ForgeHooks.onPlaceItemIntoWorld(this, playerIn, worldIn, pos, side, hitX, hitY, hitZ, hand);
-+        EnumActionResult enumactionresult = this.getItem().onItemUse(playerIn, worldIn, pos, hand, side, hitX, hitY, hitZ);
+         EnumActionResult enumactionresult = this.getItem()
+                                             .onItemUse(playerIn, worldIn, pos, hand, side, hitX, hitY, hitZ);
+ 
+@@ -187,6 +222,28 @@
+         return enumactionresult;
+     }
+ 
++    public EnumActionResult onItemUseFirst(
++        EntityPlayer playerIn,
++        World worldIn,
++        BlockPos pos,
++        EnumHand hand,
++        EnumFacing side,
++        float hitX,
++        float hitY,
++        float hitZ
++    )
++    {
++        // copy of onitemuse but for onitemusefirst
++        EnumActionResult enumactionresult = this.getItem().onItemUseFirst(playerIn, worldIn, pos, side, hitX, hitY, hitZ, hand);
 +
 +        if (enumactionresult == EnumActionResult.SUCCESS)
 +        {
@@ -156,14 +153,10 @@
 +        return enumactionresult;
 +    }
 +
-+    public EnumActionResult onItemUseFirst(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
-+    {
-+        // copy of onitemuse but for onitemusefirst
-+        EnumActionResult enumactionresult = this.getItem().onItemUseFirst(playerIn, worldIn, pos, side, hitX, hitY, hitZ, hand);
- 
-         if (enumactionresult == EnumActionResult.SUCCESS)
-         {
-@@ -211,7 +239,14 @@
+     public float getDestroySpeed(IBlockState blockIn)
+     {
+         return this.getItem().getDestroySpeed(this, blockIn);
+@@ -211,7 +268,14 @@
  
          if (this.stackTagCompound != null)
          {
@@ -179,7 +172,7 @@
          }
  
          return nbt;
-@@ -219,7 +254,7 @@
+@@ -219,7 +283,7 @@
  
      public int getMaxStackSize()
      {
@@ -188,22 +181,16 @@
      }
  
      public boolean isStackable()
-@@ -233,9 +268,13 @@
-         {
-             return false;
+@@ -235,7 +299,7 @@
          }
-+        else if (this.item.getMaxDamage(this) <= 0)
-+        {
-+            return false;
-+        }
          else
          {
 -            return this.item.getMaxDamage() <= 0 ? false : !this.hasTagCompound() || !this.getTagCompound().getBoolean("Unbreakable");
-+            return !this.hasTagCompound() || !this.getTagCompound().getBoolean("Unbreakable");
++            return this.item.getMaxDamage(this) <= 0 ? false : !this.hasTagCompound() || !this.getTagCompound().getBoolean("Unbreakable");
          }
      }
  
-@@ -246,32 +285,48 @@
+@@ -246,32 +310,48 @@
  
      public boolean isItemDamaged()
      {
@@ -247,7 +234,7 @@
 +        }
 +
 +        // Filter invalid plant data
-+        if (CraftMagicNumbers.getBlock(CraftMagicNumbers.getId(this.getItem())) == Blocks.DOUBLE_PLANT && (meta > 5 || meta < 0)) {
++        if (org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers.getBlock(org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers.getId(this.getItem())) == Blocks.DOUBLE_PLANT && (meta > 5 || meta < 0)) {
 +            meta = 0;
 +        }
 +        // CraftBukkit end
@@ -262,22 +249,10 @@
      }
  
      public boolean attemptDamageItem(int amount, Random rand, @Nullable EntityPlayerMP damager)
-@@ -287,16 +342,27 @@
-                 int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, this);
-                 int j = 0;
- 
--                for (int k = 0; i > 0 && k < amount; k++)
-+                for (int k = 0; i > 0 && k < amount; ++k)
-                 {
-                     if (EnchantmentDurability.negateDamage(this, i, rand))
-                     {
--                        j++;
-+                        ++j;
-                     }
+@@ -296,6 +376,18 @@
                  }
  
                  amount -= j;
--
 +                // Spigot start
 +                if (damager != null) {
 +                    org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack item = org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asCraftMirror(this);
@@ -290,10 +265,10 @@
 +                    amount = event.getDamage();
 +                }
 +                // Spigot end
+ 
                  if (amount <= 0)
                  {
-                     return false;
-@@ -308,8 +374,8 @@
+@@ -308,8 +400,8 @@
                  CriteriaTriggers.ITEM_DURABILITY_CHANGED.trigger(damager, this, this.itemDamage + amount);
              }
  
@@ -304,7 +279,7 @@
          }
      }
  
-@@ -322,6 +388,11 @@
+@@ -322,6 +414,11 @@
                  if (this.attemptDamageItem(amount, entityIn.getRNG(), entityIn instanceof EntityPlayerMP ? (EntityPlayerMP)entityIn : null))
                  {
                      entityIn.renderBrokenItemStack(this);
@@ -316,7 +291,7 @@
                      this.shrink(1);
  
                      if (entityIn instanceof EntityPlayer)
-@@ -358,7 +429,7 @@
+@@ -358,7 +455,7 @@
  
      public boolean canHarvestBlock(IBlockState blockIn)
      {
@@ -325,23 +300,15 @@
      }
  
      public boolean interactWithEntity(EntityPlayer playerIn, EntityLivingBase entityIn, EnumHand hand)
-@@ -366,17 +437,27 @@
-         return this.getItem().itemInteractionForEntity(this, playerIn, entityIn, hand);
-     }
+@@ -368,15 +465,30 @@
  
--    public ItemStack copy()
--    {
+     public ItemStack copy()
+     {
 -        ItemStack itemstack = new ItemStack(this.item, this.stackSize, this.itemDamage);
 -        itemstack.setAnimationsToGo(this.getAnimationsToGo());
 -
--        if (this.stackTagCompound != null)
--        {
--            itemstack.stackTagCompound = this.stackTagCompound.copy();
--        }
--
--        return itemstack;
-+    public ItemStack copy() {
-+        if (this.isEmpty()) {
++        if (this.isEmpty())
++        {
 +            return EMPTY;
 +        }
 +        ItemStack copy = new ItemStack(this.item, null);
@@ -349,90 +316,45 @@
 +        copy.itemDamage = this.itemDamage;
 +        copy.animationsToGo = this.animationsToGo;
 +        copy.delegate = this.delegate;
-+        if (this.stackTagCompound != null) {
+         if (this.stackTagCompound != null)
+         {
+-            itemstack.stackTagCompound = this.stackTagCompound.copy();
 +            copy.stackTagCompound = this.stackTagCompound.copy();
 +        }
-+        if (this.capabilities != null) {
++        if (this.capabilities != null)
++        {
 +            copy.capNBT = this.capabilities.serializeNBT();
 +            net.minecraftforge.common.capabilities.ICapabilityProvider provider = copy.item.initCapabilities(copy, copy.capNBT);
 +            copy.capabilities = net.minecraftforge.event.ForgeEventFactory.gatherCapabilities(copy, provider);
 +            if (copy.capabilities != null) {
 +                copy.capabilities.deserializeNBT(copy.capNBT);
 +            }
-+        }
+         }
+ 
+-        return itemstack;
 +        return copy;
      }
  
      public static boolean areItemStackTagsEqual(ItemStack stackA, ItemStack stackB)
-@@ -385,15 +466,20 @@
+@@ -393,7 +505,7 @@
          {
-             return true;
-         }
--        else if (stackA.isEmpty() || stackB.isEmpty())
-+        else if (!stackA.isEmpty() && !stackB.isEmpty())
-         {
--            return false;
-+            if (stackA.stackTagCompound == null && stackB.stackTagCompound != null)
-+            {
-+                return false;
-+            }
-+            else
-+            {
-+                return (stackA.stackTagCompound == null || stackA.stackTagCompound.equals(stackB.stackTagCompound)) && stackA.areCapsCompatible(stackB);
-+            }
-         }
-         else
-         {
--            return stackA.stackTagCompound == null && stackB.stackTagCompound != null
--                   ? false
+             return stackA.stackTagCompound == null && stackB.stackTagCompound != null
+                    ? false
 -                   : stackA.stackTagCompound == null || stackA.stackTagCompound.equals(stackB.stackTagCompound);
-+            return false;
++                   : stackA.stackTagCompound == null || stackA.stackTagCompound.equals(stackB.stackTagCompound) && stackA.areCapsCompatible(stackB);
          }
      }
  
-@@ -423,11 +509,13 @@
+@@ -427,7 +539,7 @@
          {
-             return false;
-         }
-+        else if (this.stackTagCompound == null && other.stackTagCompound != null)
-+        {
-+            return false;
-+        }
-         else
-         {
--            return this.stackTagCompound == null && other.stackTagCompound != null
--                   ? false
+             return this.stackTagCompound == null && other.stackTagCompound != null
+                    ? false
 -                   : this.stackTagCompound == null || this.stackTagCompound.equals(other.stackTagCompound);
-+            return (this.stackTagCompound == null || this.stackTagCompound.equals(other.stackTagCompound)) && this.areCapsCompatible(other);
++                   : this.stackTagCompound == null || this.stackTagCompound.equals(other.stackTagCompound) && this.areCapsCompatible(other);
          }
      }
  
-@@ -462,7 +550,14 @@
- 
-     public boolean isItemEqualIgnoreDurability(ItemStack stack)
-     {
--        return !this.isItemStackDamageable() ? this.isItemEqual(stack) : !stack.isEmpty() && this.item == stack.item;
-+        if (!this.isItemStackDamageable())
-+        {
-+            return this.isItemEqual(stack);
-+        }
-+        else
-+        {
-+            return !stack.isEmpty() && this.item == stack.item;
-+        }
-     }
- 
-     public String getTranslationKey()
-@@ -480,7 +575,7 @@
-     {
-         if (this.animationsToGo > 0)
-         {
--            this.animationsToGo--;
-+            --this.animationsToGo;
-         }
- 
-         if (this.item != null)
-@@ -675,7 +770,7 @@
+@@ -675,7 +787,7 @@
              {
                  NBTTagList nbttaglist = this.getEnchantmentTagList();
  
@@ -441,64 +363,15 @@
                  {
                      NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(j);
                      int k = nbttagcompound.getShort("id");
-@@ -711,7 +806,7 @@
- 
-                     if (!nbttaglist3.isEmpty())
-                     {
--                        for (int l1 = 0; l1 < nbttaglist3.tagCount(); l1++)
-+                        for (int l1 = 0; l1 < nbttaglist3.tagCount(); ++l1)
-                         {
-                             list.add(TextFormatting.DARK_PURPLE + "" + TextFormatting.ITALIC + nbttaglist3.getStringTagAt(l1));
-                         }
-@@ -768,7 +863,7 @@
-                             + I18n.translateToLocalFormatted(
-                                 "attribute.modifier.equals." + attributemodifier.getOperation(),
-                                 DECIMALFORMAT.format(d1),
--                                I18n.translateToLocal("attribute.name." + entry.getKey())
-+                                I18n.translateToLocal("attribute.name." + (String)entry.getKey())
-                             )
-                         );
-                     }
-@@ -780,7 +875,7 @@
-                             + I18n.translateToLocalFormatted(
-                                 "attribute.modifier.plus." + attributemodifier.getOperation(),
-                                 DECIMALFORMAT.format(d1),
--                                I18n.translateToLocal("attribute.name." + entry.getKey())
-+                                I18n.translateToLocal("attribute.name." + (String)entry.getKey())
-                             )
-                         );
-                     }
-@@ -793,9 +888,10 @@
-                             + I18n.translateToLocalFormatted(
-                                 "attribute.modifier.take." + attributemodifier.getOperation(),
-                                 DECIMALFORMAT.format(d1),
--                                I18n.translateToLocal("attribute.name." + entry.getKey())
-+                                I18n.translateToLocal("attribute.name." + (String)entry.getKey())
+@@ -796,6 +908,7 @@
+                                 I18n.translateToLocal("attribute.name." + entry.getKey())
                              )
                          );
 +                        list.add(" " + I18n.translateToLocalFormatted("attribute.modifier.equals." + attributemodifier.getOperation(), DECIMALFORMAT.format(d1), I18n.translateToLocal("attribute.name." + (String)entry.getKey())));
                      }
                  }
              }
-@@ -815,7 +911,7 @@
-                 list.add("");
-                 list.add(TextFormatting.GRAY + I18n.translateToLocal("item.canBreak"));
- 
--                for (int j1 = 0; j1 < nbttaglist1.tagCount(); j1++)
-+                for (int j1 = 0; j1 < nbttaglist1.tagCount(); ++j1)
-                 {
-                     Block block = Block.getBlockFromName(nbttaglist1.getStringTagAt(j1));
- 
-@@ -840,7 +936,7 @@
-                 list.add("");
-                 list.add(TextFormatting.GRAY + I18n.translateToLocal("item.canPlace"));
- 
--                for (int k1 = 0; k1 < nbttaglist2.tagCount(); k1++)
-+                for (int k1 = 0; k1 < nbttaglist2.tagCount(); ++k1)
-                 {
-                     Block block1 = Block.getBlockFromName(nbttaglist2.getStringTagAt(k1));
- 
-@@ -871,6 +967,7 @@
+@@ -871,6 +984,7 @@
              }
          }
  
@@ -506,7 +379,7 @@
          return list;
      }
  
-@@ -880,6 +977,7 @@
+@@ -880,6 +994,7 @@
          return this.getItem().hasEffect(this);
      }
  
@@ -514,39 +387,7 @@
      public EnumRarity getRarity()
      {
          return this.getItem().getRarity(this);
-@@ -887,7 +985,14 @@
- 
-     public boolean isItemEnchantable()
-     {
--        return !this.getItem().isEnchantable(this) ? false : !this.isItemEnchanted();
-+        if (!this.getItem().isEnchantable(this))
-+        {
-+            return false;
-+        }
-+        else
-+        {
-+            return !this.isItemEnchanted();
-+        }
-     }
- 
-     public void addEnchantment(Enchantment ench, int level)
-@@ -911,7 +1016,14 @@
- 
-     public boolean isItemEnchanted()
-     {
--        return this.stackTagCompound != null && this.stackTagCompound.hasKey("ench", 9) ? !this.stackTagCompound.getTagList("ench", 10).isEmpty() : false;
-+        if (this.stackTagCompound != null && this.stackTagCompound.hasKey("ench", 9))
-+        {
-+            return !this.stackTagCompound.getTagList("ench", 10).isEmpty();
-+        }
-+        else
-+        {
-+            return false;
-+        }
-     }
- 
-     public void setTagInfo(String key, NBTBase value)
-@@ -952,6 +1064,15 @@
+@@ -952,6 +1067,15 @@
  
      public void setRepairCost(int cost)
      {
@@ -562,16 +403,7 @@
          if (!this.hasTagCompound())
          {
              this.stackTagCompound = new NBTTagCompound();
-@@ -969,7 +1090,7 @@
-             multimap = HashMultimap.create();
-             NBTTagList nbttaglist = this.stackTagCompound.getTagList("AttributeModifiers", 10);
- 
--            for (int i = 0; i < nbttaglist.tagCount(); i++)
-+            for (int i = 0; i < nbttaglist.tagCount(); ++i)
-             {
-                 NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
-                 AttributeModifier attributemodifier = SharedMonsterAttributes.readAttributeModifierFromNBT(nbttagcompound);
-@@ -985,7 +1106,7 @@
+@@ -985,7 +1109,7 @@
          }
          else
          {
@@ -580,7 +412,7 @@
          }
  
          return multimap;
-@@ -1015,6 +1136,14 @@
+@@ -1015,6 +1139,14 @@
          nbttaglist.appendTag(nbttagcompound);
      }
  
@@ -595,7 +427,7 @@
      public ITextComponent getTextComponent()
      {
          TextComponentString textcomponentstring = new TextComponentString(this.getDisplayName());
-@@ -1030,7 +1159,7 @@
+@@ -1030,7 +1162,7 @@
          {
              NBTTagCompound nbttagcompound = this.writeToNBT(new NBTTagCompound());
              itextcomponent.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new TextComponentString(nbttagcompound.toString())));
@@ -604,25 +436,7 @@
          }
  
          return itextcomponent;
-@@ -1050,7 +1179,7 @@
-             {
-                 NBTTagList nbttaglist = this.stackTagCompound.getTagList("CanDestroy", 8);
- 
--                for (int i = 0; i < nbttaglist.tagCount(); i++)
-+                for (int i = 0; i < nbttaglist.tagCount(); ++i)
-                 {
-                     Block block = Block.getBlockFromName(nbttaglist.getStringTagAt(i));
- 
-@@ -1081,7 +1210,7 @@
-             {
-                 NBTTagList nbttaglist = this.stackTagCompound.getTagList("CanPlaceOn", 8);
- 
--                for (int i = 0; i < nbttaglist.tagCount(); i++)
-+                for (int i = 0; i < nbttaglist.tagCount(); ++i)
-                 {
-                     Block block = Block.getBlockFromName(nbttaglist.getStringTagAt(i));
- 
-@@ -1128,4 +1257,140 @@
+@@ -1128,4 +1260,140 @@
      {
          this.grow(-quantity);
      }

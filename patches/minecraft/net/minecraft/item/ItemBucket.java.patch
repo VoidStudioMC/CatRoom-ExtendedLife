@@ -1,23 +1,6 @@
 --- before/net/minecraft/item/ItemBucket.java
 +++ after/net/minecraft/item/ItemBucket.java
-@@ -23,6 +23,10 @@
- import net.minecraft.util.math.BlockPos;
- import net.minecraft.util.math.RayTraceResult;
- import net.minecraft.world.World;
-+import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
-+import org.bukkit.event.player.PlayerBucketEmptyEvent;
-+import org.bukkit.event.player.PlayerBucketFillEvent;
- 
- public class ItemBucket extends Item
- {
-@@ -35,20 +39,21 @@
-         this.setCreativeTab(CreativeTabs.MISC);
-     }
- 
--    @Override
-     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
-     {
+@@ -41,6 +41,8 @@
          boolean flag = this.containedBlock == Blocks.AIR;
          ItemStack itemstack = playerIn.getHeldItem(handIn);
          RayTraceResult raytraceresult = this.rayTrace(worldIn, playerIn, flag);
@@ -26,39 +9,11 @@
  
          if (raytraceresult == null)
          {
--            return new ActionResult<>(EnumActionResult.PASS, itemstack);
-+            return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
-         }
-         else if (raytraceresult.typeOfHit != RayTraceResult.Type.BLOCK)
-         {
--            return new ActionResult<>(EnumActionResult.PASS, itemstack);
-+            return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
-         }
-         else
-         {
-@@ -56,36 +61,46 @@
+@@ -71,17 +73,27 @@
  
-             if (!worldIn.isBlockModifiable(playerIn, blockpos))
-             {
--                return new ActionResult<>(EnumActionResult.FAIL, itemstack);
-+                return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
-             }
-             else if (flag)
-             {
-                 if (!playerIn.canPlayerEdit(blockpos.offset(raytraceresult.sideHit), raytraceresult.sideHit, itemstack))
-                 {
--                    return new ActionResult<>(EnumActionResult.FAIL, itemstack);
-+                    return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
-                 }
-                 else
-                 {
-                     IBlockState iblockstate = worldIn.getBlockState(blockpos);
-                     Material material = iblockstate.getMaterial();
- 
--                    if (material == Material.WATER && iblockstate.getValue(BlockLiquid.LEVEL) == 0)
-+                    if (material == Material.WATER && ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0)
+                     if (material == Material.WATER && iblockstate.getValue(BlockLiquid.LEVEL) == 0)
                      {
-+                        PlayerBucketFillEvent event = CraftEventFactory.callPlayerBucketFillEvent(playerIn, blockpos.getX(), blockpos.getY(), blockpos.getZ(), null, itemstack, Items.WATER_BUCKET);
++                        org.bukkit.event.player.PlayerBucketFillEvent event = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerBucketFillEvent(playerIn, blockpos.getX(), blockpos.getY(), blockpos.getZ(), null, itemstack, Items.WATER_BUCKET);
 +
 +                        if (event.isCancelled()) {
 +                            return new ActionResult<>(EnumActionResult.FAIL, itemstack);
@@ -67,12 +22,11 @@
                          playerIn.addStat(StatList.getObjectUseStats(this));
                          playerIn.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
 -                        return new ActionResult<>(EnumActionResult.SUCCESS, this.fillBucket(itemstack, playerIn, Items.WATER_BUCKET));
-+                        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, this.fillBucket(itemstack, playerIn, Items.WATER_BUCKET, event.getItemStack()));
++                        return new ActionResult<>(EnumActionResult.SUCCESS, this.fillBucket(itemstack, playerIn, Items.WATER_BUCKET, event.getItemStack()));
                      }
--                    else if (material == Material.LAVA && iblockstate.getValue(BlockLiquid.LEVEL) == 0)
-+                    else if (material == Material.LAVA && ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0)
+                     else if (material == Material.LAVA && iblockstate.getValue(BlockLiquid.LEVEL) == 0)
                      {
-+                        PlayerBucketFillEvent event = CraftEventFactory.callPlayerBucketFillEvent(playerIn, blockpos.getX(), blockpos.getY(), blockpos.getZ(), null, itemstack, Items.LAVA_BUCKET);
++                        org.bukkit.event.player.PlayerBucketFillEvent event = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerBucketFillEvent(playerIn, blockpos.getX(), blockpos.getY(), blockpos.getZ(), null, itemstack, Items.LAVA_BUCKET);
 +
 +                        if (event.isCancelled()) {
 +                            return new ActionResult<>(EnumActionResult.FAIL, itemstack);
@@ -81,44 +35,20 @@
                          worldIn.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 11);
                          playerIn.addStat(StatList.getObjectUseStats(this));
 -                        return new ActionResult<>(EnumActionResult.SUCCESS, this.fillBucket(itemstack, playerIn, Items.LAVA_BUCKET));
-+                        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, this.fillBucket(itemstack, playerIn, Items.LAVA_BUCKET, event.getItemStack()));
++                        return new ActionResult<>(EnumActionResult.SUCCESS, this.fillBucket(itemstack, playerIn, Items.LAVA_BUCKET, event.getItemStack()));
                      }
                      else
                      {
--                        return new ActionResult<>(EnumActionResult.FAIL, itemstack);
-+                        return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
-                     }
-                 }
-             }
-@@ -96,9 +111,9 @@
- 
-                 if (!playerIn.canPlayerEdit(blockpos1, raytraceresult.sideHit, itemstack))
+@@ -98,7 +110,7 @@
                  {
--                    return new ActionResult<>(EnumActionResult.FAIL, itemstack);
-+                    return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
+                     return new ActionResult<>(EnumActionResult.FAIL, itemstack);
                  }
 -                else if (this.tryPlaceContainedLiquid(playerIn, worldIn, blockpos1))
 +                else if (this.tryPlaceContainedLiquid(playerIn, worldIn, blockpos1, raytraceresult.sideHit, blockpos, itemstack))
                  {
                      if (playerIn instanceof EntityPlayerMP)
                      {
-@@ -106,13 +121,11 @@
-                     }
- 
-                     playerIn.addStat(StatList.getObjectUseStats(this));
--                    return !playerIn.capabilities.isCreativeMode
--                           ? new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(Items.BUCKET))
--                           : new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
-+                    return !playerIn.capabilities.isCreativeMode ? new ActionResult(EnumActionResult.SUCCESS, new ItemStack(Items.BUCKET)) : new ActionResult(EnumActionResult.SUCCESS, itemstack);
-                 }
-                 else
-                 {
--                    return new ActionResult<>(EnumActionResult.FAIL, itemstack);
-+                    return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
-                 }
-             }
-         }
-@@ -144,8 +157,40 @@
+@@ -144,8 +156,40 @@
          }
      }
  
@@ -136,13 +66,13 @@
 +            if (emptyBuckets.isEmpty())
 +            {
 +                // return new ItemStack(fullBucket);
-+                return CraftItemStack.asNMSCopy(result);
++                return org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(result);
 +            }
 +            else
 +            {
-+                if (!player.inventory.addItemStackToInventory(CraftItemStack.asNMSCopy(result)))
++                if (!player.inventory.addItemStackToInventory(org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(result)))
 +                {
-+                    player.dropItem(CraftItemStack.asNMSCopy(result), false);
++                    player.dropItem(org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(result), false);
 +                }
 +
 +                return emptyBuckets;
@@ -159,12 +89,12 @@
          if (this.containedBlock == Blocks.AIR)
          {
              return false;
-@@ -163,25 +208,24 @@
+@@ -163,6 +207,14 @@
              }
              else
              {
 +                if (player != null) {
-+                    PlayerBucketEmptyEvent event = CraftEventFactory.callPlayerBucketEmptyEvent(player, clicked.getX(), clicked.getY(), clicked.getZ(), enumdirection, itemstack);
++                    org.bukkit.event.player.PlayerBucketEmptyEvent event = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPlayerBucketEmptyEvent(player, clicked.getX(), clicked.getY(), clicked.getZ(), enumdirection, itemstack);
 +                    if (event.isCancelled()) {
 +                        // TODO: inventory not updated
 +                        return false;
@@ -174,29 +104,7 @@
                  if (worldIn.provider.doesWaterVaporize() && this.containedBlock == Blocks.FLOWING_WATER)
                  {
                      int l = posIn.getX();
-                     int i = posIn.getY();
-                     int j = posIn.getZ();
--                    worldIn.playSound(
--                        player,
--                        posIn,
--                        SoundEvents.BLOCK_FIRE_EXTINGUISH,
--                        SoundCategory.BLOCKS,
--                        0.5F,
--                        2.6F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.8F
--                    );
-+                    worldIn.playSound(player, posIn, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.6F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.8F);
- 
--                    for (int k = 0; k < 8; k++)
-+                    for (int k = 0; k < 8; ++k)
-                     {
--                        worldIn.spawnParticle(
--                            EnumParticleTypes.SMOKE_LARGE, (double)l + Math.random(), (double)i + Math.random(), (double)j + Math.random(), 0.0, 0.0, 0.0
--                        );
-+                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, (double)l + Math.random(), (double)i + Math.random(), (double)j + Math.random(), 0.0D, 0.0D, 0.0D);
-                     }
-                 }
-                 else
-@@ -198,6 +242,18 @@
+@@ -196,6 +248,18 @@
  
                  return true;
              }

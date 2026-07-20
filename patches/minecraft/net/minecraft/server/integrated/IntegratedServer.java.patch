@@ -1,60 +1,25 @@
 --- before/net/minecraft/server/integrated/IntegratedServer.java
 +++ after/net/minecraft/server/integrated/IntegratedServer.java
-@@ -7,6 +7,9 @@
- import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
- import java.io.File;
- import java.io.IOException;
+@@ -34,6 +34,9 @@
+ import net.minecraftforge.fml.relauncher.SideOnly;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
 +import java.net.InetAddress;
-+
-+import joptsimple.OptionSet;
- import net.minecraft.client.ClientBrandRetriever;
- import net.minecraft.client.Minecraft;
- import net.minecraft.client.multiplayer.ThreadLanServerPing;
-@@ -16,12 +19,14 @@
- import net.minecraft.entity.player.EntityPlayerMP;
- import net.minecraft.profiler.Snooper;
- import net.minecraft.server.MinecraftServer;
-+import net.minecraft.server.dedicated.PropertyManager;
- import net.minecraft.server.management.PlayerProfileCache;
- import net.minecraft.util.CryptManager;
- import net.minecraft.util.HttpUtil;
- import net.minecraft.util.Util;
- import net.minecraft.world.EnumDifficulty;
- import net.minecraft.world.GameType;
 +import net.minecraft.world.MinecraftException;
- import net.minecraft.world.ServerWorldEventHandler;
- import net.minecraft.world.WorldServer;
- import net.minecraft.world.WorldServerDemo;
-@@ -45,26 +50,9 @@
-     private boolean isPublic;
-     private ThreadLanServerPing lanServerPing;
++import net.minecraft.server.dedicated.PropertyManager;
  
--    public IntegratedServer(
--        Minecraft clientIn,
--        String folderNameIn,
--        String worldNameIn,
--        WorldSettings worldSettingsIn,
--        YggdrasilAuthenticationService authServiceIn,
--        MinecraftSessionService sessionServiceIn,
--        GameProfileRepository profileRepoIn,
--        PlayerProfileCache profileCacheIn
--    )
-+    public IntegratedServer(Minecraft clientIn, String folderNameIn, String worldNameIn, WorldSettings worldSettingsIn, YggdrasilAuthenticationService authServiceIn, MinecraftSessionService sessionServiceIn, GameProfileRepository profileRepoIn, PlayerProfileCache profileCacheIn)
+ @SideOnly(Side.CLIENT)
+ public class IntegratedServer extends MinecraftServer
+@@ -57,7 +60,7 @@
+     )
      {
--        super(
+         super(
 -            new File(clientIn.gameDir, "saves"),
--            clientIn.getProxy(),
--            clientIn.getDataFixer(),
--            authServiceIn,
--            sessionServiceIn,
--            profileRepoIn,
--            profileCacheIn
--        );
-+        super(null, clientIn.getProxy(), clientIn.getDataFixer(), authServiceIn, sessionServiceIn, profileRepoIn, profileCacheIn);
-         this.setServerOwner(clientIn.getSession().getUsername());
-         this.setFolderName(folderNameIn);
-         this.setWorldName(worldNameIn);
-@@ -77,17 +65,18 @@
++            null,
+             clientIn.getProxy(),
+             clientIn.getDataFixer(),
+             authServiceIn,
+@@ -77,6 +80,11 @@
      }
  
      @Override
@@ -62,12 +27,11 @@
 +        return null;
 +    }
 +
++    @Override
      public ServerCommandManager createCommandManager()
      {
          return new IntegratedServerCommandManager(this);
-     }
- 
--    @Override
+@@ -86,8 +94,6 @@
      public void loadAllWorlds(String saveName, String worldNameIn, long seed, WorldType type, String generatorOptions)
      {
          this.convertMapIfNeeded(saveName);
@@ -76,36 +40,15 @@
          ISaveHandler isavehandler = this.getActiveAnvilConverter().getSaveLoader(saveName, true);
          this.setResourcePackFromWorld(this.getFolderName(), isavehandler);
          WorldInfo worldinfo = isavehandler.loadWorldInfo();
-@@ -101,7 +90,8 @@
+@@ -101,6 +107,7 @@
              worldinfo.setWorldName(worldNameIn);
          }
  
--        for (int i = 0; i < this.worlds.length; i++)
 +        if (false) { //Forge: Dead Code, implement below.
-+        for (int i = 0; i < this.worlds.length; ++i)
+         for (int i = 0; i < this.worlds.length; i++)
          {
              int j = 0;
- 
-@@ -119,26 +109,41 @@
-             {
-                 if (this.isDemo())
-                 {
--                    this.worlds[i] = (WorldServer)new WorldServerDemo(this, isavehandler, worldinfo, j, this.profiler).init();
-+                    this.worlds[i] = (WorldServer)(new WorldServerDemo(this, isavehandler, worldinfo, j, this.profiler)).init();
-                 }
-                 else
-                 {
--                    this.worlds[i] = (WorldServer)new WorldServer(this, isavehandler, worldinfo, j, this.profiler).init();
-+                    this.worlds[i] = (WorldServer)(new WorldServer(this, isavehandler, worldinfo, j, this.profiler)).init();
-                 }
- 
-                 this.worlds[i].initialize(this.worldSettings);
-             }
-             else
-             {
--                this.worlds[i] = (WorldServer)new WorldServerMulti(this, isavehandler, j, this.worlds[0], this.profiler).init();
-+                this.worlds[i] = (WorldServer)(new WorldServerMulti(this, isavehandler, j, this.worlds[0], this.profiler)).init();
-             }
+@@ -135,10 +142,25 @@
  
              this.worlds[i].addEventListener(new ServerWorldEventHandler(this, this.worlds[i]));
          }
@@ -135,256 +78,33 @@
          {
              this.setDifficultyForAllWorlds(this.mc.gameSettings.difficulty);
          }
-@@ -146,7 +151,6 @@
-         this.initialWorldChunkLoad();
-     }
- 
--    @Override
-     public boolean init() throws IOException
-     {
-         LOGGER.info("Starting integrated minecraft server version 1.12.2");
-@@ -157,14 +161,12 @@
+@@ -157,11 +179,12 @@
          this.setAllowFlight(true);
          LOGGER.info("Generating keypair");
          this.setKeyPair(CryptManager.generateKeyPair());
--        this.loadAllWorlds(
--            this.getFolderName(), this.getWorldName(), this.worldSettings.getSeed(), this.worldSettings.getTerrainType(), this.worldSettings.getGeneratorOptions()
--        );
 +        if (!net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerAboutToStart(this)) return false;
-+        this.loadAllWorlds(this.getFolderName(), this.getWorldName(), this.worldSettings.getSeed(), this.worldSettings.getTerrainType(), this.worldSettings.getGeneratorOptions());
+         this.loadAllWorlds(
+             this.getFolderName(), this.getWorldName(), this.worldSettings.getSeed(), this.worldSettings.getTerrainType(), this.worldSettings.getGeneratorOptions()
+         );
          this.setMOTD(this.getServerOwner() + " - " + this.worlds[0].getWorldInfo().getWorldName());
 -        return true;
 +        return net.minecraftforge.fml.common.FMLCommonHandler.instance().handleServerStarting(this);
      }
  
--    @Override
-     public void tick()
-     {
-         boolean flag = this.isGamePaused;
-@@ -193,7 +195,7 @@
- 
-             if (this.mc.gameSettings.renderDistanceChunks != this.getPlayerList().getViewDistance())
-             {
--                LOGGER.info("Changing view distance to {}, from {}", this.mc.gameSettings.renderDistanceChunks, this.getPlayerList().getViewDistance());
-+                LOGGER.info("Changing view distance to {}, from {}", Integer.valueOf(this.mc.gameSettings.renderDistanceChunks), Integer.valueOf(this.getPlayerList().getViewDistance()));
-                 this.getPlayerList().setViewDistance(this.mc.gameSettings.renderDistanceChunks);
-             }
- 
-@@ -209,7 +211,7 @@
-                 }
-                 else if (worldinfo.isDifficultyLocked() && !worldinfo1.isDifficultyLocked())
-                 {
--                    LOGGER.info("Locking difficulty to {}", worldinfo.getDifficulty());
-+                    LOGGER.info("Locking difficulty to {}", (Object)worldinfo.getDifficulty());
- 
-                     for (WorldServer worldserver : this.worlds)
-                     {
-@@ -223,73 +225,62 @@
-         }
-     }
- 
--    @Override
-     public boolean canStructuresSpawn()
-     {
-         return false;
-     }
- 
--    @Override
-     public GameType getGameType()
-     {
-         return this.worldSettings.getGameType();
-     }
- 
--    @Override
+     @Override
+@@ -238,6 +261,7 @@
+     @Override
      public EnumDifficulty getDifficulty()
      {
 +        if (this.mc.world == null) return this.mc.gameSettings.difficulty; // Fix NPE just in case.
          return this.mc.world.getWorldInfo().getDifficulty();
      }
  
--    @Override
-     public boolean isHardcore()
-     {
-         return this.worldSettings.getHardcoreEnabled();
-     }
- 
--    @Override
-     public boolean shouldBroadcastRconToOps()
-     {
-         return true;
-     }
- 
--    @Override
-     public boolean shouldBroadcastConsoleToOps()
-     {
-         return true;
-     }
- 
--    @Override
-     public void saveAllWorlds(boolean isSilent)
-     {
-         super.saveAllWorlds(isSilent);
-     }
- 
--    @Override
-     public File getDataDirectory()
-     {
-         return this.mc.gameDir;
-     }
- 
--    @Override
-     public boolean isDedicatedServer()
-     {
-         return false;
-     }
- 
--    @Override
-     public boolean shouldUseNativeTransport()
-     {
-         return false;
-     }
- 
--    @Override
-     public void finalTick(CrashReport report)
-     {
-         this.mc.crashed(report);
-     }
- 
--    @Override
-     public CrashReport addServerInfoToCrashReport(CrashReport report)
-     {
-         report = super.addServerInfoToCrashReport(report);
-@@ -300,10 +291,7 @@
-                 return "Integrated Server (map_client.txt)";
-             }
-         });
--        report.getCategory()
--        .addDetail(
--            "Is Modded",
--            new ICrashReportDetail<String>()
-+        report.getCategory().addDetail("Is Modded", new ICrashReportDetail<String>()
-         {
-             public String call() throws Exception
-             {
-@@ -323,18 +311,14 @@
-                     }
-                     else
-                     {
--                        return Minecraft.class.getSigners() == null
--                               ? "Very likely; Jar signature invalidated"
--                               : "Probably not. Jar signature remains and both client + server brands are untouched.";
-+                        return Minecraft.class.getSigners() == null ? "Very likely; Jar signature invalidated" : "Probably not. Jar signature remains and both client + server brands are untouched.";
-                     }
-                 }
-             }
--        }
--        );
-+        });
-         return report;
-     }
- 
--    @Override
-     public void setDifficultyForAllWorlds(EnumDifficulty difficulty)
-     {
-         super.setDifficultyForAllWorlds(difficulty);
-@@ -345,20 +329,17 @@
-         }
-     }
- 
--    @Override
-     public void addServerStatsToSnooper(Snooper playerSnooper)
-     {
-         super.addServerStatsToSnooper(playerSnooper);
-         playerSnooper.addClientStat("snooper_partner", this.mc.getPlayerUsageSnooper().getUniqueID());
-     }
- 
--    @Override
-     public boolean isSnooperEnabled()
-     {
-         return Minecraft.getMinecraft().isSnooperEnabled();
-     }
- 
--    @Override
-     public String shareToLAN(GameType type, boolean allowCheats)
-     {
-         try
-@@ -369,8 +350,9 @@
-             {
-                 i = HttpUtil.getSuitableLanPort();
-             }
--            catch (IOException ioexception)
-+            catch (IOException var5)
-             {
-+                ;
-             }
- 
-             if (i <= 0)
-@@ -378,8 +360,8 @@
-                 i = 25564;
-             }
- 
--            this.getNetworkSystem().addEndpoint(null, i);
--            LOGGER.info("Started on {}", i);
-+            this.getNetworkSystem().addEndpoint((InetAddress)null, i);
-+            LOGGER.info("Started on {}", (int)i);
-             this.isPublic = true;
-             this.lanServerPing = new ThreadLanServerPing(this.getMOTD(), i + "");
-             this.lanServerPing.start();
-@@ -388,16 +370,19 @@
-             this.mc.player.setPermissionLevel(allowCheats ? 4 : 0);
-             return i + "";
-         }
--        catch (IOException ioexception1)
-+        catch (IOException var6)
-         {
-             return null;
-         }
-     }
- 
--    @Override
-     public void stopServer()
-     {
--        super.stopServer();
-+        try {
-+            super.stopServer();
-+        } catch (MinecraftException e) {
-+            e.printStackTrace();
-+        }
- 
-         if (this.lanServerPing != null)
-         {
-@@ -406,12 +391,11 @@
-         }
-     }
- 
--    @Override
+@@ -409,6 +433,7 @@
+     @Override
      public void initiateShutdown()
      {
 +        if (isServerRunning())
          Futures.getUnchecked(this.addScheduledTask(new Runnable()
          {
--            @Override
-             public void run()
-             {
-                 for (EntityPlayerMP entityplayermp : Lists.newArrayList(IntegratedServer.this.getPlayerList().getPlayers()))
-@@ -437,20 +421,17 @@
-         return this.isPublic;
-     }
- 
--    @Override
-     public void setGameType(GameType gameMode)
-     {
-         super.setGameType(gameMode);
-         this.getPlayerList().setGameType(gameMode);
-     }
- 
--    @Override
-     public boolean isCommandBlockEnabled()
-     {
-         return true;
-     }
- 
--    @Override
-     public int getOpPermissionLevel()
-     {
-         return 4;
+             @Override

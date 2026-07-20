@@ -1,42 +1,26 @@
 --- before/net/minecraft/tileentity/TileEntity.java
 +++ after/net/minecraft/tileentity/TileEntity.java
-@@ -1,6 +1,7 @@
- package net.minecraft.tileentity;
- 
- import javax.annotation.Nullable;
-+
- import net.minecraft.block.Block;
- import net.minecraft.block.BlockJukebox;
- import net.minecraft.block.state.IBlockState;
-@@ -20,16 +21,23 @@
- import net.minecraftforge.fml.relauncher.SideOnly;
+@@ -21,15 +21,17 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
--
+ 
 -public abstract class TileEntity
-+import org.bukkit.inventory.InventoryHolder;
-+import org.spigotmc.CustomTimingsHandler;
-+
-+import catserver.server.inventory.CatInventoryUtils;
-+
 +public abstract class TileEntity implements net.minecraftforge.common.capabilities.ICapabilitySerializable<NBTTagCompound>
  {
-+
      private static final Logger LOGGER = LogManager.getLogger();
--    private static final RegistryNamespaced < ResourceLocation, Class <? extends TileEntity >> REGISTRY = new RegistryNamespaced<>();
+     private static final RegistryNamespaced < ResourceLocation, Class <? extends TileEntity >> REGISTRY = new RegistryNamespaced<>();
 -    protected World world;
-+    private static final RegistryNamespaced < ResourceLocation, Class <? extends TileEntity >> REGISTRY = new RegistryNamespaced < ResourceLocation, Class <? extends TileEntity >> ();
 +    public World world;
      protected BlockPos pos = BlockPos.ORIGIN;
      protected boolean tileEntityInvalid;
      private int blockMetadata = -1;
      protected Block blockType;
-+    public CustomTimingsHandler tickTimer = org.bukkit.craftbukkit.v1_12_R1.SpigotTimings.getTileEntityTimings(this); // Spigot
++    public org.spigotmc.CustomTimingsHandler tickTimer = org.bukkit.craftbukkit.v1_12_R1.SpigotTimings.getTileEntityTimings(this); // Spigot
 +    public boolean skipTick = false;
  
      public static void register(String id, Class <? extends TileEntity > clazz)
      {
-@@ -60,6 +68,8 @@
+@@ -60,6 +62,8 @@
      public void readFromNBT(NBTTagCompound compound)
      {
          this.pos = new BlockPos(compound.getInteger("x"), compound.getInteger("y"), compound.getInteger("z"));
@@ -45,16 +29,7 @@
      }
  
      public NBTTagCompound writeToNBT(NBTTagCompound compound)
-@@ -69,7 +79,7 @@
- 
-     private NBTTagCompound writeInternal(NBTTagCompound compound)
-     {
--        ResourceLocation resourcelocation = REGISTRY.getNameForObject((Class <? extends TileEntity >)this.getClass());
-+        ResourceLocation resourcelocation = REGISTRY.getNameForObject(this.getClass());
- 
-         if (resourcelocation == null)
-         {
-@@ -81,6 +91,8 @@
+@@ -81,6 +85,8 @@
              compound.setInteger("x", this.pos.getX());
              compound.setInteger("y", this.pos.getY());
              compound.setInteger("z", this.pos.getZ());
@@ -63,7 +38,7 @@
              return compound;
          }
      }
-@@ -90,10 +102,11 @@
+@@ -90,19 +96,22 @@
      {
          TileEntity tileentity = null;
          String s = compound.getString("id");
@@ -72,11 +47,14 @@
          try
          {
 -            Class <? extends TileEntity > oclass = REGISTRY.getObject(new ResourceLocation(s));
-+            oclass = (Class)REGISTRY.getObject(new ResourceLocation(s));
++            oclass = REGISTRY.getObject(new ResourceLocation(s));
  
              if (oclass != null)
              {
-@@ -103,6 +116,8 @@
+-                tileentity = oclass.newInstance();
++                tileentity = oclass.getConstructor().newInstance();
+             }
+         }
          catch (Throwable throwable1)
          {
              LOGGER.error("Failed to create block entity {}", s, throwable1);
@@ -85,7 +63,7 @@
          }
  
          if (tileentity != null)
-@@ -115,12 +130,14 @@
+@@ -115,6 +124,8 @@
              catch (Throwable throwable)
              {
                  LOGGER.error("Failed to load data for block entity {}", s, throwable);
@@ -94,72 +72,24 @@
                  tileentity = null;
              }
          }
-         else
-         {
--            LOGGER.warn("Skipping BlockEntity with id {}", s);
-+            LOGGER.warn("Skipping BlockEntity with id {}", (Object)s);
-         }
- 
-         return tileentity;
-@@ -156,19 +173,18 @@
+@@ -156,7 +167,6 @@
          }
      }
  
 -    @SideOnly(Side.CLIENT)
      public double getDistanceSq(double x, double y, double z)
      {
--        double d0 = (double)this.pos.getX() + 0.5 - x;
--        double d1 = (double)this.pos.getY() + 0.5 - y;
--        double d2 = (double)this.pos.getZ() + 0.5 - z;
-+        double d0 = (double)this.pos.getX() + 0.5D - x;
-+        double d1 = (double)this.pos.getY() + 0.5D - y;
-+        double d2 = (double)this.pos.getZ() + 0.5D - z;
-         return d0 * d0 + d1 * d1 + d2 * d2;
-     }
- 
-     @SideOnly(Side.CLIENT)
-     public double getMaxRenderDistanceSquared()
-     {
--        return 4096.0;
-+        return 4096.0D;
-     }
- 
-     public BlockPos getPos()
-@@ -225,18 +241,13 @@
- 
-     public void addInfoToCrashReport(CrashReportCategory reportCategory)
-     {
--        reportCategory.addDetail(
--            "Name",
--            new ICrashReportDetail<String>()
-+        reportCategory.addDetail("Name", new ICrashReportDetail<String>()
-         {
-             public String call() throws Exception
-             {
--                return TileEntity.REGISTRY.getNameForObject((Class <? extends TileEntity >)TileEntity.this.getClass())
--                       + " // "
--                       + TileEntity.this.getClass().getCanonicalName();
-+                return TileEntity.REGISTRY.getNameForObject(TileEntity.this.getClass()) + " // " + TileEntity.this.getClass().getCanonicalName();
-             }
--        }
--        );
-+        });
- 
-         if (this.world != null)
-         {
-@@ -249,9 +260,9 @@
+         double d0 = this.pos.getX() + 0.5 - x;
+@@ -249,7 +259,7 @@
  
                      try
                      {
 -                        return String.format("ID #%d (%s // %s)", i, Block.getBlockById(i).getTranslationKey(), Block.getBlockById(i).getClass().getCanonicalName());
 +                        return String.format("ID #%d (%s // %s // %s)", i, Block.getBlockById(i).getTranslationKey(), Block.getBlockById(i).getClass().getName(), Block.getBlockById(i).getRegistryName());
                      }
--                    catch (Throwable throwable)
-+                    catch (Throwable var3)
+                     catch (Throwable throwable)
                      {
-                         return "ID #" + i;
-                     }
-@@ -302,6 +313,204 @@
+@@ -302,6 +312,204 @@
      {
      }
  
@@ -364,14 +294,14 @@
      static
      {
          register("furnace", TileEntityFurnace.class);
-@@ -329,5 +538,10 @@
+@@ -329,5 +537,10 @@
          register("command_block", TileEntityCommandBlock.class);
          register("shulker_box", TileEntityShulkerBox.class);
          register("bed", TileEntityBed.class);
 +    }
 +
 +    @Nullable
-+    public InventoryHolder getOwner() {
-+        return CatInventoryUtils.getOwner(world, pos); // CatServer - move to CatInventoryUtils
++    public org.bukkit.inventory.InventoryHolder getOwner() {
++        return catserver.server.inventory.CatInventoryUtils.getOwner(world, pos); // CatServer - move to CatInventoryUtils
      }
  }

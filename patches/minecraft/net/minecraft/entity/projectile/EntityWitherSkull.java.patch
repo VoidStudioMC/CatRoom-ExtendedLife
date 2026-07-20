@@ -1,47 +1,6 @@
 --- before/net/minecraft/entity/projectile/EntityWitherSkull.java
 +++ after/net/minecraft/entity/projectile/EntityWitherSkull.java
-@@ -18,10 +18,11 @@
- import net.minecraft.world.World;
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
-+import org.bukkit.event.entity.ExplosionPrimeEvent;
- 
- public class EntityWitherSkull extends EntityFireball
- {
--    private static final DataParameter<Boolean> INVULNERABLE = EntityDataManager.createKey(EntityWitherSkull.class, DataSerializers.BOOLEAN);
-+    private static final DataParameter<Boolean> INVULNERABLE = EntityDataManager.<Boolean>createKey(EntityWitherSkull.class, DataSerializers.BOOLEAN);
- 
-     public EntityWitherSkull(World worldIn)
-     {
-@@ -40,34 +41,29 @@
-         EntityFireball.registerFixesFireball(fixer, "WitherSkull");
-     }
- 
--    @Override
-     protected float getMotionFactor()
-     {
-         return this.isInvulnerable() ? 0.73F : super.getMotionFactor();
-     }
- 
-     @SideOnly(Side.CLIENT)
--    public EntityWitherSkull(
--        World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ
--    )
-+    public EntityWitherSkull(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ)
-     {
-         super(worldIn, x, y, z, accelX, accelY, accelZ);
-         this.setSize(0.3125F, 0.3125F);
-     }
- 
--    @Override
-     public boolean isBurning()
-     {
-         return false;
-     }
- 
--    @Override
-     public float getExplosionResistance(Explosion explosionIn, World worldIn, BlockPos pos, IBlockState blockStateIn)
-     {
+@@ -67,7 +67,7 @@
          float f = super.getExplosionResistance(explosionIn, worldIn, pos, blockStateIn);
          Block block = blockStateIn.getBlock();
  
@@ -50,15 +9,7 @@
          {
              f = Math.min(0.8F, f);
          }
-@@ -75,7 +71,6 @@
-         return f;
-     }
- 
--    @Override
-     protected void onImpact(RayTraceResult result)
-     {
-         if (!this.world.isRemote)
-@@ -84,7 +79,7 @@
+@@ -84,7 +84,7 @@
              {
                  if (this.shootingEntity != null)
                  {
@@ -67,7 +18,7 @@
                      {
                          if (result.entityHit.isEntityAlive())
                          {
-@@ -92,7 +87,7 @@
+@@ -92,7 +92,7 @@
                          }
                          else
                          {
@@ -76,7 +27,7 @@
                          }
                      }
                  }
-@@ -121,43 +116,42 @@
+@@ -121,10 +121,13 @@
                  }
              }
  
@@ -85,7 +36,7 @@
 -                this, this.posX, this.posY, this.posZ, 1.0F, false, this.world.getGameRules().getBoolean("mobGriefing")
 -            );
 +            // this.world.newExplosion(this, this.posX, this.posY, this.posZ, 1.0F, false, net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this.shootingEntity));
-+            ExplosionPrimeEvent event = new ExplosionPrimeEvent(this.getBukkitEntity(), 1.0F, false);
++            org.bukkit.event.entity.ExplosionPrimeEvent event = new org.bukkit.event.entity.ExplosionPrimeEvent(this.getBukkitEntity(), 1.0F, false);
 +            this.world.getServer().getPluginManager().callEvent(event);
 +
 +            if (!event.isCancelled()) {
@@ -94,39 +45,3 @@
              this.setDead();
          }
      }
- 
--    @Override
-     public boolean canBeCollidedWith()
-     {
-         return false;
-     }
- 
--    @Override
-     public boolean attackEntityFrom(DamageSource source, float amount)
-     {
-         return false;
-     }
- 
--    @Override
-     protected void entityInit()
-     {
--        this.dataManager.register(INVULNERABLE, false);
-+        this.dataManager.register(INVULNERABLE, Boolean.valueOf(false));
-     }
- 
-     public boolean isInvulnerable()
-     {
--        return this.dataManager.get(INVULNERABLE);
-+        return ((Boolean)this.dataManager.get(INVULNERABLE)).booleanValue();
-     }
- 
-     public void setInvulnerable(boolean invulnerable)
-     {
--        this.dataManager.set(INVULNERABLE, invulnerable);
-+        this.dataManager.set(INVULNERABLE, Boolean.valueOf(invulnerable));
-     }
- 
--    @Override
-     protected boolean isFireballFiery()
-     {
-         return false;

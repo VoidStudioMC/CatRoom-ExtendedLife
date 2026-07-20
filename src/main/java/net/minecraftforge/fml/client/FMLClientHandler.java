@@ -35,6 +35,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
+import com.cleanroommc.common.PatchModPresentChecker;
+import com.cleanroommc.kirino.KirinoClientCore;
+import com.cleanroommc.kirino.KirinoCommonCore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
@@ -112,6 +115,7 @@ import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.common.toposort.ModSortingException;
+import net.minecraftforge.fml.relauncher.CoreModManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.registries.GameData;
 
@@ -216,6 +220,20 @@ public class FMLClientHandler implements IFMLSidedHandler
         detectOptifine();
         SplashProgress.start();
         client = minecraft;
+
+        if (PatchModPresentChecker.isNotPresent()
+                && CoreModManager.hasNonCrlMods())
+        {
+            String warning = PatchModPresentChecker.getWarningMessage();
+            String prompt = "Press any key to continue, ESC to exit.";
+
+            if (!SplashProgress.confirm(warning, prompt))
+            {
+                SplashProgress.finish();
+                System.exit(0);
+            }
+        }
+
         this.resourcePackList = resourcePackList;
         this.metaSerializer = metaSerializer;
         this.resourcePackMap = Maps.newHashMap();
@@ -225,6 +243,8 @@ public class FMLClientHandler implements IFMLSidedHandler
             haltGame("FML will not run in demo mode", new RuntimeException());
             return;
         }
+
+        KirinoCommonCore.configEvent();
 
         List<String> injectedModContainers = FMLCommonHandler.instance().beginLoading(this);
         try
@@ -285,6 +305,8 @@ public class FMLClientHandler implements IFMLSidedHandler
                 sharedModList.put(sharedModId, sharedModDescriptor);
             }
         }
+
+        KirinoClientCore.init();
     }
 
     private void detectOptifine()
@@ -392,6 +414,8 @@ public class FMLClientHandler implements IFMLSidedHandler
         if (!hasError())
             Loader.instance().loadingComplete();
         SplashProgress.finish();
+
+        KirinoClientCore.postInit();
     }
 
     public void extendModList()
@@ -443,6 +467,22 @@ public class FMLClientHandler implements IFMLSidedHandler
     public Minecraft getClient()
     {
         return client;
+    }
+
+    /**
+     * Get the resource pack list, unmodifiable
+     * @return resource pack list
+     */
+    public List<IResourcePack> getResourcePackList() {
+        return Collections.unmodifiableList(resourcePackList);
+    }
+
+    /**
+     * Get the whole resource pack map, unmodifiable
+     * @return resource pack map
+     */
+    public Map<String, IResourcePack> getResourcePackMap() {
+        return Collections.unmodifiableMap(resourcePackMap);
     }
 
     /**

@@ -26,6 +26,9 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import com.cleanroommc.common.PatchModPresentChecker;
+import com.cleanroommc.kirino.KirinoCommonCore;
+import com.cleanroommc.kirino.KirinoServerCore;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
@@ -44,6 +47,7 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.StartupQuery;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import net.minecraftforge.fml.relauncher.CoreModManager;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -95,8 +99,22 @@ public class FMLServerHandler implements IFMLSidedHandler
     public void beginServerLoading(MinecraftServer minecraftServer)
     {
         server = minecraftServer;
+        KirinoCommonCore.configEvent();
+
+        if (PatchModPresentChecker.isNotPresent() && CoreModManager.hasNonCrlMods())
+        {
+            String text = PatchModPresentChecker.getWarningMessage() + "\n\n"
+                + "Run the command /fml confirm to proceed, or /fml cancel to abort.";
+            if (!StartupQuery.confirm(text))
+            {
+                StartupQuery.abort();
+            }
+        }
+
         Loader.instance().loadMods(injectedModContainers);
+
         Loader.instance().preinitializeMods();
+        KirinoServerCore.init();
     }
 
     /**
@@ -106,6 +124,7 @@ public class FMLServerHandler implements IFMLSidedHandler
     public void finishServerLoading()
     {
         Loader.instance().initializeMods();
+        KirinoServerCore.postInit();
     }
 
     @Override

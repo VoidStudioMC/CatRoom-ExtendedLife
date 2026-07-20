@@ -1,6 +1,6 @@
 --- before/net/minecraft/item/crafting/RecipeTippedArrow.java
 +++ after/net/minecraft/item/crafting/RecipeTippedArrow.java
-@@ -7,19 +7,24 @@
+@@ -7,11 +7,17 @@
  import net.minecraft.potion.PotionUtils;
  import net.minecraft.util.NonNullList;
  import net.minecraft.world.World;
@@ -10,7 +10,6 @@
 -public class RecipeTippedArrow implements IRecipe
 +public class RecipeTippedArrow extends ShapedRecipes implements IRecipe
  {
--    @Override
 +    public RecipeTippedArrow() {
 +        super("", 3, 3, NonNullList.from(Ingredient.EMPTY,
 +                Ingredient.fromItem(Items.ARROW), Ingredient.fromItem(Items.ARROW), Ingredient.fromItem(Items.ARROW),
@@ -18,52 +17,15 @@
 +                Ingredient.fromItem(Items.ARROW), Ingredient.fromItem(Items.ARROW), Ingredient.fromItem(Items.ARROW)),
 +                new ItemStack(Items.TIPPED_ARROW, 8));
 +    }
-+
++    
+     @Override
      public boolean matches(InventoryCrafting inv, World worldIn)
      {
-         if (inv.getWidth() == 3 && inv.getHeight() == 3)
-         {
--            for (int i = 0; i < inv.getWidth(); i++)
-+            for (int i = 0; i < inv.getWidth(); ++i)
-             {
--                for (int j = 0; j < inv.getHeight(); j++)
-+                for (int j = 0; j < inv.getHeight(); ++j)
-                 {
-                     ItemStack itemstack = inv.getStackInRowAndColumn(i, j);
- 
-@@ -52,7 +57,6 @@
-         }
-     }
- 
--    @Override
-     public ItemStack getCraftingResult(InventoryCrafting inv)
-     {
-         ItemStack itemstack = inv.getStackInRowAndColumn(1, 1);
-@@ -70,26 +74,21 @@
-         }
-     }
- 
--    @Override
-     public ItemStack getRecipeOutput()
-     {
-         return ItemStack.EMPTY;
-     }
- 
--    @Override
-     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
-     {
--        return NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
-+        return NonNullList.<ItemStack>withSize(inv.getSizeInventory(), ItemStack.EMPTY);
-     }
- 
--    @Override
-     public boolean isDynamic()
-     {
+@@ -88,7 +94,6 @@
          return true;
      }
  
 -    @SideOnly(Side.CLIENT)
--    @Override
+     @Override
      public boolean canFit(int width, int height)
      {
-         return width >= 2 && height >= 2;

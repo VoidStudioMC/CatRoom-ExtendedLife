@@ -203,7 +203,7 @@
 +    }
 +    // Spigot end
 +
-+    public static GameProfile updateGameprofile(GameProfile input)
++    public static GameProfile updateGameProfile(GameProfile input)
 +    {
 +        return com.google.common.util.concurrent.Futures.getUnchecked(updateGameprofile(input, com.google.common.base.Predicates.alwaysTrue(), true)); // CatServer
      }
