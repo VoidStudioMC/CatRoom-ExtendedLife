@@ -89,7 +89,7 @@ public class ModClassLoader extends URLClassLoader
         ActualClassLoader.classLoaderInclusions.put("org.bukkit.", true);
         ActualClassLoader.classLoaderInclusions.put("org.spigotmc.", true);
         ActualClassLoader.classLoaderInclusions.put("com.destroystokyo.paper.", true);
-        ActualClassLoader.classLoaderInclusions.put("org.apache.commons.pool2.", true);
+        ActualClassLoader.classLoaderInclusions.put("org.apache.commons.pool2.", true); // TODO: CREF - make a config i think
     }
 
     public void addFile(File modFile) throws MalformedURLException {
