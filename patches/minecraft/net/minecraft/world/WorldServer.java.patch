@@ -616,14 +616,17 @@
              if (progressCallback != null)
              {
                  progressCallback.displaySavingString("Saving level");
-@@ -1003,6 +1239,7 @@
+@@ -1003,8 +1239,9 @@
              }
  
              chunkproviderserver.saveChunks(all);
 +            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.WorldEvent.Save(this));
  
-             for (Chunk chunk : Lists.newArrayList(chunkproviderserver.getLoadedChunks()))
+-            for (Chunk chunk : Lists.newArrayList(chunkproviderserver.getLoadedChunks()))
++            for (Chunk chunk : chunkproviderserver.getLoadedChunks())
              {
+                 if (chunk != null && !this.playerChunkMap.contains(chunk.x, chunk.z))
+                 {
 @@ -1036,6 +1273,12 @@
              }
          }
