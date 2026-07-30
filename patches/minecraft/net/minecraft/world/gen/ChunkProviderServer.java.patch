@@ -9,13 +9,13 @@
  {
      private static final Logger LOGGER = LogManager.getLogger();
 -    private final Set<Long> droppedChunks = Sets.newHashSet();
-+    public final Set<Long> droppedChunks = Sets.newHashSet();
++    public final Set<Long> droppedChunks = new it.unimi.dsi.fastutil.longs.LongOpenHashSet();
 +    private static final double UNLOAD_QUEUE_RESIZE_FACTOR = 0.96;
      public final IChunkGenerator chunkGenerator;
      public final IChunkLoader chunkLoader;
      public final Long2ObjectMap<Chunk> loadedChunks = new Long2ObjectOpenHashMap<>(8192);
      public final WorldServer world;
-+    private final Set<Long> loadingChunks = com.google.common.collect.Sets.newHashSet();
++    private final Set<Long> loadingChunks = new it.unimi.dsi.fastutil.longs.LongOpenHashSet();
  
      public ChunkProviderServer(WorldServer worldObjIn, IChunkLoader chunkLoaderIn, IChunkGenerator chunkGeneratorIn)
      {

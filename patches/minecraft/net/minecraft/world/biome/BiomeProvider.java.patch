@@ -6,7 +6,7 @@
      private final BiomeCache biomeCache = new BiomeCache(this);
 -    private final List<Biome> biomesToSpawnIn = Lists.newArrayList(
 +    private final List<Biome> biomesToSpawnIn = Lists.newArrayList(allowedBiomes);
-+    public static List<Biome> allowedBiomes = Lists.newArrayList(
++    public static final List<Biome> allowedBiomes = Lists.newArrayList(
                  Biomes.FOREST, Biomes.PLAINS, Biomes.TAIGA, Biomes.TAIGA_HILLS, Biomes.FOREST_HILLS, Biomes.JUNGLE, Biomes.JUNGLE_HILLS
              );
  
