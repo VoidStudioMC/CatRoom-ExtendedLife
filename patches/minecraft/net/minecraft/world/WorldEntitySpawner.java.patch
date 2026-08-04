@@ -11,7 +11,7 @@
 +        for (ChunkPos coord : this.eligibleChunksForSpawning) {
 +            int x = coord.x;
 +            int z = coord.z;
-+            if (!((net.minecraft.world.gen.ChunkProviderServer) server.chunkProvider).droppedChunks.contains(coord) && server.isChunkLoaded(x, z, true)) {
++            if (!((net.minecraft.world.gen.ChunkProviderServer) server.chunkProvider).droppedChunks.contains(ChunkPos.asLong(x, z)) && server.isChunkLoaded(x, z, true)) {
 +                i += java.util.Objects.requireNonNull(server.getChunkProvider().getLoadedChunk(x, z)).entityCount.get(oClass);
 +            }
 +        }

@@ -616,18 +616,25 @@
              if (progressCallback != null)
              {
                  progressCallback.displaySavingString("Saving level");
-@@ -1003,8 +1239,9 @@
+@@ -1003,14 +1239,16 @@
              }
  
              chunkproviderserver.saveChunks(all);
 +            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.WorldEvent.Save(this));
  
 -            for (Chunk chunk : Lists.newArrayList(chunkproviderserver.getLoadedChunks()))
-+            for (Chunk chunk : chunkproviderserver.getLoadedChunks())
++            chunkproviderserver.getLoadedChunks().forEach(chunk -> // did it concurrent protect? but loadedChunks have only sync calls...
              {
                  if (chunk != null && !this.playerChunkMap.contains(chunk.x, chunk.z))
                  {
-@@ -1036,6 +1273,12 @@
+                     chunkproviderserver.queueUnload(chunk);
+                 }
+             }
++            );
+         }
+     }
+ 
+@@ -1036,6 +1274,12 @@
              }
          }
  
@@ -640,7 +647,7 @@
          this.worldInfo.setBorderSize(this.getWorldBorder().getDiameter());
          this.worldInfo.getBorderCenterX(this.getWorldBorder().getCenterX());
          this.worldInfo.getBorderCenterZ(this.getWorldBorder().getCenterZ());
-@@ -1047,6 +1290,13 @@
+@@ -1047,6 +1291,13 @@
          this.worldInfo.setBorderLerpTime(this.getWorldBorder().getTimeUntilTarget());
          this.saveHandler.saveWorldInfoWithPlayer(this.worldInfo, this.server.getPlayerList().getHostPlayerData());
          this.mapStorage.saveAllData();
@@ -654,7 +661,7 @@
      }
  
      @Override
-@@ -1060,7 +1310,7 @@
+@@ -1060,7 +1311,7 @@
      {
          for (Entity entity : Lists.newArrayList(entityCollection))
          {
@@ -663,7 +670,7 @@
              {
                  this.loadedEntityList.add(entity);
                  this.onEntityAdded(entity);
-@@ -1072,7 +1322,7 @@
+@@ -1072,7 +1323,7 @@
      {
          if (entityIn.isDead)
          {
@@ -672,7 +679,7 @@
              return false;
          }
          else
-@@ -1091,7 +1341,7 @@
+@@ -1091,7 +1342,7 @@
                  {
                      if (!(entityIn instanceof EntityPlayer))
                      {
@@ -681,7 +688,7 @@
                          return false;
                      }
  
-@@ -1142,6 +1392,15 @@
+@@ -1142,6 +1393,15 @@
      @Override
      public boolean addWeatherEffect(Entity entityIn)
      {
@@ -697,7 +704,7 @@
          if (super.addWeatherEffect(entityIn))
          {
              this.server
-@@ -1152,7 +1411,7 @@
+@@ -1152,7 +1412,7 @@
                  entityIn.posY,
                  entityIn.posZ,
                  512.0,
@@ -706,7 +713,7 @@
                  new SPacketSpawnGlobalEntity(entityIn)
              );
              return true;
-@@ -1179,11 +1438,19 @@
+@@ -1179,11 +1439,19 @@
          @Nullable Entity entityIn, double x, double y, double z, float strength, boolean causesFire, boolean damagesTerrain
      )
      {
@@ -729,7 +736,7 @@
          {
              explosion.clearAffectedBlockPositions();
          }
-@@ -1230,6 +1497,7 @@
+@@ -1230,6 +1498,7 @@
              {
                  if (this.fireBlockEvent(blockeventdata))
                  {
@@ -737,7 +744,7 @@
                      this.server
                      .getPlayerList()
                      .sendToAllNearExcept(
-@@ -1238,7 +1506,7 @@
+@@ -1238,7 +1507,7 @@
                          blockeventdata.getPosition().getY(),
                          blockeventdata.getPosition().getZ(),
                          64.0,
@@ -746,7 +753,7 @@
                          new SPacketBlockAction(
                              blockeventdata.getPosition(), blockeventdata.getBlock(), blockeventdata.getEventID(), blockeventdata.getEventParameter()
                          )
-@@ -1273,29 +1541,33 @@
+@@ -1273,29 +1542,33 @@
          {
              this.server
              .getPlayerList()
@@ -786,7 +793,7 @@
          }
      }
  
-@@ -1358,23 +1630,30 @@
+@@ -1358,23 +1631,30 @@
          int... particleArguments
      )
      {
@@ -822,7 +829,7 @@
              this.sendPacketWithinDistance(entityplayermp, longDistance, xCoord, yCoord, zCoord, spacketparticles);
          }
      }
-@@ -1456,6 +1735,11 @@
+@@ -1456,6 +1736,11 @@
      public FunctionManager getFunctionManager()
      {
          return this.functionManager;
