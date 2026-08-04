@@ -5,43 +5,46 @@ CatRoom is a Cleanroom+Bukkit+Spigot server software forked from [CatServer](htt
 
 This fork is supporting by VoidStudio. We are on [Discord](https://discord.gg/RXUY7nkEKY)!
 
-Cleanroom version: 0.3.24-alpha
+Cleanroom version: 0.5.17-alpha
 
-All updates will continue to be released in 2026
+## Features
+### Implemented
 
-## Recommendations:
-- Use Java 25 or higher for running server
-- Install [HybridFix](https://modrinth.com/mod/hybridfix) for some fixes and more features
-
-## Features:
-
-- Replaced Forge with Cleanroom
-- Enhanced mod compatibility
+- 1.12.2 on Java 25+
+- A working *mod development template/kit*
+- Patches for loading incompatible mods
+- Built-in Mixin w/ handy bootstrapping
+- Develop using Scala 3 + Kotlin 2
+- Compatibility to 99% of Forge mods
 - Built-in Forge-Bukkit permission bridge
-- Make use of modern Java features
 - Optimized plugin performance
 
-For all fixes, see [fixed upstream issues](FIXED_UPSTREAM_ISSUES.md)
+### Planning
+
+- CleanroomGradle to replace ForgeGradle
+- Actually useful APIs (See [here](https://github.com/orgs/CleanroomMC/projects/4/))
+- Optimized PLEASE FUNKYRA DON'T FORGET ABOUT THIS
 
 ## Components:
 
 - Minecraft Coder Pack
 - CleanroomLoader (Continuation + Revamp of ForgeModLoader)
 - Cleanroom Minecraft (Continuation + Revamp of MinecraftForge)
-- Customized Mixin
+- Customized Mixin with improved bootstraps
+- [Foundation](https://github.com/kappa-maintainer/Foundation/), a LaunchWrapper replacement with better debug logging.
 - Bytecode Patcher (Coming Soon) \[Inspired by [Bansoukou](https://github.com/LoliKingdom/Bansoukou) and [Bytecode Patcher](https://github.com/jbredwards/Bytecode-Patcher)]
-- [Fugue](https://www.curseforge.com/minecraft/mc-mods/fugue), a mod patches many incompatibilities.
-- Javassist
+- [Fugue](https://www.curseforge.com/minecraft/mc-mods/fugue), a mod patches many incompatible mods.
 - [Scalar](https://www.curseforge.com/minecraft/mc-mods/scalar-legacy), a Scala provider. We made Scala libraries become a standalone mod so it can be updated.
 - [Forgelin-Continuous](https://www.curseforge.com/minecraft/mc-mods/forgelin-continuous) and [LibrarianLib-Continuous](https://www.curseforge.com/minecraft/mc-mods/librarianlib-continuous)
+- Some fixes includes in [fixed upstream issues](FIXED_UPSTREAM_ISSUES.md)
 
 ### About Cross-compat Between Forge and Cleanroom
 
-- Cleanroom mods (Fugue, Scalar) will be ignored by Forge, so then won't crash existed players
-- Cleanroom integrated mods (MixinBooter, ConfigAnyTime) will be ignored by Cleanroom, then won't crash new players
+- Cleanroom mods (Fugue, Scalar) will be ignored by Forge, so then won't crash Forge
+- Jar of Cleanroom integrated mods (MixinBooter, ConfigAnyTime) will be ignored by Cleanroom, then won't crash under Cleanroom
 - The version of built-in MixinBooter is configurable in forge_early.cfg
 
-### List of Obsoleted/Incompatible Mods
+### List of Obsoleted/Incompatible Mods ?? is it actually ??
 
 - SpongeForge: Use [SpongeForge LTS](https://www.curseforge.com/minecraft/mc-mods/spongeforge)
 - Phosphor: Use [Hesperus](https://www.curseforge.com/minecraft/mc-mods/hesperus) or [Alfheim Lighting Engine](https://www.curseforge.com/minecraft/mc-mods/alfheim-lighting-engine)
@@ -55,10 +58,11 @@ For all fixes, see [fixed upstream issues](FIXED_UPSTREAM_ISSUES.md)
 ## Build Instructions:
 
 1. Clone this repository
-2. Import the `build.gradle` into your IDE (most preferably IntelliJ IDEA)
-3. Once the import has finished, run `gradlew setup`
-4. Run `gradlew --stop` to stop the daemon and prevent ForgeGradle gone wrong 
-5. Build with `gradlew build`
+2. `git submodule init` then `git submodule update` ???
+3. Import the `build.gradle` into your IDE (most preferably IntelliJ IDEA)
+4. Once the import has finished, run `gradlew setup`
+5. Run `gradlew --stop` to stop the daemon and prevent ForgeGradle gone wrong
+6. Build with `gradlew build`
 
 ## Development Tips:
 

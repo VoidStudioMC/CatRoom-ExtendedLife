@@ -18,8 +18,8 @@
  
      public EntityTippedArrow(World worldIn)
 @@ -140,7 +141,7 @@
-             double d1 = (double)(i >> 8 & 0xFF) / 255.0;
-             double d2 = (double)(i >> 0 & 0xFF) / 255.0;
+             double d1 = (i >> 8 & 0xFF) / 255.0;
+             double d2 = (i >> 0 & 0xFF) / 255.0;
  
 -            for (int j = 0; j < particleCount; j++)
 +            for (int j = 0; j < particleCount; ++j)
@@ -59,8 +59,8 @@
          this.fixedColor = true;
          this.dataManager.set(COLOR, p_191507_1_);
 @@ -296,7 +315,7 @@
-                 double d1 = (double)(i >> 8 & 0xFF) / 255.0;
-                 double d2 = (double)(i >> 0 & 0xFF) / 255.0;
+                 double d1 = (i >> 8 & 0xFF) / 255.0;
+                 double d2 = (i >> 0 & 0xFF) / 255.0;
  
 -                for (int j = 0; j < 20; j++)
 +                for (int j = 0; j < 20; ++j)

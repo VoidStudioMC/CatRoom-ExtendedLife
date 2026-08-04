@@ -1,17 +1,6 @@
 --- before/net/minecraft/world/chunk/storage/AnvilChunkLoader.java
 +++ after/net/minecraft/world/chunk/storage/AnvilChunkLoader.java
-@@ -37,8 +37,8 @@
- public class AnvilChunkLoader implements IChunkLoader, IThreadedFileIO
- {
-     private static final Logger LOGGER = LogManager.getLogger();
--    private final Map<ChunkPos, NBTTagCompound> chunksToSave = Maps.newConcurrentMap();
--    private final Set<ChunkPos> chunksBeingSaved = Collections.newSetFromMap(Maps.newConcurrentMap());
-+    private final Map<ChunkPos, NBTTagCompound> chunksToSave = Maps.<ChunkPos, NBTTagCompound>newConcurrentMap();
-+    private final Set<ChunkPos> chunksBeingSaved = Collections.<ChunkPos>newSetFromMap(Maps.newConcurrentMap());
-     public final File chunkSaveLocation;
-     private final DataFixer fixer;
-     private boolean flushing;
-@@ -49,29 +49,50 @@
+@@ -49,26 +49,50 @@
          this.fixer = dataFixerIn;
      }
  
@@ -22,12 +11,13 @@
 +    }
 +
      @Nullable
--    @Override
+     @Override
      public Chunk loadChunk(World worldIn, int x, int z) throws IOException
      {
 +        worldIn.timings.syncChunkLoadDataTimer.startTiming(); // Spigot
 +        Object[] data = this.loadChunk__Async(worldIn, x, z);
 +        worldIn.timings.syncChunkLoadDataTimer.stopTiming(); // Spigot
++
 +        if (data != null)
 +        {
 +            Chunk chunk = (Chunk) data[0];
@@ -48,7 +38,7 @@
          if (nbttagcompound == null)
          {
 -            DataInputStream datainputstream = RegionFileCache.getChunkInputStream(this.chunkSaveLocation, x, z);
-+            NBTTagCompound nbtTagCompound = RegionFileCache.getChunkInputStreamCB(this.chunkSaveLocation, x, z);
++            NBTTagCompound nbtTagCompound = RegionFileCache.getChunkInputStreamCB(this.chunkSaveLocation, x, z); // TODO: CREF: it looks so strange...
  
 -            if (datainputstream == null)
 +            if (nbtTagCompound == null)
@@ -64,11 +54,8 @@
 +        return this.checkedReadChunkFromNBT__Async(worldIn, x, z, nbttagcompound);
      }
  
--    @Override
-     public boolean isChunkGeneratedAt(int x, int z)
-     {
-         ChunkPos chunkpos = new ChunkPos(x, z);
-@@ -82,9 +103,16 @@
+     @Override
+@@ -82,6 +106,13 @@
      @Nullable
      protected Chunk checkedReadChunkFromNBT(World worldIn, int x, int z, NBTTagCompound compound)
      {
@@ -81,34 +68,9 @@
 +    {
          if (!compound.hasKey("Level", 10))
          {
--            LOGGER.error("Chunk file at {},{} is missing level data, skipping", x, z);
-+            LOGGER.error("Chunk file at {},{} is missing level data, skipping", Integer.valueOf(x), Integer.valueOf(z));
-             return null;
-         }
-         else
-@@ -93,7 +121,7 @@
- 
-             if (!nbttagcompound.hasKey("Sections", 9))
-             {
--                LOGGER.error("Chunk file at {},{} is missing block data, skipping", x, z);
-+                LOGGER.error("Chunk file at {},{} is missing block data, skipping", Integer.valueOf(x), Integer.valueOf(z));
-                 return null;
-             }
-             else
-@@ -102,25 +130,36 @@
- 
-                 if (!chunk.isAtLocation(x, z))
-                 {
--                    LOGGER.error(
--                        "Chunk file at {},{} is in the wrong location; relocating. (Expected {}, {}, got {}, {})",
--                        x,
--                        z,
--                        x,
--                        z,
--                        chunk.x,
--                        chunk.z
--                    );
-+                    LOGGER.error("Chunk file at {},{} is in the wrong location; relocating. (Expected {}, {}, got {}, {})", Integer.valueOf(x), Integer.valueOf(z), Integer.valueOf(x), Integer.valueOf(z), Integer.valueOf(chunk.x), Integer.valueOf(chunk.z));
+             LOGGER.error("Chunk file at {},{} is missing level data, skipping", x, z);
+@@ -113,10 +144,29 @@
+                     );
                      nbttagcompound.setInteger("xPos", x);
                      nbttagcompound.setInteger("zPos", z);
 +
@@ -138,12 +100,7 @@
              }
          }
      }
--    @Override
-+
-     public void saveChunk(World worldIn, Chunk chunkIn) throws MinecraftException, IOException
-     {
-         worldIn.checkSessionLock();
-@@ -131,7 +170,10 @@
+@@ -131,7 +181,10 @@
              NBTTagCompound nbttagcompound1 = new NBTTagCompound();
              nbttagcompound.setTag("Level", nbttagcompound1);
              nbttagcompound.setInteger("DataVersion", 1343);
@@ -154,23 +111,7 @@
              this.addChunkToPending(chunkIn.getPos(), nbttagcompound);
          }
          catch (Exception exception)
-@@ -150,14 +192,13 @@
-         ThreadedFileIOBase.getThreadedIOInstance().queueIO(this);
-     }
- 
--    @Override
-     public boolean writeNextIO()
-     {
-         if (this.chunksToSave.isEmpty())
-         {
-             if (this.flushing)
-             {
--                LOGGER.info("ThreadedAnvilChunkStorage ({}): All chunks are saved", this.chunkSaveLocation.getName());
-+                LOGGER.info("ThreadedAnvilChunkStorage ({}): All chunks are saved", (Object)this.chunkSaveLocation.getName());
-             }
- 
-             return false;
-@@ -197,31 +238,27 @@
+@@ -197,9 +250,10 @@
  
      private void writeChunkData(ChunkPos pos, NBTTagCompound compound) throws IOException
      {
@@ -183,73 +124,8 @@
 +        RegionFileCache.getChunkOutputStream(this.chunkSaveLocation, pos.x, pos.z, compound);
      }
  
--    @Override
-     public void saveExtraChunkData(World worldIn, Chunk chunkIn) throws IOException
-     {
-     }
- 
--    @Override
-     public void chunkTick()
-     {
-     }
- 
--    @Override
-     public void flush()
-     {
-         try
-         {
-             this.flushing = true;
- 
--            while (this.writeNextIO())
--            {
--            }
-+            while (this.writeNextIO());
-         }
-         finally
-         {
-@@ -233,7 +270,6 @@
-     {
-         fixer.registerWalker(FixTypes.CHUNK, new IDataWalker()
-         {
--            @Override
-             public NBTTagCompound process(IDataFixer fixer, NBTTagCompound compound, int versionIn)
-             {
-                 if (compound.hasKey("Level", 10))
-@@ -244,7 +280,7 @@
-                     {
-                         NBTTagList nbttaglist = nbttagcompound.getTagList("Entities", 10);
- 
--                        for (int i = 0; i < nbttaglist.tagCount(); i++)
-+                        for (int i = 0; i < nbttaglist.tagCount(); ++i)
-                         {
-                             nbttaglist.set(i, fixer.process(FixTypes.ENTITY, (NBTTagCompound)nbttaglist.get(i), versionIn));
-                         }
-@@ -254,7 +290,7 @@
-                     {
-                         NBTTagList nbttaglist1 = nbttagcompound.getTagList("TileEntities", 10);
- 
--                        for (int j = 0; j < nbttaglist1.tagCount(); j++)
-+                        for (int j = 0; j < nbttaglist1.tagCount(); ++j)
-                         {
-                             nbttaglist1.set(j, fixer.process(FixTypes.BLOCK_ENTITY, (NBTTagCompound)nbttaglist1.get(j), versionIn));
-                         }
-@@ -284,7 +320,7 @@
-             if (extendedblockstorage != Chunk.NULL_BLOCK_STORAGE)
-             {
-                 NBTTagCompound nbttagcompound = new NBTTagCompound();
--                nbttagcompound.setByte("Y", (byte)(extendedblockstorage.getYLocation() >> 4 & 0xFF));
-+                nbttagcompound.setByte("Y", (byte)(extendedblockstorage.getYLocation() >> 4 & 255));
-                 byte[] abyte = new byte[4096];
-                 NibbleArray nibblearray = new NibbleArray();
-                 NibbleArray nibblearray1 = extendedblockstorage.getData().getDataForNBT(abyte, nibblearray);
-@@ -316,17 +352,25 @@
-         chunkIn.setHasEntities(false);
-         NBTTagList nbttaglist1 = new NBTTagList();
- 
--        for (int i = 0; i < chunkIn.getEntityLists().length; i++)
-+        for (int i = 0; i < chunkIn.getEntityLists().length; ++i)
-         {
-             for (Entity entity : chunkIn.getEntityLists()[i])
+     @Override
+@@ -322,11 +376,19 @@
              {
                  NBTTagCompound nbttagcompound2 = new NBTTagCompound();
  
@@ -269,7 +145,7 @@
              }
          }
  
-@@ -335,8 +379,16 @@
+@@ -335,8 +397,16 @@
  
          for (TileEntity tileentity : chunkIn.getTileEntityMap().values())
          {
@@ -286,7 +162,7 @@
          }
  
          compound.setTag("TileEntities", nbttaglist2);
-@@ -362,6 +414,18 @@
+@@ -362,6 +432,18 @@
  
              compound.setTag("TileTicks", nbttaglist3);
          }
@@ -305,16 +181,7 @@
      }
  
      private Chunk readChunkFromNBT(World worldIn, NBTTagCompound compound)
-@@ -378,7 +442,7 @@
-         ExtendedBlockStorage[] aextendedblockstorage = new ExtendedBlockStorage[16];
-         boolean flag = worldIn.provider.hasSkyLight();
- 
--        for (int l = 0; l < nbttaglist.tagCount(); l++)
-+        for (int l = 0; l < nbttaglist.tagCount(); ++l)
-         {
-             NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(l);
-             int i1 = nbttagcompound.getByte("Y");
-@@ -405,18 +469,30 @@
+@@ -405,6 +487,17 @@
              chunk.setBiomeArray(compound.getByteArray("Biomes"));
          }
  
@@ -331,50 +198,27 @@
 +        worldIn.timings.syncChunkLoadEntitiesTimer.startTiming(); // Spigot
          NBTTagList nbttaglist1 = compound.getTagList("Entities", 10);
  
--        for (int j1 = 0; j1 < nbttaglist1.tagCount(); j1++)
-+        for (int j1 = 0; j1 < nbttaglist1.tagCount(); ++j1)
-         {
-             NBTTagCompound nbttagcompound1 = nbttaglist1.getCompoundTagAt(j1);
-             readChunkEntity(nbttagcompound1, worldIn, chunk);
+         for (int j1 = 0; j1 < nbttaglist1.tagCount(); j1++)
+@@ -414,6 +507,8 @@
              chunk.setHasEntities(true);
          }
--
+ 
 +        worldIn.timings.syncChunkLoadEntitiesTimer.stopTiming(); // Spigot
 +        worldIn.timings.syncChunkLoadTileEntitiesTimer.startTiming(); // Spigot
          NBTTagList nbttaglist2 = compound.getTagList("TileEntities", 10);
  
--        for (int k1 = 0; k1 < nbttaglist2.tagCount(); k1++)
-+        for (int k1 = 0; k1 < nbttaglist2.tagCount(); ++k1)
-         {
-             NBTTagCompound nbttagcompound2 = nbttaglist2.getCompoundTagAt(k1);
-             TileEntity tileentity = TileEntity.create(worldIn, nbttagcompound2);
-@@ -426,12 +502,13 @@
+         for (int k1 = 0; k1 < nbttaglist2.tagCount(); k1++)
+@@ -426,6 +521,8 @@
                  chunk.addTileEntity(tileentity);
              }
          }
--
 +        worldIn.timings.syncChunkLoadTileEntitiesTimer.stopTiming(); // Spigot
 +        worldIn.timings.syncChunkLoadTileTicksTimer.startTiming(); // Spigot
+ 
          if (compound.hasKey("TileTicks", 9))
          {
-             NBTTagList nbttaglist3 = compound.getTagList("TileTicks", 10);
- 
--            for (int l1 = 0; l1 < nbttaglist3.tagCount(); l1++)
-+            for (int l1 = 0; l1 < nbttaglist3.tagCount(); ++l1)
-             {
-                 NBTTagCompound nbttagcompound3 = nbttaglist3.getCompoundTagAt(l1);
-                 Block block;
-@@ -445,16 +522,10 @@
-                     block = Block.getBlockById(nbttagcompound3.getInteger("i"));
-                 }
- 
--                worldIn.scheduleBlockUpdate(
--                    new BlockPos(nbttagcompound3.getInteger("x"), nbttagcompound3.getInteger("y"), nbttagcompound3.getInteger("z")),
--                    block,
--                    nbttagcompound3.getInteger("t"),
--                    nbttagcompound3.getInteger("p")
--                );
-+                worldIn.scheduleBlockUpdate(new BlockPos(nbttagcompound3.getInteger("x"), nbttagcompound3.getInteger("y"), nbttagcompound3.getInteger("z")), block, nbttagcompound3.getInteger("t"), nbttagcompound3.getInteger("p"));
+@@ -453,8 +550,7 @@
+                 );
              }
          }
 -
@@ -383,68 +227,20 @@
      }
  
      @Nullable
-@@ -474,7 +545,7 @@
-             {
-                 NBTTagList nbttaglist = compound.getTagList("Passengers", 10);
- 
--                for (int i = 0; i < nbttaglist.tagCount(); i++)
-+                for (int i = 0; i < nbttaglist.tagCount(); ++i)
-                 {
-                     Entity entity1 = readChunkEntity(nbttaglist.getCompoundTagAt(i), worldIn, chunkIn);
- 
-@@ -490,9 +561,7 @@
-     }
- 
-     @Nullable
--    public static Entity readWorldEntityPos(
--            NBTTagCompound compound, World worldIn, double x, double y, double z, boolean attemptSpawn
--        )
-+    public static Entity readWorldEntityPos(NBTTagCompound compound, World worldIn, double x, double y, double z, boolean attemptSpawn)
-     {
-         Entity entity = createEntityFromNBT(compound, worldIn);
- 
-@@ -514,7 +583,7 @@
-                 {
-                     NBTTagList nbttaglist = compound.getTagList("Passengers", 10);
- 
--                    for (int i = 0; i < nbttaglist.tagCount(); i++)
-+                    for (int i = 0; i < nbttaglist.tagCount(); ++i)
-                     {
-                         Entity entity1 = readWorldEntityPos(nbttaglist.getCompoundTagAt(i), worldIn, x, y, z, attemptSpawn);
- 
-@@ -537,7 +606,7 @@
-         {
-             return EntityList.createEntityFromNBT(compound, worldIn);
-         }
--        catch (RuntimeException runtimeexception)
-+        catch (RuntimeException var3)
-         {
-             return null;
-         }
-@@ -545,8 +614,11 @@
+@@ -545,7 +641,11 @@
  
      public static void spawnEntity(Entity entityIn, World worldIn)
      {
 -        if (worldIn.spawnEntity(entityIn) && entityIn.isBeingRidden())
--        {
 +        spawnEntity(entityIn, worldIn, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.DEFAULT);
 +    }
 +
 +    public static void spawnEntity(Entity entityIn, World worldIn, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason reason) {
-+        if (worldIn.addEntity(entityIn, reason) && entityIn.isBeingRidden()) {
++        if (worldIn.addEntity(entityIn, reason) && entityIn.isBeingRidden())
+         {
              for (Entity entity : entityIn.getPassengers())
              {
-                 spawnEntity(entity, worldIn);
-@@ -573,7 +645,7 @@
-             {
-                 NBTTagList nbttaglist = compound.getTagList("Passengers", 10);
- 
--                for (int i = 0; i < nbttaglist.tagCount(); i++)
-+                for (int i = 0; i < nbttaglist.tagCount(); ++i)
-                 {
-                     Entity entity1 = readWorldEntity(nbttaglist.getCompoundTagAt(i), worldIn, p_186051_2_);
- 
-@@ -587,4 +659,15 @@
+@@ -587,4 +687,15 @@
              return entity;
          }
      }

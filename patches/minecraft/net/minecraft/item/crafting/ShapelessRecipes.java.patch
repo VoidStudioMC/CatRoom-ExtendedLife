@@ -1,16 +1,11 @@
 --- before/net/minecraft/item/crafting/ShapelessRecipes.java
 +++ after/net/minecraft/item/crafting/ShapelessRecipes.java
-@@ -9,97 +9,93 @@
- import net.minecraft.item.ItemStack;
+@@ -10,23 +10,27 @@
  import net.minecraft.util.JsonUtils;
  import net.minecraft.util.NonNullList;
-+import net.minecraft.util.ResourceLocation;
  import net.minecraft.world.World;
 -import net.minecraftforge.fml.relauncher.Side;
 -import net.minecraftforge.fml.relauncher.SideOnly;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftShapelessRecipe;
-+import org.bukkit.inventory.Recipe;
  
 -public class ShapelessRecipes implements IRecipe
 +public class ShapelessRecipes extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
@@ -20,7 +15,7 @@
      private final String group;
 +    private final boolean isSimple;
 +
-+    public ResourceLocation key;
++    public net.minecraft.util.ResourceLocation key;
  
      public ShapelessRecipes(String group, ItemStack output, NonNullList<Ingredient> ingredients)
      {
@@ -34,32 +29,10 @@
      }
  
 -    @SideOnly(Side.CLIENT)
--    @Override
+     @Override
      public String getGroup()
      {
-         return this.group;
-     }
- 
--    @Override
-     public ItemStack getRecipeOutput()
-     {
-         return this.recipeOutput;
-     }
- 
--    @Override
-     public NonNullList<Ingredient> getIngredients()
-     {
-         return this.recipeItems;
-     }
- 
--    @Override
-     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
-     {
--        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
-+        NonNullList<ItemStack> nonnulllist = NonNullList.<ItemStack>withSize(inv.getSizeInventory(), ItemStack.EMPTY);
- 
--        for (int i = 0; i < nonnulllist.size(); i++)
-+        for (int i = 0; i < nonnulllist.size(); ++i)
+@@ -54,10 +58,7 @@
          {
              ItemStack itemstack = inv.getStackInSlot(i);
  
@@ -71,9 +44,8 @@
          }
  
          return nonnulllist;
-     }
- 
--    @Override
+@@ -66,7 +67,9 @@
+     @Override
      public boolean matches(InventoryCrafting inv, World worldIn)
      {
 -        List<Ingredient> list = Lists.newArrayList(this.recipeItems);
@@ -81,13 +53,9 @@
 +        net.minecraft.client.util.RecipeItemHelper recipeItemHelper = new net.minecraft.client.util.RecipeItemHelper();
 +        List<ItemStack> inputs = Lists.newArrayList();
  
--        for (int i = 0; i < inv.getHeight(); i++)
-+        for (int i = 0; i < inv.getHeight(); ++i)
+         for (int i = 0; i < inv.getHeight(); i++)
          {
--            for (int j = 0; j < inv.getWidth(); j++)
-+            for (int j = 0; j < inv.getWidth(); ++j)
-             {
-                 ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
+@@ -76,27 +79,22 @@
  
                  if (!itemstack.isEmpty())
                  {
@@ -126,37 +94,22 @@
 +        return net.minecraftforge.common.util.RecipeMatcher.findMatches(inputs, this.recipeItems) != null;
      }
  
--    @Override
-     public ItemStack getCraftingResult(InventoryCrafting inv)
-     {
-         return this.recipeOutput.copy();
-@@ -127,9 +123,9 @@
- 
-     private static NonNullList<Ingredient> deserializeIngredients(JsonArray array)
-     {
--        NonNullList<Ingredient> nonnulllist = NonNullList.create();
-+        NonNullList<Ingredient> nonnulllist = NonNullList.<Ingredient>create();
- 
--        for (int i = 0; i < array.size(); i++)
-+        for (int i = 0; i < array.size(); ++i)
-         {
-             Ingredient ingredient = ShapedRecipes.deserializeIngredient(array.get(i));
- 
-@@ -142,10 +138,29 @@
+     @Override
+@@ -142,10 +140,30 @@
          return nonnulllist;
      }
  
 -    @SideOnly(Side.CLIENT)
--    @Override
+     @Override
      public boolean canFit(int width, int height)
      {
          return width * height >= this.recipeItems.size();
 +    }
 +
 +    @Override
-+    public Recipe toBukkitRecipe() {
-+        CraftItemStack result = CraftItemStack.asCraftMirror(this.recipeOutput);
-+        CraftShapelessRecipe recipe = new CraftShapelessRecipe(result, this);
++    public org.bukkit.inventory.Recipe toBukkitRecipe() {
++        org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack result = org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asCraftMirror(this.recipeOutput);
++        org.bukkit.craftbukkit.v1_12_R1.inventory.CraftShapelessRecipe recipe = new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftShapelessRecipe(result, this);
 +        for (Ingredient list : this.recipeItems) {
 +            if (list != null) { // CatServer - get recipe from OreDictionary
 +                ItemStack[] matchingStacks = list.getMatchingStacks();
@@ -170,7 +123,7 @@
 +    }
 +
 +    @Override
-+    public void setKey(ResourceLocation key) {
++    public void setKey(net.minecraft.util.ResourceLocation key) {
 +        this.key = key;
      }
  }

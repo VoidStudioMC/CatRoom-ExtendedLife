@@ -1,34 +1,14 @@
 --- before/net/minecraft/block/BlockDynamicLiquid.java
 +++ after/net/minecraft/block/BlockDynamicLiquid.java
-@@ -9,6 +9,8 @@
- import net.minecraft.util.EnumFacing;
- import net.minecraft.util.math.BlockPos;
- import net.minecraft.world.World;
-+import org.bukkit.block.BlockFace;
-+import org.bukkit.event.block.BlockFromToEvent;
- 
- public class BlockDynamicLiquid extends BlockLiquid
- {
-@@ -21,15 +23,13 @@
- 
-     private void placeStaticBlock(World worldIn, BlockPos pos, IBlockState currentState)
-     {
--        worldIn.setBlockState(
--            pos, getStaticBlock(this.material).getDefaultState().withProperty(LEVEL, currentState.getValue(LEVEL)), 2
--        );
-+        worldIn.setBlockState(pos, getStaticBlock(this.material).getDefaultState().withProperty(LEVEL, currentState.getValue(LEVEL)), 2);
-     }
- 
--    @Override
+@@ -29,6 +29,7 @@
+     @Override
      public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
      {
--        int i = state.getValue(LEVEL);
 +        if (!worldIn.isAreaLoaded(pos, this.getSlopeFindDistance(worldIn))) return; // Forge: avoid loading unloaded chunks
-+        int i = ((Integer)state.getValue(LEVEL)).intValue();
+         int i = state.getValue(LEVEL);
          int j = 1;
  
-         if (this.material == Material.LAVA && !worldIn.provider.doesWaterVaporize())
-@@ -70,7 +70,7 @@
+@@ -70,7 +71,7 @@
                  }
              }
  
@@ -37,25 +17,7 @@
              {
                  IBlockState iblockstate = worldIn.getBlockState(pos.down());
  
-@@ -78,7 +78,7 @@
-                 {
-                     i1 = 0;
-                 }
--                else if (iblockstate.getMaterial() == this.material && iblockstate.getValue(LEVEL) == 0)
-+                else if (iblockstate.getMaterial() == this.material && ((Integer)iblockstate.getValue(LEVEL)).intValue() == 0)
-                 {
-                     i1 = 0;
-                 }
-@@ -103,7 +103,7 @@
-                 }
-                 else
-                 {
--                    state = state.withProperty(LEVEL, i1);
-+                    state = state.withProperty(LEVEL, Integer.valueOf(i1));
-                     worldIn.setBlockState(pos, state, 2);
-                     worldIn.scheduleUpdate(pos, this, k);
-                     worldIn.notifyNeighborsOfStateChange(pos, this, false);
-@@ -115,15 +115,22 @@
+@@ -115,15 +116,23 @@
              this.placeStaticBlock(worldIn, pos, state);
          }
  
@@ -64,15 +26,14 @@
  
          if (this.canFlowInto(worldIn, pos.down(), iblockstate1))
          {
--            if (this.material == Material.LAVA
--                    && worldIn.getBlockState(pos.down()).getMaterial() == Material.WATER)
-+            BlockFromToEvent event = new BlockFromToEvent(source, BlockFace.DOWN);
++            org.bukkit.event.block.BlockFromToEvent event = new org.bukkit.event.block.BlockFromToEvent(source, org.bukkit.block.BlockFace.DOWN);
 +            worldIn.getServer().getPluginManager().callEvent(event);
 +
 +            if (event.isCancelled()) {
 +                return;
 +            }
-+            if (this.material == Material.LAVA && worldIn.getBlockState(pos.down()).getMaterial() == Material.WATER)
+             if (this.material == Material.LAVA
+                     && worldIn.getBlockState(pos.down()).getMaterial() == Material.WATER)
              {
 -                worldIn.setBlockState(pos.down(), Blocks.STONE.getDefaultState());
 -                this.triggerMixEffects(worldIn, pos.down());
@@ -82,12 +43,12 @@
                  return;
              }
  
-@@ -153,14 +160,19 @@
+@@ -153,14 +162,19 @@
  
              for (EnumFacing enumfacing1 : set)
              {
 -                this.tryFlowInto(worldIn, pos.offset(enumfacing1), worldIn.getBlockState(pos.offset(enumfacing1)), k1);
-+                BlockFromToEvent event = new BlockFromToEvent(source, org.bukkit.craftbukkit.v1_12_R1.block.CraftBlock.notchToBlockFace(enumfacing1));
++                org.bukkit.event.block.BlockFromToEvent event = new org.bukkit.event.block.BlockFromToEvent(source, org.bukkit.craftbukkit.v1_12_R1.block.CraftBlock.notchToBlockFace(enumfacing1));
 +                worldIn.getServer().getPluginManager().callEvent(event);
 +
 +                if (!event.isCancelled()) {
@@ -104,7 +65,7 @@
          {
              if (state.getMaterial() != Material.AIR)
              {
-@@ -170,11 +182,12 @@
+@@ -170,6 +184,7 @@
                  }
                  else
                  {
@@ -112,44 +73,16 @@
                      state.getBlock().dropBlockAsItem(worldIn, pos, state, 0);
                  }
              }
- 
--            worldIn.setBlockState(pos, this.getDefaultState().withProperty(LEVEL, level), 3);
-+            worldIn.setBlockState(pos, this.getDefaultState().withProperty(LEVEL, Integer.valueOf(level)), 3);
-         }
-     }
- 
-@@ -189,10 +202,9 @@
-                 BlockPos blockpos = pos.offset(enumfacing);
-                 IBlockState iblockstate = worldIn.getBlockState(blockpos);
- 
--                if (!this.isBlocked(worldIn, blockpos, iblockstate)
--                        && (iblockstate.getMaterial() != this.material || iblockstate.getValue(LEVEL) > 0))
-+                if (!this.isBlocked(worldIn, blockpos, iblockstate) && (iblockstate.getMaterial() != this.material || ((Integer)iblockstate.getValue(LEVEL)).intValue() > 0))
+@@ -192,7 +207,7 @@
+                 if (!this.isBlocked(worldIn, blockpos, iblockstate)
+                         && (iblockstate.getMaterial() != this.material || iblockstate.getValue(LEVEL) > 0))
                  {
 -                    if (!this.isBlocked(worldIn, blockpos.down(), iblockstate))
 +                    if (!this.isBlocked(worldIn, blockpos.down(), worldIn.getBlockState(blockpos.down())))
                      {
                          return distance;
                      }
-@@ -221,15 +233,14 @@
-     private Set<EnumFacing> getPossibleFlowDirections(World worldIn, BlockPos pos)
-     {
-         int i = 1000;
--        Set<EnumFacing> set = EnumSet.noneOf(EnumFacing.class);
-+        Set<EnumFacing> set = EnumSet.<EnumFacing>noneOf(EnumFacing.class);
- 
-         for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
-         {
-             BlockPos blockpos = pos.offset(enumfacing);
-             IBlockState iblockstate = worldIn.getBlockState(blockpos);
- 
--            if (!this.isBlocked(worldIn, blockpos, iblockstate)
--                    && (iblockstate.getMaterial() != this.material || iblockstate.getValue(LEVEL) > 0))
-+            if (!this.isBlocked(worldIn, blockpos, iblockstate) && (iblockstate.getMaterial() != this.material || ((Integer)iblockstate.getValue(LEVEL)).intValue() > 0))
-             {
-                 int j;
- 
-@@ -260,16 +271,17 @@
+@@ -260,7 +275,8 @@
  
      private boolean isBlocked(World worldIn, BlockPos pos, IBlockState state)
      {
@@ -157,36 +90,14 @@
 +        Block block = state.getBlock(); //Forge: state must be valid for position
 +        Material mat = state.getMaterial();
  
--        if (block instanceof BlockDoor || block == Blocks.STANDING_SIGN || block == Blocks.LADDER || block == Blocks.REEDS)
-+        if (!(block instanceof BlockDoor) && block != Blocks.STANDING_SIGN && block != Blocks.LADDER && block != Blocks.REEDS)
-+        {
-+            return mat != Material.PORTAL && mat != Material.STRUCTURE_VOID ? mat.blocksMovement() : true;
-+        }
-+        else
+         if (block instanceof BlockDoor || block == Blocks.STANDING_SIGN || block == Blocks.LADDER || block == Blocks.REEDS)
          {
-             return true;
+@@ -268,7 +284,7 @@
          }
--        else
--        {
--            return block.material != Material.PORTAL && block.material != Material.STRUCTURE_VOID ? block.material.blocksMovement() : true;
--        }
-     }
- 
-     protected int checkAdjacentBlock(World worldIn, BlockPos pos, int currentMinLevel)
-@@ -284,7 +296,7 @@
+         else
          {
-             if (i == 0)
-             {
--                this.adjacentSourceBlocks++;
-+                ++this.adjacentSourceBlocks;
-             }
- 
-             if (i >= 8)
-@@ -302,7 +314,6 @@
-         return material != this.material && material != Material.LAVA && !this.isBlocked(worldIn, pos, state);
+-            return block.material != Material.PORTAL && block.material != Material.STRUCTURE_VOID ? block.material.blocksMovement() : true;
++            return mat != Material.PORTAL && mat != Material.STRUCTURE_VOID ? mat.blocksMovement() : true;
+         }
      }
  
--    @Override
-     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
-     {
-         if (!this.checkForMixing(worldIn, pos, state))

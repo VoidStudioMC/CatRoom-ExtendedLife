@@ -9,16 +9,7 @@
      {
          this.dataManager.set(DATA_STRENGTH_ID, Math.max(1, Math.min(5, strengthIn)));
      }
-@@ -449,7 +449,7 @@
- 
-         if (this.rand.nextFloat() < 0.03F)
-         {
--            i++;
-+            ++i;
-         }
- 
-         entityllama.setStrength(i);
-@@ -488,6 +488,9 @@
+@@ -486,6 +486,9 @@
      @Override
      public void fall(float distance, float damageMultiplier)
      {

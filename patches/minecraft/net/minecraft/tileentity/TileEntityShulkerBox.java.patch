@@ -1,48 +1,26 @@
 --- before/net/minecraft/tileentity/TileEntityShulkerBox.java
 +++ after/net/minecraft/tileentity/TileEntityShulkerBox.java
-@@ -2,6 +2,10 @@
- 
- import java.util.List;
- import javax.annotation.Nullable;
-+
-+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity;
-+import org.bukkit.entity.HumanEntity;
-+
- import net.minecraft.block.Block;
- import net.minecraft.block.BlockShulkerBox;
- import net.minecraft.block.material.EnumPushReaction;
-@@ -33,26 +37,50 @@
- public class TileEntityShulkerBox extends TileEntityLockableLoot implements ITickable, ISidedInventory
- {
-     private static final int[] SLOTS = new int[27];
--    private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
-+    private NonNullList<ItemStack> items;
-     private boolean hasBeenCleared;
-     private int openCount;
--    private TileEntityShulkerBox.AnimationStatus animationStatus = TileEntityShulkerBox.AnimationStatus.CLOSED;
-+    private TileEntityShulkerBox.AnimationStatus animationStatus;
-     private float progress;
+@@ -41,6 +41,30 @@
      private float progressOld;
      private EnumDyeColor color;
      private boolean destroyedByCreativePlayer;
--
 +    // CraftBukkit start - add fields and methods
-+    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
++    public List<org.bukkit.entity.HumanEntity> transaction = new java.util.ArrayList<>();
 +    private int maxStack = MAX_STACK;
 +    
 +    public List<ItemStack> getContents() {
 +        return this.items;
 +    }
 +        
-+    public void onOpen(CraftHumanEntity who) {
++    public void onOpen(org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity who) {
 +        transaction.add(who);
 +    }
 +    
-+    public void onClose(CraftHumanEntity who) {
++    public void onClose(org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity who) {
 +        transaction.remove(who);
 +    }
 +        
-+    public List<HumanEntity> getViewers() {
++    public List<org.bukkit.entity.HumanEntity> getViewers() {
 +        return transaction;
 +    }
 +        
@@ -50,299 +28,19 @@
 +        maxStack = size;
 +    }
 +    // CraftBukkit end
+ 
      public TileEntityShulkerBox()
      {
--        this(null);
-+        this((EnumDyeColor)null);
-     }
- 
-     public TileEntityShulkerBox(@Nullable EnumDyeColor colorIn)
-     {
-+        this.items = NonNullList.<ItemStack>withSize(27, ItemStack.EMPTY);
-+        this.animationStatus = TileEntityShulkerBox.AnimationStatus.CLOSED;
-         this.color = colorIn;
-     }
- 
--    @Override
-     public void update()
-     {
-         this.updateAnimation();
-@@ -105,24 +133,18 @@
- 
-     public AxisAlignedBB getBoundingBox(IBlockState p_190584_1_)
-     {
--        return this.getBoundingBox(p_190584_1_.getValue(BlockShulkerBox.FACING));
-+        return this.getBoundingBox((EnumFacing)p_190584_1_.getValue(BlockShulkerBox.FACING));
-     }
- 
-     public AxisAlignedBB getBoundingBox(EnumFacing p_190587_1_)
-     {
--        return Block.FULL_BLOCK_AABB
--               .expand(
--                   (double)(0.5F * this.getProgress(1.0F) * (float)p_190587_1_.getXOffset()),
--                   (double)(0.5F * this.getProgress(1.0F) * (float)p_190587_1_.getYOffset()),
--                   (double)(0.5F * this.getProgress(1.0F) * (float)p_190587_1_.getZOffset())
--               );
-+        return Block.FULL_BLOCK_AABB.expand((double)(0.5F * this.getProgress(1.0F) * (float)p_190587_1_.getXOffset()), (double)(0.5F * this.getProgress(1.0F) * (float)p_190587_1_.getYOffset()), (double)(0.5F * this.getProgress(1.0F) * (float)p_190587_1_.getZOffset()));
-     }
- 
-     private AxisAlignedBB getTopBoundingBox(EnumFacing p_190588_1_)
-     {
-         EnumFacing enumfacing = p_190588_1_.getOpposite();
--        return this.getBoundingBox(p_190588_1_)
--               .contract((double)enumfacing.getXOffset(), (double)enumfacing.getYOffset(), (double)enumfacing.getZOffset());
-+        return this.getBoundingBox(p_190588_1_).contract((double)enumfacing.getXOffset(), (double)enumfacing.getYOffset(), (double)enumfacing.getZOffset());
-     }
- 
-     private void moveCollidedEntities()
-@@ -131,21 +153,21 @@
- 
-         if (iblockstate.getBlock() instanceof BlockShulkerBox)
-         {
--            EnumFacing enumfacing = iblockstate.getValue(BlockShulkerBox.FACING);
-+            EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(BlockShulkerBox.FACING);
-             AxisAlignedBB axisalignedbb = this.getTopBoundingBox(enumfacing).offset(this.pos);
--            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(null, axisalignedbb);
-+            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity((Entity)null, axisalignedbb);
- 
-             if (!list.isEmpty())
-             {
--                for (int i = 0; i < list.size(); i++)
-+                for (int i = 0; i < list.size(); ++i)
-                 {
-                     Entity entity = list.get(i);
- 
-                     if (entity.getPushReaction() != EnumPushReaction.IGNORE)
-                     {
--                        double d0 = 0.0;
--                        double d1 = 0.0;
--                        double d2 = 0.0;
-+                        double d0 = 0.0D;
-+                        double d1 = 0.0D;
-+                        double d2 = 0.0D;
-                         AxisAlignedBB axisalignedbb1 = entity.getEntityBoundingBox();
- 
-                         switch (enumfacing.getAxis())
-@@ -161,7 +183,7 @@
-                                     d0 = axisalignedbb1.maxX - axisalignedbb.minX;
-                                 }
- 
--                                d0 += 0.01;
-+                                d0 = d0 + 0.01D;
-                                 break;
-                             case Y:
- 
-@@ -174,7 +196,7 @@
-                                     d1 = axisalignedbb1.maxY - axisalignedbb.minY;
-                                 }
- 
--                                d1 += 0.01;
-+                                d1 = d1 + 0.01D;
-                                 break;
-                             case Z:
- 
-@@ -187,34 +209,26 @@
-                                     d2 = axisalignedbb1.maxZ - axisalignedbb.minZ;
-                                 }
- 
--                                d2 += 0.01;
-+                                d2 = d2 + 0.01D;
-                         }
- 
--                        entity.move(
--                            MoverType.SHULKER_BOX,
--                            d0 * (double)enumfacing.getXOffset(),
--                            d1 * (double)enumfacing.getYOffset(),
--                            d2 * (double)enumfacing.getZOffset()
--                        );
-+                        entity.move(MoverType.SHULKER_BOX, d0 * (double)enumfacing.getXOffset(), d1 * (double)enumfacing.getYOffset(), d2 * (double)enumfacing.getZOffset());
-                     }
-                 }
-             }
-         }
-     }
- 
--    @Override
-     public int getSizeInventory()
-     {
-         return this.items.size();
-     }
- 
--    @Override
+@@ -205,7 +229,7 @@
+     @Override
      public int getInventoryStackLimit()
      {
 -        return 64;
-+        return maxStack;
++        return this.maxStack;
      }
  
--    @Override
-     public boolean receiveClientEvent(int id, int type)
-     {
-         if (id == 1)
-@@ -239,7 +253,6 @@
-         }
-     }
- 
--    @Override
-     public void openInventory(EntityPlayer player)
-     {
-         if (!player.isSpectator())
-@@ -249,60 +262,40 @@
-                 this.openCount = 0;
-             }
- 
--            this.openCount++;
-+            ++this.openCount;
-             this.world.addBlockEvent(this.pos, this.getBlockType(), 1, this.openCount);
- 
-             if (this.openCount == 1)
-             {
--                this.world
--                .playSound(
--                    null,
--                    this.pos,
--                    SoundEvents.BLOCK_SHULKER_BOX_OPEN,
--                    SoundCategory.BLOCKS,
--                    0.5F,
--                    this.world.rand.nextFloat() * 0.1F + 0.9F
--                );
-+                this.world.playSound((EntityPlayer)null, this.pos, SoundEvents.BLOCK_SHULKER_BOX_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
-             }
-         }
-     }
- 
--    @Override
-     public void closeInventory(EntityPlayer player)
-     {
-         if (!player.isSpectator())
-         {
--            this.openCount--;
-+            --this.openCount;
-             this.world.addBlockEvent(this.pos, this.getBlockType(), 1, this.openCount);
- 
-             if (this.openCount <= 0)
-             {
--                this.world
--                .playSound(
--                    null,
--                    this.pos,
--                    SoundEvents.BLOCK_SHULKER_BOX_CLOSE,
--                    SoundCategory.BLOCKS,
--                    0.5F,
--                    this.world.rand.nextFloat() * 0.1F + 0.9F
--                );
-+                this.world.playSound((EntityPlayer)null, this.pos, SoundEvents.BLOCK_SHULKER_BOX_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
-             }
-         }
-     }
- 
--    @Override
-     public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
-     {
-         return new ContainerShulkerBox(playerInventory, this, playerIn);
-     }
- 
--    @Override
-     public String getGuiID()
-     {
-         return "minecraft:shulker_box";
-     }
- 
--    @Override
-     public String getName()
-     {
-         return this.hasCustomName() ? this.customName : "container.shulkerBox";
-@@ -310,17 +303,15 @@
- 
-     public static void registerFixesShulkerBox(DataFixer fixer)
-     {
--        fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityShulkerBox.class, "Items"));
-+        fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityShulkerBox.class, new String[] {"Items"}));
-     }
- 
--    @Override
-     public void readFromNBT(NBTTagCompound compound)
-     {
-         super.readFromNBT(compound);
-         this.loadFromNbt(compound);
-     }
- 
--    @Override
-     public NBTTagCompound writeToNBT(NBTTagCompound compound)
-     {
-         super.writeToNBT(compound);
-@@ -329,7 +320,7 @@
- 
-     public void loadFromNbt(NBTTagCompound compound)
-     {
--        this.items = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-+        this.items = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
- 
-         if (!this.checkLootAndRead(compound) && compound.hasKey("Items", 9))
-         {
-@@ -362,13 +353,11 @@
-         return compound;
-     }
- 
--    @Override
-     protected NonNullList<ItemStack> getItems()
-     {
-         return this.items;
-     }
- 
--    @Override
-     public boolean isEmpty()
-     {
-         for (ItemStack itemstack : this.items)
-@@ -382,25 +371,21 @@
-         return true;
-     }
- 
--    @Override
-     public int[] getSlotsForFace(EnumFacing side)
-     {
-         return SLOTS;
-     }
- 
--    @Override
-     public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)
-     {
-         return !(Block.getBlockFromItem(itemStackIn.getItem()) instanceof BlockShulkerBox);
-     }
- 
--    @Override
-     public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
-     {
-         return true;
-     }
- 
--    @Override
-     public void clear()
-     {
-         this.hasBeenCleared = true;
-@@ -429,7 +414,6 @@
-     }
- 
-     @Nullable
--    @Override
-     public SPacketUpdateTileEntity getUpdatePacket()
-     {
-         return new SPacketUpdateTileEntity(this.pos, 10, this.getUpdateTag());
-@@ -452,11 +436,9 @@
- 
-     static
-     {
--        int i = 0;
--
--        while (i < SLOTS.length)
-+        for (int i = 0; i < SLOTS.length; SLOTS[i] = i++)
-         {
--            SLOTS[i] = i++;
-+            ;
-         }
-     }
- 
-@@ -466,5 +448,10 @@
+     @Override
+@@ -460,5 +484,10 @@
          OPENING,
          OPENED,
          CLOSING;

@@ -77,16 +77,7 @@
                      {
                          float f1 = this.rand.nextFloat() * (float)(Math.PI * 2);
                          float f2 = MathHelper.sqrt(this.rand.nextFloat()) * 0.2F;
-@@ -252,7 +274,7 @@
-             {
-                 float f5 = (float) Math.PI * f * f;
- 
--                for (int k1 = 0; (float)k1 < f5; k1++)
-+                for (int k1 = 0; (float)k1 < f5; ++k1)
-                 {
-                     float f6 = this.rand.nextFloat() * (float)(Math.PI * 2);
-                     float f7 = MathHelper.sqrt(this.rand.nextFloat()) * f;
-@@ -340,11 +362,11 @@
+@@ -333,11 +355,11 @@
                      }
                  }
  
@@ -100,7 +91,7 @@
                          new PotionEffect(
                              potioneffect1.getPotion(),
                              potioneffect1.getDuration() / 4,
-@@ -355,19 +377,20 @@
+@@ -348,19 +370,20 @@
                      );
                  }
  
@@ -126,9 +117,9 @@
                          {
                              if (!this.reapplicationDelayMap.containsKey(entitylivingbase) && entitylivingbase.canBeHitWithPotion())
                              {
-@@ -377,13 +400,22 @@
+@@ -370,13 +393,22 @@
  
-                                 if (d2 <= (double)(f * f))
+                                 if (d2 <= f * f)
                                  {
 -                                    this.reapplicationDelayMap.put(entitylivingbase, this.ticksExisted + this.reapplicationDelay);
 +                                    entities.add((LivingEntity) entitylivingbase.getBukkitEntity());
@@ -152,7 +143,7 @@
                                          }
                                          else
                                          {
-@@ -406,7 +438,7 @@
+@@ -399,7 +431,7 @@
  
                                      if (this.durationOnUse != 0)
                                      {
@@ -161,7 +152,7 @@
  
                                          if (this.duration <= 0)
                                          {
-@@ -500,7 +532,7 @@
+@@ -493,7 +525,7 @@
              NBTTagList nbttaglist = compound.getTagList("Effects", 10);
              this.effects.clear();
  

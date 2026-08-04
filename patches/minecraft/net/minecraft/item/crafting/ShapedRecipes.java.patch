@@ -1,21 +1,18 @@
 --- before/net/minecraft/item/crafting/ShapedRecipes.java
 +++ after/net/minecraft/item/crafting/ShapedRecipes.java
-@@ -19,10 +19,11 @@
+@@ -19,10 +19,8 @@
  import net.minecraft.util.NonNullList;
  import net.minecraft.util.ResourceLocation;
  import net.minecraft.world.World;
 -import net.minecraftforge.fml.relauncher.Side;
 -import net.minecraftforge.fml.relauncher.SideOnly;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftShapedRecipe;
-+import org.bukkit.inventory.Recipe;
  
 -public class ShapedRecipes implements IRecipe
 +public class ShapedRecipes extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements net.minecraftforge.common.crafting.IShapedRecipe
  {
      public final int recipeWidth;
      public final int recipeHeight;
-@@ -30,6 +31,8 @@
+@@ -30,6 +28,8 @@
      private final ItemStack recipeOutput;
      private final String group;
  
@@ -24,31 +21,15 @@
      public ShapedRecipes(String group, int width, int height, NonNullList<Ingredient> ingredients, ItemStack result)
      {
          this.group = group;
-@@ -39,56 +42,45 @@
+@@ -39,7 +39,6 @@
          this.recipeOutput = result;
      }
  
 -    @SideOnly(Side.CLIENT)
--    @Override
+     @Override
      public String getGroup()
      {
-         return this.group;
-     }
- 
--    @Override
-     public ItemStack getRecipeOutput()
-     {
-         return this.recipeOutput;
-     }
- 
--    @Override
-     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
-     {
--        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
-+        NonNullList<ItemStack> nonnulllist = NonNullList.<ItemStack>withSize(inv.getSizeInventory(), ItemStack.EMPTY);
- 
--        for (int i = 0; i < nonnulllist.size(); i++)
-+        for (int i = 0; i < nonnulllist.size(); ++i)
+@@ -61,10 +60,7 @@
          {
              ItemStack itemstack = inv.getStackInSlot(i);
  
@@ -60,22 +41,16 @@
          }
  
          return nonnulllist;
-     }
- 
--    @Override
-     public NonNullList<Ingredient> getIngredients()
-     {
+@@ -76,7 +72,6 @@
          return this.recipeItems;
      }
  
 -    @SideOnly(Side.CLIENT)
--    @Override
+     @Override
      public boolean canFit(int width, int height)
      {
-         return width >= this.recipeWidth && height >= this.recipeHeight;
-     }
- 
--    @Override
+@@ -86,9 +81,9 @@
+     @Override
      public boolean matches(InventoryCrafting inv, World worldIn)
      {
 -        for (int i = 0; i <= 3 - this.recipeWidth; i++)
@@ -86,7 +61,7 @@
              {
                  if (this.checkMatch(inv, i, j, true))
                  {
-@@ -107,9 +99,9 @@
+@@ -107,9 +102,9 @@
  
      private boolean checkMatch(InventoryCrafting craftingInventory, int p_77573_2_, int p_77573_3_, boolean p_77573_4_)
      {
@@ -98,204 +73,21 @@
              {
                  int k = i - p_77573_2_;
                  int l = j - p_77573_3_;
-@@ -137,7 +129,6 @@
-         return true;
-     }
- 
--    @Override
-     public ItemStack getCraftingResult(InventoryCrafting inv)
-     {
-         return this.getRecipeOutput().copy();
-@@ -167,13 +158,13 @@
- 
-     private static NonNullList<Ingredient> deserializeIngredients(String[] pattern, Map<String, Ingredient> keys, int patternWidth, int patternHeight)
-     {
--        NonNullList<Ingredient> nonnulllist = NonNullList.withSize(patternWidth * patternHeight, Ingredient.EMPTY);
-+        NonNullList<Ingredient> nonnulllist = NonNullList.<Ingredient>withSize(patternWidth * patternHeight, Ingredient.EMPTY);
-         Set<String> set = Sets.newHashSet(keys.keySet());
-         set.remove(" ");
- 
--        for (int i = 0; i < pattern.length; i++)
-+        for (int i = 0; i < pattern.length; ++i)
-         {
--            for (int j = 0; j < pattern[i].length(); j++)
-+            for (int j = 0; j < pattern[i].length(); ++j)
-             {
-                 String s = pattern[i].substring(j, j + 1);
-                 Ingredient ingredient = keys.get(s);
-@@ -206,7 +197,7 @@
-         int k = 0;
-         int l = 0;
- 
--        for (int i1 = 0; i1 < toShrink.length; i1++)
-+        for (int i1 = 0; i1 < toShrink.length; ++i1)
-         {
-             String s = toShrink[i1];
-             i = Math.min(i, firstNonSpace(s));
-@@ -217,10 +208,10 @@
-             {
-                 if (k == i1)
-                 {
--                    k++;
-+                    ++k;
-                 }
- 
--                l++;
-+                ++l;
-             }
-             else
-             {
-@@ -236,7 +227,7 @@
-         {
-             String[] astring = new String[toShrink.length - l - k];
- 
--            for (int k1 = 0; k1 < astring.length; k1++)
-+            for (int k1 = 0; k1 < astring.length; ++k1)
-             {
-                 astring[k1] = toShrink[k1 + k].substring(i, j + 1);
-             }
-@@ -247,11 +238,11 @@
- 
-     private static int firstNonSpace(String str)
-     {
--        int i = 0;
-+        int i;
- 
--        while (i < str.length() && str.charAt(i) == ' ')
-+        for (i = 0; i < str.length() && str.charAt(i) == ' '; ++i)
-         {
--            i++;
-+            ;
-         }
- 
-         return i;
-@@ -259,11 +250,11 @@
- 
-     private static int lastNonSpace(String str)
-     {
--        int i = str.length() - 1;
-+        int i;
- 
--        while (i >= 0 && str.charAt(i) == ' ')
-+        for (i = str.length() - 1; i >= 0 && str.charAt(i) == ' '; --i)
-         {
--            i--;
-+            ;
-         }
- 
-         return i;
-@@ -283,7 +274,7 @@
-         }
-         else
-         {
--            for (int i = 0; i < astring.length; i++)
-+            for (int i = 0; i < astring.length; ++i)
-             {
-                 String s = JsonUtils.getString(jsonArr.get(i), "pattern[" + i + "]");
- 
-@@ -306,13 +297,13 @@
- 
-     private static Map<String, Ingredient> deserializeKey(JsonObject json)
-     {
--        Map<String, Ingredient> map = Maps.newHashMap();
-+        Map<String, Ingredient> map = Maps.<String, Ingredient>newHashMap();
- 
-         for (Entry<String, JsonElement> entry : json.entrySet())
-         {
--            if (entry.getKey().length() != 1)
-+            if (((String)entry.getKey()).length() != 1)
-             {
--                throw new JsonSyntaxException("Invalid key entry: '" + entry.getKey() + "' is an invalid symbol (must be 1 character only).");
-+                throw new JsonSyntaxException("Invalid key entry: '" + (String)entry.getKey() + "' is an invalid symbol (must be 1 character only).");
-             }
- 
-             if (" ".equals(entry.getKey()))
-@@ -329,38 +320,41 @@
- 
-     public static Ingredient deserializeIngredient(@Nullable JsonElement jsonElement)
-     {
--        if (jsonElement == null || jsonElement.isJsonNull())
-+        if (jsonElement != null && !jsonElement.isJsonNull())
-+        {
-+            if (jsonElement.isJsonObject())
-+            {
-+                return Ingredient.fromStacks(deserializeItem(jsonElement.getAsJsonObject(), false));
-+            }
-+            else if (!jsonElement.isJsonArray())
-+            {
-+                throw new JsonSyntaxException("Expected item to be object or array of objects");
-+            }
-+            else
-+            {
-+                JsonArray jsonarray = jsonElement.getAsJsonArray();
-+
-+                if (jsonarray.size() == 0)
-+                {
-+                    throw new JsonSyntaxException("Item array cannot be empty, at least one item must be defined");
-+                }
-+                else
-+                {
-+                    ItemStack[] aitemstack = new ItemStack[jsonarray.size()];
-+
-+                    for (int i = 0; i < jsonarray.size(); ++i)
-+                    {
-+                        aitemstack[i] = deserializeItem(JsonUtils.getJsonObject(jsonarray.get(i), "item"), false);
-+                    }
-+
-+                    return Ingredient.fromStacks(aitemstack);
-+                }
-+            }
-+        }
-+        else
-         {
-             throw new JsonSyntaxException("Item cannot be null");
-         }
--        else if (jsonElement.isJsonObject())
--        {
--            return Ingredient.fromStacks(deserializeItem(jsonElement.getAsJsonObject(), false));
--        }
--        else if (!jsonElement.isJsonArray())
--        {
--            throw new JsonSyntaxException("Expected item to be object or array of objects");
--        }
--        else
--        {
--            JsonArray jsonarray = jsonElement.getAsJsonArray();
--
--            if (jsonarray.size() == 0)
--            {
--                throw new JsonSyntaxException("Item array cannot be empty, at least one item must be defined");
--            }
--            else
--            {
--                ItemStack[] aitemstack = new ItemStack[jsonarray.size()];
--
--                for (int i = 0; i < jsonarray.size(); i++)
--                {
--                    aitemstack[i] = deserializeItem(JsonUtils.getJsonObject(jsonarray.get(i), "item"), false);
--                }
--
--                return Ingredient.fromStacks(aitemstack);
--            }
--        }
-     }
- 
-     public static ItemStack deserializeItem(JsonObject json, boolean useCount)
-@@ -382,5 +376,86 @@
+@@ -382,5 +377,86 @@
              int j = useCount ? JsonUtils.getInt(json, "count", 1) : 1;
              return new ItemStack(item, j, i);
          }
 +    }
 +
 +    @Override
-+    public Recipe toBukkitRecipe() {
++    public org.bukkit.inventory.Recipe toBukkitRecipe() {
 +        // CatServer start - handle special custom recipe
 +        if (this.recipeHeight < 1 || this.recipeHeight > 3 || this.recipeWidth < 1 || this.recipeWidth > 3) {
 +            return new catserver.server.inventory.CustomModRecipe(this, this.getRegistryName());
 +        }
 +        // CatServer end
-+        CraftItemStack result = CraftItemStack.asCraftMirror(this.recipeOutput);
-+        CraftShapedRecipe recipe = new CraftShapedRecipe(result, this);
++        org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack result = org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asCraftMirror(this.recipeOutput);
++        org.bukkit.craftbukkit.v1_12_R1.inventory.CraftShapedRecipe recipe = new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftShapedRecipe(result, this);
 +        switch (this.recipeHeight) {
 +            case 1:
 +                switch (this.recipeWidth) {

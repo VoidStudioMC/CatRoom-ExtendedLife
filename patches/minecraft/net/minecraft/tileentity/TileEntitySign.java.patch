@@ -1,29 +1,15 @@
 --- before/net/minecraft/tileentity/TileEntitySign.java
 +++ after/net/minecraft/tileentity/TileEntitySign.java
-@@ -22,91 +22,98 @@
- 
- public class TileEntitySign extends TileEntity
- {
--    public final ITextComponent[] signText = new ITextComponent[]
--    {
--        new TextComponentString(""), new TextComponentString(""), new TextComponentString(""), new TextComponentString("")
--    };
-+    public final ITextComponent[] signText = new ITextComponent[] {new TextComponentString(""), new TextComponentString(""), new TextComponentString(""), new TextComponentString("")};
+@@ -27,7 +27,7 @@
+         new TextComponentString(""), new TextComponentString(""), new TextComponentString(""), new TextComponentString("")
+     };
      public int lineBeingEdited = -1;
 -    private boolean isEditable = true;
 +    public boolean isEditable = true;
      private EntityPlayer player;
      private final CommandResultStats stats = new CommandResultStats();
  
--    @Override
-     public NBTTagCompound writeToNBT(NBTTagCompound compound)
-     {
-         super.writeToNBT(compound);
- 
--        for (int i = 0; i < 4; i++)
-+        for (int i = 0; i < 4; ++i)
-         {
-             String s = ITextComponent.Serializer.componentToJson(this.signText[i]);
+@@ -42,6 +42,10 @@
              compound.setString("Text" + (i + 1), s);
          }
  
@@ -34,66 +20,26 @@
          this.stats.writeStatsToNBT(compound);
          return compound;
      }
- 
--    @Override
-     protected void setWorldCreate(World worldIn)
-     {
-         this.setWorld(worldIn);
-     }
- 
--    @Override
-     public void readFromNBT(NBTTagCompound compound)
-     {
-         this.isEditable = false;
-         super.readFromNBT(compound);
-         ICommandSender icommandsender = new ICommandSender()
-         {
--            @Override
-             public String getName()
-             {
-                 return "Sign";
-             }
--            @Override
+@@ -67,7 +71,7 @@
+             @Override
              public boolean canUseCommand(int permLevel, String commandName)
              {
 -                return true;
 +                return permLevel <= 2; //Forge: Fixes  MC-75630 - Exploit with signs and command blocks
              }
--            @Override
+             @Override
              public BlockPos getPosition()
-             {
-                 return TileEntitySign.this.pos;
-             }
--            @Override
-             public Vec3d getPositionVector()
-             {
--                return new Vec3d(
--                           (double)TileEntitySign.this.pos.getX() + 0.5,
--                           (double)TileEntitySign.this.pos.getY() + 0.5,
--                           (double)TileEntitySign.this.pos.getZ() + 0.5
--                       );
-+                return new Vec3d((double)TileEntitySign.this.pos.getX() + 0.5D, (double)TileEntitySign.this.pos.getY() + 0.5D, (double)TileEntitySign.this.pos.getZ() + 0.5D);
-             }
--            @Override
-             public World getEntityWorld()
-             {
-                 return TileEntitySign.this.world;
-             }
--            @Override
-             public MinecraftServer getServer()
-             {
-                 return TileEntitySign.this.world.getMinecraftServer();
+@@ -95,18 +99,38 @@
              }
          };
  
--        for (int i = 0; i < 4; i++)
 +        // CraftBukkit start - Add an option to convert signs correctly
 +        // This is done with a flag instead of all the time because
 +        // we have no way to tell whether a sign is from 1.7.10 or 1.8
 +
 +        boolean oldSign = Boolean.getBoolean("convertLegacySigns") && !compound.getBoolean("Bukkit.isConverted");
 +
-+        for (int i = 0; i < 4; ++i)
+         for (int i = 0; i < 4; i++)
          {
              String s = compound.getString("Text" + (i + 1));
 -            ITextComponent itextcomponent = ITextComponent.Serializer.jsonToComponent(s);
@@ -105,10 +51,6 @@
              try
              {
 -                this.signText[i] = TextComponentUtils.processComponent(icommandsender, itextcomponent, null);
--            }
--            catch (CommandException commandexception)
--            {
--                this.signText[i] = itextcomponent;
 +                ITextComponent ichatbasecomponent = ITextComponent.Serializer.jsonToComponent(s);
 +
 +                if (oldSign) {
@@ -118,101 +60,20 @@
 +                // CraftBukkit end
 +
 +                try {
-+                    this.signText[i] = TextComponentUtils.processComponent(icommandsender, ichatbasecomponent, (Entity) null);
++                    this.signText[i] = TextComponentUtils.processComponent(icommandsender, ichatbasecomponent, null);
 +                } catch (CommandException commandexception) {
 +                    this.signText[i] = ichatbasecomponent;
 +                }
-+            } catch (com.google.gson.JsonParseException jsonparseexception) {
+             }
+-            catch (CommandException commandexception)
+-            {
+-                this.signText[i] = itextcomponent;
++            catch (com.google.gson.JsonParseException jsonparseexception) {
 +                this.signText[i] = new TextComponentString(s);
              }
          }
  
-@@ -114,19 +121,16 @@
-     }
- 
-     @Nullable
--    @Override
-     public SPacketUpdateTileEntity getUpdatePacket()
-     {
-         return new SPacketUpdateTileEntity(this.pos, 9, this.getUpdateTag());
-     }
- 
--    @Override
-     public NBTTagCompound getUpdateTag()
-     {
-         return this.writeToNBT(new NBTTagCompound());
-     }
- 
--    @Override
-     public boolean onlyOpsCanSetNbt()
-     {
-         return true;
-@@ -162,55 +166,41 @@
-     {
-         ICommandSender icommandsender = new ICommandSender()
-         {
--            @Override
-             public String getName()
-             {
-                 return playerIn.getName();
-             }
--            @Override
-             public ITextComponent getDisplayName()
-             {
-                 return playerIn.getDisplayName();
-             }
--            @Override
-             public void sendMessage(ITextComponent component)
-             {
-             }
--            @Override
-             public boolean canUseCommand(int permLevel, String commandName)
-             {
-                 return permLevel <= 2;
-             }
--            @Override
-             public BlockPos getPosition()
-             {
-                 return TileEntitySign.this.pos;
-             }
--            @Override
-             public Vec3d getPositionVector()
-             {
--                return new Vec3d(
--                           (double)TileEntitySign.this.pos.getX() + 0.5,
--                           (double)TileEntitySign.this.pos.getY() + 0.5,
--                           (double)TileEntitySign.this.pos.getZ() + 0.5
--                       );
-+                return new Vec3d((double)TileEntitySign.this.pos.getX() + 0.5D, (double)TileEntitySign.this.pos.getY() + 0.5D, (double)TileEntitySign.this.pos.getZ() + 0.5D);
-             }
--            @Override
-             public World getEntityWorld()
-             {
-                 return playerIn.getEntityWorld();
-             }
--            @Override
-             public Entity getCommandSenderEntity()
-             {
-                 return playerIn;
-             }
--            @Override
-             public boolean sendCommandFeedback()
-             {
-                 return false;
-             }
--            @Override
-             public void setCommandStat(CommandResultStats.Type type, int amount)
-             {
-                 if (TileEntitySign.this.world != null && !TileEntitySign.this.world.isRemote)
-@@ -218,7 +208,6 @@
-                     TileEntitySign.this.stats.setCommandStatForSender(TileEntitySign.this.world.getMinecraftServer(), this, type, amount);
-                 }
-             }
--            @Override
-             public MinecraftServer getServer()
-             {
-                 return playerIn.getServer();
-@@ -235,7 +224,12 @@
+@@ -235,7 +259,12 @@
  
                  if (clickevent.getAction() == ClickEvent.Action.RUN_COMMAND)
                  {

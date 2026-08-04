@@ -143,7 +143,7 @@ public final class CraftChatMessage {
     public static ITextComponent[] fromString(String message, boolean keepNewlines) {
         return new StringMessage(message, keepNewlines).getOutput();
     }
-    
+
     public static String fromComponent(ITextComponent component) {
         return fromComponent(component, TextFormatting.BLACK);
     }
@@ -151,8 +151,8 @@ public final class CraftChatMessage {
     public static String fromComponent(ITextComponent component, TextFormatting defaultColor) {
         if (component == null) return "";
         StringBuilder out = new StringBuilder();
-        
-        for (ITextComponent c : (Iterable<ITextComponent>) component) {
+
+        for (ITextComponent c : component) {
             Style modi = c.getStyle();
             out.append(modi.getColor() == null ? defaultColor : modi.getColor());
             if (modi.getBold()) {

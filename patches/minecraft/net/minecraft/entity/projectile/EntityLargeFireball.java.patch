@@ -1,21 +1,6 @@
 --- before/net/minecraft/entity/projectile/EntityLargeFireball.java
 +++ after/net/minecraft/entity/projectile/EntityLargeFireball.java
-@@ -1,5 +1,6 @@
- package net.minecraft.entity.projectile;
- 
-+import net.minecraft.entity.Entity;
- import net.minecraft.entity.EntityLivingBase;
- import net.minecraft.nbt.NBTTagCompound;
- import net.minecraft.util.DamageSource;
-@@ -8,6 +9,7 @@
- import net.minecraft.world.World;
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
-+import org.bukkit.event.entity.ExplosionPrimeEvent;
- 
- public class EntityLargeFireball extends EntityFireball
- {
-@@ -16,12 +18,12 @@
+@@ -16,6 +16,8 @@
      public EntityLargeFireball(World worldIn)
      {
          super(worldIn);
@@ -24,14 +9,7 @@
      }
  
      @SideOnly(Side.CLIENT)
--    public EntityLargeFireball(
--        World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ
--    )
-+    public EntityLargeFireball(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ)
-     {
-         super(worldIn, x, y, z, accelX, accelY, accelZ);
-     }
-@@ -29,9 +31,10 @@
+@@ -29,6 +31,8 @@
      public EntityLargeFireball(World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ)
      {
          super(worldIn, shooter, accelX, accelY, accelZ);
@@ -39,21 +17,18 @@
 +        isIncendiary = this.world.getGameRules().getBoolean("mobGriefing");
      }
  
--    @Override
-     protected void onImpact(RayTraceResult result)
-     {
-         if (!this.world.isRemote)
-@@ -42,8 +45,17 @@
+     @Override
+@@ -42,8 +46,17 @@
                  this.applyEnchantments(this.shootingEntity, result.entityHit);
              }
  
 -            boolean flag = this.world.getGameRules().getBoolean("mobGriefing");
--            this.world.newExplosion(null, this.posX, this.posY, this.posZ, (float)this.explosionPower, flag, flag);
+-            this.world.newExplosion(null, this.posX, this.posY, this.posZ, this.explosionPower, flag, flag);
 +            // TODO: Reimplement with correct `flag` usage below
 +            boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this.shootingEntity);
 +            // this.world.newExplosion((Entity)null, this.posX, this.posY, this.posZ, (float)this.explosionPower, flag, flag);
 +            // CraftBukkit start - fire ExplosionPrimeEvent
-+            ExplosionPrimeEvent event = new ExplosionPrimeEvent((org.bukkit.entity.Explosive) org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity.getEntity(this.world.getServer(), this));
++            org.bukkit.event.entity.ExplosionPrimeEvent event = new org.bukkit.event.entity.ExplosionPrimeEvent((org.bukkit.entity.Explosive) org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity.getEntity(this.world.getServer(), this));
 +            this.world.getServer().getPluginManager().callEvent(event);
 +            if (!event.isCancelled()) {
 +                // give 'this' instead of (Entity) null so we know what causes the damage
@@ -63,27 +38,13 @@
              this.setDead();
          }
      }
-@@ -53,21 +65,20 @@
-         EntityFireball.registerFixesFireball(fixer, "Fireball");
-     }
- 
--    @Override
-     public void writeEntityToNBT(NBTTagCompound compound)
-     {
-         super.writeEntityToNBT(compound);
-         compound.setInteger("ExplosionPower", this.explosionPower);
-     }
- 
--    @Override
-     public void readEntityFromNBT(NBTTagCompound compound)
-     {
-         super.readEntityFromNBT(compound);
+@@ -67,7 +80,8 @@
  
          if (compound.hasKey("ExplosionPower", 99))
          {
 -            this.explosionPower = compound.getInteger("ExplosionPower");
 +            // CraftBukkit - set bukkitYield when setting explosionpower
-+            bukkitYield = this.explosionPower = compound.getInteger("ExplosionPower");
++            this.bukkitYield = this.explosionPower = compound.getInteger("ExplosionPower");
          }
      }
  }

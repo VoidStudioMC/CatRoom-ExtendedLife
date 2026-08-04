@@ -1,60 +1,11 @@
 --- before/net/minecraft/entity/monster/EntitySpellcasterIllager.java
 +++ after/net/minecraft/entity/monster/EntitySpellcasterIllager.java
-@@ -54,7 +54,14 @@
- 
-     public boolean isSpellcasting()
-     {
--        return this.world.isRemote ? this.dataManager.get(SPELL) > 0 : this.spellTicks > 0;
-+        if (this.world.isRemote)
-+        {
-+            return this.dataManager.get(SPELL) > 0;
-+        }
-+        else
-+        {
-+            return this.spellTicks > 0;
-+        }
-     }
- 
-     public void setSpellType(EntitySpellcasterIllager.SpellType spellType)
-@@ -63,7 +70,7 @@
+@@ -63,7 +63,7 @@
          this.dataManager.set(SPELL, (byte)spellType.id);
      }
  
 -    protected EntitySpellcasterIllager.SpellType getSpellType()
-+    public SpellType getSpellType()
++    public EntitySpellcasterIllager.SpellType getSpellType()
      {
          return !this.world.isRemote
                 ? this.activeSpell
-@@ -77,7 +84,7 @@
- 
-         if (this.spellTicks > 0)
-         {
--            this.spellTicks--;
-+            --this.spellTicks;
-         }
-     }
- 
-@@ -171,9 +178,13 @@
-             {
-                 return false;
-             }
-+            else if (EntitySpellcasterIllager.this.isSpellcasting())
-+            {
-+                return false;
-+            }
-             else
-             {
--                return EntitySpellcasterIllager.this.isSpellcasting() ? false : EntitySpellcasterIllager.this.ticksExisted >= this.spellCooldown;
-+                return EntitySpellcasterIllager.this.ticksExisted >= this.spellCooldown;
-             }
-         }
- 
-@@ -202,7 +213,7 @@
-         @Override
-         public void updateTask()
-         {
--            this.spellWarmup--;
-+            --this.spellWarmup;
- 
-             if (this.spellWarmup == 0)
-             {

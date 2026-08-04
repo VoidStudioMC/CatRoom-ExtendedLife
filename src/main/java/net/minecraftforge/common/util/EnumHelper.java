@@ -24,11 +24,11 @@ import java.util.*;
 import java.util.function.BiPredicate;
 
 import catserver.server.launch.Java11Support;
-import com.cleanroommc.hackery.ReflectionHackery;
 import com.cleanroommc.hackery.enums.EnumHackery;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 
+import net.lenni0451.reflect.Fields;
 import net.minecraftforge.fml.common.EnhancedRuntimeException;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraft.block.BlockPressurePlate.Sensitivity;
@@ -178,18 +178,9 @@ public class EnumHelper
         return EnumHackery.addEnumEntry(HorseArmorType.class, name, new Class<?>[] { String.class, int.class }, new Object[] { textureLocation, armorStrength });
     }
 
-    @SuppressWarnings("removal")
     public static void setFailsafeFieldValue(Field field, @Nullable Object target, @Nullable Object value) throws Exception
     {
-        if(Modifier.isStatic(field.getModifiers()))
-            ReflectionHackery.unsafe.putObject(ReflectionHackery.unsafe.staticFieldBase(field), ReflectionHackery.unsafe.staticFieldOffset(field), value);
-        else
-            ReflectionHackery.unsafe.putObject(target, ReflectionHackery.unsafe.objectFieldOffset(field), value);
-
-        /*
-        field.setAccessible(true);
-        ReflectionHackery.stripFieldOfFinalModifier(field);
-        field.set(target, value);*/
+        Fields.setObject(target, field, value);
     }
 
     //Tests an enum is compatible with these args, throws an error if not.
@@ -293,12 +284,13 @@ public class EnumHelper
     }
 
     @Nullable
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static <T extends Enum<? >> T addEnum(Class<T> enumType, String enumName, Class<?>[] paramTypes, Object... paramValues)
     {
         return (T) EnumHackery.addEnumEntry((Class<? extends Enum>) enumType, enumName, paramTypes, paramValues);
     }
 
     public static World.Environment _addBukkitEnvironment(int id, String name) {
-        return addEnum(World.Environment.class, name, new Class[]{int.class}, new Object[]{id});
+        return addEnum(World.Environment.class, name, new Class[]{int.class}, id);
     }
 }

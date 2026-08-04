@@ -1,306 +1,51 @@
 --- before/net/minecraft/block/BlockButton.java
 +++ after/net/minecraft/block/BlockButton.java
-@@ -4,6 +4,7 @@
- import java.util.Random;
- import javax.annotation.Nullable;
- import net.minecraft.block.material.Material;
-+import net.minecraft.block.properties.IProperty;
- import net.minecraft.block.properties.PropertyBool;
- import net.minecraft.block.state.BlockFaceShape;
- import net.minecraft.block.state.BlockStateContainer;
-@@ -13,7 +14,6 @@
- import net.minecraft.entity.EntityLivingBase;
- import net.minecraft.entity.player.EntityPlayer;
- import net.minecraft.entity.projectile.EntityArrow;
--import net.minecraft.init.Blocks;
- import net.minecraft.util.EnumFacing;
- import net.minecraft.util.EnumHand;
- import net.minecraft.util.Mirror;
-@@ -22,65 +22,61 @@
- import net.minecraft.util.math.BlockPos;
- import net.minecraft.world.IBlockAccess;
- import net.minecraft.world.World;
-+import org.bukkit.event.block.BlockRedstoneEvent;
-+import org.bukkit.event.entity.EntityInteractEvent;
- 
- public abstract class BlockButton extends BlockDirectional
- {
-     public static final PropertyBool POWERED = PropertyBool.create("powered");
--    protected static final AxisAlignedBB AABB_DOWN_OFF = new AxisAlignedBB(0.3125, 0.875, 0.375, 0.6875, 1.0, 0.625);
--    protected static final AxisAlignedBB AABB_UP_OFF = new AxisAlignedBB(0.3125, 0.0, 0.375, 0.6875, 0.125, 0.625);
--    protected static final AxisAlignedBB AABB_NORTH_OFF = new AxisAlignedBB(0.3125, 0.375, 0.875, 0.6875, 0.625, 1.0);
--    protected static final AxisAlignedBB AABB_SOUTH_OFF = new AxisAlignedBB(0.3125, 0.375, 0.0, 0.6875, 0.625, 0.125);
--    protected static final AxisAlignedBB AABB_WEST_OFF = new AxisAlignedBB(0.875, 0.375, 0.3125, 1.0, 0.625, 0.6875);
--    protected static final AxisAlignedBB AABB_EAST_OFF = new AxisAlignedBB(0.0, 0.375, 0.3125, 0.125, 0.625, 0.6875);
--    protected static final AxisAlignedBB AABB_DOWN_ON = new AxisAlignedBB(0.3125, 0.9375, 0.375, 0.6875, 1.0, 0.625);
--    protected static final AxisAlignedBB AABB_UP_ON = new AxisAlignedBB(0.3125, 0.0, 0.375, 0.6875, 0.0625, 0.625);
--    protected static final AxisAlignedBB AABB_NORTH_ON = new AxisAlignedBB(0.3125, 0.375, 0.9375, 0.6875, 0.625, 1.0);
--    protected static final AxisAlignedBB AABB_SOUTH_ON = new AxisAlignedBB(0.3125, 0.375, 0.0, 0.6875, 0.625, 0.0625);
--    protected static final AxisAlignedBB AABB_WEST_ON = new AxisAlignedBB(0.9375, 0.375, 0.3125, 1.0, 0.625, 0.6875);
--    protected static final AxisAlignedBB AABB_EAST_ON = new AxisAlignedBB(0.0, 0.375, 0.3125, 0.0625, 0.625, 0.6875);
-+    protected static final AxisAlignedBB AABB_DOWN_OFF = new AxisAlignedBB(0.3125D, 0.875D, 0.375D, 0.6875D, 1.0D, 0.625D);
-+    protected static final AxisAlignedBB AABB_UP_OFF = new AxisAlignedBB(0.3125D, 0.0D, 0.375D, 0.6875D, 0.125D, 0.625D);
-+    protected static final AxisAlignedBB AABB_NORTH_OFF = new AxisAlignedBB(0.3125D, 0.375D, 0.875D, 0.6875D, 0.625D, 1.0D);
-+    protected static final AxisAlignedBB AABB_SOUTH_OFF = new AxisAlignedBB(0.3125D, 0.375D, 0.0D, 0.6875D, 0.625D, 0.125D);
-+    protected static final AxisAlignedBB AABB_WEST_OFF = new AxisAlignedBB(0.875D, 0.375D, 0.3125D, 1.0D, 0.625D, 0.6875D);
-+    protected static final AxisAlignedBB AABB_EAST_OFF = new AxisAlignedBB(0.0D, 0.375D, 0.3125D, 0.125D, 0.625D, 0.6875D);
-+    protected static final AxisAlignedBB AABB_DOWN_ON = new AxisAlignedBB(0.3125D, 0.9375D, 0.375D, 0.6875D, 1.0D, 0.625D);
-+    protected static final AxisAlignedBB AABB_UP_ON = new AxisAlignedBB(0.3125D, 0.0D, 0.375D, 0.6875D, 0.0625D, 0.625D);
-+    protected static final AxisAlignedBB AABB_NORTH_ON = new AxisAlignedBB(0.3125D, 0.375D, 0.9375D, 0.6875D, 0.625D, 1.0D);
-+    protected static final AxisAlignedBB AABB_SOUTH_ON = new AxisAlignedBB(0.3125D, 0.375D, 0.0D, 0.6875D, 0.625D, 0.0625D);
-+    protected static final AxisAlignedBB AABB_WEST_ON = new AxisAlignedBB(0.9375D, 0.375D, 0.3125D, 1.0D, 0.625D, 0.6875D);
-+    protected static final AxisAlignedBB AABB_EAST_ON = new AxisAlignedBB(0.0D, 0.375D, 0.3125D, 0.0625D, 0.625D, 0.6875D);
-     private final boolean wooden;
- 
-     protected BlockButton(boolean wooden)
-     {
-         super(Material.CIRCUITS);
--        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(POWERED, false));
-+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(POWERED, Boolean.valueOf(false)));
-         this.setTickRandomly(true);
-         this.setCreativeTab(CreativeTabs.REDSTONE);
-         this.wooden = wooden;
-     }
- 
-     @Nullable
--    @Override
-     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
-     {
-         return NULL_AABB;
-     }
- 
--    @Override
-     public int tickRate(World worldIn)
-     {
-         return this.wooden ? 30 : 20;
-     }
- 
--    @Override
-     public boolean isOpaqueCube(IBlockState state)
-     {
-         return false;
-     }
- 
--    @Override
-     public boolean isFullCube(IBlockState state)
-     {
-         return false;
-     }
- 
--    @Override
-     public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side)
-     {
-         return canPlaceBlock(worldIn, pos, side);
-     }
- 
--    @Override
-     public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
-     {
-         for (EnumFacing enumfacing : EnumFacing.values())
-@@ -100,30 +96,25 @@
+@@ -100,7 +100,7 @@
          IBlockState iblockstate = worldIn.getBlockState(blockpos);
          boolean flag = iblockstate.getBlockFaceShape(worldIn, blockpos, direction) == BlockFaceShape.SOLID;
          Block block = iblockstate.getBlock();
 -        return direction == EnumFacing.UP ? block == Blocks.HOPPER || !isExceptionBlockForAttaching(block) && flag : !isExceptBlockForAttachWithPiston(block) && flag;
-+
-+        if (direction == EnumFacing.UP)
-+        {
-+            return iblockstate.isTopSolid() || !isExceptionBlockForAttaching(block) && flag;
-+        }
-+        else
-+        {
-+            return !isExceptBlockForAttachWithPiston(block) && flag;
-+        }
++        return direction == EnumFacing.UP ? iblockstate.isTopSolid() || !isExceptionBlockForAttaching(block) && flag : !isExceptBlockForAttachWithPiston(block) && flag;
      }
  
--    @Override
--    public IBlockState getStateForPlacement(
--        World worldIn,
--        BlockPos pos,
--        EnumFacing facing,
--        float hitX,
--        float hitY,
--        float hitZ,
--        int meta,
--        EntityLivingBase placer
--    )
-+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-     {
--        return canPlaceBlock(worldIn, pos, facing)
--               ? this.getDefaultState().withProperty(FACING, facing).withProperty(POWERED, false)
--               : this.getDefaultState().withProperty(FACING, EnumFacing.DOWN).withProperty(POWERED, false);
-+        return canPlaceBlock(worldIn, pos, facing) ? this.getDefaultState().withProperty(FACING, facing).withProperty(POWERED, Boolean.valueOf(false)) : this.getDefaultState().withProperty(FACING, EnumFacing.DOWN).withProperty(POWERED, Boolean.valueOf(false));
-     }
- 
--    @Override
-     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
-     {
--        if (this.checkForDrop(worldIn, pos, state) && !canPlaceBlock(worldIn, pos, state.getValue(FACING)))
-+        if (this.checkForDrop(worldIn, pos, state) && !canPlaceBlock(worldIn, pos, (EnumFacing)state.getValue(FACING)))
-         {
-             this.dropBlockAsItem(worldIn, pos, state, 0);
-             worldIn.setBlockToAir(pos);
-@@ -144,11 +135,10 @@
-         }
-     }
- 
--    @Override
-     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-     {
--        EnumFacing enumfacing = state.getValue(FACING);
--        boolean flag = state.getValue(POWERED);
-+        EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
-+        boolean flag = ((Boolean)state.getValue(POWERED)).booleanValue();
- 
-         switch (enumfacing)
-         {
-@@ -168,29 +158,29 @@
-         }
-     }
- 
--    @Override
--    public boolean onBlockActivated(
--        World worldIn,
--        BlockPos pos,
--        IBlockState state,
--        EntityPlayer playerIn,
--        EnumHand hand,
--        EnumFacing facing,
--        float hitX,
--        float hitY,
--        float hitZ
--    )
-+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-     {
--        if (state.getValue(POWERED))
-+        if (((Boolean)state.getValue(POWERED)).booleanValue())
-         {
-             return true;
+     @Override
+@@ -187,6 +187,17 @@
          }
          else
          {
--            worldIn.setBlockState(pos, state.withProperty(POWERED, true), 3);
-+            boolean powered = ((Boolean) state.getValue(POWERED));
++            boolean powered = state.getValue(POWERED);
 +            org.bukkit.block.Block block = worldIn.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
 +            int old = (powered) ? 15 : 0;
 +            int current = (!powered) ? 15 : 0;
 +
-+            BlockRedstoneEvent eventRedstone = new BlockRedstoneEvent(block, old, current);
++            org.bukkit.event.block.BlockRedstoneEvent eventRedstone = new org.bukkit.event.block.BlockRedstoneEvent(block, old, current);
 +            worldIn.getServer().getPluginManager().callEvent(eventRedstone);
 +
 +            if ((eventRedstone.getNewCurrent() > 0) != (!powered)) {
 +                return true;
 +            }
-+            worldIn.setBlockState(pos, state.withProperty(POWERED, Boolean.valueOf(true)), 3);
+             worldIn.setBlockState(pos, state.withProperty(POWERED, true), 3);
              worldIn.markBlockRangeForRenderUpdate(pos, pos);
              this.playClickSound(playerIn, worldIn, pos);
--            this.notifyNeighbors(worldIn, pos, state.getValue(FACING));
-+            this.notifyNeighbors(worldIn, pos, (EnumFacing)state.getValue(FACING));
-             worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn));
-             return true;
-         }
-@@ -200,27 +190,24 @@
- 
-     protected abstract void playReleaseSound(World worldIn, BlockPos pos);
- 
--    @Override
-     public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-     {
--        if (state.getValue(POWERED))
-+        if (((Boolean)state.getValue(POWERED)).booleanValue())
-         {
--            this.notifyNeighbors(worldIn, pos, state.getValue(FACING));
-+            this.notifyNeighbors(worldIn, pos, (EnumFacing)state.getValue(FACING));
-         }
- 
-         super.breakBlock(worldIn, pos, state);
-     }
- 
--    @Override
-     public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-     {
--        return blockState.getValue(POWERED) ? 15 : 0;
-+        return ((Boolean)blockState.getValue(POWERED)).booleanValue() ? 15 : 0;
-     }
- 
--    @Override
-     public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-     {
--        if (!blockState.getValue(POWERED))
-+        if (!((Boolean)blockState.getValue(POWERED)).booleanValue())
-         {
-             return 0;
-         }
-@@ -230,23 +217,20 @@
-         }
-     }
- 
--    @Override
-     public boolean canProvidePower(IBlockState state)
-     {
-         return true;
-     }
- 
--    @Override
-     public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
-     {
-     }
- 
--    @Override
-     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-     {
-         if (!worldIn.isRemote)
-         {
--            if (state.getValue(POWERED))
-+            if (((Boolean)state.getValue(POWERED)).booleanValue())
-             {
-                 if (this.wooden)
-                 {
-@@ -254,8 +238,16 @@
+@@ -254,6 +265,14 @@
                  }
                  else
                  {
--                    worldIn.setBlockState(pos, state.withProperty(POWERED, false));
--                    this.notifyNeighbors(worldIn, pos, state.getValue(FACING));
 +                    org.bukkit.block.Block block = worldIn.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
 +
-+                    BlockRedstoneEvent eventRedstone = new BlockRedstoneEvent(block, 15, 0);
++                    org.bukkit.event.block.BlockRedstoneEvent eventRedstone = new org.bukkit.event.block.BlockRedstoneEvent(block, 15, 0);
 +                    worldIn.getServer().getPluginManager().callEvent(eventRedstone);
 +
 +                    if (eventRedstone.getNewCurrent() > 0) {
 +                        return;
 +                    }
-+                    worldIn.setBlockState(pos, state.withProperty(POWERED, Boolean.valueOf(false)));
-+                    this.notifyNeighbors(worldIn, pos, (EnumFacing)state.getValue(FACING));
+                     worldIn.setBlockState(pos, state.withProperty(POWERED, false));
+                     this.notifyNeighbors(worldIn, pos, state.getValue(FACING));
                      this.playReleaseSound(worldIn, pos);
-                     worldIn.markBlockRangeForRenderUpdate(pos, pos);
-                 }
-@@ -263,14 +255,13 @@
-         }
-     }
- 
--    @Override
-     public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
-     {
-         if (!worldIn.isRemote)
-         {
-             if (this.wooden)
-             {
--                if (!state.getValue(POWERED))
-+                if (!((Boolean)state.getValue(POWERED)).booleanValue())
-                 {
-                     this.checkPressed(state, worldIn, pos);
-                 }
-@@ -280,22 +271,61 @@
- 
-     private void checkPressed(IBlockState state, World worldIn, BlockPos pos)
-     {
--        List <? extends Entity > list = worldIn.getEntitiesWithinAABB(EntityArrow.class, state.getBoundingBox(worldIn, pos).offset(pos));
-+        List <? extends Entity > list = worldIn.<Entity>getEntitiesWithinAABB(EntityArrow.class, state.getBoundingBox(worldIn, pos).offset(pos));
+@@ -284,8 +303,39 @@
          boolean flag = !list.isEmpty();
--        boolean flag1 = state.getValue(POWERED);
-+        boolean flag1 = ((Boolean)state.getValue(POWERED)).booleanValue();
-+
+         boolean flag1 = state.getValue(POWERED);
+ 
 +        // CraftBukkit start - Call interact event when arrows turn on wooden buttons
 +        if (flag1 != flag && flag) {
 +            org.bukkit.block.Block block = worldIn.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
@@ -309,7 +54,7 @@
 +            // If all of the events are cancelled block the button press, else allow
 +            for (Object object : list) {
 +                if (object != null) {
-+                    EntityInteractEvent event = new EntityInteractEvent(((Entity) object).getBukkitEntity(), block);
++                    org.bukkit.event.entity.EntityInteractEvent event = new org.bukkit.event.entity.EntityInteractEvent(((Entity) object).getBukkitEntity(), block);
 +                    worldIn.getServer().getPluginManager().callEvent(event);
 +
 +                    if (!event.isCancelled()) {
@@ -323,98 +68,32 @@
 +                return;
 +            }
 +        }
- 
++
          if (flag && !flag1)
          {
--            worldIn.setBlockState(pos, state.withProperty(POWERED, true));
--            this.notifyNeighbors(worldIn, pos, state.getValue(FACING));
 +            org.bukkit.block.Block block = worldIn.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
 +
-+            BlockRedstoneEvent eventRedstone = new BlockRedstoneEvent(block, 0, 15);
++            org.bukkit.event.block.BlockRedstoneEvent eventRedstone = new org.bukkit.event.block.BlockRedstoneEvent(block, 0, 15);
 +            worldIn.getServer().getPluginManager().callEvent(eventRedstone);
 +
 +            if (eventRedstone.getNewCurrent() <= 0) {
 +                return;
 +            }
-+            worldIn.setBlockState(pos, state.withProperty(POWERED, Boolean.valueOf(true)));
-+            this.notifyNeighbors(worldIn, pos, (EnumFacing)state.getValue(FACING));
+             worldIn.setBlockState(pos, state.withProperty(POWERED, true));
+             this.notifyNeighbors(worldIn, pos, state.getValue(FACING));
              worldIn.markBlockRangeForRenderUpdate(pos, pos);
--            this.playClickSound(null, worldIn, pos);
-+            this.playClickSound((EntityPlayer)null, worldIn, pos);
-         }
+@@ -294,6 +344,14 @@
  
          if (!flag && flag1)
          {
--            worldIn.setBlockState(pos, state.withProperty(POWERED, false));
--            this.notifyNeighbors(worldIn, pos, state.getValue(FACING));
 +            org.bukkit.block.Block block = worldIn.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
 +
-+            BlockRedstoneEvent eventRedstone = new BlockRedstoneEvent(block, 15, 0);
++            org.bukkit.event.block.BlockRedstoneEvent eventRedstone = new org.bukkit.event.block.BlockRedstoneEvent(block, 15, 0);
 +            worldIn.getServer().getPluginManager().callEvent(eventRedstone);
 +
 +            if (eventRedstone.getNewCurrent() > 0) {
 +                return;
 +            }
-+            worldIn.setBlockState(pos, state.withProperty(POWERED, Boolean.valueOf(false)));
-+            this.notifyNeighbors(worldIn, pos, (EnumFacing)state.getValue(FACING));
+             worldIn.setBlockState(pos, state.withProperty(POWERED, false));
+             this.notifyNeighbors(worldIn, pos, state.getValue(FACING));
              worldIn.markBlockRangeForRenderUpdate(pos, pos);
-             this.playReleaseSound(worldIn, pos);
-         }
-@@ -312,7 +342,6 @@
-         worldIn.notifyNeighborsOfStateChange(pos.offset(facing.getOpposite()), this, false);
-     }
- 
--    @Override
-     public IBlockState getStateFromMeta(int meta)
-     {
-         EnumFacing enumfacing;
-@@ -339,10 +368,9 @@
-                 enumfacing = EnumFacing.UP;
-         }
- 
--        return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(POWERED, (meta & 8) > 0);
-+        return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(POWERED, Boolean.valueOf((meta & 8) > 0));
-     }
- 
--    @Override
-     public int getMetaFromState(IBlockState state)
-     {
-         int i;
-@@ -369,7 +397,7 @@
-                 i = 0;
-         }
- 
--        if (state.getValue(POWERED))
-+        if (((Boolean)state.getValue(POWERED)).booleanValue())
-         {
-             i |= 8;
-         }
-@@ -377,25 +405,21 @@
-         return i;
-     }
- 
--    @Override
-     public IBlockState withRotation(IBlockState state, Rotation rot)
-     {
--        return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
-+        return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
-     }
- 
--    @Override
-     public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
-     {
--        return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
-+        return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
-     }
- 
--    @Override
-     protected BlockStateContainer createBlockState()
-     {
--        return new BlockStateContainer(this, FACING, POWERED);
-+        return new BlockStateContainer(this, new IProperty[] {FACING, POWERED});
-     }
- 
--    @Override
-     public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-     {
-         return BlockFaceShape.UNDEFINED;

@@ -1,30 +1,6 @@
 --- before/net/minecraft/command/CommandTP.java
 +++ after/net/minecraft/command/CommandTP.java
-@@ -55,69 +55,35 @@
-                 i = 1;
-             }
- 
--            if (args.length == 1 || args.length == 2)
-+            if (args.length != 1 && args.length != 2)
-+            {
-+                if (args.length < i + 3)
-+                {
-+                    throw new WrongUsageException("commands.tp.usage", new Object[0]);
-+                }
-+                else if (entity.world != null)
-+                {
-+                    int j = 4096;
-+                    int k = i + 1;
-+                    CommandBase.CoordinateArg commandbase$coordinatearg = parseCoordinate(entity.posX, args[i], true);
-+                    CommandBase.CoordinateArg commandbase$coordinatearg1 = parseCoordinate(entity.posY, args[k++], -4096, 4096, false);
-+                    CommandBase.CoordinateArg commandbase$coordinatearg2 = parseCoordinate(entity.posZ, args[k++], true);
-+                    CommandBase.CoordinateArg commandbase$coordinatearg3 = parseCoordinate((double)entity.rotationYaw, args.length > k ? args[k++] : "~", false);
-+                    CommandBase.CoordinateArg commandbase$coordinatearg4 = parseCoordinate((double)entity.rotationPitch, args.length > k ? args[k] : "~", false);
-+                    teleportEntityToCoordinates(entity, commandbase$coordinatearg, commandbase$coordinatearg1, commandbase$coordinatearg2, commandbase$coordinatearg3, commandbase$coordinatearg4);
-+                    notifyCommandListener(sender, this, "commands.tp.success.coordinates", new Object[] {entity.getName(), commandbase$coordinatearg.getResult(), commandbase$coordinatearg1.getResult(), commandbase$coordinatearg2.getResult()});
-+                }
-+            }
-+            else
+@@ -59,27 +59,13 @@
              {
                  Entity entity1 = getEntity(server, sender, args[args.length - 1]);
  
@@ -47,52 +23,15 @@
 -                        entity.setLocationAndAngles(entity1.posX, entity1.posY, entity1.posZ, entity1.rotationYaw, entity1.rotationPitch);
 -                    }
 -
--                    notifyCommandListener(sender, this, "commands.tp.success", new Object[] {entity.getName(), entity1.getName()});
+-                    notifyCommandListener(sender, this, "commands.tp.success", entity.getName(), entity1.getName());
 -                }
--            }
--            else if (args.length < i + 3)
--            {
--                throw new WrongUsageException("commands.tp.usage");
--            }
--            else if (entity.world != null)
--            {
--                int k = 4096;
--                int lvt_6_2_ = i + 1;
--                CommandBase.CoordinateArg commandbase$coordinatearg = parseCoordinate(entity.posX, args[i], true);
--                CommandBase.CoordinateArg commandbase$coordinatearg1 = parseCoordinate(entity.posY, args[lvt_6_2_++], -4096, 4096, false);
--                CommandBase.CoordinateArg commandbase$coordinatearg2 = parseCoordinate(entity.posZ, args[lvt_6_2_++], true);
--                CommandBase.CoordinateArg commandbase$coordinatearg3 = parseCoordinate(
--                            (double)entity.rotationYaw, args.length > lvt_6_2_ ? args[lvt_6_2_++] : "~", false
--                        );
--                CommandBase.CoordinateArg commandbase$coordinatearg4 = parseCoordinate(
--                            (double)entity.rotationPitch, args.length > lvt_6_2_ ? args[lvt_6_2_] : "~", false
--                        );
--                teleportEntityToCoordinates(
--                    entity,
--                    commandbase$coordinatearg,
--                    commandbase$coordinatearg1,
--                    commandbase$coordinatearg2,
--                    commandbase$coordinatearg3,
--                    commandbase$coordinatearg4
--                );
--                notifyCommandListener(
--                    sender,
--                    this,
--                    "commands.tp.success.coordinates",
--                    new Object[]
--                    {
--                        entity.getName(),
--                        commandbase$coordinatearg.getResult(),
--                        commandbase$coordinatearg1.getResult(),
--                        commandbase$coordinatearg2.getResult()
--                    }
--                );
 +                // CraftBukkit Start
 +                // Use Bukkit teleport method in all cases. It has cross dimensional handling, events
-+                if (entity.getBukkitEntity().teleport(entity1.getBukkitEntity(), org.bukkit.event.player.PlayerTeleportEvent.TeleportCause.COMMAND)) {
-+                    notifyCommandListener(sender, (ICommand) this, "commands.tp.success", new Object[] { entity.getName(), entity1.getName()});
-+                    // CraftBukkit End
++                if (entity.getBukkitEntity().teleport(entity1.getBukkitEntity(), org.bukkit.event.player.PlayerTeleportEvent.TeleportCause.COMMAND))
++                {
++                    notifyCommandListener(sender, (ICommand)this, "commands.tp.success", entity.getName(), entity1.getName());
 +                }
++                // CraftBukkit End
              }
-         }
-     }
+             else if (args.length < i + 3)
+             {

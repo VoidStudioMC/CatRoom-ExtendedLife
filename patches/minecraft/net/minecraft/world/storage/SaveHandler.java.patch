@@ -1,44 +1,15 @@
 --- before/net/minecraft/world/storage/SaveHandler.java
 +++ after/net/minecraft/world/storage/SaveHandler.java
-@@ -6,8 +6,11 @@
- import java.io.FileInputStream;
- import java.io.FileOutputStream;
- import java.io.IOException;
-+import java.io.InputStream;
-+import java.util.UUID;
- import javax.annotation.Nullable;
- import net.minecraft.entity.player.EntityPlayer;
-+import net.minecraft.entity.player.EntityPlayerMP;
- import net.minecraft.nbt.CompressedStreamTools;
- import net.minecraft.nbt.NBTTagCompound;
- import net.minecraft.server.MinecraftServer;
-@@ -19,6 +22,7 @@
- import net.minecraft.world.gen.structure.template.TemplateManager;
- import org.apache.logging.log4j.LogManager;
- import org.apache.logging.log4j.Logger;
-+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
- 
- public class SaveHandler implements ISaveHandler, IPlayerFileData
- {
-@@ -31,6 +35,8 @@
+@@ -31,6 +31,8 @@
      private final TemplateManager structureTemplateManager;
      protected final DataFixer dataFixer;
  
-+    private UUID uuid = null;
++    private java.util.UUID uuid = null;
 +
      public SaveHandler(File p_i46648_1_, String saveDirectoryNameIn, boolean p_i46648_3_, DataFixer dataFixerIn)
      {
          this.dataFixer = dataFixerIn;
-@@ -44,7 +50,7 @@
-         if (p_i46648_3_)
-         {
-             this.playersDirectory.mkdirs();
--            this.structureTemplateManager = new TemplateManager(new File(this.worldDirectory, "structures").toString(), dataFixerIn);
-+            this.structureTemplateManager = new TemplateManager((new File(this.worldDirectory, "structures")).toString(), dataFixerIn);
-         }
-         else
-         {
-@@ -73,17 +79,15 @@
+@@ -73,7 +75,7 @@
          catch (IOException ioexception)
          {
              ioexception.printStackTrace();
@@ -47,17 +18,7 @@
          }
      }
  
--    @Override
-     public File getWorldDirectory()
-     {
-         return this.worldDirectory;
-     }
- 
--    @Override
-     public void checkSessionLock() throws MinecraftException
-     {
-         try
-@@ -95,7 +99,7 @@
+@@ -95,7 +97,7 @@
              {
                  if (datainputstream.readLong() != this.initializationTime)
                  {
@@ -66,29 +27,16 @@
                  }
              }
              finally
-@@ -103,27 +107,25 @@
-                 datainputstream.close();
-             }
+@@ -105,7 +107,7 @@
          }
--        catch (IOException ioexception)
-+        catch (IOException var7)
+         catch (IOException ioexception)
          {
 -            throw new MinecraftException("Failed to check session lock, aborting");
 +            throw new MinecraftException("Failed to check session lock for world located at " + this.worldDirectory + ", aborting. Stop the server and delete the session.lock in this world to prevent further issues."); // Spigot
          }
      }
  
--    @Override
-     public IChunkLoader getChunkLoader(WorldProvider provider)
-     {
-         throw new RuntimeException("Old Chunk Storage is no longer supported.");
-     }
- 
-     @Nullable
--    @Override
-     public WorldInfo loadWorldInfo()
-     {
-         File file1 = new File(this.worldDirectory, "level.dat");
+@@ -123,7 +125,7 @@
  
          if (file1.exists())
          {
@@ -97,7 +45,7 @@
  
              if (worldinfo != null)
              {
-@@ -131,17 +133,19 @@
+@@ -131,8 +133,9 @@
              }
          }
  
@@ -107,10 +55,8 @@
 +        return file1.exists() ? SaveFormatOld.loadAndFix(file1, this.dataFixer, this) : null;
      }
  
--    @Override
-     public void saveWorldInfoWithPlayer(WorldInfo worldInformation, @Nullable NBTTagCompound tagCompound)
-     {
-         NBTTagCompound nbttagcompound = worldInformation.cloneNBTCompound(tagCompound);
+     @Override
+@@ -142,6 +145,8 @@
          NBTTagCompound nbttagcompound1 = new NBTTagCompound();
          nbttagcompound1.setTag("Data", nbttagcompound);
  
@@ -119,57 +65,22 @@
          try
          {
              File file1 = new File(this.worldDirectory, "level.dat_new");
-@@ -174,13 +178,11 @@
-         }
-     }
- 
--    @Override
-     public void saveWorldInfo(WorldInfo worldInformation)
-     {
--        this.saveWorldInfoWithPlayer(worldInformation, null);
-+        this.saveWorldInfoWithPlayer(worldInformation, (NBTTagCompound)null);
-     }
- 
--    @Override
-     public void writePlayerData(EntityPlayer player)
-     {
-         try
-@@ -196,15 +198,15 @@
+@@ -196,6 +201,7 @@
              }
  
              file1.renameTo(file2);
 +            net.minecraftforge.event.ForgeEventFactory.firePlayerSavingEvent(player, this.playersDirectory, player.getUniqueID().toString());
          }
--        catch (Exception exception)
-+        catch (Exception var5)
+         catch (Exception exception)
          {
--            LOGGER.warn("Failed to save player data for {}", player.getName());
-+            LOGGER.warn("Failed to save player data for {}", (Object)player.getName());
-         }
-     }
- 
-     @Nullable
--    @Override
-     public NBTTagCompound readPlayerData(EntityPlayer player)
-     {
-         NBTTagCompound nbttagcompound = null;
-@@ -218,26 +220,47 @@
-                 nbttagcompound = CompressedStreamTools.readCompressed(new FileInputStream(file1));
-             }
-         }
--        catch (Exception exception)
-+        catch (Exception var4)
-         {
--            LOGGER.warn("Failed to load player data for {}", player.getName());
-+            LOGGER.warn("Failed to load player data for {}", (Object)player.getName());
-         }
+@@ -225,12 +231,35 @@
  
          if (nbttagcompound != null)
          {
-+            if (player instanceof EntityPlayerMP) {
-+                CraftPlayer playerCB = (CraftPlayer) player.getBukkitEntity();
++            if (player instanceof net.minecraft.entity.player.EntityPlayerMP) {
++                org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer playerCB = (org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer) player.getBukkitEntity();
 +                // Only update first played if it is older than the one we have
-+                long modified = new File(this.playersDirectory, player.getUniqueID().toString() + ".dat").lastModified();
++                long modified = new File(this.playersDirectory, player.getUniqueID() + ".dat").lastModified();
 +                if (modified < playerCB.getFirstPlayed()) {
 +                    playerCB.setFirstPlayed(modified);
 +                }
@@ -181,13 +92,12 @@
          return nbttagcompound;
      }
  
--    @Override
 +    public NBTTagCompound getPlayerData(String s) {
 +        try {
 +            File file1 = new File(this.playersDirectory, s + ".dat");
 +
 +            if (file1.exists()) {
-+                return CompressedStreamTools.readCompressed((InputStream) (new FileInputStream(file1)));
++                return CompressedStreamTools.readCompressed(new FileInputStream(file1));
 +            }
 +        } catch (Exception exception) {
 +            LOGGER.warn("Failed to load player data for " + s);
@@ -196,40 +106,10 @@
 +        return null;
 +    }
 +
+     @Override
      public IPlayerFileData getPlayerNBTManager()
      {
-         return this;
-     }
- 
--    @Override
-     public String[] getAvailablePlayerDat()
-     {
-         String[] astring = this.playersDirectory.list();
-@@ -247,7 +270,7 @@
-             astring = new String[0];
-         }
- 
--        for (int i = 0; i < astring.length; i++)
-+        for (int i = 0; i < astring.length; ++i)
-         {
-             if (astring[i].endsWith(".dat"))
-             {
-@@ -258,20 +281,79 @@
-         return astring;
-     }
- 
--    @Override
-     public void flush()
-     {
-     }
- 
--    @Override
-     public File getMapFileFromName(String mapName)
-     {
-         return new File(this.mapDataDir, mapName + ".dat");
-     }
- 
--    @Override
+@@ -273,5 +302,67 @@
      public TemplateManager getStructureTemplateManager()
      {
          return this.structureTemplateManager;
@@ -239,7 +119,7 @@
 +    {
 +        try
 +        {
-+            File file1 = new File(this.playersDirectory, player.getUniqueID().toString() + ".dat");
++            File file1 = new File(this.playersDirectory, player.getUniqueID() + ".dat");
 +
 +            if (file1.exists() && file1.isFile())
 +            {
@@ -253,14 +133,14 @@
 +        return null;
 +    }
 +
-+    public UUID getUUID() {
++    public java.util.UUID getUUID() {
 +        if (uuid != null) return uuid;
 +        File file1 = new File(this.worldDirectory, "uid.dat");
 +        if (file1.exists()) {
 +            DataInputStream dis = null;
 +            try {
 +                dis = new DataInputStream(new FileInputStream(file1));
-+                return uuid = new UUID(dis.readLong(), dis.readLong());
++                return uuid = new java.util.UUID(dis.readLong(), dis.readLong());
 +            } catch (IOException ex) {
 +                LOGGER.warn("Failed to read " + file1 + ", generating new random UUID", ex);
 +            } finally {
@@ -273,7 +153,7 @@
 +                }
 +            }
 +        }
-+        uuid = UUID.randomUUID();
++        this.uuid = java.util.UUID.randomUUID();
 +        DataOutputStream dos = null;
 +        try {
 +            dos = new DataOutputStream(new FileOutputStream(file1));

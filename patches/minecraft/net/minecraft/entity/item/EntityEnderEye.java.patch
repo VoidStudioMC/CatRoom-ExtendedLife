@@ -29,7 +29,7 @@
 +        this.posZ += this.motionZ;
          float f = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
          this.rotationYaw = (float)(MathHelper.atan2(this.motionX, this.motionZ) * 180.0F / (float)Math.PI);
-         this.rotationPitch = (float)(MathHelper.atan2(this.motionY, (double)f) * 180.0F / (float)Math.PI);
+         this.rotationPitch = (float)(MathHelper.atan2(this.motionY, f) * 180.0F / (float)Math.PI);
 @@ -154,11 +154,11 @@
  
              if (this.posY < this.targetY)

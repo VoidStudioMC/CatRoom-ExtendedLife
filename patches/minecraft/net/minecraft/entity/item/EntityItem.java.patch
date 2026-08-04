@@ -1,94 +1,43 @@
 --- before/net/minecraft/entity/item/EntityItem.java
 +++ after/net/minecraft/entity/item/EntityItem.java
-@@ -13,6 +13,7 @@
- import net.minecraft.network.datasync.DataParameter;
- import net.minecraft.network.datasync.DataSerializers;
- import net.minecraft.network.datasync.EntityDataManager;
-+import net.minecraft.server.MinecraftServer;
- import net.minecraft.stats.StatList;
- import net.minecraft.util.DamageSource;
- import net.minecraft.util.datafix.DataFixer;
-@@ -26,36 +27,47 @@
- import net.minecraftforge.fml.relauncher.SideOnly;
- import org.apache.logging.log4j.LogManager;
- import org.apache.logging.log4j.Logger;
-+import org.bukkit.event.entity.EntityPickupItemEvent;
-+import org.bukkit.event.player.PlayerPickupItemEvent;
- 
- public class EntityItem extends Entity
- {
+@@ -32,12 +32,19 @@
      private static final Logger LOGGER = LogManager.getLogger();
--    private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityItem.class, DataSerializers.ITEM_STACK);
-+    private static final DataParameter<ItemStack> ITEM = EntityDataManager.<ItemStack>createKey(EntityItem.class, DataSerializers.ITEM_STACK);
+     private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityItem.class, DataSerializers.ITEM_STACK);
      private int age;
 -    private int pickupDelay;
--    private int health = 5;
 +    public int pickupDelay;
-+    private int health;
+     private int health = 5;
      private String thrower;
      private String owner;
--    public float hoverStart = (float)(Math.random() * Math.PI * 2.0);
-+    public float hoverStart;
-+
+     public float hoverStart = (float)(Math.random() * Math.PI * 2.0);
+ 
 +    /**
 +     * The maximum age of this EntityItem.  The item is expired once this is reached.
 +     */
 +    public int lifespan = 6000;
 +
 +    private int lastTick = catserver.server.CatServer.getCurrentTick() - 1; // CatServer - implement realtime
- 
++
      public EntityItem(World worldIn, double x, double y, double z)
      {
          super(worldIn);
-+        this.health = 5;
-+        this.hoverStart = (float)(Math.random() * Math.PI * 2.0D);
-         this.setSize(0.25F, 0.25F);
-         this.setPosition(x, y, z);
--        this.rotationYaw = (float)(Math.random() * 360.0);
--        this.motionX = (double)((float)(Math.random() * 0.2F - 0.1F));
--        this.motionY = 0.2F;
--        this.motionZ = (double)((float)(Math.random() * 0.2F - 0.1F));
-+        this.rotationYaw = (float)(Math.random() * 360.0D);
-+        this.motionX = (double)((float)(Math.random() * 0.20000000298023224D - 0.10000000149011612D));
-+        this.motionY = 0.20000000298023224D;
-+        this.motionZ = (double)((float)(Math.random() * 0.20000000298023224D - 0.10000000149011612D));
-     }
- 
-     public EntityItem(World worldIn, double x, double y, double z, ItemStack stack)
+@@ -53,6 +60,7 @@
      {
          this(worldIn, x, y, z);
          this.setItem(stack);
 +        this.lifespan = (stack.getItem() == null ? world.spigotConfig.itemDespawnRate : stack.getItem().getEntityLifespan(stack, worldIn)); // Spigot
      }
  
--    @Override
-     protected boolean canTriggerWalking()
-     {
-         return false;
-@@ -64,19 +76,20 @@
-     public EntityItem(World worldIn)
-     {
-         super(worldIn);
-+        this.health = 5;
-+        this.hoverStart = (float)(Math.random() * Math.PI * 2.0D);
-         this.setSize(0.25F, 0.25F);
-         this.setItem(ItemStack.EMPTY);
-     }
- 
--    @Override
-     protected void entityInit()
-     {
-         this.getDataManager().register(ITEM, ItemStack.EMPTY);
-     }
- 
--    @Override
+     @Override
+@@ -77,6 +85,7 @@
+     @Override
      public void onUpdate()
      {
 +        if (getItem().getItem().onEntityItemUpdate(this)) return;
          if (this.getItem().isEmpty())
          {
              this.setDead();
-@@ -85,10 +98,15 @@
+@@ -85,10 +94,15 @@
          {
              super.onUpdate();
  
@@ -108,41 +57,7 @@
  
              this.prevPosX = this.posX;
              this.prevPosY = this.posY;
-@@ -99,7 +117,7 @@
- 
-             if (!this.hasNoGravity())
-             {
--                this.motionY -= 0.04F;
-+                this.motionY -= 0.03999999910593033D;
-             }
- 
-             if (this.world.isRemote)
-@@ -108,21 +126,17 @@
-             }
-             else
-             {
--                this.noClip = this.pushOutOfBlocks(
--                                         this.posX, (this.getEntityBoundingBox().minY + this.getEntityBoundingBox().maxY) / 2.0, this.posZ
--                                     );
-+                this.noClip = this.pushOutOfBlocks(this.posX, (this.getEntityBoundingBox().minY + this.getEntityBoundingBox().maxY) / 2.0D, this.posZ);
-             }
- 
-             this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
--            boolean flag = (int)this.prevPosX != (int)this.posX
--                           || (int)this.prevPosY != (int)this.posY
--                           || (int)this.prevPosZ != (int)this.posZ;
-+            boolean flag = (int)this.prevPosX != (int)this.posX || (int)this.prevPosY != (int)this.posY || (int)this.prevPosZ != (int)this.posZ;
- 
-             if (flag || this.ticksExisted % 25 == 0)
-             {
-                 if (this.world.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA)
-                 {
--                    this.motionY = 0.2F;
-+                    this.motionY = 0.20000000298023224D;
-                     this.motionX = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-                     this.motionZ = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-                     this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
-@@ -138,32 +152,26 @@
+@@ -138,17 +152,9 @@
  
              if (this.onGround)
              {
@@ -162,15 +77,9 @@
 +                f = underState.getBlock().getSlipperiness(underState, this.world, underPos, this) * 0.98F;
              }
  
-             this.motionX *= (double)f;
--            this.motionY *= 0.98F;
-+            this.motionY *= 0.9800000190734863D;
-             this.motionZ *= (double)f;
- 
-             if (this.onGround)
-             {
--                this.motionY *= -0.5;
-+                this.motionY *= -0.5D;
+             this.motionX *= f;
+@@ -160,10 +166,12 @@
+                 this.motionY *= -0.5;
              }
  
 +            /* Craftbukkit start - moved up
@@ -183,14 +92,7 @@
  
              this.handleWaterMovement();
  
-@@ -174,22 +182,59 @@
-                 double d5 = this.motionZ - d2;
-                 double d6 = d3 * d3 + d4 * d4 + d5 * d5;
- 
--                if (d6 > 0.01)
-+                if (d6 > 0.01D)
-                 {
-                     this.isAirBorne = true;
+@@ -180,16 +188,53 @@
                  }
              }
  
@@ -246,92 +148,14 @@
          {
              this.combineItems(entityitem);
          }
-@@ -206,48 +251,58 @@
-             ItemStack itemstack = this.getItem();
-             ItemStack itemstack1 = other.getItem();
- 
--            if (this.pickupDelay == 32767 || other.pickupDelay == 32767)
--            {
--                return false;
--            }
--            else if (this.age != -32768 && other.age != -32768)
--            {
--                if (itemstack1.getItem() != itemstack.getItem())
--                {
--                    return false;
--                }
--                else if (itemstack1.hasTagCompound() ^ itemstack.hasTagCompound())
--                {
--                    return false;
--                }
--                else if (itemstack1.hasTagCompound() && !itemstack1.getTagCompound().equals(itemstack.getTagCompound()))
--                {
--                    return false;
--                }
--                else if (itemstack1.getItem() == null)
--                {
--                    return false;
--                }
--                else if (itemstack1.getItem().getHasSubtypes() && itemstack1.getMetadata() != itemstack.getMetadata())
--                {
--                    return false;
--                }
--                else if (itemstack1.getCount() < itemstack.getCount())
--                {
--                    return other.combineItems(this);
--                }
--                else if (itemstack1.getCount() + itemstack.getCount() > itemstack1.getMaxStackSize())
--                {
--                    return false;
-+            if (this.pickupDelay != 32767 && other.pickupDelay != 32767)
-+            {
-+                if (this.age != -32768 && other.age != -32768)
-+                {
-+                    if (itemstack1.getItem() != itemstack.getItem())
-+                    {
-+                        return false;
-+                    }
-+                    else if (itemstack1.hasTagCompound() ^ itemstack.hasTagCompound())
-+                    {
-+                        return false;
-+                    }
-+                    else if (itemstack1.hasTagCompound() && !itemstack1.getTagCompound().equals(itemstack.getTagCompound()))
-+                    {
-+                        return false;
-+                    }
-+                    else if (itemstack1.getItem() == null)
-+                    {
-+                        return false;
-+                    }
-+                    else if (itemstack1.getItem().getHasSubtypes() && itemstack1.getMetadata() != itemstack.getMetadata())
-+                    {
-+                        return false;
-+                    }
-+                    else if (itemstack1.getCount() < itemstack.getCount())
-+                    {
-+                        return other.combineItems(this);
-+                    }
-+                    else if (itemstack1.getCount() + itemstack.getCount() > itemstack1.getMaxStackSize())
-+                    {
-+                        return false;
-+                    }
-+                    else if (!itemstack.areCapsCompatible(itemstack1))
-+                    {
-+                        return false;
-+                    }
-+                    else
-+                    {
-+                        // Spigot start
-+                        if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callItemMergeEvent(other, this).isCancelled()) return false;
-+                        itemstack.grow(itemstack1.getCount());
-+                        this.pickupDelay = Math.max(other.pickupDelay, this.pickupDelay);
-+                        this.age = Math.min(other.age, this.age);
-+                        this.setItem(itemstack);
-+                        other.setDead();
-+                        // Spigot end
-+                        return true;
-+                    }
+@@ -240,13 +285,20 @@
+                 {
+                     return false;
                  }
++                else if (!itemstack.areCapsCompatible(itemstack1))
++                {
++                    return false;
++                }
                  else
                  {
 -                    itemstack1.grow(itemstack.getCount());
@@ -339,30 +163,19 @@
 -                    other.age = Math.min(other.age, this.age);
 -                    other.setItem(itemstack1);
 -                    this.setDead();
--                    return true;
-+                    return false;
++                    // Spigot start
++                    if (org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callItemMergeEvent(other, this).isCancelled()) return false;
++                    itemstack.grow(itemstack1.getCount());
++                    this.pickupDelay = Math.max(other.pickupDelay, this.pickupDelay);
++                    this.age = Math.min(other.age, this.age);
++                    this.setItem(itemstack);
++                    other.setDead();
++                    // Spigot end
+                     return true;
                  }
              }
-             else
-@@ -266,7 +321,6 @@
-         this.age = 4800;
-     }
- 
--    @Override
-     public boolean handleWaterMovement()
-     {
-         if (this.world.handleMaterialAcceleration(this.getEntityBoundingBox(), Material.WATER, this))
-@@ -286,15 +340,14 @@
-         return this.inWater;
-     }
- 
--    @Override
-     protected void dealFireDamage(int amount)
-     {
-         this.attackEntityFrom(DamageSource.IN_FIRE, (float)amount);
-     }
- 
--    @Override
+@@ -295,6 +347,7 @@
+     @Override
      public boolean attackEntityFrom(DamageSource source, float amount)
      {
 +        if (this.world.isRemote || this.isDead) return false; //Forge: Fixes MC-53850
@@ -377,19 +190,9 @@
 +                return false;
 +            }
              this.markVelocityChanged();
-             this.health = (int)((float)this.health - amount);
+             this.health = (int)(this.health - amount);
  
-@@ -319,15 +375,15 @@
- 
-     public static void registerFixesItem(DataFixer fixer)
-     {
--        fixer.registerWalker(FixTypes.ENTITY, new ItemStackData(EntityItem.class, "Item"));
-+        fixer.registerWalker(FixTypes.ENTITY, new ItemStackData(EntityItem.class, new String[] {"Item"}));
-     }
- 
--    @Override
-     public void writeEntityToNBT(NBTTagCompound compound)
-     {
+@@ -328,6 +384,7 @@
          compound.setShort("Health", (short)this.health);
          compound.setShort("Age", (short)this.age);
          compound.setShort("PickupDelay", (short)this.pickupDelay);
@@ -397,23 +200,15 @@
  
          if (this.getThrower() != null)
          {
-@@ -345,7 +401,6 @@
-         }
-     }
- 
--    @Override
-     public void readEntityFromNBT(NBTTagCompound compound)
-     {
-         this.health = compound.getShort("Health");
-@@ -373,25 +428,59 @@
+@@ -373,6 +430,7 @@
          {
              this.setDead();
          }
 +        if (compound.hasKey("Lifespan")) lifespan = compound.getInteger("Lifespan");
      }
  
--    @Override
-     public void onCollideWithPlayer(EntityPlayer entityIn)
+     @Override
+@@ -380,18 +438,52 @@
      {
          if (!this.world.isRemote)
          {
@@ -432,7 +227,7 @@
 +            if (this.pickupDelay <= 0 && canHold > 0) {
 +                itemstack.setCount(canHold);
 +                // Call legacy event
-+                PlayerPickupItemEvent playerEvent = new PlayerPickupItemEvent((org.bukkit.entity.Player) entityIn.getBukkitEntity(), (org.bukkit.entity.Item) this.getBukkitEntity(), remaining);
++                org.bukkit.event.player.PlayerPickupItemEvent playerEvent = new org.bukkit.event.player.PlayerPickupItemEvent((org.bukkit.entity.Player) entityIn.getBukkitEntity(), (org.bukkit.entity.Item) this.getBukkitEntity(), remaining);
 +                playerEvent.setCancelled(!entityIn.canPickUpLoot);
 +                this.world.getServer().getPluginManager().callEvent(playerEvent);
 +                if (playerEvent.isCancelled()) {
@@ -440,7 +235,7 @@
 +                }
 +
 +                // Call newer event afterwards
-+                EntityPickupItemEvent entityEvent = new EntityPickupItemEvent((org.bukkit.entity.Player) entityIn.getBukkitEntity(), (org.bukkit.entity.Item) this.getBukkitEntity(), remaining);
++                org.bukkit.event.entity.EntityPickupItemEvent entityEvent = new org.bukkit.event.entity.EntityPickupItemEvent(entityIn.getBukkitEntity(), (org.bukkit.entity.Item) this.getBukkitEntity(), remaining);
 +                entityEvent.setCancelled(!entityIn.canPickUpLoot);
 +                this.world.getServer().getPluginManager().callEvent(entityEvent);
 +                if (entityEvent.isCancelled()) {
@@ -470,24 +265,10 @@
                      this.setDead();
                      itemstack.setCount(i);
                  }
-@@ -401,23 +490,20 @@
-         }
-     }
- 
--    @Override
-     public String getName()
-     {
-         return this.hasCustomName() ? this.getCustomNameTag() : I18n.translateToLocal("item." + this.getItem().getTranslationKey());
-     }
- 
--    @Override
-     public boolean canBeAttackedWithItem()
-     {
-         return false;
-     }
+@@ -415,9 +507,9 @@
  
      @Nullable
--    @Override
+     @Override
 -    public Entity changeDimension(int dimensionIn)
 +    public Entity changeDimension(int dimensionIn, net.minecraftforge.common.util.ITeleporter teleporter)
      {
@@ -496,16 +277,7 @@
  
          if (!this.world.isRemote && entity instanceof EntityItem)
          {
-@@ -429,7 +515,7 @@
- 
-     public ItemStack getItem()
-     {
--        return this.getDataManager().get(ITEM);
-+        return (ItemStack)this.getDataManager().get(ITEM);
-     }
- 
-     public void setItem(ItemStack stack)
-@@ -497,6 +583,6 @@
+@@ -497,6 +589,6 @@
      public void makeFakeItem()
      {
          this.setInfinitePickupDelay();

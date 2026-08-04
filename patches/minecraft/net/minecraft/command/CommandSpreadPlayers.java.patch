@@ -16,75 +16,7 @@
  
  public class CommandSpreadPlayers extends CommandBase
  {
-@@ -172,18 +174,18 @@
-         double d0 = Float.MAX_VALUE;
-         int i;
- 
--        for (i = 0; i < 10000 && flag; i++)
-+        for (i = 0; i < 10000 && flag; ++i)
-         {
-             flag = false;
-             d0 = Float.MAX_VALUE;
- 
--            for (int j = 0; j < p_110668_14_.length; j++)
-+            for (int j = 0; j < p_110668_14_.length; ++j)
-             {
-                 CommandSpreadPlayers.Position commandspreadplayers$position = p_110668_14_[j];
-                 int k = 0;
-                 CommandSpreadPlayers.Position commandspreadplayers$position1 = new CommandSpreadPlayers.Position();
- 
--                for (int l = 0; l < p_110668_14_.length; l++)
-+                for (int l = 0; l < p_110668_14_.length; ++l)
-                 {
-                     if (j != l)
-                     {
-@@ -193,11 +195,11 @@
- 
-                         if (d1 < p_110668_2_)
-                         {
--                            k++;
--                            commandspreadplayers$position1.x = commandspreadplayers$position1.x
--                                    + (commandspreadplayers$position2.x - commandspreadplayers$position.x);
--                            commandspreadplayers$position1.z = commandspreadplayers$position1.z
--                                    + (commandspreadplayers$position2.z - commandspreadplayers$position.z);
-+                            ++k;
-+                            commandspreadplayers$position1.x += commandspreadplayers$position2.x
-+                                    - commandspreadplayers$position.x;
-+                            commandspreadplayers$position1.z += commandspreadplayers$position2.z
-+                                    - commandspreadplayers$position.z;
-                         }
-                     }
-                 }
-@@ -262,7 +264,7 @@
-         int i = 0;
-         Map<Team, CommandSpreadPlayers.Position> map = Maps.newHashMap();
- 
--        for (int j = 0; j < p_110671_1_.size(); j++)
-+        for (int j = 0; j < p_110671_1_.size(); ++j)
-         {
-             Entity entity = p_110671_1_.get(j);
-             CommandSpreadPlayers.Position commandspreadplayers$position;
-@@ -311,7 +313,7 @@
-     {
-         CommandSpreadPlayers.Position[] acommandspreadplayers$position = new CommandSpreadPlayers.Position[p_110670_2_];
- 
--        for (int i = 0; i < acommandspreadplayers$position.length; i++)
-+        for (int i = 0; i < acommandspreadplayers$position.length; ++i)
-         {
-             CommandSpreadPlayers.Position commandspreadplayers$position = new CommandSpreadPlayers.Position();
-             commandspreadplayers$position.randomize(p_110670_1_, p_110670_3_, p_110670_5_, p_110670_7_, p_110670_9_);
-@@ -363,8 +365,8 @@
- 
-             public void moveAway(CommandSpreadPlayers.Position pos)
-             {
--                this.x = this.x - pos.x;
--                this.z = this.z - pos.z;
-+                this.x -= pos.x;
-+                this.z -= pos.z;
-             }
- 
-             public boolean clamp(double p_111093_1_, double p_111093_3_, double p_111093_5_, double p_111093_7_)
-@@ -404,7 +406,7 @@
+@@ -406,7 +408,7 @@
                  {
                      blockpos = blockpos.down();
  
@@ -93,7 +25,7 @@
                      {
                          return blockpos.getY() + 1;
                      }
-@@ -420,7 +422,7 @@
+@@ -422,7 +424,7 @@
                  while (blockpos.getY() > 0)
                  {
                      blockpos = blockpos.down();
@@ -102,7 +34,7 @@
  
                      if (material != Material.AIR)
                      {
-@@ -436,5 +438,12 @@
+@@ -438,5 +440,12 @@
                  this.x = MathHelper.nextDouble(rand, p_111097_2_, p_111097_6_);
                  this.z = MathHelper.nextDouble(rand, p_111097_4_, p_111097_8_);
              }

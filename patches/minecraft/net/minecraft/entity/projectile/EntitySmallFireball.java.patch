@@ -1,14 +1,6 @@
 --- before/net/minecraft/entity/projectile/EntitySmallFireball.java
 +++ after/net/minecraft/entity/projectile/EntitySmallFireball.java
-@@ -8,6 +8,7 @@
- import net.minecraft.util.math.BlockPos;
- import net.minecraft.util.math.RayTraceResult;
- import net.minecraft.world.World;
-+import org.bukkit.event.entity.EntityCombustByEntityEvent;
- 
- public class EntitySmallFireball extends EntityFireball
- {
-@@ -21,11 +22,13 @@
+@@ -21,6 +21,10 @@
      {
          super(worldIn, shooter, accelX, accelY, accelZ);
          this.setSize(0.3125F, 0.3125F);
@@ -18,22 +10,8 @@
 +        }
      }
  
--    public EntitySmallFireball(
--        World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ
--    )
-+    public EntitySmallFireball(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ)
-     {
-         super(worldIn, x, y, z, accelX, accelY, accelZ);
-         this.setSize(0.3125F, 0.3125F);
-@@ -36,7 +39,6 @@
-         EntityFireball.registerFixesFireball(fixer, "SmallFireball");
-     }
- 
--    @Override
-     protected void onImpact(RayTraceResult result)
-     {
-         if (!this.world.isRemote)
-@@ -45,12 +47,17 @@
+     public EntitySmallFireball(
+@@ -45,12 +49,17 @@
              {
                  if (!result.entityHit.isImmuneToFire())
                  {
@@ -47,7 +25,7 @@
                          this.applyEnchantments(this.shootingEntity, result.entityHit);
 -                        result.entityHit.setFire(5);
 +                        // result.entityHit.setFire(5);
-+                        EntityCombustByEntityEvent event = new EntityCombustByEntityEvent(this.getBukkitEntity(), result.entityHit.getBukkitEntity(), 5);
++                        org.bukkit.event.entity.EntityCombustByEntityEvent event = new org.bukkit.event.entity.EntityCombustByEntityEvent(this.getBukkitEntity(), result.entityHit.getBukkitEntity(), 5);
 +                        result.entityHit.world.getServer().getPluginManager().callEvent(event);
 +
 +                        if (!event.isCancelled()) {
@@ -56,7 +34,7 @@
                      }
                  }
              }
-@@ -60,16 +67,18 @@
+@@ -60,16 +69,18 @@
  
                  if (this.shootingEntity != null && this.shootingEntity instanceof EntityLiving)
                  {
@@ -71,24 +49,9 @@
  
                      if (this.world.isAirBlock(blockpos))
                      {
--                        this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 +                        if (!org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callBlockIgniteEvent(world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), this).isCancelled()) {
-+                            this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
+                         this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 +                        }
                      }
                  }
              }
-@@ -78,13 +87,11 @@
-         }
-     }
- 
--    @Override
-     public boolean canBeCollidedWith()
-     {
-         return false;
-     }
- 
--    @Override
-     public boolean attackEntityFrom(DamageSource source, float amount)
-     {
-         return false;

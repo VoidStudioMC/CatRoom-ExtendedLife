@@ -37,38 +37,18 @@
              {
                  if (this.isLingering())
                  {
-@@ -163,47 +171,55 @@
-         }
-     }
- 
--    private void applySplash(RayTraceResult p_190543_1_, List<PotionEffect> p_190543_2_)
--    {
--        AxisAlignedBB axisalignedbb = this.getEntityBoundingBox().grow(4.0, 2.0, 4.0);
--        List<EntityLivingBase> list = this.world.getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
--
--        if (!list.isEmpty())
--        {
--            for (EntityLivingBase entitylivingbase : list)
--            {
--                if (entitylivingbase.canBeHitWithPotion())
--                {
-+    private void applySplash(RayTraceResult p_190543_1_, List<PotionEffect> p_190543_2_) {
-+        AxisAlignedBB axisalignedbb = this.getEntityBoundingBox().grow(4.0D, 2.0D, 4.0D);
-+        List<EntityLivingBase> list = this.world.<EntityLivingBase>getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
+@@ -167,6 +175,7 @@
+     {
+         AxisAlignedBB axisalignedbb = this.getEntityBoundingBox().grow(4.0, 2.0, 4.0);
+         List<EntityLivingBase> list = this.world.getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
 +        Map<LivingEntity, Double> affected = new HashMap<LivingEntity, Double>();
-+        if (!list.isEmpty()) {
-+            for (EntityLivingBase entitylivingbase : list) {
-+                if (entitylivingbase.canBeHitWithPotion()) {
-                     double d0 = this.getDistanceSq(entitylivingbase);
  
--                    if (d0 < 16.0)
--                    {
--                        double d1 = 1.0 - Math.sqrt(d0) / 4.0;
--
--                        if (entitylivingbase == p_190543_1_.entityHit)
--                        {
--                            d1 = 1.0;
--                        }
+         if (!list.isEmpty())
+         {
+@@ -184,26 +193,46 @@
+                         {
+                             d1 = 1.0;
+                         }
 -
 -                        for (PotionEffect potioneffect : p_190543_2_)
 -                        {
@@ -80,7 +60,7 @@
 -                            }
 -                            else
 -                            {
--                                int i = (int)(d1 * (double)potioneffect.getDuration() + 0.5);
+-                                int i = (int)(d1 * potioneffect.getDuration() + 0.5);
 -
 -                                if (i > 20)
 -                                {
@@ -89,50 +69,50 @@
 -                                    );
 -                                }
 -                            }
-+                    if (d0 < 16.0D) {
-+                        double d1 = 1.0D - Math.sqrt(d0) / 4.0D;
-+
-+                        if (entitylivingbase == p_190543_1_.entityHit) {
-+                            d1 = 1.0D;
-+                        }
-+                        affected.put((LivingEntity) entitylivingbase.getBukkitEntity(), d1);
++                        affected.put((LivingEntity)entitylivingbase.getBukkitEntity(), d1);
 +                    }
 +                }
 +            }
 +        }
++
 +        org.bukkit.event.entity.PotionSplashEvent event = org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory.callPotionSplashEvent(this, affected);
-+        if (!event.isCancelled() && p_190543_2_ != null && !p_190543_2_.isEmpty()) { // do not process effects if there are no effects to process
-+            for (LivingEntity victim : event.getAffectedEntities()) {
-+                if (!(victim instanceof CraftLivingEntity)) {
++        if (!event.isCancelled() && p_190543_2_ != null && !p_190543_2_.isEmpty())
++        {
++            for (LivingEntity victim : event.getAffectedEntities())
++            {
++                if (!(victim instanceof CraftLivingEntity))
++                {
 +                    continue;
 +                }
-+                EntityLivingBase entityliving = ((CraftLivingEntity) victim).getHandle();
++                EntityLivingBase entityliving = ((CraftLivingEntity)victim).getHandle();
 +                double d1 = event.getIntensity(victim);
-+                // CraftBukkit end
 +
-+                for (PotionEffect mobeffect : p_190543_2_) {
++                for (PotionEffect mobeffect : p_190543_2_)
++                {
 +                    Potion mobeffectlist = mobeffect.getPotion();
-+                    // CraftBukkit start - Abide by PVP settings - for players only!
-+                    if (!this.world.pvpMode && this.getThrower() instanceof EntityPlayer && entityliving instanceof EntityPlayer && entityliving != this.getThrower()) {
++                    if (!this.world.pvpMode && this.getThrower() instanceof EntityPlayer && entityliving instanceof EntityPlayer && entityliving != this.getThrower())
++                    {
 +                        int i = Potion.getIdFromPotion(mobeffectlist);
-+                        // Block SLOWER_MOVEMENT, SLOWER_DIG, HARM, BLINDNESS, HUNGER, WEAKNESS and POISON potions
-+                        if (i == 2 || i == 4 || i == 7 || i == 15 || i == 17 || i == 18 || i == 19) {
++                        if (i == 2 || i == 4 || i == 7 || i == 15 || i == 17 || i == 18 || i == 19)
++                        {
 +                            continue;
 +                        }
 +                    }
-+                    // CraftBukkit end
 +
-+                    if (mobeffectlist.isInstant()) {
++                    if (mobeffectlist.isInstant())
++                    {
 +                        mobeffectlist.affectEntity(this, this.getThrower(), entityliving, mobeffect.getAmplifier(), d1);
-+                    } else {
-+                        int i = (int) (d1 * (double) mobeffect.getDuration() + 0.5D);
-+
-+                        if (i > 20) {
++                    }
++                    else
++                    {
++                        int i = (int)(d1 * mobeffect.getDuration() + 0.5D);
++                        if (i > 20)
++                        {
 +                            entityliving.addPotionEffect(new PotionEffect(mobeffectlist, i, mobeffect.getAmplifier(), mobeffect.getIsAmbient(), mobeffect.doesShowParticles()));
                          }
                      }
                  }
-@@ -233,10 +249,16 @@
+@@ -233,10 +262,16 @@
              entityareaeffectcloud.setColor(nbttagcompound.getInteger("CustomPotionColor"));
          }
  

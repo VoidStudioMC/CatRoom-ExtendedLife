@@ -1,61 +1,26 @@
 --- before/net/minecraft/tileentity/TileEntityHopper.java
 +++ after/net/minecraft/tileentity/TileEntityHopper.java
-@@ -2,17 +2,21 @@
- 
- import java.util.List;
- import javax.annotation.Nullable;
-+
-+import catserver.server.inventory.CatInventoryUtils;
- import net.minecraft.block.Block;
- import net.minecraft.block.BlockChest;
- import net.minecraft.block.BlockHopper;
- import net.minecraft.entity.Entity;
- import net.minecraft.entity.item.EntityItem;
-+import net.minecraft.entity.item.EntityMinecartHopper;
- import net.minecraft.entity.player.EntityPlayer;
- import net.minecraft.entity.player.InventoryPlayer;
- import net.minecraft.inventory.Container;
- import net.minecraft.inventory.ContainerHopper;
- import net.minecraft.inventory.IInventory;
- import net.minecraft.inventory.ISidedInventory;
-+import net.minecraft.inventory.InventoryLargeChest;
- import net.minecraft.inventory.ItemStackHelper;
- import net.minecraft.item.ItemStack;
- import net.minecraft.nbt.NBTTagCompound;
-@@ -28,22 +32,54 @@
- import net.minecraft.util.math.MathHelper;
- import net.minecraft.world.World;
- 
-+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity;
-+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
-+import org.bukkit.entity.HumanEntity;
-+import org.bukkit.event.inventory.InventoryMoveItemEvent;
-+import org.bukkit.event.inventory.InventoryPickupItemEvent;
-+import org.bukkit.inventory.Inventory;
-+
- public class TileEntityHopper extends TileEntityLockableLoot implements IHopper, ITickable
- {
--    private NonNullList<ItemStack> inventory = NonNullList.withSize(5, ItemStack.EMPTY);
-+    private NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(5, ItemStack.EMPTY);
+@@ -33,6 +33,32 @@
+     private NonNullList<ItemStack> inventory = NonNullList.withSize(5, ItemStack.EMPTY);
      private int transferCooldown = -1;
      private long tickedGameTime;
 +    // CraftBukkit start - add fields and methods
-+    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
++    public List<org.bukkit.entity.HumanEntity> transaction = new java.util.ArrayList<>();
 +    private int maxStack = MAX_STACK;
 +    
 +    public List<ItemStack> getContents() {
 +        return this.inventory;
 +    }
 +        
-+    public void onOpen(CraftHumanEntity who) {
++    public void onOpen(org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity who) {
 +        transaction.add(who);
 +    }
 +    
-+    public void onClose(CraftHumanEntity who) {
++    public void onClose(org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity who) {
 +        transaction.remove(who);
 +    }
 +        
-+    public List<HumanEntity> getViewers() {
++    public List<org.bukkit.entity.HumanEntity> getViewers() {
 +        return transaction;
 +    }
 +        
@@ -68,83 +33,26 @@
  
      public static void registerFixesHopper(DataFixer fixer)
      {
--        fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityHopper.class, "Items"));
-+        fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityHopper.class, new String[] {"Items"}));
-     }
- 
--    @Override
-     public void readFromNBT(NBTTagCompound compound)
-     {
-         super.readFromNBT(compound);
--        this.inventory = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-+        this.inventory = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
- 
-         if (!this.checkLootAndRead(compound))
-         {
-@@ -58,7 +94,6 @@
-         this.transferCooldown = compound.getInteger("TransferCooldown");
-     }
- 
--    @Override
-     public NBTTagCompound writeToNBT(NBTTagCompound compound)
-     {
-         super.writeToNBT(compound);
-@@ -78,23 +113,21 @@
-         return compound;
-     }
- 
--    @Override
-     public int getSizeInventory()
-     {
-         return this.inventory.size();
-     }
- 
--    @Override
+@@ -88,7 +114,8 @@
      public ItemStack decrStackSize(int index, int count)
      {
--        this.fillWithLoot(null);
+         this.fillWithLoot(null);
 -        return ItemStackHelper.getAndSplit(this.getItems(), index, count);
-+        this.fillWithLoot((EntityPlayer)null);
 +        ItemStack itemstack = ItemStackHelper.getAndSplit(this.getItems(), index, count);
 +        return itemstack;
      }
  
--    @Override
-     public void setInventorySlotContents(int index, ItemStack stack)
-     {
--        this.fillWithLoot(null);
-+        this.fillWithLoot((EntityPlayer)null);
-         this.getItems().set(index, stack);
- 
-         if (stack.getCount() > this.getInventoryStackLimit())
-@@ -103,24 +136,21 @@
-         }
-     }
- 
--    @Override
-     public String getName()
-     {
-         return this.hasCustomName() ? this.customName : "container.hopper";
-     }
- 
--    @Override
+     @Override
+@@ -112,7 +139,7 @@
+     @Override
      public int getInventoryStackLimit()
      {
 -        return 64;
-+        return maxStack;
++        return this.maxStack;
      }
  
--    @Override
-     public void update()
-     {
-         if (this.world != null && !this.world.isRemote)
-         {
--            this.transferCooldown--;
-+            --this.transferCooldown;
-             this.tickedGameTime = this.world.getTotalWorldTime();
- 
-             if (!this.isOnTransferCooldown())
-@@ -151,7 +181,7 @@
+     @Override
+@@ -151,7 +178,7 @@
  
                  if (flag)
                  {
@@ -153,15 +61,7 @@
                      this.markDirty();
                      return true;
                  }
-@@ -178,7 +208,6 @@
-         return true;
-     }
- 
--    @Override
-     public boolean isEmpty()
-     {
-         return this.isInventoryEmpty();
-@@ -199,6 +228,7 @@
+@@ -199,6 +226,7 @@
  
      private boolean transferItemsOut()
      {
@@ -169,73 +69,7 @@
          IInventory iinventory = this.getInventoryForHopperTransfer();
  
          if (iinventory == null)
-@@ -215,7 +245,7 @@
-             }
-             else
-             {
--                for (int i = 0; i < this.getSizeInventory(); i++)
-+                for (int i = 0; i < this.getSizeInventory(); ++i)
-                 {
-                     if (!this.getStackInSlot(i).isEmpty())
-                     {
-@@ -244,23 +274,9 @@
-             ISidedInventory isidedinventory = (ISidedInventory)inventoryIn;
-             int[] aint = isidedinventory.getSlotsForFace(side);
- 
--            for (int i : aint)
--            {
--                ItemStack itemstack = isidedinventory.getStackInSlot(i);
--
--                if (itemstack.isEmpty() || itemstack.getCount() != itemstack.getMaxStackSize())
--                {
--                    return false;
--                }
--            }
--        }
--        else
--        {
--            int j = inventoryIn.getSizeInventory();
--
--            for (int k = 0; k < j; k++)
--            {
--                ItemStack itemstack1 = inventoryIn.getStackInSlot(k);
-+            for (int k : aint)
-+            {
-+                ItemStack itemstack1 = isidedinventory.getStackInSlot(k);
- 
-                 if (itemstack1.isEmpty() || itemstack1.getCount() != itemstack1.getMaxStackSize())
-                 {
-@@ -268,6 +284,20 @@
-                 }
-             }
-         }
-+        else
-+        {
-+            int i = inventoryIn.getSizeInventory();
-+
-+            for (int j = 0; j < i; ++j)
-+            {
-+                ItemStack itemstack = inventoryIn.getStackInSlot(j);
-+
-+                if (itemstack.isEmpty() || itemstack.getCount() != itemstack.getMaxStackSize())
-+                {
-+                    return false;
-+                }
-+            }
-+        }
- 
-         return true;
-     }
-@@ -291,7 +321,7 @@
-         {
-             int j = inventoryIn.getSizeInventory();
- 
--            for (int k = 0; k < j; k++)
-+            for (int k = 0; k < j; ++k)
-             {
-                 if (!inventoryIn.getStackInSlot(k).isEmpty())
-                 {
-@@ -305,6 +335,8 @@
+@@ -305,6 +333,8 @@
  
      public static boolean pullItems(IHopper hopper)
      {
@@ -244,29 +78,6 @@
          IInventory iinventory = getSourceInventory(hopper);
  
          if (iinventory != null)
-@@ -333,7 +365,7 @@
-             {
-                 int j = iinventory.getSizeInventory();
- 
--                for (int k = 0; k < j; k++)
-+                for (int k = 0; k < j; ++k)
-                 {
-                     if (pullItemFromSlot(hopper, iinventory, k, enumfacing))
-                     {
-@@ -344,11 +376,9 @@
-         }
-         else
-         {
--            for (EntityItem entityitem : getCaptureItems(
--                        hopper.getWorld(), hopper.getXPos(), hopper.getYPos(), hopper.getZPos()
--                    ))
-+            for (EntityItem entityitem : getCaptureItems(hopper.getWorld(), hopper.getXPos(), hopper.getYPos(), hopper.getZPos()))
-             {
--                if (putDropInInventoryAllSlots(null, hopper, entityitem))
-+                if (putDropInInventoryAllSlots((IInventory)null, hopper, entityitem))
-                 {
-                     return true;
-                 }
 @@ -358,6 +388,7 @@
          return false;
      }
@@ -284,20 +95,20 @@
 +            ItemStack originNMSStack = inventoryIn.decrStackSize(index, hopper.getWorld().spigotConfig.hopperAmount);
 +            ItemStack resultNMSStack = originNMSStack;
 +
-+            InventoryMoveItemEvent event = null;
++            org.bukkit.event.inventory.InventoryMoveItemEvent event = null;
 +            if (!TileEntityHopper.skipHopperEvents) {
-+                CraftItemStack oitemstack = CraftItemStack.asCraftMirror(originNMSStack);
++                org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack oitemstack = org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asCraftMirror(originNMSStack);
 +
-+                Inventory sourceInventory;
++                org.bukkit.inventory.Inventory sourceInventory;
 +                // Have to special case large chests as they work oddly
-+                if (inventoryIn instanceof InventoryLargeChest) {
-+                    sourceInventory = new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryDoubleChest((InventoryLargeChest) inventoryIn);
++                if (inventoryIn instanceof net.minecraft.inventory.InventoryLargeChest) {
++                    sourceInventory = new org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryDoubleChest((net.minecraft.inventory.InventoryLargeChest) inventoryIn);
 +                } else {
-+                    sourceInventory = CatInventoryUtils.getBukkitInventory(inventoryIn);
++                    sourceInventory = catserver.server.inventory.CatInventoryUtils.getBukkitInventory(inventoryIn);
 +                }
 +
 +                if (sourceInventory != null) {
-+                    event = new InventoryMoveItemEvent(sourceInventory, oitemstack, CatInventoryUtils.getBukkitInventory(hopper), false);
++                    event = new org.bukkit.event.inventory.InventoryMoveItemEvent(sourceInventory, oitemstack, catserver.server.inventory.CatInventoryUtils.getBukkitInventory(hopper), false);
 +                    hopper.getWorld().getServer().getPluginManager().callEvent(event);
 +
 +                    if (event.isCancelled()) {
@@ -305,7 +116,7 @@
 +                        return true;
 +                    }
 +
-+                    if (event.isCallSetItem) resultNMSStack = CraftItemStack.asNMSCopy(event.getRawItem());
++                    if (event.isCallSetItem) resultNMSStack = org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(event.getRawItem());
 +                }
 +            }
 +
@@ -329,21 +140,18 @@
              inventoryIn.setInventorySlotContents(index, itemstack1);
          }
  
-@@ -389,8 +456,13 @@
+@@ -389,6 +456,11 @@
          }
          else
          {
-+            InventoryPickupItemEvent event = new InventoryPickupItemEvent(CatInventoryUtils.getBukkitInventory(destination) , (org.bukkit.entity.Item) entity.getBukkitEntity());
++            org.bukkit.event.inventory.InventoryPickupItemEvent event = new org.bukkit.event.inventory.InventoryPickupItemEvent(catserver.server.inventory.CatInventoryUtils.getBukkitInventory(destination) , (org.bukkit.entity.Item) entity.getBukkitEntity());
 +            entity.world.getServer().getPluginManager().callEvent(event);
 +            if (event.isCancelled()) {
 +                return false;
 +            }
              ItemStack itemstack = entity.getItem().copy();
--            ItemStack itemstack1 = putStackInInventoryAllSlots(source, destination, itemstack, null);
-+            ItemStack itemstack1 = putStackInInventoryAllSlots(source, destination, itemstack, (EnumFacing)null);
+             ItemStack itemstack1 = putStackInInventoryAllSlots(source, destination, itemstack, null);
  
-             if (itemstack1.isEmpty())
-             {
 @@ -406,6 +478,12 @@
          }
      }
@@ -357,43 +165,7 @@
      public static ItemStack putStackInInventoryAllSlots(IInventory source, IInventory destination, ItemStack stack, @Nullable EnumFacing direction)
      {
          if (destination instanceof ISidedInventory && direction != null)
-@@ -413,7 +491,7 @@
-             ISidedInventory isidedinventory = (ISidedInventory)destination;
-             int[] aint = isidedinventory.getSlotsForFace(direction);
- 
--            for (int k = 0; k < aint.length && !stack.isEmpty(); k++)
-+            for (int k = 0; k < aint.length && !stack.isEmpty(); ++k)
-             {
-                 stack = insertStack(source, destination, stack, aint[k], direction);
-             }
-@@ -422,7 +500,7 @@
-         {
-             int i = destination.getSizeInventory();
- 
--            for (int j = 0; j < i && !stack.isEmpty(); j++)
-+            for (int j = 0; j < i && !stack.isEmpty(); ++j)
-             {
-                 stack = insertStack(source, destination, stack, j, direction);
-             }
-@@ -433,9 +511,14 @@
- 
-     private static boolean canInsertItemInSlot(IInventory inventoryIn, ItemStack stack, int index, EnumFacing side)
-     {
--        return !inventoryIn.isItemValidForSlot(index, stack)
--               ? false
--               : !(inventoryIn instanceof ISidedInventory) || ((ISidedInventory)inventoryIn).canInsertItem(index, stack, side);
-+        if (!inventoryIn.isItemValidForSlot(index, stack))
-+        {
-+            return false;
-+        }
-+        else
-+        {
-+            return !(inventoryIn instanceof ISidedInventory) || ((ISidedInventory)inventoryIn).canInsertItem(index, stack, side);
-+        }
-     }
- 
-     private static boolean canExtractItemFromSlot(IInventory inventoryIn, ItemStack stack, int index, EnumFacing side)
-@@ -487,7 +570,7 @@
+@@ -487,7 +565,7 @@
                              }
                          }
  
@@ -402,37 +174,7 @@
                      }
                  }
  
-@@ -501,26 +584,17 @@
-     private IInventory getInventoryForHopperTransfer()
-     {
-         EnumFacing enumfacing = BlockHopper.getFacing(this.getBlockMetadata());
--        return getInventoryAtPosition(
--                   this.getWorld(),
--                   this.getXPos() + (double)enumfacing.getXOffset(),
--                   this.getYPos() + (double)enumfacing.getYOffset(),
--                   this.getZPos() + (double)enumfacing.getZOffset()
--               );
-+        return getInventoryAtPosition(this.getWorld(), this.getXPos() + (double)enumfacing.getXOffset(), this.getYPos() + (double)enumfacing.getYOffset(), this.getZPos() + (double)enumfacing.getZOffset());
-     }
- 
-     public static IInventory getSourceInventory(IHopper hopper)
-     {
--        return getInventoryAtPosition(hopper.getWorld(), hopper.getXPos(), hopper.getYPos() + 1.0, hopper.getZPos());
-+        return getInventoryAtPosition(hopper.getWorld(), hopper.getXPos(), hopper.getYPos() + 1.0D, hopper.getZPos());
-     }
- 
-     public static List<EntityItem> getCaptureItems(World worldIn, double p_184292_1_, double p_184292_3_, double p_184292_5_)
-     {
--        return worldIn.getEntitiesWithinAABB(
--                   EntityItem.class,
--                   new AxisAlignedBB(p_184292_1_ - 0.5, p_184292_3_, p_184292_5_ - 0.5, p_184292_1_ + 0.5, p_184292_3_ + 1.5, p_184292_5_ + 0.5),
--                   EntitySelectors.IS_ALIVE
--               );
-+        return worldIn.<EntityItem>getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(p_184292_1_ - 0.5D, p_184292_3_, p_184292_5_ - 0.5D, p_184292_1_ + 0.5D, p_184292_3_ + 1.5D, p_184292_5_ + 0.5D), EntitySelectors.IS_ALIVE);
-     }
- 
-     public static IInventory getInventoryAtPosition(World worldIn, double x, double y, double z)
-@@ -530,9 +604,11 @@
+@@ -530,9 +608,11 @@
          int j = MathHelper.floor(y);
          int k = MathHelper.floor(z);
          BlockPos blockpos = new BlockPos(i, j, k);
@@ -446,75 +188,7 @@
          {
              TileEntity tileentity = worldIn.getTileEntity(blockpos);
  
-@@ -549,11 +625,7 @@
- 
-         if (iinventory == null)
-         {
--            List<Entity> list = worldIn.getEntitiesInAABBexcluding(
--                                    null,
--                                    new AxisAlignedBB(x - 0.5, y - 0.5, z - 0.5, x + 0.5, y + 0.5, z + 0.5),
--                                    EntitySelectors.HAS_INVENTORY
--                                );
-+            List<Entity> list = worldIn.getEntitiesInAABBexcluding((Entity)null, new AxisAlignedBB(x - 0.5D, y - 0.5D, z - 0.5D, x + 0.5D, y + 0.5D, z + 0.5D), EntitySelectors.HAS_INVENTORY);
- 
-             if (!list.isEmpty())
-             {
-@@ -574,28 +646,29 @@
-         {
-             return false;
-         }
-+        else if (stack1.getCount() > stack1.getMaxStackSize())
-+        {
-+            return false;
-+        }
-         else
-         {
--            return stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2);
-+            return ItemStack.areItemStackTagsEqual(stack1, stack2);
-         }
-     }
- 
--    @Override
-     public double getXPos()
-     {
--        return (double)this.pos.getX() + 0.5;
-+        return (double)this.pos.getX() + 0.5D;
-     }
- 
--    @Override
-     public double getYPos()
-     {
--        return (double)this.pos.getY() + 0.5;
-+        return (double)this.pos.getY() + 0.5D;
-     }
- 
--    @Override
-     public double getZPos()
-     {
--        return (double)this.pos.getZ() + 0.5;
-+        return (double)this.pos.getZ() + 0.5D;
-     }
- 
-     public void setTransferCooldown(int ticks)
-@@ -613,22 +686,21 @@
-         return this.transferCooldown > 8;
-     }
- 
--    @Override
-     public String getGuiID()
-     {
-         return "minecraft:hopper";
-     }
- 
--    @Override
-     public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
-     {
-         this.fillWithLoot(playerIn);
-         return new ContainerHopper(playerInventory, this, playerIn);
-     }
- 
--    @Override
-     protected NonNullList<ItemStack> getItems()
+@@ -631,4 +711,6 @@
      {
          return this.inventory;
      }

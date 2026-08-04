@@ -1,43 +1,7 @@
 --- before/net/minecraft/world/storage/WorldInfo.java
 +++ after/net/minecraft/world/storage/WorldInfo.java
-@@ -6,7 +6,10 @@
- import javax.annotation.Nullable;
- import net.minecraft.crash.CrashReportCategory;
- import net.minecraft.crash.ICrashReportDetail;
-+import net.minecraft.entity.player.EntityPlayer;
-+import net.minecraft.entity.player.EntityPlayerMP;
- import net.minecraft.nbt.NBTTagCompound;
-+import net.minecraft.network.play.server.SPacketServerDifficulty;
- import net.minecraft.server.MinecraftServer;
- import net.minecraft.util.datafix.DataFixer;
- import net.minecraft.util.datafix.FixTypes;
-@@ -17,10 +20,14 @@
- import net.minecraft.world.EnumDifficulty;
- import net.minecraft.world.GameRules;
- import net.minecraft.world.GameType;
-+import net.minecraft.world.WorldServer;
- import net.minecraft.world.WorldSettings;
- import net.minecraft.world.WorldType;
- import net.minecraftforge.fml.relauncher.Side;
- import net.minecraftforge.fml.relauncher.SideOnly;
-+import org.bukkit.Bukkit;
-+import org.bukkit.event.weather.ThunderChangeEvent;
-+import org.bukkit.event.weather.WeatherChangeEvent;
- 
- public class WorldInfo
- {
-@@ -56,15 +63,18 @@
-     private boolean difficultyLocked;
-     private double borderCenterX;
-     private double borderCenterZ;
--    private double borderSize = 6.0E7;
-+    private double borderSize = 6.0E7D;
-     private long borderSizeLerpTime;
-     private double borderSizeLerpTarget;
--    private double borderSafeZone = 5.0;
--    private double borderDamagePerBlock = 0.2;
-+    private double borderSafeZone = 5.0D;
-+    private double borderDamagePerBlock = 0.2D;
+@@ -63,8 +63,11 @@
+     private double borderDamagePerBlock = 0.2;
      private int borderWarningDistance = 5;
      private int borderWarningTime = 15;
 -    private final Map<DimensionType, NBTTagCompound> dimensionData = Maps.newEnumMap(DimensionType.class);
@@ -45,19 +9,11 @@
      private GameRules gameRules = new GameRules();
 +    private java.util.Map<String, net.minecraft.nbt.NBTBase> additionalProperties;
 +
-+    public WorldServer world;
++    public net.minecraft.world.WorldServer world;
  
      protected WorldInfo()
      {
-@@ -74,7 +84,6 @@
-     {
-         fixer.registerWalker(FixTypes.LEVEL, new IDataWalker()
-         {
--            @Override
-             public NBTTagCompound process(IDataFixer fixer, NBTTagCompound compound, int versionIn)
-             {
-                 if (compound.hasKey("Player", 10))
-@@ -161,6 +170,7 @@
+@@ -161,6 +164,7 @@
          this.thunderTime = nbt.getInteger("thunderTime");
          this.thundering = nbt.getBoolean("thundering");
          this.hardcore = nbt.getBoolean("hardcore");
@@ -65,7 +21,7 @@
  
          if (nbt.hasKey("initialized", 99))
          {
-@@ -252,7 +262,7 @@
+@@ -252,7 +256,7 @@
  
              for (String s : nbttagcompound1.getKeySet())
              {
@@ -74,15 +30,15 @@
              }
          }
      }
-@@ -367,6 +377,7 @@
+@@ -367,6 +371,7 @@
          nbt.setDouble("BorderSizeLerpTarget", this.borderSizeLerpTarget);
-         nbt.setDouble("BorderWarningBlocks", (double)this.borderWarningDistance);
-         nbt.setDouble("BorderWarningTime", (double)this.borderWarningTime);
+         nbt.setDouble("BorderWarningBlocks", this.borderWarningDistance);
+         nbt.setDouble("BorderWarningTime", this.borderWarningTime);
 +        net.minecraftforge.fml.common.FMLCommonHandler.instance().getDataFixer().writeVersionData(nbt);
  
          if (this.difficulty != null)
          {
-@@ -375,11 +386,13 @@
+@@ -375,11 +380,13 @@
  
          nbt.setBoolean("DifficultyLocked", this.difficultyLocked);
          nbt.setTag("GameRules", this.gameRules.writeToNBT());
@@ -98,38 +54,14 @@
          }
  
          nbt.setTag("DimensionData", nbttagcompound1);
-@@ -443,17 +456,17 @@
-         this.spawnY = y;
-     }
- 
--    @SideOnly(Side.CLIENT)
--    public void setSpawnZ(int z)
--    {
--        this.spawnZ = z;
--    }
--
-     public void setWorldTotalTime(long time)
-     {
-         this.totalTime = time;
-     }
- 
-+    @SideOnly(Side.CLIENT)
-+    public void setSpawnZ(int z)
-+    {
-+        this.spawnZ = z;
-+    }
-+
-     public void setWorldTime(long time)
-     {
-         this.worldTime = time;
-@@ -509,6 +522,14 @@
+@@ -509,6 +516,14 @@
  
      public void setThundering(boolean thunderingIn)
      {
-+        org.bukkit.World world = Bukkit.getWorld(getWorldName());
++        org.bukkit.World world = org.bukkit.Bukkit.getWorld(getWorldName());
 +        if (world != null) {
-+            ThunderChangeEvent thunder = new ThunderChangeEvent(world, thunderingIn);
-+            Bukkit.getServer().getPluginManager().callEvent(thunder);
++            org.bukkit.event.weather.ThunderChangeEvent thunder = new org.bukkit.event.weather.ThunderChangeEvent(world, thunderingIn);
++            org.bukkit.Bukkit.getServer().getPluginManager().callEvent(thunder);
 +            if (thunder.isCancelled()) {
 +                return;
 +            }
@@ -137,14 +69,14 @@
          this.thundering = thunderingIn;
      }
  
-@@ -529,6 +550,14 @@
+@@ -529,6 +544,14 @@
  
      public void setRaining(boolean isRaining)
      {
-+        org.bukkit.World world = Bukkit.getWorld(getWorldName());
++        org.bukkit.World world = org.bukkit.Bukkit.getWorld(getWorldName());
 +        if (world != null) {
-+            WeatherChangeEvent weather = new WeatherChangeEvent(world, isRaining);
-+            Bukkit.getServer().getPluginManager().callEvent(weather);
++            org.bukkit.event.weather.WeatherChangeEvent weather = new org.bukkit.event.weather.WeatherChangeEvent(world, isRaining);
++            org.bukkit.Bukkit.getServer().getPluginManager().callEvent(weather);
 +            if (weather.isCancelled()) {
 +                return;
 +            }
@@ -152,7 +84,7 @@
          this.raining = isRaining;
      }
  
-@@ -704,11 +733,16 @@
+@@ -704,11 +727,16 @@
  
      public EnumDifficulty getDifficulty()
      {
@@ -163,101 +95,18 @@
      public void setDifficulty(EnumDifficulty newDifficulty)
      {
 +        net.minecraftforge.common.ForgeHooks.onDifficultyChange(newDifficulty, this.difficulty);
-+        SPacketServerDifficulty packet = new SPacketServerDifficulty(this.getDifficulty(), this.isDifficultyLocked());
-+        for (EntityPlayer player : world.playerEntities) {
-+            ((EntityPlayerMP) player).connection.sendPacket(packet);
++        net.minecraft.network.play.server.SPacketServerDifficulty packet = new net.minecraft.network.play.server.SPacketServerDifficulty(this.getDifficulty(), this.isDifficultyLocked());
++        for (net.minecraft.entity.player.EntityPlayer player : world.playerEntities) {
++            ((net.minecraft.entity.player.EntityPlayerMP) player).connection.sendPacket(packet);
 +        }
          this.difficulty = newDifficulty;
      }
  
-@@ -731,22 +765,13 @@
-                 return String.valueOf(WorldInfo.this.getSeed());
-             }
-         });
--        category.addDetail(
--            "Level generator",
--            new ICrashReportDetail<String>()
-+        category.addDetail("Level generator", new ICrashReportDetail<String>()
-         {
-             public String call() throws Exception
-             {
--                return String.format(
--                           "ID %02d - %s, ver %d. Features enabled: %b",
--                           WorldInfo.this.terrainType.getId(),
--                           WorldInfo.this.terrainType.getName(),
--                           WorldInfo.this.terrainType.getVersion(),
--                           WorldInfo.this.mapFeaturesEnabled
--                       );
-+                return String.format("ID %02d - %s, ver %d. Features enabled: %b", WorldInfo.this.terrainType.getId(), WorldInfo.this.terrainType.getName(), WorldInfo.this.terrainType.getVersion(), WorldInfo.this.mapFeaturesEnabled);
-             }
--        }
--        );
-+        });
-         category.addDetail("Level generator options", new ICrashReportDetail<String>()
-         {
-             public String call() throws Exception
-@@ -792,56 +817,70 @@
-                             s = "Anvil";
-                     }
-                 }
--                catch (Throwable throwable)
-+                catch (Throwable var3)
-                 {
-+                    ;
-                 }
- 
-                 return String.format("0x%05X - %s", WorldInfo.this.saveVersion, s);
-             }
-         });
--        category.addDetail(
--            "Level weather",
--            new ICrashReportDetail<String>()
--        {
--            public String call() throws Exception
--            {
--                return String.format(
--                           "Rain time: %d (now: %b), thunder time: %d (now: %b)",
--                           WorldInfo.this.rainTime,
--                           WorldInfo.this.raining,
--                           WorldInfo.this.thunderTime,
--                           WorldInfo.this.thundering
--                       );
--            }
--        }
--        );
--        category.addDetail(
--            "Level game mode",
--            new ICrashReportDetail<String>()
--        {
--            public String call() throws Exception
--            {
--                return String.format(
--                           "Game mode: %s (ID %d). Hardcore: %b. Cheats: %b",
--                           WorldInfo.this.gameType.getName(),
--                           WorldInfo.this.gameType.getID(),
--                           WorldInfo.this.hardcore,
--                           WorldInfo.this.allowCommands
--                       );
--            }
--        }
--        );
--    }
+@@ -832,16 +860,47 @@
+         }
+         );
+     }
 -
-+        category.addDetail("Level weather", new ICrashReportDetail<String>()
-+        {
-+            public String call() throws Exception
-+            {
-+                return String.format("Rain time: %d (now: %b), thunder time: %d (now: %b)", WorldInfo.this.rainTime, WorldInfo.this.raining, WorldInfo.this.thunderTime, WorldInfo.this.thundering);
-+            }
-+        });
-+        category.addDetail("Level game mode", new ICrashReportDetail<String>()
-+        {
-+            public String call() throws Exception
-+            {
-+                return String.format("Game mode: %s (ID %d). Hardcore: %b. Cheats: %b", WorldInfo.this.gameType.getName(), WorldInfo.this.gameType.getID(), WorldInfo.this.hardcore, WorldInfo.this.allowCommands);
-+            }
-+        });
-+    }
 +    /**
 +     * Allow access to additional mod specific world based properties
 +     * Used by FML to store mod list associated with a world, and maybe an id map
@@ -303,7 +152,7 @@
      }
  
      @SideOnly(Side.CLIENT)
-@@ -860,5 +899,26 @@
+@@ -860,5 +919,26 @@
      public String getVersionName()
      {
          return this.versionName;

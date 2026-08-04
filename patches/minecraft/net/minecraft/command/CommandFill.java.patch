@@ -1,75 +1,6 @@
 --- before/net/minecraft/command/CommandFill.java
 +++ after/net/minecraft/command/CommandFill.java
-@@ -18,30 +18,26 @@
- 
- public class CommandFill extends CommandBase
- {
--    @Override
-     public String getName()
-     {
-         return "fill";
-     }
- 
--    @Override
-     public int getRequiredPermissionLevel()
-     {
-         return 2;
-     }
- 
--    @Override
-     public String getUsage(ICommandSender sender)
-     {
-         return "commands.fill.usage";
-     }
- 
--    @Override
-     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-     {
-         if (args.length < 7)
-         {
--            throw new WrongUsageException("commands.fill.usage");
-+            throw new WrongUsageException("commands.fill.usage", new Object[0]);
-         }
-         else
-         {
-@@ -60,23 +56,13 @@
-                 iblockstate = block.getDefaultState();
-             }
- 
--            BlockPos blockpos2 = new BlockPos(
--                Math.min(blockpos.getX(), blockpos1.getX()),
--                Math.min(blockpos.getY(), blockpos1.getY()),
--                Math.min(blockpos.getZ(), blockpos1.getZ())
--            );
--            BlockPos blockpos3 = new BlockPos(
--                Math.max(blockpos.getX(), blockpos1.getX()),
--                Math.max(blockpos.getY(), blockpos1.getY()),
--                Math.max(blockpos.getZ(), blockpos1.getZ())
--            );
--            int i = (blockpos3.getX() - blockpos2.getX() + 1)
--                    * (blockpos3.getY() - blockpos2.getY() + 1)
--                    * (blockpos3.getZ() - blockpos2.getZ() + 1);
-+            BlockPos blockpos2 = new BlockPos(Math.min(blockpos.getX(), blockpos1.getX()), Math.min(blockpos.getY(), blockpos1.getY()), Math.min(blockpos.getZ(), blockpos1.getZ()));
-+            BlockPos blockpos3 = new BlockPos(Math.max(blockpos.getX(), blockpos1.getX()), Math.max(blockpos.getY(), blockpos1.getY()), Math.max(blockpos.getZ(), blockpos1.getZ()));
-+            int i = (blockpos3.getX() - blockpos2.getX() + 1) * (blockpos3.getY() - blockpos2.getY() + 1) * (blockpos3.getZ() - blockpos2.getZ() + 1);
- 
-             if (i > 32768)
-             {
--                throw new CommandException("commands.fill.tooManyBlocks", i, 32768);
-+                throw new CommandException("commands.fill.tooManyBlocks", new Object[] {i, Integer.valueOf(32768)});
-             }
-             else if (blockpos2.getY() >= 0 && blockpos3.getY() < 256)
-             {
-@@ -88,7 +74,7 @@
-                     {
-                         if (!world.isBlockLoaded(new BlockPos(k, blockpos3.getY() - blockpos2.getY(), j)))
-                         {
--                            throw new CommandException("commands.fill.outOfWorld");
-+                            throw new CommandException("commands.fill.outOfWorld", new Object[0]);
-                         }
-                     }
-                 }
-@@ -96,7 +82,7 @@
+@@ -96,7 +96,7 @@
                  NBTTagCompound nbttagcompound = new NBTTagCompound();
                  boolean flag = false;
  
@@ -78,31 +9,7 @@
                  {
                      String s = buildString(args, 9);
  
-@@ -107,18 +93,18 @@
-                     }
-                     catch (NBTException nbtexception)
-                     {
--                        throw new CommandException("commands.fill.tagError", nbtexception.getMessage());
-+                        throw new CommandException("commands.fill.tagError", new Object[] {nbtexception.getMessage()});
-                     }
-                 }
- 
--                List<BlockPos> list = Lists.newArrayList();
-+                List<BlockPos> list = Lists.<BlockPos>newArrayList();
-                 i = 0;
- 
--                for (int l = blockpos2.getZ(); l <= blockpos3.getZ(); l++)
-+                for (int l = blockpos2.getZ(); l <= blockpos3.getZ(); ++l)
-                 {
--                    for (int i1 = blockpos2.getY(); i1 <= blockpos3.getY(); i1++)
-+                    for (int i1 = blockpos2.getY(); i1 <= blockpos3.getY(); ++i1)
-                     {
--                        for (int j1 = blockpos2.getX(); j1 <= blockpos3.getX(); j1++)
-+                        for (int j1 = blockpos2.getX(); j1 <= blockpos3.getX(); ++j1)
-                         {
-                             BlockPos blockpos4 = new BlockPos(j1, i1, l);
- 
-@@ -137,26 +123,17 @@
+@@ -137,7 +137,7 @@
                                              continue;
                                          }
                                      }
@@ -111,67 +18,3 @@
                                      {
                                          Block block1 = CommandBase.getBlockByText(sender, args[9]);
  
--                                        if (world.getBlockState(blockpos4).getBlock() != block1
--                                                || args.length > 10
--                                                && !"-1".equals(args[10])
--                                                && !"*".equals(args[10])
--                                                && !CommandBase.convertArgToBlockStatePredicate(block1, args[10]).apply(world.getBlockState(blockpos4)))
-+                                        if (world.getBlockState(blockpos4).getBlock() != block1 || args.length > 10 && !"-1".equals(args[10]) && !"*".equals(args[10]) && !CommandBase.convertArgToBlockStatePredicate(block1, args[10]).apply(world.getBlockState(blockpos4)))
-                                         {
-                                             continue;
-                                         }
-                                     }
-                                 }
--                                else if (j1 != blockpos2.getX()
--                                         && j1 != blockpos3.getX()
--                                         && i1 != blockpos2.getY()
--                                         && i1 != blockpos3.getY()
--                                         && l != blockpos2.getZ()
--                                         && l != blockpos3.getZ())
-+                                else if (j1 != blockpos2.getX() && j1 != blockpos3.getX() && i1 != blockpos2.getY() && i1 != blockpos3.getY() && l != blockpos2.getZ() && l != blockpos3.getZ())
-                                 {
-                                     if ("hollow".equals(args[8]))
-                                     {
-@@ -178,7 +155,7 @@
-                             if (world.setBlockState(blockpos4, iblockstate, 2))
-                             {
-                                 list.add(blockpos4);
--                                i++;
-+                                ++i;
- 
-                                 if (flag)
-                                 {
-@@ -205,7 +182,7 @@
- 
-                 if (i <= 0)
-                 {
--                    throw new CommandException("commands.fill.failed");
-+                    throw new CommandException("commands.fill.failed", new Object[0]);
-                 }
-                 else
-                 {
-@@ -215,12 +192,11 @@
-             }
-             else
-             {
--                throw new CommandException("commands.fill.outOfWorld");
-+                throw new CommandException("commands.fill.outOfWorld", new Object[0]);
-             }
-         }
-     }
- 
--    @Override
-     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
-     {
-         if (args.length > 0 && args.length <= 3)
-@@ -241,9 +217,7 @@
-         }
-         else
-         {
--            return args.length == 10 && "replace".equals(args[8])
--                   ? getListOfStringsMatchingLastWord(args, Block.REGISTRY.getKeys())
--                   : Collections.emptyList();
-+            return args.length == 10 && "replace".equals(args[8]) ? getListOfStringsMatchingLastWord(args, Block.REGISTRY.getKeys()) : Collections.emptyList();
-         }
-     }
- }

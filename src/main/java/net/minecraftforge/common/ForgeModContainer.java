@@ -129,6 +129,8 @@ public class ForgeModContainer extends DummyModContainer implements WorldAccessC
     public static boolean logCascadingWorldGeneration = true; // see Chunk#logCascadingWorldGeneration()
     public static boolean fixVanillaCascading = false; // There are various places in vanilla that cause cascading worldgen. Enabling this WILL change where blocks are placed to prevent this.
                                                        // DO NOT contact Forge about worldgen not 'matching' vanilla if this flag is set.
+    public static int maxTooltipNBTListLength = 100;
+    public static boolean displayAdvancedTooltips = true;
 
     static final Logger log = LogManager.getLogger(ForgeVersion.MOD_ID);
 
@@ -374,6 +376,30 @@ public class ForgeModContainer extends DummyModContainer implements WorldAccessC
         prop.setLanguageKey("forge.configgui.selectiveResourceReloadEnabled");
         propOrder.add(prop.getName());
 
+        prop = config.get(Configuration.CATEGORY_CLIENT, "inputMethodBlockingEnabled", true,
+                "When enabled, input methods will be blocked in non-input situations.");
+        inputMethodBlockingEnabled = prop.getBoolean(true);
+        prop.setLanguageKey("forge.configgui.inputMethodGuiWhiteList");
+        propOrder.add(prop.getName());
+
+        prop = config.get(Configuration.CATEGORY_CLIENT, "inputMethodGuiWhiteList", new String[]{},
+                "A list of modded gui classes considered as input method suitable.");
+        inputMethodGuiWhiteList = prop.getStringList();
+        prop.setLanguageKey("forge.configgui.inputMethodGuiWhiteList");
+        propOrder.add(prop.getName());
+
+        prop = config.get(Configuration.CATEGORY_CLIENT, "maxTooltipNBTListLength", 100,
+                "Maximum length (in characters) of NBT data (from NBTTagCompound#toString()) to display in tooltips (set to 0 to disable).");
+        maxTooltipNBTListLength = prop.getInt(100);
+        prop.setLanguageKey("forge.configgui.maxTooltipNBTListLength");
+        propOrder.add(prop.getName());
+        
+        prop = config.get(Configuration.CATEGORY_CLIENT, "displayAdvancedTooltips", false,
+            "Whether to disable advanced tooltips (will also disable NBT data in tooltips).)");
+        displayAdvancedTooltips = prop.getBoolean();
+        prop.setLanguageKey("forge.configgui.displayAdvancedTooltips");
+        propOrder.add(prop.getName());
+
         var categoryHudId = CATEGORY_CLIENT + Configuration.CATEGORY_SPLITTER + "hud";
         var categoryHud = config.getCategory(categoryHudId);
         categoryHud.setComment("Controls rendering of various HUD elements");
@@ -473,6 +499,7 @@ public class ForgeModContainer extends DummyModContainer implements WorldAccessC
                     FMLCommonHandler.instance().reloadRenderers();
                 }
             }
+            case "forge_early" -> ConfigManager.sync(ForgeEarlyConfig.class);
             default -> syncConfig(false);
         }
     }
