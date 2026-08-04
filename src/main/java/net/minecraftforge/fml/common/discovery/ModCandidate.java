@@ -28,7 +28,8 @@ import net.minecraftforge.fml.common.ModContainer;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-public class ModCandidate {
+public class ModCandidate
+{
     private final File classPathRoot;
     private final File resourcePathRoot;
     private final File modContainer;
@@ -40,11 +41,13 @@ public class ModCandidate {
     private final List<String> packages = Lists.newArrayList();
     private ASMDataTable table;
 
-    public ModCandidate(File classPathRoot, File modContainer, ContainerType sourceType) {
+    public ModCandidate(File classPathRoot, File modContainer, ContainerType sourceType)
+    {
         this(classPathRoot, modContainer, sourceType, false, false);
     }
 
-    protected ModCandidate(File classPathRoot, File resourcePathRoot) {
+    public ModCandidate(File classPathRoot, File resourcePathRoot)
+    {
         this.classPathRoot = classPathRoot;
         this.resourcePathRoot = resourcePathRoot;
         this.modContainer = classPathRoot;
@@ -53,7 +56,8 @@ public class ModCandidate {
         this.classpath = true;
     }
 
-    public ModCandidate(File classPathRoot, File modContainer, ContainerType sourceType, boolean isMinecraft, boolean classpath) {
+    public ModCandidate(File classPathRoot, File modContainer, ContainerType sourceType, boolean isMinecraft, boolean classpath)
+    {
         this.classPathRoot = classPathRoot;
         this.resourcePathRoot = classPathRoot;
         this.modContainer = modContainer;
@@ -62,29 +66,35 @@ public class ModCandidate {
         this.classpath = classpath;
     }
 
-    public File getClassPathRoot() {
+    public File getClassPathRoot()
+    {
         return classPathRoot;
     }
     
-    public File getResourcePathRoot() {
+    public File getResourcePathRoot()
+    {
         return resourcePathRoot;
     }
 
-    public File getModContainer() {
+    public File getModContainer()
+    {
         return modContainer;
     }
 
-    public ContainerType getSourceType() {
+    public ContainerType getSourceType()
+    {
         return sourceType;
     }
     
-    public List<ModContainer> explore(ASMDataTable table) {
+    public List<ModContainer> explore(ASMDataTable table)
+    {
         this.table = table;
         this.mods = sourceType.findMods(this, table);
         return this.mods;
     }
 
-    public void addClassEntry(String name) {
+    public void addClassEntry(String name)
+    {
         String className = name.substring(0, name.lastIndexOf('.')); // strip the .class
         foundClasses.add(className);
         className = className.replace('/','.');
@@ -97,23 +107,28 @@ public class ModCandidate {
         }
     }
 
-    public boolean isClasspath() {
+    public boolean isClasspath()
+    {
         return classpath;
     }
     
-    public boolean isMinecraftJar() {
+    public boolean isMinecraftJar()
+    {
         return isMinecraft;
     }
     
-    public Set<String> getClassList() {
+    public Set<String> getClassList()
+    {
         return foundClasses;
     }
     
-    public List<ModContainer> getContainedMods() {
+    public List<ModContainer> getContainedMods()
+    {
         return mods;
     }
     
-    public List<String> getContainedPackages() {
+    public List<String> getContainedPackages()
+    {
         return packages;
     }
 }
