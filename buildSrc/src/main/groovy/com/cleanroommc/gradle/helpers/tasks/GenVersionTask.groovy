@@ -9,8 +9,6 @@ import org.gradle.api.tasks.TaskAction;
 
 
 abstract class GenVersionTask extends DefaultTask { // TODO: rewrite for catroom
-    @Input
-    final String lastTag = ((Closure<VersionDetails>)getProject().rootProject.getExtensions().getExtraProperties().get('versionDetails')).call().lastTag
     @InputFile
     final File template = new File("${getProject().rootProject.projectDir}/templates/CleanroomVersion.java")
     @OutputFile
@@ -19,8 +17,8 @@ abstract class GenVersionTask extends DefaultTask { // TODO: rewrite for catroom
     void action() {
         versionClass.withWriter { def writer ->
             template.eachLine { def line ->
-                def newLine = line.replace("%VERSION%", lastTag)
-                    .replace("%BUILD_VERSION%", getProject().rootProject.version.toString())
+                def newLine = line.replace("%VERSION%", this.getProject().rootProject.cleanroom_version.toString())
+                    .replace("%BUILD_VERSION%", this.getProject().rootProject.version.toString())
                 writer.write(newLine + "\n")
             }
         }
