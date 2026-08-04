@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class CatEntityRegistry<K, V> extends RegistryNamespaced<K, V> {
+public class CatEntityRegistry<K, V> extends RegistryNamespaced<K, V> { // TODO: CREF - rewrite it
     private final RegistryNamespaced<K, V> REGISTRY = new RegistryNamespaced<K, V>();
 
     public void register(int id, K key, V value) {
