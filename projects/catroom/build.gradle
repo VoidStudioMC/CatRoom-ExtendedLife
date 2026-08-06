@@ -107,6 +107,7 @@ ext {
 }
 
 patcher {
+    removeDefaultRuns()
     excs.from file("$rootDir/src/main/resources/forge.exc")
     parent = project(':minecraft')
     patches = file("$rootDir/patches/minecraft")
@@ -140,6 +141,20 @@ patcher {
             environment 'FORGE_VERSION', props.last_forge_version
 
             jvmArgs ProjectConstants.JVM_ARGUMENTS + '-Dmixin.debug.export=true' + '-Dmixin.checks.interfaces=true'
+
+            def legacyVanillaClasspathExclusions = [
+                    '^patchy-.*$',
+                    '^oshi-core-1.*$',
+                    '^jna-4.*$',
+                    '^icu4j-core-mojang-51.*$',
+                    '^netty-all-4.*$',
+                    '^lwjgl-2.*$',
+                    '^lwjgl_util-2.*$',
+                    '^lwjgl-platform-2.*$',
+                    '^java-objc-bridge-1.*$'
+            ]
+
+            classpathExclude(*legacyVanillaClasspathExclusions)
             //jvmArgs jvm_arguments
 
             // Lazily supply the Mappings target, createSrg2Mcp.getMappings() doesn't get populated until later
@@ -239,7 +254,7 @@ configurations {
 dependencies {
     // LWJGL
     compileOnly "com.cleanroommc:lwjglx:1.0.0"
-    installer "com.cleanroommc:lwjglxx:1.1.21"
+    installer "com.cleanroommc:lwjglxx:1.1.22"
     lwjglLibraries[0].each {
         if (it == 'lwjgl') {
             installer "org.lwjgl:$it:$props.lwjgl_version:unsafe"
@@ -264,7 +279,7 @@ dependencies {
     installer "org.ow2.asm:asm-deprecated:$props.asm_deprecated"
 
     // Hacks
-    installer "top.outlands:foundation:0.19.8"
+    installer "top.outlands:foundation:0.19.11"
     installer 'net.lenni0451:Reflect:1.6.4'
     installer 'net.lenni0451.commons:unchecked:1.9.2'
     installer 'org.javassist:javassist:3.30.2-GA'
@@ -360,8 +375,8 @@ dependencies {
     installer 'io.github.classgraph:classgraph:4.8.184'
 
     // Mixin
-    installer 'com.cleanroommc:sponge-mixin:0.20.12+mixin.0.8.7'
-    installer annotationProcessor('io.github.llamalad7:mixinextras-common:0.5.4')
+    installer "com.cleanroommc:cleanmix:$props.cleanmix_version"
+    installer annotationProcessor('com.cleanroommc:mixinextras-common:0.5.5')
 
     testImplementation platform('org.junit:junit-bom:6.1.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -381,6 +396,13 @@ dependencies {
     installer 'net.openhft:affinity:3.23.3'
     installer 'org.slf4j:slf4j-api:2.1.0-alpha1' // Affinity
     installer 'org.slf4j:slf4j-simple:2.1.0-alpha1' // Affinity
+}
+
+processResources {
+    inputs.property 'cleanmix_version', props.cleanmix_version
+    filesMatching('cleanmix.info') {
+        expand cleanmix_version: props.cleanmix_version
+    }
 }
 
 tasks.named('test') {
