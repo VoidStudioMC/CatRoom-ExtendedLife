@@ -57,8 +57,8 @@ public final class SimplePluginManager implements PluginManager {
         server = instance;
         this.commandMap = commandMap;
 
-        defaultPerms.put(true, new HashSet<Permission>());
-        defaultPerms.put(false, new HashSet<Permission>());
+        defaultPerms.put(true, new HashSet<>());
+        defaultPerms.put(false, new HashSet<>());
     }
 
     /**
@@ -558,11 +558,8 @@ public final class SimplePluginManager implements PluginManager {
             throw new IllegalPluginAccessException("Plugin attempted to register " + event + " while not enabled");
         }
 
-        if (useTimings) { // Always false here
-            getEventListeners(event).register(new TimedRegisteredListener(listener, executor, priority, plugin, ignoreCancelled));
-        } else {
-            getEventListeners(event).register(new RegisteredListener(listener, executor, priority, plugin, ignoreCancelled));
-        }
+
+        getEventListeners(event).register(new RegisteredListener(listener, executor, priority, plugin, ignoreCancelled));
     }
 
     private HandlerList getEventListeners(Class<? extends Event> type) {
@@ -730,7 +727,7 @@ public final class SimplePluginManager implements PluginManager {
     }
 
     public Set<Permission> getPermissions() {
-        return new HashSet<Permission>(permissions.values());
+        return new HashSet<>(permissions.values());
     }
 
     public boolean useTimings() {
