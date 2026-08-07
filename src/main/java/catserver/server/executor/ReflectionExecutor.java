@@ -4,7 +4,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
-import org.spigotmc.CustomTimingsHandler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -12,12 +11,10 @@ import java.lang.reflect.Method;
 public class ReflectionExecutor implements EventExecutor {
     private final Method method;
     private final Class<? extends Event> eventClass;
-    private final CustomTimingsHandler timings;
 
-    public ReflectionExecutor(Method method, Class<? extends Event> eventClass, CustomTimingsHandler timings) {
+    public ReflectionExecutor(Method method, Class<? extends Event> eventClass) {
         this.method = method;
         this.eventClass = eventClass;
-        this.timings = timings;
     }
 
     @Override
@@ -27,10 +24,7 @@ public class ReflectionExecutor implements EventExecutor {
                 return;
             }
             // Spigot start
-            boolean isAsync = event.isAsynchronous();
-            if (!isAsync) timings.startTiming();
-            method.invoke(listener, event);
-            if (!isAsync) timings.stopTiming();
+            this.method.invoke(listener, event);
             // Spigot end
         } catch (InvocationTargetException ex) {
             throw new EventException(ex.getCause());

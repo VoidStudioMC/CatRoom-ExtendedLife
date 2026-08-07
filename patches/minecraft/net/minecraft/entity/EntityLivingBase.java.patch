@@ -1052,16 +1052,15 @@
                                   * 0.91F;
                          }
  
-@@ -2138,6 +2489,8 @@
+@@ -2138,6 +2489,7 @@
      @Override
      public void onUpdate()
      {
 +        if (net.minecraftforge.common.ForgeHooks.onLivingUpdate(this)) return;
-+        org.bukkit.craftbukkit.v1_12_R1.SpigotTimings.timerEntityBaseTick.startTiming(); // Spigot
          super.onUpdate();
          this.updateActiveHand();
  
-@@ -2180,9 +2533,11 @@
+@@ -2180,9 +2532,11 @@
  
                  if (!ItemStack.areItemStacksEqual(itemstack1, itemstack))
                  {
@@ -1073,56 +1072,7 @@
  
                      if (!itemstack.isEmpty())
                      {
-@@ -2223,7 +2578,9 @@
-             }
-         }
- 
-+        org.bukkit.craftbukkit.v1_12_R1.SpigotTimings.timerEntityBaseTick.stopTiming(); // Spigot
-         this.onLivingUpdate();
-+        org.bukkit.craftbukkit.v1_12_R1.SpigotTimings.timerEntityTickRest.startTiming(); // Spigot
-         double d0 = this.posX - this.prevPosX;
-         double d1 = this.posZ - this.prevPosZ;
-         float f3 = (float)(d0 * d0 + d1 * d1);
-@@ -2316,6 +2673,7 @@
-         {
-             this.ticksElytraFlying = 0;
-         }
-+        org.bukkit.craftbukkit.v1_12_R1.SpigotTimings.timerEntityTickRest.stopTiming(); // Spigot
-     }
- 
-     protected float updateDistance(float p_110146_1_, float p_110146_2_)
-@@ -2392,6 +2750,7 @@
-         }
- 
-         this.world.profiler.startSection("ai");
-+        org.bukkit.craftbukkit.v1_12_R1.SpigotTimings.timerEntityAI.startTiming(); // Spigot
- 
-         if (this.isMovementBlocked())
-         {
-@@ -2406,6 +2765,7 @@
-             this.updateEntityActionState();
-             this.world.profiler.endSection();
-         }
-+        org.bukkit.craftbukkit.v1_12_R1.SpigotTimings.timerEntityAI.stopTiming(); // Spigot
- 
-         this.world.profiler.endSection();
-         this.world.profiler.startSection("jump");
-@@ -2437,10 +2797,14 @@
-         this.moveForward *= 0.98F;
-         this.randomYawVelocity *= 0.9F;
-         this.updateElytra();
-+        org.bukkit.craftbukkit.v1_12_R1.SpigotTimings.timerEntityAIMove.startTiming(); // Spigot
-         this.travel(this.moveStrafing, this.moveVertical, this.moveForward);
-+        org.bukkit.craftbukkit.v1_12_R1.SpigotTimings.timerEntityAIMove.stopTiming(); // Spigot
-         this.world.profiler.endSection();
-         this.world.profiler.startSection("push");
-+        org.bukkit.craftbukkit.v1_12_R1.SpigotTimings.timerEntityAICollision.startTiming(); // Spigot
-         this.collideWithNearbyEntities();
-+        org.bukkit.craftbukkit.v1_12_R1.SpigotTimings.timerEntityAICollision.stopTiming(); // Spigot
-         this.world.profiler.endSection();
-     }
- 
-@@ -2473,6 +2837,7 @@
+@@ -2473,6 +2827,7 @@
  
          if (!this.world.isRemote)
          {
@@ -1130,7 +1080,7 @@
              this.setFlag(7, flag);
          }
      }
-@@ -2507,9 +2872,13 @@
+@@ -2507,9 +2862,13 @@
                  }
              }
  
@@ -1145,7 +1095,7 @@
                  this.collideWithEntity(entity);
              }
          }
-@@ -2622,13 +2991,13 @@
+@@ -2622,13 +2981,13 @@
      @Override
      public boolean canBeCollidedWith()
      {
@@ -1161,7 +1111,7 @@
      }
  
      @Override
-@@ -2683,6 +3052,40 @@
+@@ -2683,6 +3042,40 @@
          this.potionsNeedUpdate = true;
      }
  
@@ -1202,7 +1152,7 @@
      public abstract EnumHandSide getPrimaryHand();
  
      public boolean isHandActive()
-@@ -2700,15 +3103,23 @@
+@@ -2700,15 +3093,23 @@
          if (this.isHandActive())
          {
              ItemStack itemstack = this.getHeldItem(this.getActiveHand());
@@ -1227,7 +1177,7 @@
                  {
                      this.onItemUseFinish();
                  }
-@@ -2726,8 +3137,10 @@
+@@ -2726,8 +3127,10 @@
  
          if (!itemstack.isEmpty() && !this.isHandActive())
          {
@@ -1239,7 +1189,7 @@
  
              if (!this.world.isRemote)
              {
-@@ -2834,7 +3247,27 @@
+@@ -2834,7 +3237,27 @@
          if (!this.activeItemStack.isEmpty() && this.isHandActive())
          {
              this.updateItemUse(this.activeItemStack, 16);
@@ -1268,7 +1218,7 @@
              this.resetActiveHand();
          }
      }
-@@ -2858,7 +3291,8 @@
+@@ -2858,7 +3281,8 @@
      {
          if (!this.activeItemStack.isEmpty())
          {
@@ -1278,7 +1228,7 @@
          }
  
          this.resetActiveHand();
-@@ -2934,12 +3368,16 @@
+@@ -2934,12 +3358,16 @@
  
              if (flag1)
              {
@@ -1297,7 +1247,7 @@
              }
          }
  
-@@ -2973,11 +3411,41 @@
+@@ -2973,11 +3401,41 @@
          }
      }
  
@@ -1339,7 +1289,7 @@
      public boolean attackable()
      {
          return true;
-@@ -2986,5 +3454,31 @@
+@@ -2986,5 +3444,31 @@
      @SideOnly(Side.CLIENT)
      public void setPartying(BlockPos pos, boolean isPartying)
      {

@@ -6,7 +6,7 @@ package org.spigotmc;
  * activity is allotted a proportion of the expected slack time according to its weight, versus the
  * estimated total weight of all activities.
  */
-public class SlackActivityAccountant {
+public class SlackActivityAccountant { // TODO: CREF - review
     private double prevTickSlackWeightReciprocal = 1 / MIN_SLACK_WEIGHT;
     private static final double MIN_SLACK_WEIGHT = 1 / 65536.0;
     private double averageTickNonSlackNanos = 0;

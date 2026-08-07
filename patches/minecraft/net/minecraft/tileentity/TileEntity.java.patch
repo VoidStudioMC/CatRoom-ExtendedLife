@@ -1,6 +1,6 @@
 --- before/net/minecraft/tileentity/TileEntity.java
 +++ after/net/minecraft/tileentity/TileEntity.java
-@@ -21,15 +21,17 @@
+@@ -21,15 +21,16 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -15,12 +15,11 @@
      protected boolean tileEntityInvalid;
      private int blockMetadata = -1;
      protected Block blockType;
-+    public org.spigotmc.CustomTimingsHandler tickTimer = org.bukkit.craftbukkit.v1_12_R1.SpigotTimings.getTileEntityTimings(this); // Spigot
 +    public boolean skipTick = false;
  
      public static void register(String id, Class <? extends TileEntity > clazz)
      {
-@@ -60,6 +62,8 @@
+@@ -60,6 +61,8 @@
      public void readFromNBT(NBTTagCompound compound)
      {
          this.pos = new BlockPos(compound.getInteger("x"), compound.getInteger("y"), compound.getInteger("z"));
@@ -29,7 +28,7 @@
      }
  
      public NBTTagCompound writeToNBT(NBTTagCompound compound)
-@@ -81,6 +85,8 @@
+@@ -81,6 +84,8 @@
              compound.setInteger("x", this.pos.getX());
              compound.setInteger("y", this.pos.getY());
              compound.setInteger("z", this.pos.getZ());
@@ -38,7 +37,7 @@
              return compound;
          }
      }
-@@ -90,19 +96,22 @@
+@@ -90,19 +95,22 @@
      {
          TileEntity tileentity = null;
          String s = compound.getString("id");
@@ -63,7 +62,7 @@
          }
  
          if (tileentity != null)
-@@ -115,6 +124,8 @@
+@@ -115,6 +123,8 @@
              catch (Throwable throwable)
              {
                  LOGGER.error("Failed to load data for block entity {}", s, throwable);
@@ -72,7 +71,7 @@
                  tileentity = null;
              }
          }
-@@ -156,7 +167,6 @@
+@@ -156,7 +166,6 @@
          }
      }
  
@@ -80,7 +79,7 @@
      public double getDistanceSq(double x, double y, double z)
      {
          double d0 = this.pos.getX() + 0.5 - x;
-@@ -249,7 +259,7 @@
+@@ -249,7 +258,7 @@
  
                      try
                      {
@@ -89,7 +88,7 @@
                      }
                      catch (Throwable throwable)
                      {
-@@ -302,6 +312,204 @@
+@@ -302,6 +311,204 @@
      {
      }
  
@@ -137,9 +136,9 @@
 +     * @param newState The new ID of the block (May be the same)
 +     * @return true forcing the invalidation of the existing TE, false not to invalidate the existing TE
 +     */
-+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
++    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
 +    {
-+        return isVanilla ? (oldState.getBlock() != newSate.getBlock()) : oldState != newSate;
++        return isVanilla ? (oldState.getBlock() != newState.getBlock()) : oldState != newState;
 +    }
 +
 +    public boolean shouldRenderInPass(int pass)
@@ -148,15 +147,15 @@
 +    }
 +
 +    /**
-+     * Sometimes default render bounding box: infinite in scope. Used to control rendering on {@link TileEntitySpecialRenderer}.
++     * Sometimes default render bounding box: infinite in scope. Used to control rendering on {@link net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer}.
 +     */
 +    public static final net.minecraft.util.math.AxisAlignedBB INFINITE_EXTENT_AABB = new net.minecraft.util.math.AxisAlignedBB(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 +    /**
-+     * Return an {@link AxisAlignedBB} that controls the visible scope of a {@link TileEntitySpecialRenderer} associated with this {@link TileEntity}
++     * Return an {@link net.minecraft.util.math.AxisAlignedBB} that controls the visible scope of a {@link net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer} associated with this {@link TileEntity}
 +     * Defaults to the collision bounding box {@link Block#getCollisionBoundingBoxFromPool(World, int, int, int)} associated with the block
 +     * at this location.
 +     *
-+     * @return an appropriately size {@link AxisAlignedBB} for the {@link TileEntity}
++     * @return an appropriately size {@link net.minecraft.util.math.AxisAlignedBB} for the {@link TileEntity}
 +     */
 +    @SideOnly(Side.CLIENT)
 +    public net.minecraft.util.math.AxisAlignedBB getRenderBoundingBox()
@@ -294,7 +293,7 @@
      static
      {
          register("furnace", TileEntityFurnace.class);
-@@ -329,5 +537,10 @@
+@@ -329,5 +536,10 @@
          register("command_block", TileEntityCommandBlock.class);
          register("shulker_box", TileEntityShulkerBox.class);
          register("bed", TileEntityBed.class);

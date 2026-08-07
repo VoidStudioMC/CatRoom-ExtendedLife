@@ -1634,12 +1634,11 @@ public final class CraftServer implements Server {
     }
 
     public List<String> tabComplete(net.minecraft.command.ICommandSender sender, String message, BlockPos pos, boolean forceCommand) {
-        // Spigot Start
-        if ((org.spigotmc.SpigotConfig.tabComplete < 0 || message.length() <= org.spigotmc.SpigotConfig.tabComplete) && !message.contains(" ")) {
-            return ImmutableList.of();
-        }
+        if (!(sender instanceof EntityPlayerMP) || // Spigot Start
+            ((org.spigotmc.SpigotConfig.tabComplete < 0 || message.length() <= org.spigotmc.SpigotConfig.tabComplete)
+                && !message.contains(" ")))
         // Spigot End
-        if (!(sender instanceof EntityPlayerMP)) {
+        {
             return ImmutableList.of();
         }
 
@@ -1674,7 +1673,7 @@ public final class CraftServer implements Server {
             getLogger().log(Level.SEVERE, "Exception when " + player.getName() + " attempted to tab complete " + message, ex);
         }
 
-        return completions == null ? ImmutableList.<String>of() : completions;
+        return completions == null ? ImmutableList.of() : completions;
     }
 
     public List<String> tabCompleteChat(Player player, String message) {

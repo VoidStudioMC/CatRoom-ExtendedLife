@@ -1,6 +1,6 @@
 --- before/net/minecraft/world/chunk/storage/AnvilChunkLoader.java
 +++ after/net/minecraft/world/chunk/storage/AnvilChunkLoader.java
-@@ -49,26 +49,50 @@
+@@ -49,26 +49,48 @@
          this.fixer = dataFixerIn;
      }
  
@@ -14,9 +14,7 @@
      @Override
      public Chunk loadChunk(World worldIn, int x, int z) throws IOException
      {
-+        worldIn.timings.syncChunkLoadDataTimer.startTiming(); // Spigot
 +        Object[] data = this.loadChunk__Async(worldIn, x, z);
-+        worldIn.timings.syncChunkLoadDataTimer.stopTiming(); // Spigot
 +
 +        if (data != null)
 +        {
@@ -55,7 +53,7 @@
      }
  
      @Override
-@@ -82,6 +106,13 @@
+@@ -82,6 +104,13 @@
      @Nullable
      protected Chunk checkedReadChunkFromNBT(World worldIn, int x, int z, NBTTagCompound compound)
      {
@@ -69,7 +67,7 @@
          if (!compound.hasKey("Level", 10))
          {
              LOGGER.error("Chunk file at {},{} is missing level data, skipping", x, z);
-@@ -113,10 +144,29 @@
+@@ -113,10 +142,29 @@
                      );
                      nbttagcompound.setInteger("xPos", x);
                      nbttagcompound.setInteger("zPos", z);
@@ -100,7 +98,7 @@
              }
          }
      }
-@@ -131,7 +181,10 @@
+@@ -131,7 +179,10 @@
              NBTTagCompound nbttagcompound1 = new NBTTagCompound();
              nbttagcompound.setTag("Level", nbttagcompound1);
              nbttagcompound.setInteger("DataVersion", 1343);
@@ -111,7 +109,7 @@
              this.addChunkToPending(chunkIn.getPos(), nbttagcompound);
          }
          catch (Exception exception)
-@@ -197,9 +250,10 @@
+@@ -197,9 +248,10 @@
  
      private void writeChunkData(ChunkPos pos, NBTTagCompound compound) throws IOException
      {
@@ -125,7 +123,7 @@
      }
  
      @Override
-@@ -322,11 +376,19 @@
+@@ -322,11 +374,19 @@
              {
                  NBTTagCompound nbttagcompound2 = new NBTTagCompound();
  
@@ -145,7 +143,7 @@
              }
          }
  
-@@ -335,8 +397,16 @@
+@@ -335,8 +395,16 @@
  
          for (TileEntity tileentity : chunkIn.getTileEntityMap().values())
          {
@@ -162,7 +160,7 @@
          }
  
          compound.setTag("TileEntities", nbttaglist2);
-@@ -362,6 +432,18 @@
+@@ -362,6 +430,18 @@
  
              compound.setTag("TileTicks", nbttaglist3);
          }
@@ -181,7 +179,7 @@
      }
  
      private Chunk readChunkFromNBT(World worldIn, NBTTagCompound compound)
-@@ -405,6 +487,17 @@
+@@ -405,6 +485,16 @@
              chunk.setBiomeArray(compound.getByteArray("Biomes"));
          }
  
@@ -195,39 +193,19 @@
 +
 +    public void loadEntities(World worldIn, NBTTagCompound compound, Chunk chunk)
 +    {
-+        worldIn.timings.syncChunkLoadEntitiesTimer.startTiming(); // Spigot
          NBTTagList nbttaglist1 = compound.getTagList("Entities", 10);
  
          for (int j1 = 0; j1 < nbttaglist1.tagCount(); j1++)
-@@ -414,6 +507,8 @@
-             chunk.setHasEntities(true);
-         }
- 
-+        worldIn.timings.syncChunkLoadEntitiesTimer.stopTiming(); // Spigot
-+        worldIn.timings.syncChunkLoadTileEntitiesTimer.startTiming(); // Spigot
-         NBTTagList nbttaglist2 = compound.getTagList("TileEntities", 10);
- 
-         for (int k1 = 0; k1 < nbttaglist2.tagCount(); k1++)
-@@ -426,6 +521,8 @@
-                 chunk.addTileEntity(tileentity);
-             }
-         }
-+        worldIn.timings.syncChunkLoadTileEntitiesTimer.stopTiming(); // Spigot
-+        worldIn.timings.syncChunkLoadTileTicksTimer.startTiming(); // Spigot
- 
-         if (compound.hasKey("TileTicks", 9))
-         {
-@@ -453,8 +550,7 @@
+@@ -453,8 +543,6 @@
                  );
              }
          }
 -
 -        return chunk;
-+        worldIn.timings.syncChunkLoadTileTicksTimer.stopTiming(); // Spigot
      }
  
      @Nullable
-@@ -545,7 +641,11 @@
+@@ -545,7 +633,11 @@
  
      public static void spawnEntity(Entity entityIn, World worldIn)
      {
@@ -240,7 +218,7 @@
          {
              for (Entity entity : entityIn.getPassengers())
              {
-@@ -587,4 +687,15 @@
+@@ -587,4 +679,15 @@
              return entity;
          }
      }

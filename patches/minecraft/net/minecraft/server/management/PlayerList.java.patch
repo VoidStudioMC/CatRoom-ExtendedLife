@@ -1,14 +1,6 @@
 --- before/net/minecraft/server/management/PlayerList.java
 +++ after/net/minecraft/server/management/PlayerList.java
-@@ -66,6 +66,7 @@
- import net.minecraftforge.fml.relauncher.SideOnly;
- import org.apache.logging.log4j.LogManager;
- import org.apache.logging.log4j.Logger;
-+// TODO: CREF: cleanup
- 
- public abstract class PlayerList
- {
-@@ -76,7 +77,7 @@
+@@ -76,7 +76,7 @@
      private static final Logger LOGGER = LogManager.getLogger();
      private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
      private final MinecraftServer server;
@@ -17,7 +9,7 @@
      private final Map<UUID, EntityPlayerMP> uuidToPlayerMap = Maps.newHashMap();
      private final UserListBans bannedPlayers = new UserListBans(FILE_PLAYERBANS);
      private final UserListIPBans bannedIPs = new UserListIPBans(FILE_IPBANS);
-@@ -84,7 +85,7 @@
+@@ -84,7 +84,7 @@
      private final UserListWhitelist whiteListedPlayers = new UserListWhitelist(FILE_WHITELIST);
      private final Map<UUID, StatisticsManagerServer> playerStatFiles = Maps.newHashMap();
      private final Map<UUID, PlayerAdvancements> advancements = Maps.newHashMap();
@@ -26,7 +18,7 @@
      private boolean whiteListEnforced;
      protected int maxPlayers;
      private int viewDistance;
-@@ -92,6 +93,8 @@
+@@ -92,6 +92,8 @@
      private boolean commandsAllowedForAll;
      private int playerPingIndex;
  
@@ -35,7 +27,7 @@
      public PlayerList(MinecraftServer server)
      {
          this.server = server;
-@@ -100,8 +103,22 @@
+@@ -100,8 +102,22 @@
          this.maxPlayers = 8;
      }
  
@@ -59,7 +51,7 @@
          GameProfile gameprofile = playerIn.getGameProfile();
          PlayerProfileCache playerprofilecache = this.server.getPlayerProfileCache();
          GameProfile gameprofile1 = playerprofilecache.getProfileByUUID(gameprofile.getId());
-@@ -109,6 +126,24 @@
+@@ -109,6 +125,24 @@
          playerprofilecache.addEntry(gameprofile);
          NBTTagCompound nbttagcompound = this.readPlayerDataFromFile(playerIn);
          playerIn.setWorld(this.server.getWorld(playerIn.dimension));
@@ -84,7 +76,7 @@
          playerIn.interactionManager.setWorld((WorldServer)playerIn.world);
          String s1 = "local";
  
-@@ -117,31 +152,44 @@
+@@ -117,31 +151,44 @@
              s1 = netManager.getRemoteAddress().toString();
          }
  
@@ -140,7 +132,7 @@
          nethandlerplayserver.sendPacket(
              new SPacketCustomPayload("MC|Brand", new PacketBuffer(Unpooled.buffer()).writeString(this.getServerInstance().getServerModName()))
          );
-@@ -153,20 +201,23 @@
+@@ -153,20 +200,23 @@
          playerIn.getRecipeBook().init(playerIn);
          this.sendScoreboard((ServerScoreboard)worldserver.getScoreboard(), playerIn);
          this.server.refreshStatusNextTick();
@@ -171,7 +163,7 @@
          nethandlerplayserver.setPlayerLocation(
              playerIn.posX, playerIn.posY, playerIn.posZ, playerIn.rotationYaw, playerIn.rotationPitch
          );
-@@ -221,9 +272,12 @@
+@@ -221,9 +271,12 @@
          }
  
          playerIn.addSelfToInternalCraftingInventory();
@@ -185,7 +177,7 @@
      {
          Set<ScoreObjective> set = Sets.newHashSet();
  
-@@ -250,6 +304,7 @@
+@@ -250,6 +303,7 @@
  
      public void setPlayerManager(WorldServer[] worldServers)
      {
@@ -193,7 +185,7 @@
          this.playerDataManager = worldServers[0].getSaveHandler().getPlayerNBTManager();
          worldServers[0].getWorldBorder().addListener(new IBorderListener()
          {
-@@ -322,7 +377,7 @@
+@@ -322,7 +376,7 @@
      @Nullable
      public NBTTagCompound readPlayerDataFromFile(EntityPlayerMP playerIn)
      {
@@ -202,7 +194,7 @@
          NBTTagCompound nbttagcompound1;
  
          if (playerIn.getName().equals(this.server.getServerOwner()) && nbttagcompound != null)
-@@ -330,6 +385,7 @@
+@@ -330,6 +384,7 @@
              nbttagcompound1 = nbttagcompound;
              playerIn.readFromNBT(nbttagcompound);
              LOGGER.debug("loading single player");
@@ -210,7 +202,7 @@
          }
          else
          {
-@@ -339,8 +395,24 @@
+@@ -339,8 +394,24 @@
          return nbttagcompound1;
      }
  
@@ -235,7 +227,7 @@
          this.playerDataManager.writePlayerData(playerIn);
          StatisticsManagerServer statisticsmanagerserver = this.playerStatFiles.get(playerIn.getUniqueID());
  
-@@ -369,19 +441,90 @@
+@@ -369,19 +440,90 @@
              playerIn.connection.sendPacket(new SPacketPlayerListItem(SPacketPlayerListItem.Action.ADD_PLAYER, this.playerEntityList.get(i)));
          }
  
@@ -270,7 +262,7 @@
 +
 +        // CraftBukkit start - sendAll above replaced with this loop
 +        SPacketPlayerListItem packet = new SPacketPlayerListItem(SPacketPlayerListItem.Action.ADD_PLAYER, playerIn);
-+        for (int i = 0; i < this.playerEntityList.size(); ++i)
++        for (int i = 0; i < this.playerEntityList.size(); i++)
 +        {
 +            // playerIn.connection.sendPacket(new SPacketPlayerListItem(SPacketPlayerListItem.Action.ADD_PLAYER, new EntityPlayerMP[] {this.playerEntityList.get(i)}));
 +            EntityPlayerMP entityplayer1 = this.playerEntityList.get(i);
@@ -327,7 +319,7 @@
          this.writePlayerData(playerIn);
  
          if (playerIn.isRiding())
-@@ -402,6 +545,7 @@
+@@ -402,6 +544,7 @@
                  worldserver.getChunk(playerIn.chunkCoordX, playerIn.chunkCoordZ).markDirty();
              }
          }
@@ -335,7 +327,7 @@
  
          worldserver.removeEntity(playerIn);
          worldserver.getPlayerChunkMap().removePlayer(playerIn);
-@@ -417,7 +561,23 @@
+@@ -417,7 +560,23 @@
              this.advancements.remove(uuid);
          }
  
@@ -360,7 +352,7 @@
      }
  
      public String allowUserToConnect(SocketAddress address, GameProfile profile)
-@@ -456,6 +616,87 @@
+@@ -456,6 +615,87 @@
          }
      }
  
@@ -373,7 +365,7 @@
 +
 +        EntityPlayerMP entityplayer;
 +
-+        for (int i = 0; i < this.playerEntityList.size(); ++i) {
++        for (int i = 0; i < this.playerEntityList.size(); i++) {
 +            entityplayer = (EntityPlayerMP) this.playerEntityList.get(i);
 +            if (entityplayer.getUniqueID().equals(uuid)) {
 +                arraylist.add(entityplayer);
@@ -448,7 +440,7 @@
      public EntityPlayerMP createPlayerForUser(GameProfile profile)
      {
          UUID uuid = EntityPlayer.getUUID(profile);
-@@ -497,15 +738,99 @@
+@@ -497,15 +737,99 @@
          return new EntityPlayerMP(this.server, this.server.getWorld(0), profile, playerinteractionmanager);
      }
  
@@ -458,7 +450,7 @@
 +        UUID uuid = EntityPlayer.getUUID(profile);
 +        List<EntityPlayerMP> list = Lists.<EntityPlayerMP>newArrayList();
 +
-+        for (int i = 0; i < this.playerEntityList.size(); ++i)
++        for (int i = 0; i < this.playerEntityList.size(); i++)
 +        {
 +            EntityPlayerMP entityplayermp = this.playerEntityList.get(i);
 +
@@ -551,7 +543,7 @@
          playerIn.dimension = dimension;
          PlayerInteractionManager playerinteractionmanager;
  
-@@ -521,8 +846,14 @@
+@@ -521,8 +845,14 @@
          EntityPlayerMP entityplayermp = new EntityPlayerMP(
              this.server, this.server.getWorld(playerIn.dimension), playerIn.getGameProfile(), playerinteractionmanager
          );
@@ -566,7 +558,7 @@
          entityplayermp.setEntityId(playerIn.getEntityId());
          entityplayermp.setCommandStats(playerIn);
          entityplayermp.setPrimaryHand(playerIn.getPrimaryHand());
-@@ -532,60 +863,112 @@
+@@ -532,60 +862,112 @@
              entityplayermp.addTag(s);
          }
  
@@ -712,7 +704,7 @@
          return entityplayermp;
      }
  
-@@ -593,53 +976,125 @@
+@@ -593,53 +975,125 @@
      {
          GameProfile gameprofile = player.getGameProfile();
          int i = this.canSendCommands(gameprofile) ? this.ops.getPermissionLevel(gameprofile) : 0;
@@ -862,7 +854,7 @@
          {
              d0 = MathHelper.clamp(d0 / 8.0, toWorldIn.getWorldBorder().minX() + 16.0, toWorldIn.getWorldBorder().maxX() - 16.0);
              d1 = MathHelper.clamp(d1 / 8.0, toWorldIn.getWorldBorder().minZ() + 16.0, toWorldIn.getWorldBorder().maxZ() - 16.0);
-@@ -650,7 +1105,7 @@
+@@ -650,7 +1104,7 @@
                  oldWorldIn.updateEntityWithOptionalForce(entityIn, false);
              }
          }
@@ -871,7 +863,7 @@
          {
              d0 = MathHelper.clamp(d0 * 8.0, toWorldIn.getWorldBorder().minX() + 16.0, toWorldIn.getWorldBorder().maxX() - 16.0);
              d1 = MathHelper.clamp(d1 * 8.0, toWorldIn.getWorldBorder().minZ() + 16.0, toWorldIn.getWorldBorder().maxZ() - 16.0);
-@@ -661,7 +1116,7 @@
+@@ -661,7 +1115,7 @@
                  oldWorldIn.updateEntityWithOptionalForce(entityIn, false);
              }
          }
@@ -880,7 +872,7 @@
          {
              BlockPos blockpos;
  
-@@ -687,7 +1142,7 @@
+@@ -687,7 +1141,7 @@
  
          oldWorldIn.profiler.endSection();
  
@@ -889,7 +881,7 @@
          {
              oldWorldIn.profiler.startSection("placing");
              d0 = MathHelper.clamp((int)d0, -29999872, 29999872);
-@@ -696,7 +1151,8 @@
+@@ -696,7 +1150,8 @@
              if (entityIn.isEntityAlive())
              {
                  entityIn.setLocationAndAngles(d0, entityIn.posY, d1, entityIn.rotationYaw, entityIn.rotationPitch);
@@ -899,7 +891,7 @@
                  toWorldIn.spawnEntity(entityIn);
                  toWorldIn.updateEntityWithOptionalForce(entityIn, false);
              }
-@@ -707,11 +1163,155 @@
+@@ -707,11 +1162,155 @@
          entityIn.setWorld(toWorldIn);
      }
  
@@ -1043,7 +1035,7 @@
          {
 -            this.sendPacketToAllPlayers(new SPacketPlayerListItem(SPacketPlayerListItem.Action.UPDATE_LATENCY, this.playerEntityList));
 +            // this.sendPacketToAllPlayers(new SPacketPlayerListItem(SPacketPlayerListItem.Action.UPDATE_LATENCY, this.playerEntityList));
-+            for (int i = 0; i < this.playerEntityList.size(); ++i) {
++            for (int i = 0; i < this.playerEntityList.size(); i++) {
 +                final EntityPlayerMP target = this.playerEntityList.get(i);
 +
 +                target.connection.sendPacket(new SPacketPlayerListItem(SPacketPlayerListItem.Action.UPDATE_LATENCY, com.google.common.collect.Iterables.filter(this.playerEntityList, new com.google.common.base.Predicate<EntityPlayerMP>() {
@@ -1056,13 +1048,13 @@
              this.playerPingIndex = 0;
          }
      }
-@@ -724,6 +1324,24 @@
+@@ -724,6 +1323,24 @@
          }
      }
  
 +    // CraftBukkit start - add a world/entity limited version
 +    public void sendAll(Packet packet, EntityPlayer entityhuman) {
-+        for (int i = 0; i < this.playerEntityList.size(); ++i) {
++        for (int i = 0; i < this.playerEntityList.size(); i++) {
 +            EntityPlayerMP entityplayer =  this.playerEntityList.get(i);
 +            if (entityhuman != null && entityhuman instanceof EntityPlayerMP && !entityplayer.getBukkitEntity().canSee(((EntityPlayerMP) entityhuman).getBukkitEntity())) {
 +                continue;
@@ -1072,7 +1064,7 @@
 +    }
 +
 +    public void sendAll(Packet packet, World world) {
-+        for (int i = 0; i < world.playerEntities.size(); ++i) {
++        for (int i = 0; i < world.playerEntities.size(); i++) {
 +            ((EntityPlayerMP) world.playerEntities.get(i)).connection.sendPacket(packet);
 +        }
 +    }
@@ -1081,7 +1073,7 @@
      public void sendPacketToAllPlayersInDimension(Packet<?> packetIn, int dimension)
      {
          for (int i = 0; i < this.playerEntityList.size(); i++)
-@@ -839,12 +1457,20 @@
+@@ -839,12 +1456,20 @@
          int i = this.server.getOpPermissionLevel();
          this.ops.addEntry(new UserListOpsEntry(profile, this.server.getOpPermissionLevel(), this.ops.bypassesPlayerLimit(profile)));
          this.sendPlayerPermissionLevel(this.getPlayerByUUID(profile.getId()), i);
@@ -1102,7 +1094,7 @@
      }
  
      private void sendPlayerPermissionLevel(EntityPlayerMP player, int permLevel)
-@@ -879,7 +1505,7 @@
+@@ -879,7 +1504,7 @@
      {
          return this.ops.hasEntry(profile)
                 || this.server.isSinglePlayer()
@@ -1111,7 +1103,7 @@
                 && this.server.getServerOwner().equalsIgnoreCase(profile.getName())
                 || this.commandsAllowedForAll;
      }
-@@ -912,6 +1538,12 @@
+@@ -912,6 +1537,12 @@
          {
              EntityPlayerMP entityplayermp = this.playerEntityList.get(i);
  
@@ -1124,7 +1116,7 @@
              if (entityplayermp != except && entityplayermp.dimension == dimension)
              {
                  double d0 = x - entityplayermp.posX;
-@@ -970,7 +1602,7 @@
+@@ -970,7 +1601,7 @@
  
      public void updateTimeAndWeatherForPlayer(EntityPlayerMP playerIn, WorldServer worldIn)
      {
@@ -1133,7 +1125,7 @@
          playerIn.connection.sendPacket(new SPacketWorldBorder(worldborder, SPacketWorldBorder.Action.INITIALIZE));
          playerIn.connection
          .sendPacket(new SPacketTimeUpdate(worldIn.getTotalWorldTime(), worldIn.getWorldTime(), worldIn.getGameRules().getBoolean("doDaylightCycle")));
-@@ -979,16 +1611,21 @@
+@@ -979,16 +1610,21 @@
  
          if (worldIn.isRaining())
          {
@@ -1159,7 +1151,7 @@
          playerIn.connection.sendPacket(new SPacketHeldItemChange(playerIn.inventory.currentItem));
      }
  
-@@ -1004,7 +1641,7 @@
+@@ -1004,7 +1640,7 @@
  
      public String[] getAvailablePlayerDat()
      {
@@ -1168,7 +1160,7 @@
      }
  
      @SideOnly(Side.SERVER)
-@@ -1076,9 +1713,15 @@
+@@ -1076,9 +1712,15 @@
  
      public void removeAllPlayers()
      {
@@ -1187,7 +1179,7 @@
          }
      }
  
-@@ -1086,7 +1729,10 @@
+@@ -1086,7 +1728,10 @@
      {
          this.server.sendMessage(component);
          ChatType chattype = isSystem ? ChatType.SYSTEM : ChatType.CHAT;
@@ -1199,7 +1191,7 @@
      }
  
      public void sendMessage(ITextComponent component)
-@@ -1122,6 +1768,8 @@
+@@ -1122,6 +1767,8 @@
          return statisticsmanagerserver;
      }
  
@@ -1208,7 +1200,7 @@
      public PlayerAdvancements getPlayerAdvancements(EntityPlayerMP p_192054_1_)
      {
          UUID uuid = p_192054_1_.getUniqueID();
-@@ -1145,7 +1793,7 @@
+@@ -1145,7 +1792,7 @@
  
          if (this.server.worlds != null)
          {

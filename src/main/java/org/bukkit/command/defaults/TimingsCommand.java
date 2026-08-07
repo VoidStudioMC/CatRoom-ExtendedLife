@@ -103,6 +103,11 @@ public class TimingsCommand extends BukkitCommand {
 
     @Override
     public boolean execute(CommandSender sender, String currentAlias, String[] args) {
+        if (true) {
+            sender.sendMessage(ChatColor.RED + "CatRoom is not supporting timings. Use Spark instead.");
+            return true;
+        }
+
         if (!testPermission(sender)) return true;
         if (args.length < 1)  { // Spigot
             sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
