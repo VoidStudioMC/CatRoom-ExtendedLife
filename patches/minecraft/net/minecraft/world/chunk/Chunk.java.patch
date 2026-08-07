@@ -434,13 +434,12 @@
              for (T t : this.entityLists[k].getByClass(entityClass))
              {
                  if (t.getEntityBoundingBox().intersects(aabb) && (filter == null || filter.apply(t)))
-@@ -999,8 +1148,70 @@
+@@ -999,8 +1148,68 @@
          }
      }
  
 +    public void populateCB(IChunkProvider chunkProvider, IChunkGenerator chunkGenrator, boolean newChunk)
 +    {
-+        world.timings.syncChunkLoadPostTimer.startTiming(); // Spigot
 +        org.bukkit.Server server = world.getServer();
 +        if (server != null) {
 +            /*
@@ -494,7 +493,6 @@
 +                chunk4.populate(chunkGenrator);
 +            }
 +        }
-+        world.timings.syncChunkLoadPostTimer.stopTiming(); // Spigot
 +    }
 +
      protected void populate(IChunkGenerator generator)
@@ -505,7 +503,7 @@
          if (this.isTerrainPopulated())
          {
              if (generator.generateStructures(this, this.x, this.z))
-@@ -1012,8 +1223,32 @@
+@@ -1012,8 +1221,32 @@
          {
              this.checkLight();
              generator.populate(this.x, this.z);
@@ -538,7 +536,7 @@
      }
  
      public BlockPos getPrecipitationHeight(BlockPos pos)
-@@ -1068,7 +1303,7 @@
+@@ -1068,7 +1301,7 @@
          {
              BlockPos blockpos = this.tileEntityPosQueue.poll();
  
@@ -547,7 +545,7 @@
              {
                  TileEntity tileentity = this.createNewTileEntity(blockpos);
                  this.world.setTileEntity(blockpos, tileentity);
-@@ -1079,7 +1314,7 @@
+@@ -1079,7 +1312,7 @@
  
      public boolean isPopulated()
      {
@@ -556,7 +554,7 @@
      }
  
      public boolean wasTicked()
-@@ -1132,6 +1367,13 @@
+@@ -1132,6 +1365,13 @@
      @SideOnly(Side.CLIENT)
      public void read(PacketBuffer buf, int availableSections, boolean groundUpContinuous)
      {
@@ -570,7 +568,7 @@
          boolean flag = this.world.provider.hasSkyLight();
  
          for (int i = 0; i < this.storageArrays.length; i++)
-@@ -1180,10 +1422,16 @@
+@@ -1180,10 +1420,16 @@
          this.isTerrainPopulated = true;
          this.generateHeightMap();
  
@@ -587,7 +585,7 @@
      }
  
      public Biome getBiome(BlockPos pos, BiomeProvider provider)
-@@ -1194,7 +1442,12 @@
+@@ -1194,7 +1440,12 @@
  
          if (k == 255)
          {
@@ -601,7 +599,7 @@
              k = Biome.getIdForBiome(biome);
              this.blockBiomeArray[j << 4 | i] = (byte)(k & 0xFF);
          }
-@@ -1249,13 +1502,13 @@
+@@ -1249,13 +1500,13 @@
                      boolean flag = i1 == 0 || i1 == 15 || k == 0 || k == 15 || l == 0 || l == 15;
  
                      if (this.storageArrays[j] == NULL_BLOCK_STORAGE && flag
@@ -617,7 +615,7 @@
                              {
                                  this.world.checkLight(blockpos2);
                              }
-@@ -1388,7 +1641,7 @@
+@@ -1388,7 +1639,7 @@
          {
              blockpos$mutableblockpos.setPos(blockpos$mutableblockpos.getX(), l, blockpos$mutableblockpos.getZ());
  
@@ -626,7 +624,7 @@
              {
                  this.world.checkLight(blockpos$mutableblockpos);
              }
-@@ -1427,6 +1680,7 @@
+@@ -1427,6 +1678,7 @@
          else
          {
              System.arraycopy(newHeightMap, 0, this.heightMap, 0, this.heightMap.length);
@@ -634,7 +632,7 @@
          }
      }
  
-@@ -1496,4 +1750,61 @@
+@@ -1496,4 +1748,61 @@
          QUEUED,
          CHECK;
      }

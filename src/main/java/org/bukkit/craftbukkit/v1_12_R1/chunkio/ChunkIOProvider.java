@@ -6,6 +6,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
+import net.minecraft.world.gen.ChunkProviderServer;
+import net.minecraft.world.gen.IChunkGenerator;
 import org.bukkit.craftbukkit.v1_12_R1.util.AsynchronousExecutor;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,18 +40,21 @@ class ChunkIOProvider implements AsynchronousExecutor.CallBackProvider<QueuedChu
             return;
         }
 
+        final ChunkProviderServer providerServer = queuedChunk.provider;
+        final IChunkGenerator chunkGenerator = providerServer.chunkGenerator;
+        final int chunkX = queuedChunk.x;
+        final int chunkZ = queuedChunk.z;
+
         queuedChunk.loader.loadEntities(queuedChunk.world, queuedChunk.compound.getCompoundTag("Level"), chunk);
-        chunk.setLastSaveTime(queuedChunk.provider.world.getTotalWorldTime());
-        queuedChunk.provider.loadedChunks.put(ChunkPos.asLong(queuedChunk.x, queuedChunk.z), chunk);
+        chunk.setLastSaveTime(providerServer.world.getTotalWorldTime());
+        providerServer.loadedChunks.put(ChunkPos.asLong(chunkX, chunkZ), chunk);
         chunk.onLoad();
 
-        if (queuedChunk.provider.chunkGenerator != null) {
-            queuedChunk.provider.world.timings.syncChunkLoadStructuresTimer.startTiming(); // Spigot
-            queuedChunk.provider.chunkGenerator.recreateStructures(chunk, queuedChunk.x, queuedChunk.z);
-            queuedChunk.provider.world.timings.syncChunkLoadStructuresTimer.stopTiming(); // Spigot
+        if (chunkGenerator != null) {
+            chunkGenerator.recreateStructures(chunk, chunkX, chunkZ);
         }
 
-        chunk.populateCB(queuedChunk.provider, queuedChunk.provider.chunkGenerator, false);
+        chunk.populateCB(providerServer, chunkGenerator, false);
     }
 
     public void callStage3(QueuedChunk queuedChunk, Chunk chunk, Runnable runnable) throws RuntimeException {
@@ -57,7 +62,7 @@ class ChunkIOProvider implements AsynchronousExecutor.CallBackProvider<QueuedChu
     }
 
     public Thread newThread(Runnable runnable) {
-        Thread thread = new Thread(runnable, "Chunk I/O Executor Thread-" + threadNumber.getAndIncrement());
+        Thread thread = new Thread(runnable, "Chunk I/O Executor Thread-" + this.threadNumber.getAndIncrement());
         thread.setDaemon(true);
         return thread;
     }

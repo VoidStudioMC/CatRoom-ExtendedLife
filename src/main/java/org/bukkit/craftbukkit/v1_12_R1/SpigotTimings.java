@@ -15,7 +15,6 @@ import org.bukkit.craftbukkit.v1_12_R1.scheduler.CraftTask;
 
 @Deprecated(forRemoval = true) // TODO: CREF - remove for 1.0.+ version
 public class SpigotTimings {
-
     public static final CustomTimingsHandler serverTickTimer = new CustomTimingsHandler("** Full Server Tick");
     public static final CustomTimingsHandler playerListTimer = new CustomTimingsHandler("Player List");
     public static final CustomTimingsHandler commandFunctionsTimer = new CustomTimingsHandler("Command Functions");
@@ -39,7 +38,7 @@ public class SpigotTimings {
     public static final CustomTimingsHandler timerEntityTickRest = new CustomTimingsHandler("** livingEntityTickRest");
 
     public static final CustomTimingsHandler processQueueTimer = new CustomTimingsHandler("processQueue");
-    public static final CustomTimingsHandler schedulerSyncTimer = new CustomTimingsHandler("** Scheduler - Sync Tasks", JavaPluginLoader.pluginParentTimer);
+    public static final CustomTimingsHandler schedulerSyncTimer = new CustomTimingsHandler("** Scheduler - Sync Tasks"/*, JavaPluginLoader.pluginParentTimer*/);
 
     public static final CustomTimingsHandler playerCommandTimer = new CustomTimingsHandler("** playerCommand");
 

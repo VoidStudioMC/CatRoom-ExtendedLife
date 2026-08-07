@@ -1,11 +1,8 @@
 package org.bukkit.craftbukkit.v1_12_R1.scheduler;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_12_R1.SpigotTimings; // Spigot
-import org.spigotmc.CustomTimingsHandler; // Spigot
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
-
 
 public class CraftTask implements BukkitTask, Runnable { // Spigot
 
@@ -29,7 +26,6 @@ public class CraftTask implements BukkitTask, Runnable { // Spigot
     private final Plugin plugin;
     private final int id;
 
-    final CustomTimingsHandler timings; // Spigot
     CraftTask() {
         this(null, null, CraftTask.NO_REPEATING, CraftTask.NO_REPEATING);
     }
@@ -39,7 +35,7 @@ public class CraftTask implements BukkitTask, Runnable { // Spigot
     }
 
     // Spigot start
-    public String timingName = null;
+    public final String timingName = null;
     CraftTask(String timingName) {
         this(timingName, null, null, -1, -1);
     }
@@ -51,8 +47,6 @@ public class CraftTask implements BukkitTask, Runnable { // Spigot
         this.task = task;
         this.id = id;
         this.period = period;
-        this.timingName = timingName == null && task == null ? "Unknown" : timingName;
-        timings = this.isSync() ? SpigotTimings.getPluginTaskTimings(this, period) : null;
     }
 
     CraftTask(final Plugin plugin, final Runnable task, final int id, final long period) {

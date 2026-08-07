@@ -1,22 +1,6 @@
 --- before/net/minecraft/server/dedicated/DedicatedServer.java
 +++ after/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -47,24 +47,37 @@
- import net.minecraftforge.fml.relauncher.SideOnly;
- import org.apache.logging.log4j.LogManager;
- import org.apache.logging.log4j.Logger;
-+import net.minecraft.world.chunk.storage.AnvilSaveConverter; // TODO: CREF: cleanup
-+import org.apache.logging.log4j.Level;
-+import java.io.PrintStream;
-+import gg.pufferfish.pufferfish.simd.SIMDDetection;
-+import org.bukkit.craftbukkit.v1_12_R1.LoggerOutputStream;
-+import org.bukkit.craftbukkit.v1_12_R1.SpigotTimings;
-+import org.bukkit.craftbukkit.v1_12_R1.util.Waitable;
-+import org.bukkit.event.server.RemoteServerCommandEvent;
-+import org.bukkit.event.server.ServerCommandEvent;
-+import org.spigotmc.SpigotConfig;
- 
- @SideOnly(Side.SERVER)
- public class DedicatedServer extends MinecraftServer implements IServer
+@@ -53,18 +53,21 @@
  {
      private static final Logger LOGGER = LogManager.getLogger();
      private static final Pattern RESOURCE_PACK_SHA1_PATTERN = Pattern.compile("^[a-fA-F0-9]{40}$");
@@ -42,7 +26,7 @@
          DataFixer dataFixerIn,
          YggdrasilAuthenticationService authServiceIn,
          MinecraftSessionService sessionServiceIn,
-@@ -72,11 +85,13 @@
+@@ -72,11 +75,13 @@
          PlayerProfileCache profileCacheIn
      )
      {
@@ -58,7 +42,7 @@
                  this.start();
              }
              @Override
-@@ -104,6 +119,11 @@
+@@ -104,6 +109,11 @@
              @Override
              public void run()
              {
@@ -70,7 +54,7 @@
                  BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
                  String s4;
  
-@@ -120,6 +140,35 @@
+@@ -120,6 +130,35 @@
                  }
              }
          };
@@ -99,14 +83,14 @@
 +
 +        catserver.server.threads.ConsoleWriteThread.startThread(); // CatServer
 +
-+        System.setOut(new PrintStream(new LoggerOutputStream(logger, Level.INFO), true));
-+        System.setErr(new PrintStream(new LoggerOutputStream(logger, Level.WARN), true));
++        System.setOut(new java.io.PrintStream(new org.bukkit.craftbukkit.v1_12_R1.LoggerOutputStream(logger, org.apache.logging.log4j.Level.INFO), true));
++        System.setErr(new java.io.PrintStream(new org.bukkit.craftbukkit.v1_12_R1.LoggerOutputStream(logger, org.apache.logging.log4j.Level.WARN), true));
 +        // CraftBukkit end
 +
          thread.setDaemon(true);
          thread.start();
          LOGGER.info("Starting minecraft server version 1.12.2");
-@@ -129,8 +178,10 @@
+@@ -129,8 +168,10 @@
              LOGGER.warn("To start the server with more ram, launch it as \"java -Xmx1024M -Xms1024M -jar minecraft_server.jar\"");
          }
  
@@ -118,20 +102,20 @@
          this.eula = new ServerEula(new File("eula.txt"));
  
          if (!this.eula.hasAcceptedEULA())
-@@ -152,6 +203,12 @@
+@@ -152,6 +193,12 @@
                  this.setHostname(this.settings.getStringProperty("server-ip", ""));
              }
  
 +            // CatRoom start - SIMD support
 +            try {
-+                SIMDDetection.initialize();
++                gg.pufferfish.pufferfish.simd.SIMDDetection.initialize();
 +            } catch (Throwable ignored) {}
 +            // CatRoom end - SIMD support
 +
              this.setCanSpawnAnimals(this.settings.getBooleanProperty("spawn-animals", true));
              this.setCanSpawnNPCs(this.settings.getBooleanProperty("spawn-npcs", true));
              this.setAllowPvp(this.settings.getBooleanProperty("pvp", true));
-@@ -186,29 +243,42 @@
+@@ -186,29 +233,42 @@
                  this.setServerPort(this.settings.getIntProperty("server-port", 25565));
              }
  
@@ -156,7 +140,7 @@
 -                LOGGER.warn("Perhaps a server is already running on that port?");
 -                return false;
 -            }
-+            if(!SpigotConfig.lateBind) {
++            if(!org.spigotmc.SpigotConfig.lateBind) {
 +                try
 +                {
 +                    this.getNetworkSystem().addEndpoint(inetaddress, this.getServerPort());
@@ -189,18 +173,18 @@
                  LOGGER.warn("To change this, set \"online-mode\" to \"true\" in the server.properties file.");
              }
  
-@@ -223,7 +293,9 @@
+@@ -223,7 +283,9 @@
              }
              else
              {
 -                this.setPlayerList(new DedicatedPlayerList(this));
 +                net.minecraftforge.fml.common.FMLCommonHandler.instance().onServerStarted();
-+                this.anvilConverterForAnvilFile = new AnvilSaveConverter(server.getWorldContainer(), this.dataFixer); // CraftBukkit - moved from MinecraftServer constructor
++                this.anvilConverterForAnvilFile = new net.minecraft.world.chunk.storage.AnvilSaveConverter(server.getWorldContainer(), this.dataFixer); // CraftBukkit - moved from MinecraftServer constructor
 +//                this.setPlayerList(new DedicatedPlayerList(this));
                  long j = System.nanoTime();
  
                  if (this.getFolderName() == null)
-@@ -271,15 +343,17 @@
+@@ -271,15 +333,17 @@
                  TileEntitySkull.setProfileCache(this.getPlayerProfileCache());
                  TileEntitySkull.setSessionService(this.getMinecraftSessionService());
                  PlayerProfileCache.setOnlineMode(this.isServerInOnlineMode());
@@ -219,7 +203,7 @@
                      .getGameRules()
                      .setOrCreateGameRule("announceAdvancements", this.settings.getBooleanProperty("announce-player-achievements", true) ? "true" : "false");
                      this.settings.removeProperty("announce-player-achievements");
-@@ -298,9 +372,29 @@
+@@ -298,9 +362,29 @@
                      LOGGER.info("Starting remote control listener");
                      this.rconThread = new RConThreadMain(this);
                      this.rconThread.startThread();
@@ -237,7 +221,7 @@
 +                    this.settings.saveProperties();
 +                }
 +
-+                if (SpigotConfig.lateBind) {
++                if (org.spigotmc.SpigotConfig.lateBind) {
 +                    try {
 +                        this.getNetworkSystem().addEndpoint(inetaddress, this.getServerPort());
 +                    } catch (IOException ioexception) {
@@ -252,7 +236,7 @@
                  {
                      Thread thread1 = new Thread(new ServerHangWatchdog(this));
                      thread1.setName("Server Watchdog");
-@@ -309,7 +403,8 @@
+@@ -309,7 +393,8 @@
                  }
  
                  Items.AIR.getSubItems(CreativeTabs.SEARCH, NonNullList.create());
@@ -262,15 +246,14 @@
              }
          }
      }
-@@ -446,11 +541,32 @@
+@@ -446,11 +531,30 @@
  
      public void executePendingCommands()
      {
-+        SpigotTimings.serverCommandTimer.startTiming(); // Spigot
 +        PendingCommand pendingcommand;
 +        while ((pendingcommand = this.pendingCommandList.poll()) != null) {  // Paper - use proper queue
 +            // CraftBukkit start - ServerCommand for preprocessing
-+            ServerCommandEvent event = new ServerCommandEvent(console, pendingcommand.command);
++            org.bukkit.event.server.ServerCommandEvent event = new org.bukkit.event.server.ServerCommandEvent(console, pendingcommand.command);
 +            server.getPluginManager().callEvent(event);
 +            if (event.isCancelled()) continue;
 +            pendingcommand = new PendingCommand(event.getCommand(), pendingcommand.sender);
@@ -285,7 +268,7 @@
 -            PendingCommand pendingcommand = this.pendingCommandList.remove(0);
 -            this.getCommandManager().executeCommand(pendingcommand.sender, pendingcommand.command);
 +            pendingcommand = this.pendingCommandList.poll();
-+            ServerCommandEvent event = new ServerCommandEvent(console, pendingcommand.command);
++            org.bukkit.event.server.ServerCommandEvent event = new org.bukkit.event.server.ServerCommandEvent(console, pendingcommand.command);
 +            server.getPluginManager().callEvent(event);
 +            if (event.isCancelled()) continue;
 +            pendingcommand = new PendingCommand(event.getCommand(), pendingcommand.sender);
@@ -293,11 +276,10 @@
 +            server.dispatchServerCommand(console, pendingcommand);
          }
 +        // CatServer end
-+        SpigotTimings.serverCommandTimer.stopTiming(); // Spigot
      }
  
      @Override
-@@ -557,7 +673,7 @@
+@@ -557,7 +661,7 @@
      @Override
      public boolean isBlockProtected(World worldIn, BlockPos pos, EntityPlayer playerIn)
      {
@@ -306,7 +288,7 @@
          {
              return false;
          }
-@@ -632,6 +748,9 @@
+@@ -632,6 +736,9 @@
          return this.settings.getIntProperty("network-compression-threshold", super.getNetworkCompressionThreshold());
      }
  
@@ -316,7 +298,7 @@
      protected boolean convertFiles() throws IOException
      {
          boolean flag = false;
-@@ -721,14 +840,67 @@
+@@ -721,14 +828,70 @@
      @Override
      public String getPlugins()
      {
@@ -355,20 +337,23 @@
 -        this.rconConsoleSource.resetLog();
 -        this.commandManager.executeCommand(this.rconConsoleSource, command);
 -        return this.rconConsoleSource.getLogContents();
-+        Waitable<String> waitable = new Waitable<String>() {
++        org.bukkit.craftbukkit.v1_12_R1.util.Waitable<String> waitable = new org.bukkit.craftbukkit.v1_12_R1.util.Waitable<>() {
 +            @Override
 +            protected String evaluate() {
-+                rconConsoleSource.resetLog();
++                RConConsoleSource rconSource = DedicatedServer.this.rconConsoleSource;
++                org.bukkit.command.RemoteConsoleCommandSender rcon = DedicatedServer.this.remoteConsole;
++                org.bukkit.craftbukkit.v1_12_R1.CraftServer craftServer = DedicatedServer.this.server;
++                rconSource.resetLog();
 +                // Event changes start
-+                RemoteServerCommandEvent event = new RemoteServerCommandEvent(remoteConsole, command);
-+                server.getPluginManager().callEvent(event);
++                org.bukkit.event.server.RemoteServerCommandEvent event = new org.bukkit.event.server.RemoteServerCommandEvent(rcon, command);
++                craftServer.getPluginManager().callEvent(event);
 +                if (event.isCancelled()) {
 +                    return "";
 +                }
 +                // Event change end
-+                PendingCommand serverCommand = new PendingCommand(event.getCommand(), rconConsoleSource);
-+                server.dispatchServerCommand(remoteConsole, serverCommand);
-+                return rconConsoleSource.getLogContents();
++                PendingCommand serverCommand = new PendingCommand(event.getCommand(), rconSource);
++                craftServer.dispatchServerCommand(rcon, serverCommand);
++                return rconSource.getLogContents();
 +            }
 +        };
 +        processQueue.add(waitable);

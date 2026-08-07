@@ -101,15 +101,7 @@
  
      @Override
      public Chunk provideChunk(int x, int z)
-@@ -106,6 +158,7 @@
- 
-         if (chunk == null)
-         {
-+            world.timings.syncChunkLoadTimer.startTiming(); // Spigot
-             long i = ChunkPos.asLong(x, z);
- 
-             try
-@@ -124,11 +177,45 @@
+@@ -124,11 +176,42 @@
  
              this.loadedChunks.put(i, chunk);
              chunk.onLoad();
@@ -119,7 +111,6 @@
 -        return chunk;
 -    }
 +            chunk.populateCB(this, this.chunkGenerator, true);
-+            world.timings.syncChunkLoadTimer.stopTiming(); // Spigot
 +        }
 +
 +        return chunk;
@@ -134,7 +125,6 @@
 +        Chunk chunk = this.loadChunk(x, z, runnable);
 +
 +        if (chunk == null && generate) {
-+            world.timings.syncChunkLoadTimer.startTiming(); // Spigot
 +            long i = ChunkPos.asLong(x, z);
 +
 +            try {
@@ -151,7 +141,6 @@
 +            this.loadedChunks.put(i, chunk);
 +            chunk.onLoad();
 +            chunk.populateCB(this, this.chunkGenerator, true);
-+            world.timings.syncChunkLoadTimer.stopTiming(); // Spigot
 +        }
 +
 +        return chunk;
@@ -160,7 +149,7 @@
  
      @Nullable
      private Chunk loadChunkFromFile(int x, int z)
-@@ -222,28 +309,82 @@
+@@ -222,28 +305,82 @@
          {
              if (!this.droppedChunks.isEmpty())
              {
