@@ -210,7 +210,6 @@ public final class JavaPluginLoader implements PluginLoader {
         Validate.notNull(plugin, "Plugin can not be null");
         Validate.notNull(listener, "Listener can not be null");
 
-        boolean useTimings = server.getPluginManager().useTimings();
         Map<Class<? extends Event>, Set<RegisteredListener>> ret = new HashMap<Class<? extends Event>, Set<RegisteredListener>>();
         Set<Method> methods;
         try {
