@@ -30,16 +30,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
-import it.unimi.dsi.fastutil.ints.IntIterator;
-import it.unimi.dsi.fastutil.ints.IntLinkedOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntRBTreeSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
-import it.unimi.dsi.fastutil.ints.IntSets;
-import it.unimi.dsi.fastutil.ints.IntSortedSet;
+import it.unimi.dsi.fastutil.ints.*;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Lists;
@@ -93,7 +84,7 @@ public class DimensionManager
     private static final IntSet usedIds = new IntOpenHashSet();
     private static final ConcurrentMap<World, World> weakWorldMap = new MapMaker().weakKeys().weakValues().makeMap();
     private static final Multiset<Integer> leakedWorlds = HashMultiset.create();
-    private static ArrayList<Integer> bukkitDims = new ArrayList<Integer>(); // used to keep track of Bukkit dimensions
+    private static final IntArrayList bukkitDims = new IntArrayList(); // used to keep track of Bukkit dimensions
 
     /**
      * Returns a list of dimensions associated with this DimensionType.
@@ -187,15 +178,13 @@ public class DimensionManager
         return getWorld(dim).provider;
     }
 
-    public static Integer[] getIDs(boolean check)
+    public static int[] getIDs(boolean check)
     {
         if (check)
         {
             List<World> allWorlds = Lists.newArrayList(weakWorldMap.keySet());
             allWorlds.removeAll(worlds.values());
-            for (ListIterator<World> li = allWorlds.listIterator(); li.hasNext(); )
-            {
-                World w = li.next();
+            for (World w : allWorlds) {
                 leakedWorlds.add(System.identityHashCode(w));
             }
             for (World w : allWorlds)
@@ -214,9 +203,9 @@ public class DimensionManager
         return getIDs();
     }
 
-    public static Integer[] getIDs()
+    public static int[] getIDs()
     {
-        return worlds.keySet().toArray(new Integer[0]); // Only loaded dims, since usually used to cycle through loaded worlds
+        return worlds.keySet().toIntArray(); // Only loaded dims, since usually used to cycle through loaded worlds
     }
 
     public static void setWorld(int id, @Nullable WorldServer world, MinecraftServer server)
@@ -649,10 +638,10 @@ public class DimensionManager
             bukkitDims.remove(bukkitDims.indexOf(dim));
     }
 
-    public static ArrayList<Integer> getBukkitDimensionIDs()
+    public static IntArrayList getBukkitDimensionIDs()
     {
         return bukkitDims;
-    }
+    } // TODO: CREF - needs test
 
     public static boolean isBukkitDimension(int dim)
     {
