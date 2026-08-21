@@ -1,5 +1,6 @@
 package catserver.server;
 
+import io.netty.util.internal.PlatformDependent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.WorldServer;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Queue;
 
 public class WeakWorldSaveManager {
-    private static final Queue<WorldServer> saveTaskQueue = new catserver.server.utils.CachedSizeConcurrentLinkedQueue<>();
+    private static final Queue<WorldServer> saveTaskQueue = PlatformDependent.newMpscQueue();
     private static long lastSaveTick = MinecraftServer.currentTick;
 
     public static void saveAllWorlds() {

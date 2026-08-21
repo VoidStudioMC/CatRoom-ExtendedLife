@@ -43,7 +43,7 @@
      private final PlayerProfileCache profileCache;
      private long nanoTimeSinceStatusRefresh;
 -    public final Queue < FutureTask<? >> futureTaskQueue = Queues.newArrayDeque();
-+    public final Queue < FutureTask<? >> futureTaskQueue = new catserver.server.utils.CachedSizeConcurrentLinkedQueue<>(); // Paper - Make size() constant-time
++    public final Queue < FutureTask<? >> futureTaskQueue = io.netty.util.internal.PlatformDependent.newMpscQueue(); // Paper - Make size() constant-time
      private Thread serverThread;
      protected long currentTime = getCurrentTimeMillis();
      @SideOnly(Side.CLIENT)
@@ -59,7 +59,7 @@
 +    // public ConsoleReader reader; // Paper
 +    public static int currentTick = 0; // Paper - Further improve tick loop
 +    public Thread primaryThread;
-+    public Queue<Runnable> processQueue = new java.util.concurrent.ConcurrentLinkedQueue<>(); // TODO: CREF - look for jctools
++    public final Queue<Runnable> processQueue = io.netty.util.internal.PlatformDependent.newMpscQueue();
 +    public int autosavePeriod;
 +    // CraftBukkit end
 +    // Spigot start
