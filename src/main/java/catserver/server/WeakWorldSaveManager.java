@@ -16,13 +16,13 @@ public class WeakWorldSaveManager {
     public static void saveAllWorlds() {
         List<WorldServer> alreadySavedLagWorlds = null;
 
-        if (saveTaskQueue.size() > 0) {
-            MinecraftServer.LOGGER.warn("[WeakWorldSaveManager] World auto save lag! Remaining count: " + saveTaskQueue.size());
+        if (!saveTaskQueue.isEmpty()) {
+            MinecraftServer.LOGGER.warn("[WeakWorldSaveManager] World auto save lag! Remaining count: {}", saveTaskQueue.size());
             alreadySavedLagWorlds = new ArrayList<>();
             WorldServer worldServer;
             while ((worldServer = saveTaskQueue.poll()) != null) {
                 if (MinecraftServer.getServerInst().worldServerList.contains(worldServer) /* Is unloaded? */) {
-                    MinecraftServer.LOGGER.warn("[WeakWorldSaveManager] Saving dimension: " + worldServer.dimension);
+                    MinecraftServer.LOGGER.warn("[WeakWorldSaveManager] Saving dimension: {}", worldServer.dimension);
                     try {
                         worldServer.saveAllChunks(true, null);
                     } catch (MinecraftException minecraftexception) {
@@ -44,7 +44,7 @@ public class WeakWorldSaveManager {
 
     public static void onTick() {
         long startTime = System.nanoTime();
-        while (saveTaskQueue.size() > 0) {
+        while (!saveTaskQueue.isEmpty()) {
             WorldServer worldServer = saveTaskQueue.poll();
             if (worldServer != null && MinecraftServer.getServerInst().worldServerList.contains(worldServer) /* Is unloaded? */) {
                 try {
@@ -62,6 +62,6 @@ public class WeakWorldSaveManager {
     }
 
     public static boolean isNeedTick() {
-        return saveTaskQueue.size() > 0 && MinecraftServer.currentTick - lastSaveTick > 1 /* Idle one tick for working on other things */;
+        return !saveTaskQueue.isEmpty() && MinecraftServer.currentTick - lastSaveTick > 1 /* Idle one tick for working on other things */;
     }
 }
