@@ -1,5 +1,7 @@
 package catserver.server;
 
+import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -8,7 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class BukkitWorldDimensionManager {
-    private static final Map<String, Integer> bukkitWorldDimIds = new LinkedHashMap<>();
+    private static final Object2IntMap<String> bukkitWorldDimIds = new Object2IntLinkedOpenHashMap<>();
 
     public static int getWorldDimId(String name) {
         return bukkitWorldDimIds.getOrDefault(name, 0);

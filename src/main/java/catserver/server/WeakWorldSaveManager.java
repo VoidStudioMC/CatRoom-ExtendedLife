@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Queue;
 
 public class WeakWorldSaveManager {
-    private static final Queue<WorldServer> saveTaskQueue = PlatformDependent.newMpscQueue();
+    private static final Queue<WorldServer> saveTaskQueue = PlatformDependent.newSpscQueue();
     private static long lastSaveTick = MinecraftServer.currentTick;
 
     public static void saveAllWorlds() {
