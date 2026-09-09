@@ -404,7 +404,7 @@ public class DimensionManager
     /*
      * To be called by the server at the appropriate time, do not call from mod code.
      */
-    public static void unloadWorlds(Hashtable<Integer, long[]> worldTickTimes)
+    public static void unloadWorlds(Int2ObjectMap<long[]> worldTickTimes)
     {
         IntIterator queueIterator = unloadQueue.iterator();
         while (queueIterator.hasNext())

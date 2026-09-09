@@ -34,7 +34,7 @@
      public final long[] tickTimeArray = new long[100];
 -    public long[][] timeOfLastDimensionTick;
 +    //public long[][] timeOfLastDimensionTick;
-+    public java.util.Hashtable<Integer, long[]> worldTickTimes = new java.util.Hashtable<>();
++    public final it.unimi.dsi.fastutil.ints.Int2ObjectMap<long[]> worldTickTimes = new it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap<>();
      private KeyPair serverKeyPair;
      private String serverOwner;
      private String folderName;
@@ -43,22 +43,23 @@
      private final PlayerProfileCache profileCache;
      private long nanoTimeSinceStatusRefresh;
 -    public final Queue < FutureTask<? >> futureTaskQueue = Queues.newArrayDeque();
-+    public final Queue < FutureTask<? >> futureTaskQueue = io.netty.util.internal.PlatformDependent.newMpscQueue(); // Paper - Make size() constant-time
-     private Thread serverThread;
+-    private Thread serverThread;
++    public final Queue < FutureTask<? >> futureTaskQueue = io.netty.util.internal.PlatformDependent.newMpscQueue();
++    private final Thread serverThread;
      protected long currentTime = getCurrentTimeMillis();
      @SideOnly(Side.CLIENT)
      private boolean worldIconSet;
 +    private boolean hasStopped = false;
 +    private final Object stopLock = new Object();
 +    // CraftBukkit start
-+    public List<WorldServer> worldServerList = new it.unimi.dsi.fastutil.objects.ObjectArrayList<>();
++    public final List<WorldServer> worldServerList = new it.unimi.dsi.fastutil.objects.ObjectArrayList<>();
 +    public org.bukkit.craftbukkit.v1_12_R1.CraftServer server;
 +    public joptsimple.OptionSet options;
 +    public org.bukkit.command.ConsoleCommandSender console;
 +    public org.bukkit.command.RemoteConsoleCommandSender remoteConsole;
 +    // public ConsoleReader reader; // Paper
 +    public static int currentTick = 0; // Paper - Further improve tick loop
-+    public Thread primaryThread;
++    public final Thread primaryThread;
 +    public final Queue<Runnable> processQueue = io.netty.util.internal.PlatformDependent.newMpscQueue();
 +    public int autosavePeriod;
 +    // CraftBukkit end
@@ -113,7 +114,7 @@
 +        */
 +        // Paper end
 +        Runtime.getRuntime().addShutdownHook(new org.bukkit.craftbukkit.v1_12_R1.util.ServerShutdownThread(this));
-+        this.serverThread = this.primaryThread = new Thread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, this, "Server thread"); // Moved from main
++        this.serverThread = this.primaryThread = new io.netty.util.concurrent.FastThreadLocalThread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, this, "Server thread"); // Moved from main
 +        // CatRoom Start
 +        this.serverThread.setPriority(Thread.MAX_PRIORITY);
 +        // CatRoom End
@@ -667,7 +668,7 @@
  
          this.profiler.startSection("tallying");
          this.tickTimeArray[this.tickCounter % 100] = System.nanoTime() - i;
-@@ -701,43 +901,73 @@
+@@ -701,43 +901,74 @@
  
          this.profiler.endSection();
          this.profiler.endSection();
@@ -701,8 +702,9 @@
 -        for (int j = 0; j < this.worlds.length; j++)
 +        // CraftBukkit start
 +        // Run tasks that are waiting on processing
-+        while (!processQueue.isEmpty()) {
-+            processQueue.remove().run();
++        Runnable task;
++        while ((task = this.processQueue.poll()) != null) {
++            task.run();
 +        }
 +
 +        org.bukkit.craftbukkit.v1_12_R1.chunkio.ChunkIOExecutor.tick();
@@ -759,7 +761,7 @@
  
                  try
                  {
-@@ -761,16 +991,20 @@
+@@ -761,16 +992,20 @@
                      throw new ReportedException(crashreport1);
                  }
  
@@ -782,7 +784,7 @@
          this.profiler.endStartSection("connection");
          this.getNetworkSystem().networkTick();
          this.profiler.endStartSection("players");
-@@ -801,6 +1035,20 @@
+@@ -801,6 +1036,20 @@
      @SideOnly(Side.SERVER)
      public static void main(String[] p_main_0_)
      {
@@ -803,7 +805,7 @@
          Bootstrap.register();
  
          try
-@@ -808,110 +1056,31 @@
+@@ -808,110 +1057,31 @@
              boolean flag = true;
              String s = null;
              String s1 = ".";
@@ -932,7 +934,7 @@
          }
          catch (Exception exception)
          {
-@@ -921,8 +1090,12 @@
+@@ -921,8 +1091,11 @@
  
      public void startServerThread()
      {
@@ -940,7 +942,6 @@
 +        if (this instanceof MinecraftServer) return; // CatServer - Don't remove the code, or it will break asm of the fucking coremod, so just return always
 +        // /* CraftBukkit start - prevent abuse
 +        net.minecraftforge.fml.common.StartupQuery.reset();
-+        this.serverThread = new Thread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, this, "Server thread");
          this.serverThread.start();
 +        // // CraftBukkit end */
      }
