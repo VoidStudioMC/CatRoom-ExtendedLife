@@ -152,19 +152,20 @@ public class CraftBlock implements Block {
     public boolean setTypeIdAndData(final int type, final byte data, final boolean applyPhysics) {
         IBlockState blockData = getNMSBlock(type).getStateFromMeta(data);
         BlockPos position = new BlockPos(x, y, z);
+        CraftChunk craftChunk = this.chunk;
 
         // SPIGOT-611: need to do this to prevent glitchiness. Easier to handle this here (like /setblock) than to fix weirdness in tile entity cleanup
         if (type != 0 && blockData.getBlock() instanceof BlockContainer && type != getTypeId()) {
-            chunk.getHandle().getWorld().setBlockState(position, Blocks.AIR.getDefaultState(), 0);
+            craftChunk.getHandle().getWorld().setBlockState(position, Blocks.AIR.getDefaultState(), 0);
         }
 
         if (applyPhysics) {
-            return chunk.getHandle().getWorld().setBlockState(position, blockData, 3);
+            return craftChunk.getHandle().getWorld().setBlockState(position, blockData, 3);
         } else {
-            IBlockState old = chunk.getHandle().getBlockState(position);
-            boolean success = chunk.getHandle().getWorld().setBlockState(position, blockData, 18); // NOTIFY | NO_OBSERVER
+            IBlockState old = craftChunk.getHandle().getBlockState(position);
+            boolean success = craftChunk.getHandle().getWorld().setBlockState(position, blockData, 18); // NOTIFY | NO_OBSERVER
             if (success) {
-                chunk.getHandle().getWorld().notifyBlockUpdate(
+                craftChunk.getHandle().getWorld().notifyBlockUpdate(
                         position,
                         old,
                         blockData,

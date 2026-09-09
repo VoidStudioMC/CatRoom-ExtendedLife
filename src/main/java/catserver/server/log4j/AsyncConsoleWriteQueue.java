@@ -5,7 +5,7 @@ import net.minecraftforge.server.terminalconsole.TerminalConsoleAppender;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class AsyncConsoleWriteQueue implements Runnable {
+public class AsyncConsoleWriteQueue implements Runnable { // TODO: CREF - delete
     public static boolean enable = false;
 
     private static final int MAX_CAPACITY = 250;

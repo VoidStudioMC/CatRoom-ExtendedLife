@@ -1,33 +1,31 @@
 package catserver.server;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayFIFOQueue;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.WorldServer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-
 public class WeakWorldSaveManager {
-    private static final Queue<WorldServer> saveTaskQueue = new catserver.server.utils.CachedSizeConcurrentLinkedQueue<>();
+    private static final ObjectArrayFIFOQueue<WorldServer> saveTaskQueue = new ObjectArrayFIFOQueue<>();
+    private static final ObjectArrayList<WorldServer> alreadySavedLagWorlds = new ObjectArrayList<>();
     private static long lastSaveTick = MinecraftServer.currentTick;
 
     public static void saveAllWorlds() {
-        List<WorldServer> alreadySavedLagWorlds = null;
+        alreadySavedLagWorlds.clear();
 
-        if (saveTaskQueue.size() > 0) {
-            MinecraftServer.LOGGER.warn("[WeakWorldSaveManager] World auto save lag! Remaining count: " + saveTaskQueue.size());
-            alreadySavedLagWorlds = new ArrayList<>();
+        if (!saveTaskQueue.isEmpty()) {
+            MinecraftServer.LOGGER.warn("[WeakWorldSaveManager] World auto save lag! Remaining count: {}", saveTaskQueue.size());
             WorldServer worldServer;
-            while ((worldServer = saveTaskQueue.poll()) != null) {
+            while ((worldServer = saveTaskQueue.dequeue()) != null) {
                 if (MinecraftServer.getServerInst().worldServerList.contains(worldServer) /* Is unloaded? */) {
-                    MinecraftServer.LOGGER.warn("[WeakWorldSaveManager] Saving dimension: " + worldServer.dimension);
+                    MinecraftServer.LOGGER.warn("[WeakWorldSaveManager] Saving dimension: {}", worldServer.dimension);
                     try {
                         worldServer.saveAllChunks(true, null);
                     } catch (MinecraftException minecraftexception) {
                         MinecraftServer.LOGGER.warn(minecraftexception.getMessage());
                     }
-                    saveTaskQueue.remove(worldServer);
+
                     alreadySavedLagWorlds.add(worldServer);
                 }
             }
@@ -35,16 +33,16 @@ public class WeakWorldSaveManager {
 
         for (WorldServer worldServer : MinecraftServer.getServerInst().worldServerList) {
             if (worldServer != null) {
-                if (alreadySavedLagWorlds != null && alreadySavedLagWorlds.contains(worldServer)) continue;
-                saveTaskQueue.add(worldServer);
+                if (alreadySavedLagWorlds.contains(worldServer)) continue;
+                saveTaskQueue.enqueue(worldServer);
             }
         }
     }
 
     public static void onTick() {
         long startTime = System.nanoTime();
-        while (saveTaskQueue.size() > 0) {
-            WorldServer worldServer = saveTaskQueue.poll();
+        while (!saveTaskQueue.isEmpty()) {
+            WorldServer worldServer = saveTaskQueue.dequeue();
             if (worldServer != null && MinecraftServer.getServerInst().worldServerList.contains(worldServer) /* Is unloaded? */) {
                 try {
                     worldServer.saveAllChunks(true, null);
@@ -61,6 +59,6 @@ public class WeakWorldSaveManager {
     }
 
     public static boolean isNeedTick() {
-        return saveTaskQueue.size() > 0 && MinecraftServer.currentTick - lastSaveTick > 1 /* Idle one tick for working on other things */;
+        return !saveTaskQueue.isEmpty() && MinecraftServer.currentTick - lastSaveTick > 1 /* Idle one tick for working on other things */;
     }
 }

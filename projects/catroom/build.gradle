@@ -393,9 +393,9 @@ dependencies {
     installer 'mysql:mysql-connector-java:8.0.24'
 
     // CatRoom
-    installer 'net.openhft:affinity:3.23.3'
-    installer 'org.slf4j:slf4j-api:2.1.0-alpha1' // Affinity
-    installer 'org.slf4j:slf4j-simple:2.1.0-alpha1' // Affinity
+    installer 'net.openhft:affinity:2026.2'
+    installer 'org.slf4j:slf4j-api:2.0.18' // Affinity
+    installer 'org.slf4j:slf4j-simple:2.0.18' // Affinity
 }
 
 processResources {
