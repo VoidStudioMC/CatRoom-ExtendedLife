@@ -308,15 +308,15 @@ public class DimensionManager
 
     public static WorldServer getWorld(int id)
     {
-        return getWorld(id, false);
+        return worlds.get(id);
     }
 
     public static WorldServer getWorld(int id, boolean resetUnloadDelay)
     {
-        if (resetUnloadDelay && unloadQueue.contains(id))
-        {
+        if (resetUnloadDelay && unloadQueue.contains(id)) {
             dimensions.get(id).ticksWaited = 0;
         }
+
         return worlds.get(id);
     }
 
