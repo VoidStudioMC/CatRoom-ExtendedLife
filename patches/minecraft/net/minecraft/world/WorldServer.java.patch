@@ -631,7 +631,7 @@
 +    public boolean addEntity(Entity entityIn, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason spawnReason) {
 +        // World.spawnEntity(Entity) will call this, and we still want to perform
 +        // existing entity checking when it's called with a SpawnReason
-+        return this.canAddEntity(entityIn) ? super.addEntity(entityIn, spawnReason) : false;
++        return this.canAddEntity(entityIn) && super.addEntity(entityIn, spawnReason);
      }
  
      @Override

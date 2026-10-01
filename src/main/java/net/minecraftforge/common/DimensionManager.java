@@ -334,9 +334,9 @@ public class DimensionManager
      * Not public API: used internally to get dimensions that should load at
      * server startup
      */
-    public static Integer[] getStaticDimensionIDs()
+    public static int[] getStaticDimensionIDs()
     {
-        return dimensions.keySet().toArray(new Integer[0]);
+        return dimensions.keySet().toArray(new int[0]);
     }
 
     public static WorldProvider createProviderFor(int dim)

@@ -1,6 +1,6 @@
 --- before/net/minecraft/world/World.java
 +++ after/net/minecraft/world/World.java
-@@ -62,8 +62,16 @@
+@@ -62,18 +62,26 @@
  import net.minecraftforge.fml.relauncher.Side;
  import net.minecraftforge.fml.relauncher.SideOnly;
  
@@ -17,7 +17,25 @@
 +    private int tilesThisCycle = 0; // CatRoom - Move to member variable and keep LVT clean // TODO: CREF - review
      private int seaLevel = 63;
      protected boolean scheduledUpdatesAreImmediate;
-     public final List<Entity> loadedEntityList = Lists.newArrayList();
+-    public final List<Entity> loadedEntityList = Lists.newArrayList();
+-    protected final List<Entity> unloadedEntityList = Lists.newArrayList();
+-    public final List<TileEntity> loadedTileEntityList = Lists.newArrayList();
+-    public final List<TileEntity> tickableTileEntities = Lists.newArrayList();
+-    private final List<TileEntity> addedTileEntityList = Lists.newArrayList();
+-    private final List<TileEntity> tileEntitiesToBeRemoved = Lists.newArrayList();
+-    public final List<EntityPlayer> playerEntities = Lists.newArrayList();
+-    public final List<Entity> weatherEffects = Lists.newArrayList();
++    public final List<Entity> loadedEntityList = new it.unimi.dsi.fastutil.objects.ObjectArrayList<>();
++    protected final List<Entity> unloadedEntityList = new it.unimi.dsi.fastutil.objects.ObjectArrayList<>();
++    public final List<TileEntity> loadedTileEntityList = new it.unimi.dsi.fastutil.objects.ObjectArrayList<>();
++    public final List<TileEntity> tickableTileEntities = new it.unimi.dsi.fastutil.objects.ObjectArrayList<>();
++    private final List<TileEntity> addedTileEntityList = new it.unimi.dsi.fastutil.objects.ObjectArrayList<>();
++    private final List<TileEntity> tileEntitiesToBeRemoved = new it.unimi.dsi.fastutil.objects.ObjectArrayList<>();
++    public final List<EntityPlayer> playerEntities = new it.unimi.dsi.fastutil.objects.ObjectArrayList<>();
++    public final List<Entity> weatherEffects = new it.unimi.dsi.fastutil.objects.ObjectArrayList<>();
+     protected final IntHashMap<Entity> entitiesById = new IntHashMap<>();
+     private final long cloudColour = 16777215L;
+     private int skylightSubtracted;
 @@ -85,36 +93,149 @@
      public float thunderingStrength;
      private int lastLightningBolt;
@@ -25,7 +43,8 @@
 -    public final WorldProvider provider;
 +    public WorldProvider provider;
      protected PathWorldListener pathListener = new PathWorldListener();
-     protected List<IWorldEventListener> eventListeners = Lists.newArrayList(this.pathListener);
+-    protected List<IWorldEventListener> eventListeners = Lists.newArrayList(this.pathListener);
++    protected final List<IWorldEventListener> eventListeners = new it.unimi.dsi.fastutil.objects.ObjectArrayList<>(new IWorldEventListener[]{this.pathListener});
      protected IChunkProvider chunkProvider;
      protected final ISaveHandler saveHandler;
 -    protected WorldInfo worldInfo;
