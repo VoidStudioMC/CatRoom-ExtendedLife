@@ -61,7 +61,7 @@
 +        WorldServer overWorld = (isDemo() ? (WorldServer)(new WorldServerDemo(this, isavehandler, worldinfo, 0, this.profiler)).init() :
 +                                            (WorldServer)(new WorldServer(this, isavehandler, worldinfo, 0, this.profiler)).init());
 +        overWorld.initialize(this.worldSettings);
-+        for (int dim : net.minecraftforge.common.DimensionManager.getStaticDimensionIDs())
++        for (Integer dim : net.minecraftforge.common.DimensionManager.getStaticDimensionIDs())
 +        {
 +            WorldServer world = (dim == 0 ? overWorld : (WorldServer)(new WorldServerMulti(this, isavehandler, dim, overWorld, this.profiler)).init());
 +            world.addEventListener(new ServerWorldEventHandler(this, world));

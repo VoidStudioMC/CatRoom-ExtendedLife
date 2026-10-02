@@ -61,7 +61,7 @@ public class CommandCatserver extends Command {
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "worlds" -> {
                 sender.sendMessage(formatStringLength("Dim", 8) + " " + formatStringLength("Name", 8) + " " + formatStringLength("Type", 8));
-                for (int dimension : DimensionManager.getStaticDimensionIDs()) {
+                for (Integer dimension : DimensionManager.getStaticDimensionIDs()) {
                     World world = DimensionManager.getWorld(dimension, false);
                     String name = (world != null ? world.getWorld().getName() : "(Unload)");
                     String type = DimensionManager.getProviderType(dimension).toString();
