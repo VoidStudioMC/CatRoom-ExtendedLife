@@ -665,7 +665,7 @@
              {
                  int i = (this.getActivePotionEffect(MobEffects.RESISTANCE).getAmplifier() + 1) * 5;
                  int j = 25 - i;
-@@ -1435,34 +1606,202 @@
+@@ -1435,34 +1606,198 @@
  
      protected void damageEntity(DamageSource damageSrc, float damageAmount)
      {
@@ -702,17 +702,13 @@
 +        */
 +    }
 +
-+    private boolean callingLivingHurtEvent = false; // CatServer - Fix StackOverflowError
 +    protected boolean damageEntity_CB(final DamageSource damagesource, float f) { // void -> boolean, add final
 +        if (!this.isEntityInvulnerable(damagesource)) {
 +            final boolean human = this instanceof EntityPlayer;
 +            float originalDamage = f;
 +
 +            if (!human || f > 0) { // filter out 0 damage (from EntityPlayer.attackEntityFrom)
-+                if (callingLivingHurtEvent) return true;
-+                callingLivingHurtEvent = true;
 +                f = net.minecraftforge.common.ForgeHooks.onLivingHurt(this, damagesource, f);
-+                callingLivingHurtEvent = false;
 +            }
 +
 +            float originalDamage_CB = f;
@@ -880,7 +876,7 @@
          }
          else if (this.attackingPlayer != null)
          {
-@@ -1503,6 +1842,11 @@
+@@ -1503,6 +1838,11 @@
  
      public void swingArm(EnumHand hand)
      {
@@ -892,7 +888,7 @@
          if (!this.isSwingInProgress || this.swingProgressInt >= this.getArmSwingAnimationEnd() / 2 || this.swingProgressInt < 0)
          {
              this.swingProgressInt = -1;
-@@ -1524,7 +1868,34 @@
+@@ -1524,7 +1864,34 @@
          boolean flag1 = id == 36;
          boolean flag2 = id == 37;
  
@@ -928,7 +924,7 @@
          {
              this.limbSwingAmount = 1.5F;
              this.hurtResistantTime = this.maxHurtResistantTime;
-@@ -1563,33 +1934,8 @@
+@@ -1563,33 +1930,8 @@
  
              this.attackEntityFrom(DamageSource.GENERIC, 0.0F);
          }
@@ -962,7 +958,7 @@
      protected void outOfWorld()
      {
          this.attackEntityFrom(DamageSource.OUT_OF_WORLD, 4.0F);
-@@ -1627,6 +1973,7 @@
+@@ -1627,6 +1969,7 @@
          if (this.attributeMap == null)
          {
              this.attributeMap = new AttributeMap();
@@ -970,7 +966,7 @@
          }
  
          return this.attributeMap;
-@@ -1763,7 +2110,7 @@
+@@ -1763,7 +2106,7 @@
  
                      if (!this.world.collidesWithAnyBlock(axisalignedbb1))
                      {
@@ -979,7 +975,7 @@
                          {
                              this.setPositionAndUpdate(d11, this.posY + 1.0, d12);
                              return;
-@@ -1771,7 +2118,7 @@
+@@ -1771,7 +2114,7 @@
  
                          BlockPos blockpos = new BlockPos(d11, this.posY - 1.0, d12);
  
@@ -988,7 +984,7 @@
                                  || this.world.getBlockState(blockpos).getMaterial() == Material.WATER)
                          {
                              d1 = d11;
-@@ -1780,7 +2127,7 @@
+@@ -1780,7 +2123,7 @@
                          }
                      }
                      else if (!this.world.collidesWithAnyBlock(axisalignedbb1.offset(0.0, 1.0, 0.0))
@@ -997,7 +993,7 @@
                      {
                          d1 = d11;
                          d13 = this.posY + 2.0;
-@@ -1853,16 +2200,17 @@
+@@ -1853,16 +2196,17 @@
          }
  
          this.isAirBorne = true;
@@ -1017,7 +1013,7 @@
      }
  
      protected float getWaterSlowDown()
-@@ -1936,6 +2284,7 @@
+@@ -1936,6 +2280,7 @@
  
                          if (this.onGround && !this.world.isRemote)
                          {
@@ -1025,7 +1021,7 @@
                              this.setFlag(7, false);
                          }
                      }
-@@ -1948,7 +2297,8 @@
+@@ -1948,7 +2293,8 @@
  
                          if (this.onGround)
                          {
@@ -1035,7 +1031,7 @@
                          }
  
                          float f7 = 0.16277136F / (f6 * f6 * f6);
-@@ -1968,12 +2318,13 @@
+@@ -1968,12 +2314,13 @@
  
                          if (this.onGround)
                          {
@@ -1052,7 +1048,7 @@
                                   * 0.91F;
                          }
  
-@@ -2138,6 +2489,7 @@
+@@ -2138,6 +2485,7 @@
      @Override
      public void onUpdate()
      {
@@ -1060,7 +1056,7 @@
          super.onUpdate();
          this.updateActiveHand();
  
-@@ -2180,9 +2532,11 @@
+@@ -2180,9 +2528,11 @@
  
                  if (!ItemStack.areItemStacksEqual(itemstack1, itemstack))
                  {
@@ -1072,7 +1068,7 @@
  
                      if (!itemstack.isEmpty())
                      {
-@@ -2473,6 +2827,7 @@
+@@ -2473,6 +2823,7 @@
  
          if (!this.world.isRemote)
          {
@@ -1080,7 +1076,7 @@
              this.setFlag(7, flag);
          }
      }
-@@ -2507,9 +2862,13 @@
+@@ -2507,9 +2858,13 @@
                  }
              }
  
@@ -1095,7 +1091,7 @@
                  this.collideWithEntity(entity);
              }
          }
-@@ -2622,13 +2981,13 @@
+@@ -2622,13 +2977,13 @@
      @Override
      public boolean canBeCollidedWith()
      {
@@ -1111,7 +1107,7 @@
      }
  
      @Override
-@@ -2683,6 +3042,40 @@
+@@ -2683,6 +3038,40 @@
          this.potionsNeedUpdate = true;
      }
  
@@ -1152,7 +1148,7 @@
      public abstract EnumHandSide getPrimaryHand();
  
      public boolean isHandActive()
-@@ -2700,15 +3093,23 @@
+@@ -2700,15 +3089,23 @@
          if (this.isHandActive())
          {
              ItemStack itemstack = this.getHeldItem(this.getActiveHand());
@@ -1177,7 +1173,7 @@
                  {
                      this.onItemUseFinish();
                  }
-@@ -2726,8 +3127,10 @@
+@@ -2726,8 +3123,10 @@
  
          if (!itemstack.isEmpty() && !this.isHandActive())
          {
@@ -1189,7 +1185,7 @@
  
              if (!this.world.isRemote)
              {
-@@ -2834,7 +3237,27 @@
+@@ -2834,7 +3233,27 @@
          if (!this.activeItemStack.isEmpty() && this.isHandActive())
          {
              this.updateItemUse(this.activeItemStack, 16);
@@ -1218,7 +1214,7 @@
              this.resetActiveHand();
          }
      }
-@@ -2858,7 +3281,8 @@
+@@ -2858,7 +3277,8 @@
      {
          if (!this.activeItemStack.isEmpty())
          {
@@ -1228,7 +1224,7 @@
          }
  
          this.resetActiveHand();
-@@ -2934,12 +3358,16 @@
+@@ -2934,12 +3354,16 @@
  
              if (flag1)
              {
@@ -1247,7 +1243,7 @@
              }
          }
  
-@@ -2973,11 +3401,41 @@
+@@ -2973,11 +3397,41 @@
          }
      }
  
@@ -1289,7 +1285,7 @@
      public boolean attackable()
      {
          return true;
-@@ -2986,5 +3444,31 @@
+@@ -2986,5 +3440,31 @@
      @SideOnly(Side.CLIENT)
      public void setPartying(BlockPos pos, boolean isPartying)
      {
